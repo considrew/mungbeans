@@ -1,17 +1,17 @@
 ---
 title: "Disclaimer"
-description: "Legal disclaimer for Below The Line stock screening tool."
+description: "Legal disclaimer for mungbeans.io stock screening tool."
 ---
 
 # Disclaimer
 
-**Below The Line is for educational and informational purposes only. It is not financial, investment, or trading advice.**
+**mungbeans.io is for educational and informational purposes only. It is not financial, investment, or trading advice.**
 
 ## Not Investment Advice
 
-Below The Line is not a registered investment adviser, broker-dealer, or financial planner. The information provided on this website does not constitute investment advice, financial advice, trading advice, or any other sort of advice.
+mungbeans.io is not a registered investment adviser, broker-dealer, or financial planner. The information provided on this website does not constitute investment advice, financial advice, trading advice, or any other sort of advice.
 
-You should not treat any of the website's content as such. Below The Line does not recommend that any securities should be bought, sold, or held by you. Nothing on this website should be construed as an offer to buy or sell securities.
+You should not treat any of the website's content as such. mungbeans.io does not recommend that any securities should be bought, sold, or held by you. Nothing on this website should be construed as an offer to buy or sell securities.
 
 ## Do Your Own Research
 
@@ -36,7 +36,7 @@ Trading and investing in securities involves substantial risk of loss. You shoul
 
 ## No Liability
 
-Below The Line, its owners, and its contributors shall not be held liable for any damages or losses arising from the use of information on this website.
+mungbeans.io, its owners, and its contributors shall not be held liable for any damages or losses arising from the use of information on this website.
 
 ---
 
