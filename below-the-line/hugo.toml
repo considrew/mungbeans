@@ -1,0 +1,29 @@
+baseURL = 'https://mungbeans.io/'
+languageCode = 'en-us'
+title = 'Mung Beans - 200-Week Moving Average Stock Signals'
+
+[params]
+  description = "Track when quality stocks drop below their 200-week moving average. A simple signal inspired by value investing principles."
+  author = "Below The Line"
+  
+[markup.goldmark.renderer]
+  unsafe = true
+
+[outputs]
+  home = ['HTML', 'RSS', 'JSON']
+  section = ['HTML', 'RSS']
+  page = ['HTML']
+
+[sitemap]
+  changefreq = 'weekly'
+  priority = 0.5
+  filename = 'sitemap.xml'
+
+[privacy]
+  [privacy.googleAnalytics]
+    disable = false
+    anonymizeIP = true
+    respectDoNotTrack = true
+
+[build]
+  writeStats = true
