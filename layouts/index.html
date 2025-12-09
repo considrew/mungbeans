@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Below The Line - 200-Week Moving Average Stock Signals</title>
+  <meta name="description" content="Track when quality stocks drop below their 200-week moving average. Simple yes/no signals for value investors.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Below The Line - 200-Week MA Stock Signals">
+  <meta property="og:description" content="Track when quality stocks drop below their 200-week moving average.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Site.BaseURL }}">
+  
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Below The Line",
+    "description": "Track when quality stocks drop below their 200-week moving average",
+    "url": "{{ .Site.BaseURL }}"
+  }
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">Below The Line</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  {{ $data := dict }}
+  {{ with resources.Get "data/stocks.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $data = . }}
+    {{ end }}
+  {{ end }}
+
+  <main class="homepage">
+    <!-- Hero Section -->
+    <section class="hero">
+      <h1>Below The Line</h1>
+      <p class="tagline">Track when quality stocks touch their 200-week moving average.</p>
+      
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">{{ $data.summary.below_line_count }}</span>
+          <span class="stat-label">Below the line</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ $data.summary.approaching_count }}</span>
+          <span class="stat-label">Approaching</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ $data.summary.total_stocks }}</span>
+          <span class="stat-label">Stocks tracked</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ad Placement: After Hero -->
+    <div class="ad-container ad-container--leaderboard" id="ad-home-top">
+      <div class="ad-label">Advertisement</div>
+      <!-- Google AdSense or ad network code goes here -->
+    </div>
+
+    <!-- Stocks Below The Line -->
+    {{ if $data.summary.below_line_stocks }}
+    <section class="stock-section below-section">
+      <h2>📉 Below The Line</h2>
+      <p class="section-desc">These stocks are currently trading below their 200-week moving average.</p>
+      
+      <div class="stock-grid">
+        {{ range $data.summary.below_line_stocks }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-signal">YES</div>
+          <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
+          <div class="card-direction">
+            {{ if .approaching }}↓ Deepening{{ else }}↑ Recovering{{ end }}
+          </div>
+          {{ if lt .rsi_14 30.0 }}
+          <div class="card-badge oversold">RSI {{ printf "%.0f" .rsi_14 }}</div>
+          {{ end }}
+        </a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    <!-- The Waiting Room - Approaching Stocks -->
+    {{ if $data.summary.approaching_stocks }}
+    <section class="stock-section approaching-section">
+      <h2>⏳ The Waiting Room</h2>
+      <p class="section-desc">Stocks within 15% of their 200-week line, sorted by proximity.</p>
+      
+      <div class="stock-grid">
+        {{ range $data.summary.approaching_stocks }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-signal">NO</div>
+          <div class="card-pct">{{ printf "%.1f%%" .pct_from_wma }} above</div>
+          <div class="card-direction">
+            {{ if .approaching }}↓ Approaching{{ else }}↑ Moving away{{ end }}
+          </div>
+          {{ if lt .rsi_14 30.0 }}
+          <div class="card-badge oversold">RSI {{ printf "%.0f" .rsi_14 }}</div>
+          {{ end }}
+        </a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    <!-- Oversold Stocks -->
+    {{ if $data.summary.oversold_stocks }}
+    <section class="stock-section oversold-section">
+      <h2>📊 Oversold (RSI &lt; 30)</h2>
+      <p class="section-desc">Stocks showing oversold conditions on 14-week RSI.</p>
+      
+      <div class="stock-grid">
+        {{ range $data.summary.oversold_stocks }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-signal">{{ if .below_line }}YES{{ else }}NO{{ end }}</div>
+          <div class="card-pct">
+            {{ if .below_line }}
+              {{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below
+            {{ else }}
+              {{ printf "%.1f%%" .pct_from_wma }} above
+            {{ end }}
+          </div>
+          <div class="card-badge oversold">RSI {{ printf "%.0f" .rsi_14 }}</div>
+        </a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    <!-- Methodology -->
+    <section class="methodology">
+      <h2>The Methodology</h2>
+      <p>
+        The 200-week moving average represents roughly 4 years of price history. 
+        When a quality stock drops to this level, it often represents a significant 
+        buying opportunity—the kind that comes along only a handful of times per decade 
+        for any given company.
+      </p>
+      <p>
+        This tool tracks two simple things:
+      </p>
+      <ol>
+        <li><strong>Is the stock below its 200-week moving average?</strong> Yes or no.</li>
+        <li><strong>Is it approaching or retreating?</strong> Week-over-week direction.</li>
+      </ol>
+      <p>
+        We also show 14-week RSI as a short-term oversold indicator, and historical data 
+        on what happened after previous touches.
+      </p>
+      <p class="methodology-note">
+        <strong>This is not financial advice.</strong> A stock being below its 200-week 
+        average could mean opportunity—or it could mean the business is deteriorating. 
+        Always do your own research.
+      </p>
+    </section>
+
+    <!-- All Stocks Link -->
+    <section class="all-stocks-cta">
+      <a href="/stocks/" class="cta-button">View All {{ $data.summary.total_stocks }} Stocks →</a>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Data updated weekly (Friday close). Last update: {{ $data.generated_readable }}</p>
+    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+</body>
+</html>

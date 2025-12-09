@@ -1,0 +1,323 @@
+{
+  "stocks": [
+    {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "sector": "Technology",
+      "ir_url": "https://investor.apple.com",
+      "close": 189.95,
+      "wma_200": 168.42,
+      "buy_threshold": 168.42,
+      "pct_from_wma": 12.78,
+      "wow_change": -1.34,
+      "rsi_14": 52.3,
+      "below_line": false,
+      "approaching": true,
+      "zone": "approaching",
+      "historical_touches": [
+        {"date": "Mar 2009", "date_iso": "2009-03-06", "weeks_below": 12, "max_depth": -18.4, "return_1yr": 112.3},
+        {"date": "Aug 2013", "date_iso": "2013-08-02", "weeks_below": 3, "max_depth": -4.2, "return_1yr": 42.1},
+        {"date": "Jan 2016", "date_iso": "2016-01-15", "weeks_below": 8, "max_depth": -11.7, "return_1yr": 28.4},
+        {"date": "Dec 2018", "date_iso": "2018-12-21", "weeks_below": 4, "max_depth": -8.3, "return_1yr": 89.2},
+        {"date": "Jun 2022", "date_iso": "2022-06-17", "weeks_below": 6, "max_depth": -9.1, "return_1yr": 31.5}
+      ],
+      "touch_count": 5,
+      "avg_return_after_touch": 60.7,
+      "avg_weeks_below": 6.6,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft Corporation",
+      "sector": "Technology",
+      "ir_url": "https://www.microsoft.com/en-us/investor",
+      "close": 425.22,
+      "wma_200": 312.18,
+      "buy_threshold": 312.18,
+      "pct_from_wma": 36.21,
+      "wow_change": 2.15,
+      "rsi_14": 61.8,
+      "below_line": false,
+      "approaching": false,
+      "zone": "above",
+      "historical_touches": [
+        {"date": "Mar 2009", "date_iso": "2009-03-06", "weeks_below": 8, "max_depth": -22.1, "return_1yr": 78.4},
+        {"date": "Oct 2022", "date_iso": "2022-10-14", "weeks_below": 5, "max_depth": -7.8, "return_1yr": 42.3}
+      ],
+      "touch_count": 2,
+      "avg_return_after_touch": 60.4,
+      "avg_weeks_below": 6.5,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "INTC",
+      "name": "Intel Corporation",
+      "sector": "Technology",
+      "ir_url": "https://www.intc.com",
+      "close": 21.34,
+      "wma_200": 32.45,
+      "buy_threshold": 32.45,
+      "pct_from_wma": -34.24,
+      "wow_change": -2.18,
+      "rsi_14": 24.1,
+      "below_line": true,
+      "approaching": true,
+      "zone": "extreme_value",
+      "historical_touches": [
+        {"date": "Mar 2009", "date_iso": "2009-03-06", "weeks_below": 6, "max_depth": -28.4, "return_1yr": 52.1},
+        {"date": "Oct 2022", "date_iso": "2022-10-14", "weeks_below": 8, "max_depth": -18.2, "return_1yr": 15.3},
+        {"date": "Aug 2024", "date_iso": "2024-08-02", "weeks_below": 18, "max_depth": -34.2, "return_1yr": null, "ongoing": true}
+      ],
+      "touch_count": 3,
+      "avg_return_after_touch": 33.7,
+      "avg_weeks_below": 10.7,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet Inc.",
+      "sector": "Technology",
+      "ir_url": "https://abc.xyz/investor/",
+      "close": 175.82,
+      "wma_200": 142.35,
+      "buy_threshold": 142.35,
+      "pct_from_wma": 23.51,
+      "wow_change": 0.82,
+      "rsi_14": 55.2,
+      "below_line": false,
+      "approaching": false,
+      "zone": "above",
+      "historical_touches": [
+        {"date": "Nov 2022", "date_iso": "2022-11-04", "weeks_below": 4, "max_depth": -12.3, "return_1yr": 58.2}
+      ],
+      "touch_count": 1,
+      "avg_return_after_touch": 58.2,
+      "avg_weeks_below": 4.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms Inc.",
+      "sector": "Technology",
+      "ir_url": "https://investor.fb.com",
+      "close": 585.32,
+      "wma_200": 298.45,
+      "buy_threshold": 298.45,
+      "pct_from_wma": 96.12,
+      "wow_change": 3.21,
+      "rsi_14": 72.4,
+      "below_line": false,
+      "approaching": false,
+      "zone": "above",
+      "historical_touches": [
+        {"date": "Nov 2022", "date_iso": "2022-11-04", "weeks_below": 12, "max_depth": -42.8, "return_1yr": 198.4}
+      ],
+      "touch_count": 1,
+      "avg_return_after_touch": 198.4,
+      "avg_weeks_below": 12.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA Corporation",
+      "sector": "Technology",
+      "ir_url": "https://investor.nvidia.com",
+      "close": 138.25,
+      "wma_200": 62.18,
+      "buy_threshold": 62.18,
+      "pct_from_wma": 122.35,
+      "wow_change": -4.52,
+      "rsi_14": 48.3,
+      "below_line": false,
+      "approaching": true,
+      "zone": "above",
+      "historical_touches": [
+        {"date": "Oct 2022", "date_iso": "2022-10-14", "weeks_below": 8, "max_depth": -24.6, "return_1yr": 245.8}
+      ],
+      "touch_count": 1,
+      "avg_return_after_touch": 245.8,
+      "avg_weeks_below": 8.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "BAC",
+      "name": "Bank of America Corporation",
+      "sector": "Financial Services",
+      "ir_url": "https://investor.bankofamerica.com",
+      "close": 42.18,
+      "wma_200": 38.92,
+      "buy_threshold": 38.92,
+      "pct_from_wma": 8.38,
+      "wow_change": -0.92,
+      "rsi_14": 44.2,
+      "below_line": false,
+      "approaching": true,
+      "zone": "getting_close",
+      "historical_touches": [
+        {"date": "Mar 2020", "date_iso": "2020-03-13", "weeks_below": 4, "max_depth": -28.4, "return_1yr": 82.1},
+        {"date": "Oct 2023", "date_iso": "2023-10-27", "weeks_below": 2, "max_depth": -4.2, "return_1yr": 38.4}
+      ],
+      "touch_count": 2,
+      "avg_return_after_touch": 60.3,
+      "avg_weeks_below": 3.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "KO",
+      "name": "The Coca-Cola Company",
+      "sector": "Consumer Defensive",
+      "ir_url": "https://investors.coca-colacompany.com",
+      "close": 62.45,
+      "wma_200": 58.12,
+      "buy_threshold": 58.12,
+      "pct_from_wma": 7.45,
+      "wow_change": -0.28,
+      "rsi_14": 38.5,
+      "below_line": false,
+      "approaching": true,
+      "zone": "getting_close",
+      "historical_touches": [
+        {"date": "Mar 2020", "date_iso": "2020-03-20", "weeks_below": 2, "max_depth": -12.8, "return_1yr": 28.4}
+      ],
+      "touch_count": 1,
+      "avg_return_after_touch": 28.4,
+      "avg_weeks_below": 2.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "DVA",
+      "name": "DaVita Inc.",
+      "sector": "Healthcare",
+      "ir_url": "https://investors.davita.com",
+      "close": 142.85,
+      "wma_200": 98.42,
+      "buy_threshold": 98.42,
+      "pct_from_wma": 45.14,
+      "wow_change": 1.82,
+      "rsi_14": 58.2,
+      "below_line": false,
+      "approaching": false,
+      "zone": "above",
+      "historical_touches": [
+        {"date": "Mar 2020", "date_iso": "2020-03-20", "weeks_below": 6, "max_depth": -32.4, "return_1yr": 48.2},
+        {"date": "Sep 2022", "date_iso": "2022-09-23", "weeks_below": 14, "max_depth": -28.6, "return_1yr": 62.8}
+      ],
+      "touch_count": 2,
+      "avg_return_after_touch": 55.5,
+      "avg_weeks_below": 10.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    },
+    {
+      "symbol": "CVX",
+      "name": "Chevron Corporation",
+      "sector": "Energy",
+      "ir_url": "https://www.chevron.com/investors",
+      "close": 148.92,
+      "wma_200": 142.18,
+      "buy_threshold": 142.18,
+      "pct_from_wma": 4.74,
+      "wow_change": -1.42,
+      "rsi_14": 32.8,
+      "below_line": false,
+      "approaching": true,
+      "zone": "at_doorstep",
+      "historical_touches": [
+        {"date": "Mar 2020", "date_iso": "2020-03-20", "weeks_below": 8, "max_depth": -38.2, "return_1yr": 68.4}
+      ],
+      "touch_count": 1,
+      "avg_return_after_touch": 68.4,
+      "avg_weeks_below": 8.0,
+      "last_updated": "2025-12-06",
+      "data_weeks": 520
+    }
+  ],
+  "summary": {
+    "total_stocks": 10,
+    "below_line_count": 1,
+    "approaching_count": 4,
+    "oversold_count": 1,
+    "below_line_stocks": [
+      {
+        "symbol": "INTC",
+        "close": 21.34,
+        "wma_200": 32.45,
+        "pct_from_wma": -34.24,
+        "wow_change": -2.18,
+        "rsi_14": 24.1,
+        "below_line": true,
+        "approaching": true,
+        "zone": "extreme_value"
+      }
+    ],
+    "approaching_stocks": [
+      {
+        "symbol": "CVX",
+        "close": 148.92,
+        "wma_200": 142.18,
+        "pct_from_wma": 4.74,
+        "wow_change": -1.42,
+        "rsi_14": 32.8,
+        "below_line": false,
+        "approaching": true,
+        "zone": "at_doorstep"
+      },
+      {
+        "symbol": "KO",
+        "close": 62.45,
+        "wma_200": 58.12,
+        "pct_from_wma": 7.45,
+        "wow_change": -0.28,
+        "rsi_14": 38.5,
+        "below_line": false,
+        "approaching": true,
+        "zone": "getting_close"
+      },
+      {
+        "symbol": "BAC",
+        "close": 42.18,
+        "wma_200": 38.92,
+        "pct_from_wma": 8.38,
+        "wow_change": -0.92,
+        "rsi_14": 44.2,
+        "below_line": false,
+        "approaching": true,
+        "zone": "getting_close"
+      },
+      {
+        "symbol": "AAPL",
+        "close": 189.95,
+        "wma_200": 168.42,
+        "pct_from_wma": 12.78,
+        "wow_change": -1.34,
+        "rsi_14": 52.3,
+        "below_line": false,
+        "approaching": true,
+        "zone": "approaching"
+      }
+    ],
+    "oversold_stocks": [
+      {
+        "symbol": "INTC",
+        "close": 21.34,
+        "wma_200": 32.45,
+        "pct_from_wma": -34.24,
+        "wow_change": -2.18,
+        "rsi_14": 24.1,
+        "below_line": true,
+        "approaching": true,
+        "zone": "extreme_value"
+      }
+    ]
+  },
+  "generated": "2025-12-06T18:00:00.000000",
+  "generated_readable": "December 06, 2025"
+}

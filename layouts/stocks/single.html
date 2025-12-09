@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Params.name }} ({{ .Params.symbol }}) - Is It Below The 200-Week Line?</title>
+  <meta name="description" content="Is {{ .Params.name }} ({{ .Params.symbol }}) below its 200-week moving average? Check the signal, RSI, and historical touch data for value investors.">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ .Params.symbol }} {{ .Params.name }} - Below The Line">
+  <meta property="og:description" content="Is {{ .Params.name }} below its 200-week moving average? Current signal: {{ if .Params.below_line }}YES - {{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below{{ else }}NO - {{ printf "%.1f%%" .Params.pct_from_wma }} above{{ end }}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Permalink }}">
+  
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "{{ .Params.symbol }} - 200-Week Moving Average Signal",
+    "description": "Track {{ .Params.symbol }} against its 200-week moving average",
+    "url": "{{ .Permalink }}",
+    "mainEntity": {
+      "@type": "FinancialProduct",
+      "name": "{{ .Params.symbol }}",
+      "tickerSymbol": "{{ .Params.symbol }}"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "Stocks", "item": "{{ .Site.BaseURL }}stocks/"},
+        {"@type": "ListItem", "position": 3, "name": "{{ .Params.symbol }}"}
+      ]
+    },
+    "dateModified": "{{ .Params.last_updated }}"
+  }
+  </script>
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">Below The Line</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="stock-page">
+    <div class="breadcrumb">
+      <a href="/">Home</a> → <a href="/stocks/">Stocks</a> → {{ .Params.symbol }}
+    </div>
+
+    <h1>{{ .Params.symbol }}</h1>
+    <p class="company-info">
+      <span class="company-name">{{ .Params.name }}</span>
+      {{ if .Params.sector }}<span class="sector">{{ .Params.sector }}</span>{{ end }}
+      {{ if .Params.ir_url }}<a href="{{ .Params.ir_url }}" target="_blank" rel="noopener" class="ir-link">Investor Relations →</a>{{ end }}
+    </p>
+    
+    <!-- Main Signal Box -->
+    <div class="signal-box zone-{{ .Params.zone }}">
+      <div class="signal-answer">
+        {{ if .Params.below_line }}
+          <span class="yes">YES</span>
+        {{ else }}
+          <span class="no">NO</span>
+        {{ end }}
+      </div>
+      
+      <div class="signal-detail">
+        {{ if .Params.below_line }}
+          {{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} BELOW
+        {{ else }}
+          {{ printf "%.1f%%" .Params.pct_from_wma }} ABOVE
+        {{ end }}
+      </div>
+      
+      <div class="signal-direction">
+        {{ if .Params.approaching }}
+          <span class="approaching">↓ Approaching</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week</span>
+        {{ else }}
+          <span class="retreating">↑ Moving away</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week</span>
+        {{ end }}
+      </div>
+    </div>
+
+    <!-- Proximity Bar -->
+    <div class="proximity-bar">
+      <div class="bar-track">
+        {{ $position := 50 }}
+        {{ if gt .Params.pct_from_wma 15 }}
+          {{ $position = 100 }}
+        {{ else if lt .Params.pct_from_wma -15 }}
+          {{ $position = 0 }}
+        {{ else }}
+          {{ $position = add (div (add .Params.pct_from_wma 15) 0.3) 0 }}
+        {{ end }}
+        <div class="bar-marker" style="left: {{ $position }}%"></div>
+        <div class="bar-zones">
+          <span class="zone zone-extreme">-15%</span>
+          <span class="zone zone-deep">-10%</span>
+          <span class="zone zone-below">-5%</span>
+          <span class="zone zone-line">0%</span>
+          <span class="zone zone-near">5%</span>
+          <span class="zone zone-close">10%</span>
+          <span class="zone zone-approach">15%+</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Metrics -->
+    <div class="metrics-row">
+      <div class="metric">
+        <span class="metric-label">Buy Threshold</span>
+        <span class="metric-value">${{ printf "%.2f" .Params.buy_threshold }}</span>
+      </div>
+      <div class="metric">
+        <span class="metric-label">14-Week RSI</span>
+        <span class="metric-value {{ if lt .Params.rsi_14 30.0 }}oversold{{ else if gt .Params.rsi_14 70.0 }}overbought{{ end }}">
+          {{ printf "%.0f" .Params.rsi_14 }}
+          {{ if lt .Params.rsi_14 30.0 }} 📉{{ end }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Ad Placement: Rectangle -->
+    <div class="ad-container ad-container--leaderboard" id="ad-stock-top">
+      <div class="ad-label">Advertisement</div>
+      <!-- Google AdSense or ad network code goes here -->
+    </div>
+
+    <!-- Historical Touches -->
+    {{ if .Params.historical_touches }}
+    <section class="historical-touches">
+      <h2>Historical Touches</h2>
+      <p class="touch-summary">
+        {{ .Params.symbol }} has crossed below its 200-week MA 
+        <strong>{{ .Params.touch_count }} time{{ if gt .Params.touch_count 1 }}s{{ end }}</strong>
+        {{ if .Params.avg_return_after_touch }}
+        with an average 1-year return of <strong>{{ printf "+%.1f%%" .Params.avg_return_after_touch }}</strong> after recovery.
+        {{ end }}
+      </p>
+      
+      <table class="touches-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Weeks Below</th>
+            <th>Max Depth</th>
+            <th>1-Year Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Params.historical_touches }}
+          <tr{{ if .ongoing }} class="ongoing"{{ end }}>
+            <td>{{ .date }}</td>
+            <td>{{ .weeks_below }}{{ if .ongoing }}+{{ end }}</td>
+            <td>{{ printf "%.1f%%" .max_depth }}</td>
+            <td>
+              {{ if .ongoing }}
+                <em>Ongoing</em>
+              {{ else if .return_1yr }}
+                <span class="return {{ if gt .return_1yr 0.0 }}positive{{ else }}negative{{ end }}">
+                  {{ if gt .return_1yr 0.0 }}+{{ end }}{{ printf "%.1f%%" .return_1yr }}
+                </span>
+              {{ else }}
+                <em>N/A</em>
+              {{ end }}
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+        {{ if and .Params.avg_return_after_touch .Params.avg_weeks_below }}
+        <tfoot>
+          <tr>
+            <td><strong>Average</strong></td>
+            <td>{{ printf "%.1f" .Params.avg_weeks_below }}</td>
+            <td>—</td>
+            <td><strong>{{ printf "+%.1f%%" .Params.avg_return_after_touch }}</strong></td>
+          </tr>
+        </tfoot>
+        {{ end }}
+      </table>
+    </section>
+    {{ else }}
+    <section class="no-touches">
+      <h2>Historical Touches</h2>
+      <p>{{ .Params.symbol }} has not crossed below its 200-week moving average in the available data ({{ .Params.data_weeks }} weeks).</p>
+    </section>
+    {{ end }}
+
+    <!-- Disclaimer -->
+    <div class="disclaimer">
+      <p>
+        <strong>Not financial advice.</strong> This is an educational tool. 
+        Past performance does not guarantee future results. 
+        Do your own research before making investment decisions.
+      </p>
+      <p class="last-updated">Data as of Friday close, {{ .Params.last_updated }}</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Hugo
+public/
+resources/_gen/
+.hugo_build.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local development
+*.log

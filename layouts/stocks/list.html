@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Stocks - Below The Line</title>
+  <meta name="description" content="Browse all stocks tracked against their 200-week moving average.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">Below The Line</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  {{ $data := dict }}
+  {{ with resources.Get "data/stocks.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $data = . }}
+    {{ end }}
+  {{ end }}
+
+  <main class="stocks-list-page">
+    <h1>All Stocks</h1>
+    <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}.</p>
+
+    <!-- Filter Controls -->
+    <div class="filter-controls">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="below">Below Line ({{ $data.summary.below_line_count }})</button>
+      <button class="filter-btn" data-filter="approaching">Approaching ({{ $data.summary.approaching_count }})</button>
+      <button class="filter-btn" data-filter="oversold">Oversold ({{ $data.summary.oversold_count }})</button>
+    </div>
+
+    <!-- Stocks Table -->
+    <table class="stocks-table">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Signal</th>
+          <th>Distance</th>
+          <th>Direction</th>
+          <th>RSI</th>
+          <th>Touches</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range $data.stocks }}
+        <tr class="stock-row zone-{{ .zone }}" 
+            data-below="{{ .below_line }}" 
+            data-approaching="{{ and (not .below_line) (le .pct_from_wma 15.0) }}"
+            data-oversold="{{ lt .rsi_14 30.0 }}">
+          <td>
+            <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
+          </td>
+          <td>
+            {{ if .below_line }}
+              <span class="signal-badge yes">YES</span>
+            {{ else }}
+              <span class="signal-badge no">NO</span>
+            {{ end }}
+          </td>
+          <td class="mono">
+            {{ if .below_line }}
+              {{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below
+            {{ else }}
+              {{ printf "%.1f%%" .pct_from_wma }} above
+            {{ end }}
+          </td>
+          <td>
+            {{ if .approaching }}
+              <span class="direction approaching">↓ Approaching</span>
+            {{ else }}
+              <span class="direction retreating">↑ Away</span>
+            {{ end }}
+          </td>
+          <td class="mono {{ if lt .rsi_14 30.0 }}oversold{{ end }}">
+            {{ printf "%.0f" .rsi_14 }}
+          </td>
+          <td class="mono">{{ .touch_count }}</td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </main>
+
+  <footer class="site-footer">
+    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+
+  <script>
+    // Simple filter functionality
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.stock-row').forEach(row => {
+          if (filter === 'all') {
+            row.style.display = '';
+          } else if (filter === 'below') {
+            row.style.display = row.dataset.below === 'true' ? '' : 'none';
+          } else if (filter === 'approaching') {
+            row.style.display = row.dataset.approaching === 'true' ? '' : 'none';
+          } else if (filter === 'oversold') {
+            row.style.display = row.dataset.oversold === 'true' ? '' : 'none';
+          }
+        });
+      });
+    });
+  </script>
+
+  <style>
+    .stocks-list-page {
+      max-width: 1000px;
+    }
+    
+    .page-desc {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-xl);
+    }
+    
+    .filter-controls {
+      display: flex;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: var(--space-sm) var(--space-md);
+      color: var(--color-text-muted);
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+    
+    .filter-btn:hover {
+      border-color: var(--color-text-muted);
+    }
+    
+    .filter-btn.active {
+      background: var(--color-border);
+      color: var(--color-text);
+    }
+    
+    .stocks-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .stocks-table th,
+    .stocks-table td {
+      padding: var(--space-sm) var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .stocks-table th {
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .stocks-table td a {
+      font-weight: 600;
+    }
+    
+    .mono {
+      font-family: var(--font-mono);
+    }
+    
+    .signal-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    
+    .signal-badge.yes {
+      background: var(--color-yes-bg);
+      color: var(--zone-below-line);
+    }
+    
+    .signal-badge.no {
+      background: var(--color-surface);
+      color: var(--color-text-muted);
+    }
+    
+    .direction.approaching {
+      color: var(--color-approaching);
+    }
+    
+    .direction.retreating {
+      color: var(--color-text-muted);
+    }
+    
+    td.oversold {
+      color: var(--zone-below-line);
+      font-weight: 600;
+    }
+    
+    .stock-row.zone-below_line,
+    .stock-row.zone-deep_value,
+    .stock-row.zone-extreme_value {
+      background: var(--color-yes-bg);
+    }
+  </style>
+</body>
+</html>

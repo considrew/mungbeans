@@ -1,0 +1,43 @@
+{{/* 
+  Content Adapter: Generates individual stock pages from stocks.json
+  Each stock in the data becomes a page at /stocks/{symbol}/
+*/}}
+
+{{ $data := dict }}
+{{ with resources.Get "data/stocks.json" }}
+  {{ with . | transform.Unmarshal }}
+    {{ $data = . }}
+  {{ end }}
+{{ end }}
+
+{{ range $data.stocks }}
+  {{ $slug := .symbol | lower }}
+  {{ $page := dict
+    "kind" "page"
+    "path" $slug
+    "title" (printf "%s (%s) - Below The Line" .name .symbol)
+    "content" ""
+    "params" (dict
+      "symbol" .symbol
+      "name" .name
+      "sector" .sector
+      "ir_url" .ir_url
+      "close" .close
+      "wma_200" .wma_200
+      "buy_threshold" .buy_threshold
+      "pct_from_wma" .pct_from_wma
+      "wow_change" .wow_change
+      "rsi_14" .rsi_14
+      "below_line" .below_line
+      "approaching" .approaching
+      "zone" .zone
+      "historical_touches" .historical_touches
+      "touch_count" .touch_count
+      "avg_return_after_touch" .avg_return_after_touch
+      "avg_weeks_below" .avg_weeks_below
+      "last_updated" .last_updated
+      "data_weeks" .data_weeks
+    )
+  }}
+  {{ $.AddPage $page }}
+{{ end }}
