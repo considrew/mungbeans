@@ -1,6 +1,5 @@
 {{/* 
   Content Adapter: Generates individual stock pages from stocks.json
-  Each stock in the data becomes a page at /stocks/{symbol}/
 */}}
 
 {{ $data := dict }}
@@ -16,7 +15,6 @@
     "kind" "page"
     "path" $slug
     "title" (printf "%s (%s) - Below The Line" .name .symbol)
-    "content" ""
     "params" (dict
       "symbol" .symbol
       "name" .name
