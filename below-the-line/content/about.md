@@ -1,9 +1,9 @@
 ---
 title: "About"
-description: "About Below The Line and the 200-week moving average methodology."
+description: "About mungbeans.io and the 200-week moving average methodology."
 ---
 
-# About Below The Line
+# About mungbeans.io
 
 ## The Idea
 
@@ -15,7 +15,7 @@ Whether or not Munger actually said this, the concept is sound: the 200-week mov
 
 ## What This Tool Does
 
-Below The Line answers one simple question for each stock:
+mungbeans.io answers one simple question for each stock:
 
 **Is it below its 200-week moving average? Yes or no.**
 
