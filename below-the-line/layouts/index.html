@@ -173,6 +173,20 @@
 
     <!-- All Stocks Link -->
     <section class="all-stocks-cta">
+      <!-- Email Signup -->
+    <section class="email-signup">
+      <h2>📬 Get Notified</h2>
+      <p>Get a weekly email when stocks cross below their 200-week line.</p>
+      <form name="notify" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="signup-form">
+        <input type="hidden" name="form-name" value="notify">
+        <p class="hidden" style="display:none;">
+          <label>Don't fill this out: <input name="bot-field"></label>
+        </p>
+        <input type="email" name="email" placeholder="you@example.com" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="signup-note">No spam. Unsubscribe anytime.</p>
+    </section>
       <a href="/stocks/" class="cta-button">View All {{ $data.summary.total_stocks }} Stocks →</a>
     </section>
   </main>
