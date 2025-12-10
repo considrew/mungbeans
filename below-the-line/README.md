@@ -25,7 +25,7 @@ A simple stock screening tool that tracks when quality stocks drop below their 2
 
 3. **Set your API key**
    ```bash
-   export ALPHA_VANTAGE_KEY="your_api_key_here"
+   export ALPHA_VANTAGE_KEY="4RJ3Q220NSRGS26P"
    ```
 
 4. **Update stock data** (optional - sample data included)
