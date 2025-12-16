@@ -78,6 +78,34 @@ STOCK_UNIVERSE = [
     'TXN', 'PM', 'RTX', 'ORCL', 'HON', 'UNP', 'IBM', 'QCOM', 'SPGI', 'CAT',
     'GE', 'AMGN', 'INTU', 'AMAT', 'ISRG', 'BKNG', 'PLD', 'MDLZ', 'GS', 'BLK',
     'INTC', 'AMD', 'CRM', 'NOW', 'UBER', 'SQ', 'SHOP', 'ZS', 'PANW', 'FTNT',
+
+    # === REDDIT POPULAR / MEME STOCKS ===
+    'TSM',    # Taiwan Semiconductor
+    'GME',    # GameStop
+    'AMC',    # AMC Entertainment
+    'RIVN',   # Rivian Automotive
+    'LCID',   # Lucid Group
+    'PYPL',   # PayPal
+    'DIS',    # Disney
+    'BABA',   # Alibaba
+    'ARM',    # Arm Holdings
+
+    # === VALUE INVESTING (/r/valueinvesting) ===
+    'GILD',   # Gilead Sciences
+    'BMY',    # Bristol-Myers Squibb
+    'VZ',     # Verizon
+    'T',      # AT&T
+    'WBA',    # Walgreens Boots Alliance
+    'PFE',    # Pfizer
+    'F',      # Ford Motor
+    'GM',     # General Motors
+    'O',      # Realty Income
+    'BTI',    # British American Tobacco
+    'MO',     # Altria
+    'LMT',    # Lockheed Martin
+    'TGT',    # Target
+    'NVO',    # Novo Nordisk
+    'LLY',    # Eli Lilly
 ]
 
 

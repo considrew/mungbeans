@@ -523,5 +523,130 @@
     "name": "Intel Corporation",
     "sector": "Technology",
     "ir_url": "https://www.intc.com"
+  },
+  "TSM": {
+    "name": "Taiwan Semiconductor Manufacturing",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investor.tsmc.com"
+  },
+  "GME": {
+    "name": "GameStop Corp.",
+    "sector": "Consumer Cyclical - Retail",
+    "ir_url": "https://investor.gamestop.com"
+  },
+  "AMC": {
+    "name": "AMC Entertainment Holdings",
+    "sector": "Communication Services - Entertainment",
+    "ir_url": "https://investor.amctheatres.com"
+  },
+  "RIVN": {
+    "name": "Rivian Automotive Inc.",
+    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "ir_url": "https://rivian.com/investors"
+  },
+  "LCID": {
+    "name": "Lucid Group Inc.",
+    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "ir_url": "https://ir.lucidmotors.com"
+  },
+  "PYPL": {
+    "name": "PayPal Holdings Inc.",
+    "sector": "Financial Services - Fintech",
+    "ir_url": "https://investor.pypl.com"
+  },
+  "SQ": {
+    "name": "Block Inc.",
+    "sector": "Financial Services - Fintech",
+    "ir_url": "https://investors.block.xyz"
+  },
+  "DIS": {
+    "name": "The Walt Disney Company",
+    "sector": "Communication Services - Entertainment",
+    "ir_url": "https://thewaltdisneycompany.com/investor-relations"
+  },
+  "BABA": {
+    "name": "Alibaba Group Holding Ltd.",
+    "sector": "Consumer Cyclical - E-Commerce",
+    "ir_url": "https://www.alibabagroup.com/en-US/investor-relations"
+  },
+  "ARM": {
+    "name": "Arm Holdings plc",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investors.arm.com"
+  },
+  "GILD": {
+    "name": "Gilead Sciences Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.gilead.com"
+  },
+  "BMY": {
+    "name": "Bristol-Myers Squibb Company",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investors.bms.com"
+  },
+  "VZ": {
+    "name": "Verizon Communications Inc.",
+    "sector": "Communication Services - Telecom",
+    "ir_url": "https://www.verizon.com/about/investors"
+  },
+  "T": {
+    "name": "AT&T Inc.",
+    "sector": "Communication Services - Telecom",
+    "ir_url": "https://investors.att.com"
+  },
+  "WBA": {
+    "name": "Walgreens Boots Alliance Inc.",
+    "sector": "Healthcare - Pharmacies",
+    "ir_url": "https://investor.walgreensbootsalliance.com"
+  },
+  "PFE": {
+    "name": "Pfizer Inc.",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investors.pfizer.com"
+  },
+  "F": {
+    "name": "Ford Motor Company",
+    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "ir_url": "https://shareholder.ford.com"
+  },
+  "GM": {
+    "name": "General Motors Company",
+    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "ir_url": "https://investor.gm.com"
+  },
+  "O": {
+    "name": "Realty Income Corporation",
+    "sector": "Real Estate - REIT",
+    "ir_url": "https://www.realtyincome.com/investors"
+  },
+  "BTI": {
+    "name": "British American Tobacco plc",
+    "sector": "Consumer Defensive - Tobacco",
+    "ir_url": "https://www.bat.com/investors"
+  },
+  "MO": {
+    "name": "Altria Group Inc.",
+    "sector": "Consumer Defensive - Tobacco",
+    "ir_url": "https://investor.altria.com"
+  },
+  "LMT": {
+    "name": "Lockheed Martin Corporation",
+    "sector": "Industrials - Aerospace & Defense",
+    "ir_url": "https://investors.lockheedmartin.com"
+  },
+  "TGT": {
+    "name": "Target Corporation",
+    "sector": "Consumer Defensive - Retail",
+    "ir_url": "https://investors.target.com"
+  },
+  "NVO": {
+    "name": "Novo Nordisk A/S",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://www.novonordisk.com/investors.html"
+  },
+  "LLY": {
+    "name": "Eli Lilly and Company",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investor.lilly.com"
   }
 }
