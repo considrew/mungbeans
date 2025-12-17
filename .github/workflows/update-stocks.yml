@@ -1,0 +1,41 @@
+name: Weekly Stock Data Update
+
+on:
+  schedule:
+    # Run every Saturday at 6 AM UTC (after Friday market close)
+    - cron: '0 6 * * 6'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  update-stocks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas requests
+
+      - name: Run stock update script
+        env:
+          ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
+        run: |
+          cd below-the-line
+          python scripts/update_stocks.py
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add below-the-line/assets/data/stocks.json
+          git diff --staged --quiet || git commit -m "Update stock data $(date +'%Y-%m-%d')"
+          git push
