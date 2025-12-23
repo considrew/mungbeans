@@ -1,51 +1,56 @@
-name: Weekly Build and Deploy
+name: Weekly Stock Data Update and Deploy
 
 on:
-  # Run every Saturday at 6:00 AM UTC (after markets close Friday)
   schedule:
     - cron: '0 6 * * 6'
-  
-  # Allow manual trigger from GitHub UI
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  update-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Setup Python
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
-      
+
       - name: Install Python dependencies
-        run: |
-          pip install --upgrade pip
-          pip install pandas requests
-      
-      - name: Update stock data
+        run: pip install pandas requests
+
+      - name: Run stock update script
         env:
           ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
-        run: python scripts/update_stocks.py
-      
+        run: |
+          cd below-the-line
+          python scripts/update_stocks.py
+
+      - name: Commit updated data
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add below-the-line/assets/data/stocks.json
+          git diff --staged --quiet || git commit -m "Update stock data $(date +'%Y-%m-%d')"
+          git push
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
           hugo-version: 'latest'
           extended: true
-      
+
       - name: Build site
-        run: hugo --minify
-      
-      # Deploy to Netlify
+        run: |
+          cd below-the-line
+          hugo --minify
+
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: './public'
+          publish-dir: './below-the-line/public'
           production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
