@@ -26,18 +26,18 @@
   },
   "IONQ": {
     "name": "IonQ Inc.",
-    "sector": "Technology - Quantum",
+    "sector": "Technology - Quantum Computing",
     "ir_url": "https://investors.ionq.com"
   },
   "RGTI": {
     "name": "Rigetti Computing Inc.",
-    "sector": "Technology - Quantum",
+    "sector": "Technology - Quantum Computing",
     "ir_url": "https://investors.rigetti.com"
   },
   "SMR": {
     "name": "NuScale Power Corporation",
     "sector": "Energy - Nuclear",
-    "ir_url": "https://www.nuscalepower.com/en/investors"
+    "ir_url": "https://www.nuscalepower.com/investors"
   },
   "LEU": {
     "name": "Centrus Energy Corp.",
@@ -56,32 +56,32 @@
   },
   "PLTR": {
     "name": "Palantir Technologies Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Software",
     "ir_url": "https://investors.palantir.com"
   },
   "SOFI": {
     "name": "SoFi Technologies Inc.",
-    "sector": "Financial Services",
+    "sector": "Financial Services - Fintech",
     "ir_url": "https://investors.sofi.com"
   },
   "HOOD": {
     "name": "Robinhood Markets Inc.",
-    "sector": "Financial Services",
+    "sector": "Financial Services - Fintech",
     "ir_url": "https://investors.robinhood.com"
   },
   "AFRM": {
     "name": "Affirm Holdings Inc.",
-    "sector": "Financial Services",
+    "sector": "Financial Services - Fintech",
     "ir_url": "https://investors.affirm.com"
   },
   "UPST": {
     "name": "Upstart Holdings Inc.",
-    "sector": "Financial Services",
+    "sector": "Financial Services - Fintech",
     "ir_url": "https://ir.upstart.com"
   },
   "PATH": {
     "name": "UiPath Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Software",
     "ir_url": "https://investor.uipath.com"
   },
   "S": {
@@ -96,67 +96,417 @@
   },
   "NET": {
     "name": "Cloudflare Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investors.cloudflare.com"
+    "sector": "Technology - Cloud Infrastructure",
+    "ir_url": "https://cloudflare.net/investor-relations"
   },
   "DDOG": {
     "name": "Datadog Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Cloud Software",
     "ir_url": "https://investors.datadoghq.com"
   },
   "SNOW": {
     "name": "Snowflake Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Cloud Data",
     "ir_url": "https://investors.snowflake.com"
   },
   "MDB": {
     "name": "MongoDB Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Database",
     "ir_url": "https://investors.mongodb.com"
   },
   "COIN": {
     "name": "Coinbase Global Inc.",
-    "sector": "Financial Services - Crypto",
+    "sector": "Financial Services - Cryptocurrency",
     "ir_url": "https://investor.coinbase.com"
   },
   "MSTR": {
     "name": "MicroStrategy Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Business Intelligence",
     "ir_url": "https://www.microstrategy.com/investor-relations"
   },
   "ARKK": {
     "name": "ARK Innovation ETF",
-    "sector": "ETF",
-    "ir_url": "https://ark-invest.com/arkk"
+    "sector": "ETF - Growth",
+    "ir_url": "https://ark-funds.com/arkk"
+  },
+  "AAPL": {
+    "name": "Apple Inc.",
+    "sector": "Technology - Consumer Electronics",
+    "ir_url": "https://investor.apple.com"
+  },
+  "BAC": {
+    "name": "Bank of America Corporation",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://investor.bankofamerica.com"
+  },
+  "AXP": {
+    "name": "American Express Company",
+    "sector": "Financial Services - Credit Cards",
+    "ir_url": "https://ir.americanexpress.com"
+  },
+  "KO": {
+    "name": "The Coca-Cola Company",
+    "sector": "Consumer Staples - Beverages",
+    "ir_url": "https://investors.coca-colacompany.com"
+  },
+  "CVX": {
+    "name": "Chevron Corporation",
+    "sector": "Energy - Oil & Gas",
+    "ir_url": "https://www.chevron.com/investors"
+  },
+  "OXY": {
+    "name": "Occidental Petroleum Corporation",
+    "sector": "Energy - Oil & Gas",
+    "ir_url": "https://www.oxy.com/investors/"
+  },
+  "KHC": {
+    "name": "The Kraft Heinz Company",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://ir.kraftheinzcompany.com"
+  },
+  "MCO": {
+    "name": "Moody's Corporation",
+    "sector": "Financial Services - Ratings",
+    "ir_url": "https://ir.moodys.com"
+  },
+  "CB": {
+    "name": "Chubb Limited",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://investors.chubb.com"
+  },
+  "DVA": {
+    "name": "DaVita Inc.",
+    "sector": "Healthcare - Dialysis Services",
+    "ir_url": "https://investors.davita.com"
+  },
+  "C": {
+    "name": "Citigroup Inc.",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://www.citigroup.com/global/investors"
+  },
+  "KR": {
+    "name": "The Kroger Co.",
+    "sector": "Consumer Staples - Grocery",
+    "ir_url": "https://ir.kroger.com"
+  },
+  "VRSN": {
+    "name": "VeriSign Inc.",
+    "sector": "Technology - Internet Infrastructure",
+    "ir_url": "https://investor.verisign.com"
+  },
+  "V": {
+    "name": "Visa Inc.",
+    "sector": "Financial Services - Payments",
+    "ir_url": "https://investor.visa.com"
+  },
+  "MA": {
+    "name": "Mastercard Incorporated",
+    "sector": "Financial Services - Payments",
+    "ir_url": "https://investor.mastercard.com"
+  },
+  "AMZN": {
+    "name": "Amazon.com Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://ir.aboutamazon.com"
+  },
+  "NU": {
+    "name": "Nu Holdings Ltd.",
+    "sector": "Financial Services - Fintech",
+    "ir_url": "https://investors.nu"
+  },
+  "AON": {
+    "name": "Aon plc",
+    "sector": "Financial Services - Insurance Brokerage",
+    "ir_url": "https://www.aon.com/investor-relations"
+  },
+  "COF": {
+    "name": "Capital One Financial Corporation",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://investor.capitalone.com"
+  },
+  "ALLY": {
+    "name": "Ally Financial Inc.",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://www.ally.com/about/investor/"
+  },
+  "MSFT": {
+    "name": "Microsoft Corporation",
+    "sector": "Technology - Software",
+    "ir_url": "https://www.microsoft.com/investor"
+  },
+  "GOOGL": {
+    "name": "Alphabet Inc. (Class A)",
+    "sector": "Technology - Internet Services",
+    "ir_url": "https://abc.xyz/investor/"
+  },
+  "GOOG": {
+    "name": "Alphabet Inc. (Class C)",
+    "sector": "Technology - Internet Services",
+    "ir_url": "https://abc.xyz/investor/"
+  },
+  "META": {
+    "name": "Meta Platforms Inc.",
+    "sector": "Technology - Social Media",
+    "ir_url": "https://investor.fb.com"
+  },
+  "NVDA": {
+    "name": "NVIDIA Corporation",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investor.nvidia.com"
+  },
+  "TSLA": {
+    "name": "Tesla Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://ir.tesla.com"
+  },
+  "BRK-B": {
+    "name": "Berkshire Hathaway Inc. (Class B)",
+    "sector": "Financial Services - Conglomerate",
+    "ir_url": "https://www.berkshirehathaway.com"
+  },
+  "JPM": {
+    "name": "JPMorgan Chase & Co.",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://www.jpmorganchase.com/ir"
+  },
+  "JNJ": {
+    "name": "Johnson & Johnson",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investor.jnj.com"
+  },
+  "UNH": {
+    "name": "UnitedHealth Group Incorporated",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://www.unitedhealthgroup.com/investors.html"
+  },
+  "XOM": {
+    "name": "Exxon Mobil Corporation",
+    "sector": "Energy - Oil & Gas",
+    "ir_url": "https://investor.exxonmobil.com"
+  },
+  "PG": {
+    "name": "The Procter & Gamble Company",
+    "sector": "Consumer Staples - Household Products",
+    "ir_url": "https://pginvestor.com"
+  },
+  "HD": {
+    "name": "The Home Depot Inc.",
+    "sector": "Consumer Discretionary - Home Improvement",
+    "ir_url": "https://ir.homedepot.com"
+  },
+  "MRK": {
+    "name": "Merck & Co. Inc.",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://www.merck.com/investor-relations/"
+  },
+  "ABBV": {
+    "name": "AbbVie Inc.",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investors.abbvie.com"
+  },
+  "PEP": {
+    "name": "PepsiCo Inc.",
+    "sector": "Consumer Staples - Beverages",
+    "ir_url": "https://investor.pepsico.com"
+  },
+  "COST": {
+    "name": "Costco Wholesale Corporation",
+    "sector": "Consumer Staples - Retail",
+    "ir_url": "https://investor.costco.com"
+  },
+  "AVGO": {
+    "name": "Broadcom Inc.",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investors.broadcom.com"
+  },
+  "TMO": {
+    "name": "Thermo Fisher Scientific Inc.",
+    "sector": "Healthcare - Life Sciences",
+    "ir_url": "https://ir.thermofisher.com"
+  },
+  "MCD": {
+    "name": "McDonald's Corporation",
+    "sector": "Consumer Discretionary - Restaurants",
+    "ir_url": "https://investor.mcdonalds.com"
+  },
+  "WMT": {
+    "name": "Walmart Inc.",
+    "sector": "Consumer Staples - Retail",
+    "ir_url": "https://stock.walmart.com"
+  },
+  "CSCO": {
+    "name": "Cisco Systems Inc.",
+    "sector": "Technology - Networking",
+    "ir_url": "https://investor.cisco.com"
+  },
+  "ACN": {
+    "name": "Accenture plc",
+    "sector": "Technology - IT Services",
+    "ir_url": "https://investor.accenture.com"
+  },
+  "LIN": {
+    "name": "Linde plc",
+    "sector": "Materials - Industrial Gases",
+    "ir_url": "https://www.linde.com/investors"
+  },
+  "ABT": {
+    "name": "Abbott Laboratories",
+    "sector": "Healthcare - Medical Devices",
+    "ir_url": "https://www.abbottinvestor.com"
+  },
+  "DHR": {
+    "name": "Danaher Corporation",
+    "sector": "Healthcare - Life Sciences",
+    "ir_url": "https://investors.danaher.com"
+  },
+  "NEE": {
+    "name": "NextEra Energy Inc.",
+    "sector": "Utilities - Renewable Energy",
+    "ir_url": "https://www.investor.nexteraenergy.com"
+  },
+  "ADBE": {
+    "name": "Adobe Inc.",
+    "sector": "Technology - Software",
+    "ir_url": "https://www.adobe.com/investor-relations.html"
+  },
+  "NKE": {
+    "name": "NIKE Inc.",
+    "sector": "Consumer Discretionary - Apparel",
+    "ir_url": "https://investors.nike.com"
+  },
+  "TXN": {
+    "name": "Texas Instruments Incorporated",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investor.ti.com"
+  },
+  "PM": {
+    "name": "Philip Morris International Inc.",
+    "sector": "Consumer Staples - Tobacco",
+    "ir_url": "https://www.pmi.com/investor-relations"
+  },
+  "RTX": {
+    "name": "RTX Corporation",
+    "sector": "Industrials - Aerospace & Defense",
+    "ir_url": "https://www.rtx.com/investors"
+  },
+  "ORCL": {
+    "name": "Oracle Corporation",
+    "sector": "Technology - Software",
+    "ir_url": "https://investor.oracle.com"
+  },
+  "HON": {
+    "name": "Honeywell International Inc.",
+    "sector": "Industrials - Conglomerate",
+    "ir_url": "https://investor.honeywell.com"
+  },
+  "UNP": {
+    "name": "Union Pacific Corporation",
+    "sector": "Industrials - Railroads",
+    "ir_url": "https://www.up.com/investor"
+  },
+  "IBM": {
+    "name": "International Business Machines Corporation",
+    "sector": "Technology - IT Services",
+    "ir_url": "https://www.ibm.com/investor"
+  },
+  "QCOM": {
+    "name": "QUALCOMM Incorporated",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://investor.qualcomm.com"
+  },
+  "SPGI": {
+    "name": "S&P Global Inc.",
+    "sector": "Financial Services - Data & Analytics",
+    "ir_url": "https://investor.spglobal.com"
+  },
+  "CAT": {
+    "name": "Caterpillar Inc.",
+    "sector": "Industrials - Machinery",
+    "ir_url": "https://www.caterpillar.com/investors"
+  },
+  "GE": {
+    "name": "GE Aerospace",
+    "sector": "Industrials - Aerospace",
+    "ir_url": "https://www.geaerospace.com/investor-relations"
+  },
+  "AMGN": {
+    "name": "Amgen Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.amgen.com"
+  },
+  "INTU": {
+    "name": "Intuit Inc.",
+    "sector": "Technology - Software",
+    "ir_url": "https://investors.intuit.com"
+  },
+  "AMAT": {
+    "name": "Applied Materials Inc.",
+    "sector": "Technology - Semiconductor Equipment",
+    "ir_url": "https://ir.appliedmaterials.com"
+  },
+  "ISRG": {
+    "name": "Intuitive Surgical Inc.",
+    "sector": "Healthcare - Medical Devices",
+    "ir_url": "https://isrg.intuitive.com/investor-relations"
+  },
+  "BKNG": {
+    "name": "Booking Holdings Inc.",
+    "sector": "Consumer Discretionary - Travel",
+    "ir_url": "https://ir.bookingholdings.com"
+  },
+  "PLD": {
+    "name": "Prologis Inc.",
+    "sector": "Real Estate - Industrial REITs",
+    "ir_url": "https://ir.prologis.com"
+  },
+  "MDLZ": {
+    "name": "Mondelez International Inc.",
+    "sector": "Consumer Staples - Snacks",
+    "ir_url": "https://ir.mondelezinternational.com"
+  },
+  "GS": {
+    "name": "The Goldman Sachs Group Inc.",
+    "sector": "Financial Services - Investment Banking",
+    "ir_url": "https://www.goldmansachs.com/investor-relations"
+  },
+  "BLK": {
+    "name": "BlackRock Inc.",
+    "sector": "Financial Services - Asset Management",
+    "ir_url": "https://ir.blackrock.com"
+  },
+  "INTC": {
+    "name": "Intel Corporation",
+    "sector": "Technology - Semiconductors",
+    "ir_url": "https://www.intc.com"
   },
   "AMD": {
     "name": "Advanced Micro Devices Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Semiconductors",
     "ir_url": "https://ir.amd.com"
   },
   "CRM": {
     "name": "Salesforce Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Cloud Software",
     "ir_url": "https://investor.salesforce.com"
   },
   "NOW": {
     "name": "ServiceNow Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Cloud Software",
     "ir_url": "https://investors.servicenow.com"
   },
   "UBER": {
     "name": "Uber Technologies Inc.",
-    "sector": "Technology",
+    "sector": "Technology - Ridesharing",
     "ir_url": "https://investor.uber.com"
   },
   "SQ": {
     "name": "Block Inc.",
-    "sector": "Financial Services",
+    "sector": "Financial Services - Payments",
     "ir_url": "https://investors.block.xyz"
   },
   "SHOP": {
     "name": "Shopify Inc.",
-    "sector": "Technology",
+    "sector": "Technology - E-Commerce Platform",
     "ir_url": "https://investors.shopify.com"
   },
   "ZS": {
@@ -174,390 +524,35 @@
     "sector": "Technology - Cybersecurity",
     "ir_url": "https://investor.fortinet.com"
   },
-  "AAPL": {
-    "name": "Apple Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.apple.com"
-  },
-  "MSFT": {
-    "name": "Microsoft Corporation",
-    "sector": "Technology",
-    "ir_url": "https://www.microsoft.com/en-us/investor"
-  },
-  "GOOGL": {
-    "name": "Alphabet Inc.",
-    "sector": "Technology",
-    "ir_url": "https://abc.xyz/investor/"
-  },
-  "GOOG": {
-    "name": "Alphabet Inc. (Class C)",
-    "sector": "Technology",
-    "ir_url": "https://abc.xyz/investor/"
-  },
-  "AMZN": {
-    "name": "Amazon.com Inc.",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://ir.aboutamazon.com"
-  },
-  "META": {
-    "name": "Meta Platforms Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.fb.com"
-  },
-  "NVDA": {
-    "name": "NVIDIA Corporation",
-    "sector": "Technology",
-    "ir_url": "https://investor.nvidia.com"
-  },
-  "TSLA": {
-    "name": "Tesla Inc.",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://ir.tesla.com"
-  },
-  "BRK-B": {
-    "name": "Berkshire Hathaway Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://www.berkshirehathaway.com"
-  },
-  "JPM": {
-    "name": "JPMorgan Chase & Co.",
-    "sector": "Financial Services",
-    "ir_url": "https://www.jpmorganchase.com/ir"
-  },
-  "JNJ": {
-    "name": "Johnson & Johnson",
-    "sector": "Healthcare",
-    "ir_url": "https://www.investor.jnj.com"
-  },
-  "UNH": {
-    "name": "UnitedHealth Group Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://www.unitedhealthgroup.com/investors.html"
-  },
-  "XOM": {
-    "name": "Exxon Mobil Corporation",
-    "sector": "Energy",
-    "ir_url": "https://investor.exxonmobil.com"
-  },
-  "V": {
-    "name": "Visa Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://investor.visa.com"
-  },
-  "MA": {
-    "name": "Mastercard Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://investor.mastercard.com"
-  },
-  "PG": {
-    "name": "Procter & Gamble Co.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://pginvestor.com"
-  },
-  "HD": {
-    "name": "The Home Depot Inc.",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://ir.homedepot.com"
-  },
-  "MRK": {
-    "name": "Merck & Co. Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://www.merck.com/investor-relations/"
-  },
-  "ABBV": {
-    "name": "AbbVie Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://investors.abbvie.com"
-  },
-  "PEP": {
-    "name": "PepsiCo Inc.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://www.pepsico.com/our-stories/investors"
-  },
-  "KO": {
-    "name": "The Coca-Cola Company",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://investors.coca-colacompany.com"
-  },
-  "COST": {
-    "name": "Costco Wholesale Corporation",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://investor.costco.com"
-  },
-  "AVGO": {
-    "name": "Broadcom Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investors.broadcom.com"
-  },
-  "TMO": {
-    "name": "Thermo Fisher Scientific Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://ir.thermofisher.com"
-  },
-  "MCD": {
-    "name": "McDonald's Corporation",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://investor.mcdonalds.com"
-  },
-  "WMT": {
-    "name": "Walmart Inc.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://stock.walmart.com"
-  },
-  "CSCO": {
-    "name": "Cisco Systems Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.cisco.com"
-  },
-  "ACN": {
-    "name": "Accenture plc",
-    "sector": "Technology",
-    "ir_url": "https://investor.accenture.com"
-  },
-  "LIN": {
-    "name": "Linde plc",
-    "sector": "Basic Materials",
-    "ir_url": "https://investors.linde.com"
-  },
-  "ABT": {
-    "name": "Abbott Laboratories",
-    "sector": "Healthcare",
-    "ir_url": "https://www.abbottinvestor.com"
-  },
-  "DHR": {
-    "name": "Danaher Corporation",
-    "sector": "Healthcare",
-    "ir_url": "https://investors.danaher.com"
-  },
-  "NEE": {
-    "name": "NextEra Energy Inc.",
-    "sector": "Utilities",
-    "ir_url": "https://www.investor.nexteraenergy.com"
-  },
-  "ADBE": {
-    "name": "Adobe Inc.",
-    "sector": "Technology",
-    "ir_url": "https://www.adobe.com/investor-relations.html"
-  },
-  "NKE": {
-    "name": "Nike Inc.",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://investors.nike.com"
-  },
-  "TXN": {
-    "name": "Texas Instruments Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.ti.com"
-  },
-  "PM": {
-    "name": "Philip Morris International Inc.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://www.pmi.com/investor-relations"
-  },
-  "RTX": {
-    "name": "RTX Corporation",
-    "sector": "Industrials",
-    "ir_url": "https://www.rtx.com/investors"
-  },
-  "ORCL": {
-    "name": "Oracle Corporation",
-    "sector": "Technology",
-    "ir_url": "https://investor.oracle.com"
-  },
-  "HON": {
-    "name": "Honeywell International Inc.",
-    "sector": "Industrials",
-    "ir_url": "https://investor.honeywell.com"
-  },
-  "UNP": {
-    "name": "Union Pacific Corporation",
-    "sector": "Industrials",
-    "ir_url": "https://www.up.com/investor/index.htm"
-  },
-  "IBM": {
-    "name": "International Business Machines",
-    "sector": "Technology",
-    "ir_url": "https://www.ibm.com/investor"
-  },
-  "QCOM": {
-    "name": "Qualcomm Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.qualcomm.com"
-  },
-  "SPGI": {
-    "name": "S&P Global Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://investor.spglobal.com"
-  },
-  "CAT": {
-    "name": "Caterpillar Inc.",
-    "sector": "Industrials",
-    "ir_url": "https://www.caterpillar.com/investors"
-  },
-  "GE": {
-    "name": "General Electric Company",
-    "sector": "Industrials",
-    "ir_url": "https://www.ge.com/investor-relations"
-  },
-  "AMGN": {
-    "name": "Amgen Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://investors.amgen.com"
-  },
-  "INTU": {
-    "name": "Intuit Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investors.intuit.com"
-  },
-  "AMAT": {
-    "name": "Applied Materials Inc.",
-    "sector": "Technology",
-    "ir_url": "https://ir.appliedmaterials.com"
-  },
-  "ISRG": {
-    "name": "Intuitive Surgical Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://isrg.intuitive.com/investors"
-  },
-  "BKNG": {
-    "name": "Booking Holdings Inc.",
-    "sector": "Consumer Cyclical",
-    "ir_url": "https://ir.bookingholdings.com"
-  },
-  "PLD": {
-    "name": "Prologis Inc.",
-    "sector": "Real Estate",
-    "ir_url": "https://ir.prologis.com"
-  },
-  "MDLZ": {
-    "name": "Mondelez International Inc.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://ir.mondelezinternational.com"
-  },
-  "GS": {
-    "name": "Goldman Sachs Group Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://www.goldmansachs.com/investor-relations/"
-  },
-  "BLK": {
-    "name": "BlackRock Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://ir.blackrock.com"
-  },
-  "BAC": {
-    "name": "Bank of America Corporation",
-    "sector": "Financial Services",
-    "ir_url": "https://investor.bankofamerica.com"
-  },
-  "AXP": {
-    "name": "American Express Company",
-    "sector": "Financial Services",
-    "ir_url": "https://ir.americanexpress.com"
-  },
-  "CVX": {
-    "name": "Chevron Corporation",
-    "sector": "Energy",
-    "ir_url": "https://www.chevron.com/investors"
-  },
-  "OXY": {
-    "name": "Occidental Petroleum Corporation",
-    "sector": "Energy",
-    "ir_url": "https://www.oxy.com/investors/"
-  },
-  "KHC": {
-    "name": "The Kraft Heinz Company",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://ir.kraftheinzcompany.com"
-  },
-  "MCO": {
-    "name": "Moody's Corporation",
-    "sector": "Financial Services",
-    "ir_url": "https://ir.moodys.com"
-  },
-  "CB": {
-    "name": "Chubb Limited",
-    "sector": "Financial Services",
-    "ir_url": "https://investors.chubb.com"
-  },
-  "DVA": {
-    "name": "DaVita Inc.",
-    "sector": "Healthcare",
-    "ir_url": "https://investors.davita.com"
-  },
-  "C": {
-    "name": "Citigroup Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://www.citigroup.com/global/investors"
-  },
-  "KR": {
-    "name": "The Kroger Co.",
-    "sector": "Consumer Defensive",
-    "ir_url": "https://ir.kroger.com"
-  },
-  "VRSN": {
-    "name": "VeriSign Inc.",
-    "sector": "Technology",
-    "ir_url": "https://investor.verisign.com"
-  },
-  "NU": {
-    "name": "Nu Holdings Ltd.",
-    "sector": "Financial Services",
-    "ir_url": "https://investors.nu"
-  },
-  "AON": {
-    "name": "Aon plc",
-    "sector": "Financial Services",
-    "ir_url": "https://www.aon.com/investor-relations"
-  },
-  "COF": {
-    "name": "Capital One Financial Corporation",
-    "sector": "Financial Services",
-    "ir_url": "https://ir.capitalone.com"
-  },
-  "ALLY": {
-    "name": "Ally Financial Inc.",
-    "sector": "Financial Services",
-    "ir_url": "https://www.ally.com/about/investor/"
-  },
-  "INTC": {
-    "name": "Intel Corporation",
-    "sector": "Technology",
-    "ir_url": "https://www.intc.com"
-  },
   "TSM": {
-    "name": "Taiwan Semiconductor Manufacturing",
+    "name": "Taiwan Semiconductor Manufacturing Company",
     "sector": "Technology - Semiconductors",
     "ir_url": "https://investor.tsmc.com"
   },
   "GME": {
     "name": "GameStop Corp.",
-    "sector": "Consumer Cyclical - Retail",
+    "sector": "Consumer Discretionary - Retail",
     "ir_url": "https://investor.gamestop.com"
   },
   "AMC": {
-    "name": "AMC Entertainment Holdings",
-    "sector": "Communication Services - Entertainment",
+    "name": "AMC Entertainment Holdings Inc.",
+    "sector": "Consumer Discretionary - Entertainment",
     "ir_url": "https://investor.amctheatres.com"
   },
   "RIVN": {
     "name": "Rivian Automotive Inc.",
-    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "sector": "Consumer Discretionary - Electric Vehicles",
     "ir_url": "https://rivian.com/investors"
   },
   "LCID": {
     "name": "Lucid Group Inc.",
-    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "sector": "Consumer Discretionary - Electric Vehicles",
     "ir_url": "https://ir.lucidmotors.com"
   },
   "PYPL": {
     "name": "PayPal Holdings Inc.",
-    "sector": "Financial Services - Fintech",
+    "sector": "Financial Services - Payments",
     "ir_url": "https://investor.pypl.com"
-  },
-  "SQ": {
-    "name": "Block Inc.",
-    "sector": "Financial Services - Fintech",
-    "ir_url": "https://investors.block.xyz"
   },
   "DIS": {
     "name": "The Walt Disney Company",
@@ -565,9 +560,9 @@
     "ir_url": "https://thewaltdisneycompany.com/investor-relations"
   },
   "BABA": {
-    "name": "Alibaba Group Holding Ltd.",
-    "sector": "Consumer Cyclical - E-Commerce",
-    "ir_url": "https://www.alibabagroup.com/en-US/investor-relations"
+    "name": "Alibaba Group Holding Limited",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://www.alibabagroup.com/en/ir"
   },
   "ARM": {
     "name": "Arm Holdings plc",
@@ -582,7 +577,7 @@
   "BMY": {
     "name": "Bristol-Myers Squibb Company",
     "sector": "Healthcare - Pharmaceuticals",
-    "ir_url": "https://investors.bms.com"
+    "ir_url": "https://www.bms.com/investors.html"
   },
   "VZ": {
     "name": "Verizon Communications Inc.",
@@ -596,7 +591,7 @@
   },
   "WBA": {
     "name": "Walgreens Boots Alliance Inc.",
-    "sector": "Healthcare - Pharmacies",
+    "sector": "Healthcare - Pharmacy Retail",
     "ir_url": "https://investor.walgreensbootsalliance.com"
   },
   "PFE": {
@@ -606,47 +601,522 @@
   },
   "F": {
     "name": "Ford Motor Company",
-    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "sector": "Consumer Discretionary - Automobiles",
     "ir_url": "https://shareholder.ford.com"
   },
   "GM": {
     "name": "General Motors Company",
-    "sector": "Consumer Cyclical - Auto Manufacturers",
+    "sector": "Consumer Discretionary - Automobiles",
     "ir_url": "https://investor.gm.com"
   },
   "O": {
     "name": "Realty Income Corporation",
-    "sector": "Real Estate - REIT",
+    "sector": "Real Estate - Retail REITs",
     "ir_url": "https://www.realtyincome.com/investors"
   },
-  "BTI": {
-    "name": "British American Tobacco plc",
-    "sector": "Consumer Defensive - Tobacco",
-    "ir_url": "https://www.bat.com/investors"
+  "SCHD": {
+    "name": "Schwab U.S. Dividend Equity ETF",
+    "sector": "ETF - Dividend",
+    "ir_url": "https://www.schwabassetmanagement.com/products/schd"
   },
-  "MO": {
-    "name": "Altria Group Inc.",
-    "sector": "Consumer Defensive - Tobacco",
-    "ir_url": "https://investor.altria.com"
+  "WFC": {
+    "name": "Wells Fargo & Company",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://www.wellsfargo.com/about/investor-relations/"
   },
-  "LMT": {
-    "name": "Lockheed Martin Corporation",
-    "sector": "Industrials - Aerospace & Defense",
-    "ir_url": "https://investors.lockheedmartin.com"
+  "USB": {
+    "name": "U.S. Bancorp",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.usbank.com"
   },
-  "TGT": {
-    "name": "Target Corporation",
-    "sector": "Consumer Defensive - Retail",
-    "ir_url": "https://investors.target.com"
+  "PNC": {
+    "name": "The PNC Financial Services Group Inc.",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://investor.pnc.com"
   },
-  "NVO": {
-    "name": "Novo Nordisk A/S",
+  "TFC": {
+    "name": "Truist Financial Corporation",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.truist.com"
+  },
+  "SCHW": {
+    "name": "The Charles Schwab Corporation",
+    "sector": "Financial Services - Brokerage",
+    "ir_url": "https://www.aboutschwab.com/investor-relations"
+  },
+  "MS": {
+    "name": "Morgan Stanley",
+    "sector": "Financial Services - Investment Banking",
+    "ir_url": "https://www.morganstanley.com/about-us-ir"
+  },
+  "AIG": {
+    "name": "American International Group Inc.",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://www.aig.com/investor-relations"
+  },
+  "MET": {
+    "name": "MetLife Inc.",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://investor.metlife.com"
+  },
+  "PRU": {
+    "name": "Prudential Financial Inc.",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://investor.prudential.com"
+  },
+  "ALL": {
+    "name": "The Allstate Corporation",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://www.allstateinvestors.com"
+  },
+  "TRV": {
+    "name": "The Travelers Companies Inc.",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://investor.travelers.com"
+  },
+  "AFL": {
+    "name": "Aflac Incorporated",
+    "sector": "Financial Services - Insurance",
+    "ir_url": "https://investors.aflac.com"
+  },
+  "CME": {
+    "name": "CME Group Inc.",
+    "sector": "Financial Services - Exchanges",
+    "ir_url": "https://investor.cmegroup.com"
+  },
+  "ICE": {
+    "name": "Intercontinental Exchange Inc.",
+    "sector": "Financial Services - Exchanges",
+    "ir_url": "https://ir.theice.com"
+  },
+  "FITB": {
+    "name": "Fifth Third Bancorp",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.53.com"
+  },
+  "KEY": {
+    "name": "KeyCorp",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://investor.key.com"
+  },
+  "RF": {
+    "name": "Regions Financial Corporation",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.regions.com"
+  },
+  "CFG": {
+    "name": "Citizens Financial Group Inc.",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://investor.citizensbank.com"
+  },
+  "MTB": {
+    "name": "M&T Bank Corporation",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.mtb.com"
+  },
+  "HBAN": {
+    "name": "Huntington Bancshares Incorporated",
+    "sector": "Financial Services - Banking",
+    "ir_url": "https://ir.huntington.com"
+  },
+  "DUK": {
+    "name": "Duke Energy Corporation",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.duke-energy.com/investors"
+  },
+  "SO": {
+    "name": "The Southern Company",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://investor.southerncompany.com"
+  },
+  "D": {
+    "name": "Dominion Energy Inc.",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://investors.dominionenergy.com"
+  },
+  "AEP": {
+    "name": "American Electric Power Company Inc.",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.aep.com/investors/"
+  },
+  "XEL": {
+    "name": "Xcel Energy Inc.",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://investors.xcelenergy.com"
+  },
+  "EXC": {
+    "name": "Exelon Corporation",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.exeloncorp.com/investor-relations"
+  },
+  "SRE": {
+    "name": "Sempra",
+    "sector": "Utilities - Multi-Utilities",
+    "ir_url": "https://investor.sempra.com"
+  },
+  "ED": {
+    "name": "Consolidated Edison Inc.",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://investor.conedison.com"
+  },
+  "WEC": {
+    "name": "WEC Energy Group Inc.",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.wecenergygroup.com/invest/"
+  },
+  "ES": {
+    "name": "Eversource Energy",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.eversource.com/investors"
+  },
+  "PPL": {
+    "name": "PPL Corporation",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://investors.pplweb.com"
+  },
+  "ETR": {
+    "name": "Entergy Corporation",
+    "sector": "Utilities - Electric",
+    "ir_url": "https://www.entergy.com/investors/"
+  },
+  "AES": {
+    "name": "The AES Corporation",
+    "sector": "Utilities - Renewable Energy",
+    "ir_url": "https://investor.aes.com"
+  },
+  "CNP": {
+    "name": "CenterPoint Energy Inc.",
+    "sector": "Utilities - Multi-Utilities",
+    "ir_url": "https://investors.centerpointenergy.com"
+  },
+  "NI": {
+    "name": "NiSource Inc.",
+    "sector": "Utilities - Gas",
+    "ir_url": "https://investors.nisource.com"
+  },
+  "CL": {
+    "name": "Colgate-Palmolive Company",
+    "sector": "Consumer Staples - Household Products",
+    "ir_url": "https://investor.colgatepalmolive.com"
+  },
+  "GIS": {
+    "name": "General Mills Inc.",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://investors.generalmills.com"
+  },
+  "SJM": {
+    "name": "The J.M. Smucker Company",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://investors.jmsmucker.com"
+  },
+  "CPB": {
+    "name": "Campbell Soup Company",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://investor.campbellsoupcompany.com"
+  },
+  "CAG": {
+    "name": "Conagra Brands Inc.",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://www.conagrabrands.com/investor-relations"
+  },
+  "HRL": {
+    "name": "Hormel Foods Corporation",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://www.hormelfoods.com/investors/"
+  },
+  "MKC": {
+    "name": "McCormick & Company Inc.",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://ir.mccormick.com"
+  },
+  "CHD": {
+    "name": "Church & Dwight Co. Inc.",
+    "sector": "Consumer Staples - Household Products",
+    "ir_url": "https://investor.churchdwight.com"
+  },
+  "CLX": {
+    "name": "The Clorox Company",
+    "sector": "Consumer Staples - Household Products",
+    "ir_url": "https://investors.thecloroxcompany.com"
+  },
+  "KMB": {
+    "name": "Kimberly-Clark Corporation",
+    "sector": "Consumer Staples - Household Products",
+    "ir_url": "https://investor.kimberly-clark.com"
+  },
+  "TAP": {
+    "name": "Molson Coors Beverage Company",
+    "sector": "Consumer Staples - Beverages",
+    "ir_url": "https://ir.molsoncoors.com"
+  },
+  "STZ": {
+    "name": "Constellation Brands Inc.",
+    "sector": "Consumer Staples - Beverages",
+    "ir_url": "https://www.cbrands.com/investors"
+  },
+  "BG": {
+    "name": "Bunge Global SA",
+    "sector": "Consumer Staples - Agricultural Products",
+    "ir_url": "https://investors.bunge.com"
+  },
+  "ADM": {
+    "name": "Archer-Daniels-Midland Company",
+    "sector": "Consumer Staples - Agricultural Products",
+    "ir_url": "https://investors.adm.com"
+  },
+  "K": {
+    "name": "Kellanova",
+    "sector": "Consumer Staples - Food",
+    "ir_url": "https://investor.kellanova.com"
+  },
+  "CVS": {
+    "name": "CVS Health Corporation",
+    "sector": "Healthcare - Pharmacy & Healthcare",
+    "ir_url": "https://investors.cvshealth.com"
+  },
+  "CI": {
+    "name": "The Cigna Group",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://investors.cigna.com"
+  },
+  "HUM": {
+    "name": "Humana Inc.",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://humana.gcs-web.com"
+  },
+  "CNC": {
+    "name": "Centene Corporation",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://investors.centene.com"
+  },
+  "ELV": {
+    "name": "Elevance Health Inc.",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://ir.elevancehealth.com"
+  },
+  "MCK": {
+    "name": "McKesson Corporation",
+    "sector": "Healthcare - Distribution",
+    "ir_url": "https://investor.mckesson.com"
+  },
+  "CAH": {
+    "name": "Cardinal Health Inc.",
+    "sector": "Healthcare - Distribution",
+    "ir_url": "https://ir.cardinalhealth.com"
+  },
+  "VTRS": {
+    "name": "Viatris Inc.",
     "sector": "Healthcare - Pharmaceuticals",
-    "ir_url": "https://www.novonordisk.com/investors.html"
+    "ir_url": "https://investor.viatris.com"
+  },
+  "ZTS": {
+    "name": "Zoetis Inc.",
+    "sector": "Healthcare - Animal Health",
+    "ir_url": "https://investor.zoetis.com"
   },
   "LLY": {
     "name": "Eli Lilly and Company",
     "sector": "Healthcare - Pharmaceuticals",
     "ir_url": "https://investor.lilly.com"
+  },
+  "MMM": {
+    "name": "3M Company",
+    "sector": "Industrials - Conglomerate",
+    "ir_url": "https://investors.3m.com"
+  },
+  "EMR": {
+    "name": "Emerson Electric Co.",
+    "sector": "Industrials - Electrical Equipment",
+    "ir_url": "https://www.emerson.com/en-us/investors"
+  },
+  "ETN": {
+    "name": "Eaton Corporation plc",
+    "sector": "Industrials - Electrical Equipment",
+    "ir_url": "https://www.eaton.com/us/en-us/company/investor-relations.html"
+  },
+  "ITW": {
+    "name": "Illinois Tool Works Inc.",
+    "sector": "Industrials - Machinery",
+    "ir_url": "https://investor.itw.com"
+  },
+  "PH": {
+    "name": "Parker-Hannifin Corporation",
+    "sector": "Industrials - Machinery",
+    "ir_url": "https://investors.parker.com"
+  },
+  "SWK": {
+    "name": "Stanley Black & Decker Inc.",
+    "sector": "Industrials - Tools",
+    "ir_url": "https://www.stanleyblackanddecker.com/investors"
+  },
+  "DOV": {
+    "name": "Dover Corporation",
+    "sector": "Industrials - Machinery",
+    "ir_url": "https://investors.dovercorporation.com"
+  },
+  "SNA": {
+    "name": "Snap-on Incorporated",
+    "sector": "Industrials - Tools",
+    "ir_url": "https://investor.snapon.com"
+  },
+  "CMI": {
+    "name": "Cummins Inc.",
+    "sector": "Industrials - Engines",
+    "ir_url": "https://investor.cummins.com"
+  },
+  "PCAR": {
+    "name": "PACCAR Inc.",
+    "sector": "Industrials - Trucks",
+    "ir_url": "https://www.paccar.com/investors/"
+  },
+  "DE": {
+    "name": "Deere & Company",
+    "sector": "Industrials - Agricultural Machinery",
+    "ir_url": "https://investor.deere.com"
+  },
+  "FDX": {
+    "name": "FedEx Corporation",
+    "sector": "Industrials - Logistics",
+    "ir_url": "https://investors.fedex.com"
+  },
+  "UPS": {
+    "name": "United Parcel Service Inc.",
+    "sector": "Industrials - Logistics",
+    "ir_url": "https://investors.ups.com"
+  },
+  "NSC": {
+    "name": "Norfolk Southern Corporation",
+    "sector": "Industrials - Railroads",
+    "ir_url": "https://norfolksouthern.com/investors"
+  },
+  "CSX": {
+    "name": "CSX Corporation",
+    "sector": "Industrials - Railroads",
+    "ir_url": "https://investors.csx.com"
+  },
+  "LMT": {
+    "name": "Lockheed Martin Corporation",
+    "sector": "Industrials - Defense",
+    "ir_url": "https://investors.lockheedmartin.com"
+  },
+  "NOC": {
+    "name": "Northrop Grumman Corporation",
+    "sector": "Industrials - Defense",
+    "ir_url": "https://investor.northropgrumman.com"
+  },
+  "GD": {
+    "name": "General Dynamics Corporation",
+    "sector": "Industrials - Defense",
+    "ir_url": "https://investorrelations.gd.com"
+  },
+  "BA": {
+    "name": "The Boeing Company",
+    "sector": "Industrials - Aerospace",
+    "ir_url": "https://investors.boeing.com"
+  },
+  "SLB": {
+    "name": "Schlumberger Limited",
+    "sector": "Energy - Oilfield Services",
+    "ir_url": "https://investorcenter.slb.com"
+  },
+  "HAL": {
+    "name": "Halliburton Company",
+    "sector": "Energy - Oilfield Services",
+    "ir_url": "https://ir.halliburton.com"
+  },
+  "BKR": {
+    "name": "Baker Hughes Company",
+    "sector": "Energy - Oilfield Services",
+    "ir_url": "https://investors.bakerhughes.com"
+  },
+  "DVN": {
+    "name": "Devon Energy Corporation",
+    "sector": "Energy - Oil & Gas",
+    "ir_url": "https://investors.devonenergy.com"
+  },
+  "MPC": {
+    "name": "Marathon Petroleum Corporation",
+    "sector": "Energy - Refining",
+    "ir_url": "https://ir.marathonpetroleum.com"
+  },
+  "VLO": {
+    "name": "Valero Energy Corporation",
+    "sector": "Energy - Refining",
+    "ir_url": "https://investorvalero.com"
+  },
+  "SPG": {
+    "name": "Simon Property Group Inc.",
+    "sector": "Real Estate - Retail REITs",
+    "ir_url": "https://investors.simon.com"
+  },
+  "AMT": {
+    "name": "American Tower Corporation",
+    "sector": "Real Estate - Infrastructure REITs",
+    "ir_url": "https://www.americantower.com/investor-relations/"
+  },
+  "CCI": {
+    "name": "Crown Castle Inc.",
+    "sector": "Real Estate - Infrastructure REITs",
+    "ir_url": "https://investor.crowncastle.com"
+  },
+  "EQIX": {
+    "name": "Equinix Inc.",
+    "sector": "Real Estate - Data Center REITs",
+    "ir_url": "https://investor.equinix.com"
+  },
+  "DLR": {
+    "name": "Digital Realty Trust Inc.",
+    "sector": "Real Estate - Data Center REITs",
+    "ir_url": "https://investor.digitalrealty.com"
+  },
+  "PSA": {
+    "name": "Public Storage",
+    "sector": "Real Estate - Self-Storage REITs",
+    "ir_url": "https://investors.publicstorage.com"
+  },
+  "AVB": {
+    "name": "AvalonBay Communities Inc.",
+    "sector": "Real Estate - Residential REITs",
+    "ir_url": "https://investors.avalonbay.com"
+  },
+  "EQR": {
+    "name": "Equity Residential",
+    "sector": "Real Estate - Residential REITs",
+    "ir_url": "https://investors.equityresidential.com"
+  },
+  "WELL": {
+    "name": "Welltower Inc.",
+    "sector": "Real Estate - Healthcare REITs",
+    "ir_url": "https://welltower.com/investors/"
+  },
+  "VTR": {
+    "name": "Ventas Inc.",
+    "sector": "Real Estate - Healthcare REITs",
+    "ir_url": "https://ir.ventasreit.com"
+  },
+  "NUE": {
+    "name": "Nucor Corporation",
+    "sector": "Materials - Steel",
+    "ir_url": "https://www.nucor.com/investors/"
+  },
+  "FCX": {
+    "name": "Freeport-McMoRan Inc.",
+    "sector": "Materials - Copper Mining",
+    "ir_url": "https://investors.fcx.com"
+  },
+  "NEM": {
+    "name": "Newmont Corporation",
+    "sector": "Materials - Gold Mining",
+    "ir_url": "https://www.newmont.com/investors/"
+  },
+  "DOW": {
+    "name": "Dow Inc.",
+    "sector": "Materials - Chemicals",
+    "ir_url": "https://investors.dow.com"
+  },
+  "LYB": {
+    "name": "LyondellBasell Industries N.V.",
+    "sector": "Materials - Chemicals",
+    "ir_url": "https://www.lyondellbasell.com/investors/"
   }
 }

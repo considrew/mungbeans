@@ -66,11 +66,11 @@ STOCK_UNIVERSE = [
     'COIN',   # Coinbase
     'MSTR',   # MicroStrategy
     'ARKK',   # ARK Innovation ETF
-    
+
     # === BERKSHIRE HATHAWAY HOLDINGS ===
     'AAPL', 'BAC', 'AXP', 'KO', 'CVX', 'OXY', 'KHC', 'MCO', 'CB', 'DVA',
     'C', 'KR', 'VRSN', 'V', 'MA', 'AMZN', 'NU', 'AON', 'COF', 'ALLY',
-    
+
     # === MAJOR S&P 500 ===
     'MSFT', 'GOOGL', 'GOOG', 'META', 'NVDA', 'TSLA', 'BRK-B', 'JPM', 'JNJ',
     'UNH', 'XOM', 'PG', 'HD', 'MRK', 'ABBV', 'PEP', 'COST', 'AVGO', 'TMO',
@@ -80,32 +80,128 @@ STOCK_UNIVERSE = [
     'INTC', 'AMD', 'CRM', 'NOW', 'UBER', 'SQ', 'SHOP', 'ZS', 'PANW', 'FTNT',
 
     # === REDDIT POPULAR / MEME STOCKS ===
-    'TSM',    # Taiwan Semiconductor
-    'GME',    # GameStop
-    'AMC',    # AMC Entertainment
-    'RIVN',   # Rivian Automotive
-    'LCID',   # Lucid Group
-    'PYPL',   # PayPal
-    'DIS',    # Disney
-    'BABA',   # Alibaba
-    'ARM',    # Arm Holdings
+    'TSM', 'GME', 'AMC', 'RIVN', 'LCID', 'PYPL', 'DIS', 'BABA', 'ARM',
 
-    # === VALUE INVESTING (/r/valueinvesting) ===
-    'GILD',   # Gilead Sciences
-    'BMY',    # Bristol-Myers Squibb
-    'VZ',     # Verizon
-    'T',      # AT&T
-    'WBA',    # Walgreens Boots Alliance
-    'PFE',    # Pfizer
-    'F',      # Ford Motor
-    'GM',     # General Motors
-    'O',      # Realty Income
-    'BTI',    # British American Tobacco
-    'MO',     # Altria
-    'LMT',    # Lockheed Martin
-    'TGT',    # Target
-    'NVO',    # Novo Nordisk
+    # === VALUE INVESTING CORE ===
+    'GILD', 'BMY', 'VZ', 'T', 'WBA', 'PFE', 'F', 'GM', 'O', 'SCHD',
+
+    # === NEW VALUE STOCKS - FINANCIALS (20) ===
+    'WFC',    # Wells Fargo
+    'USB',    # U.S. Bancorp
+    'PNC',    # PNC Financial
+    'TFC',    # Truist Financial
+    'SCHW',   # Charles Schwab
+    'MS',     # Morgan Stanley
+    'AIG',    # American International Group
+    'MET',    # MetLife
+    'PRU',    # Prudential Financial
+    'ALL',    # Allstate
+    'TRV',    # Travelers Companies
+    'AFL',    # Aflac
+    'CME',    # CME Group
+    'ICE',    # Intercontinental Exchange
+    'FITB',   # Fifth Third Bancorp
+    'KEY',    # KeyCorp
+    'RF',     # Regions Financial
+    'CFG',    # Citizens Financial
+    'MTB',    # M&T Bank
+    'HBAN',   # Huntington Bancshares
+
+    # === NEW VALUE STOCKS - UTILITIES (15) ===
+    'DUK',    # Duke Energy
+    'SO',     # Southern Company
+    'D',      # Dominion Energy
+    'AEP',    # American Electric Power
+    'XEL',    # Xcel Energy
+    'EXC',    # Exelon
+    'SRE',    # Sempra Energy
+    'ED',     # Consolidated Edison
+    'WEC',    # WEC Energy Group
+    'ES',     # Eversource Energy
+    'PPL',    # PPL Corporation
+    'ETR',    # Entergy
+    'AES',    # AES Corporation
+    'CNP',    # CenterPoint Energy
+    'NI',     # NiSource
+
+    # === NEW VALUE STOCKS - CONSUMER STAPLES (15) ===
+    'CL',     # Colgate-Palmolive
+    'GIS',    # General Mills
+    'SJM',    # J.M. Smucker
+    'CPB',    # Campbell Soup
+    'CAG',    # Conagra Brands
+    'HRL',    # Hormel Foods
+    'MKC',    # McCormick & Company
+    'CHD',    # Church & Dwight
+    'CLX',    # Clorox
+    'KMB',    # Kimberly-Clark
+    'TAP',    # Molson Coors
+    'STZ',    # Constellation Brands
+    'BG',     # Bunge Limited
+    'ADM',    # Archer-Daniels-Midland
+    'K',      # Kellanova
+
+    # === NEW VALUE STOCKS - HEALTHCARE (10) ===
+    'CVS',    # CVS Health
+    'CI',     # Cigna Group
+    'HUM',    # Humana
+    'CNC',    # Centene
+    'ELV',    # Elevance Health
+    'MCK',    # McKesson
+    'CAH',    # Cardinal Health
+    'VTRS',   # Viatris
+    'ZTS',    # Zoetis
     'LLY',    # Eli Lilly
+
+    # === NEW VALUE STOCKS - INDUSTRIALS (15) ===
+    'MMM',    # 3M Company
+    'EMR',    # Emerson Electric
+    'ETN',    # Eaton Corporation
+    'ITW',    # Illinois Tool Works
+    'PH',     # Parker-Hannifin
+    'SWK',    # Stanley Black & Decker
+    'DOV',    # Dover Corporation
+    'SNA',    # Snap-on
+    'CMI',    # Cummins
+    'PCAR',   # PACCAR
+    'DE',     # Deere & Company
+    'FDX',    # FedEx
+    'UPS',    # United Parcel Service
+    'NSC',    # Norfolk Southern
+    'CSX',    # CSX Corporation
+
+    # === NEW VALUE STOCKS - DEFENSE (4) ===
+    'LMT',    # Lockheed Martin
+    'NOC',    # Northrop Grumman
+    'GD',     # General Dynamics
+    'BA',     # Boeing
+
+    # === NEW VALUE STOCKS - ENERGY (6) ===
+    'SLB',    # Schlumberger
+    'HAL',    # Halliburton
+    'BKR',    # Baker Hughes
+    'DVN',    # Devon Energy
+    'MPC',    # Marathon Petroleum
+    'VLO',    # Valero Energy
+
+    # === NEW VALUE STOCKS - REITS (10) ===
+    'SPG',    # Simon Property Group
+    'AMT',    # American Tower
+    'CCI',    # Crown Castle
+    'EQIX',   # Equinix
+    'DLR',    # Digital Realty
+    'PSA',    # Public Storage
+    'AVB',    # AvalonBay Communities
+    'EQR',    # Equity Residential
+    'WELL',   # Welltower
+    'VTR',    # Ventas
+
+    # === NEW VALUE STOCKS - MATERIALS (5) ===
+    'NUE',    # Nucor
+    'FCX',    # Freeport-McMoRan
+    'NEM',    # Newmont Corporation
+    'DOW',    # Dow Inc.
+    'LYB',    # LyondellBasell
 ]
 
 
