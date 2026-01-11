@@ -202,6 +202,126 @@ STOCK_UNIVERSE = [
     'NEM',    # Newmont Corporation
     'DOW',    # Dow Inc.
     'LYB',    # LyondellBasell
+
+     # === REGIONAL BANKS & ASSET MANAGERS (15) ===
+    'ZION',   # Zions Bancorporation
+    'CMA',    # Comerica
+    'FHN',    # First Horizon
+    'EWBC',   # East West Bancorp
+    'WAL',    # Western Alliance
+    'BOKF',   # BOK Financial
+    'FNB',    # F.N.B. Corporation
+    'TROW',   # T. Rowe Price
+    'IVZ',    # Invesco
+    'BEN',    # Franklin Resources
+    'NTRS',   # Northern Trust
+    'STT',    # State Street
+    'AMG',    # Affiliated Managers Group
+    'SEIC',   # SEI Investments
+    'CBOE',   # Cboe Global Markets
+
+    # === HEALTHCARE - PHARMA, BIOTECH, DEVICES (15) ===
+    'BIIB',   # Biogen
+    'REGN',   # Regeneron Pharmaceuticals
+    'VRTX',   # Vertex Pharmaceuticals
+    'MRNA',   # Moderna
+    'ILMN',   # Illumina
+    'DXCM',   # DexCom
+    'IDXX',   # IDEXX Laboratories
+    'MTD',    # Mettler-Toledo
+    'STE',    # Steris
+    'BAX',    # Baxter International
+    'BDX',    # Becton Dickinson
+    'SYK',    # Stryker
+    'MDT',    # Medtronic
+    'BSX',    # Boston Scientific
+    'EW',     # Edwards Lifesciences
+
+    # === INDUSTRIALS - MACHINERY, CONSTRUCTION (15) ===
+    'ROK',    # Rockwell Automation
+    'AME',    # AMETEK
+    'GNRC',   # Generac Holdings
+    'IR',     # Ingersoll Rand
+    'XYL',    # Xylem
+    'GWW',    # W.W. Grainger
+    'FAST',   # Fastenal
+    'URI',    # United Rentals
+    'PWR',    # Quanta Services
+    'J',      # Jacobs Solutions
+    'WAB',    # Westinghouse Air Brake
+    'TT',     # Trane Technologies
+    'CARR',   # Carrier Global
+    'OTIS',   # Otis Worldwide
+    'LHX',    # L3Harris Technologies
+
+    # === CONSUMER DISCRETIONARY - RETAIL, RESTAURANTS (15) ===
+    'TJX',    # TJX Companies
+    'ROST',   # Ross Stores
+    'DG',     # Dollar General
+    'DLTR',   # Dollar Tree
+    'ORLY',   # O'Reilly Automotive
+    'AZO',    # AutoZone
+    'BBY',    # Best Buy
+    'LOW',    # Lowe's Companies
+    'TGT',    # Target
+    'SBUX',   # Starbucks
+    'CMG',    # Chipotle Mexican Grill
+    'DPZ',    # Domino's Pizza
+    'YUM',    # Yum! Brands
+    'MAR',    # Marriott International
+    'HLT',    # Hilton Worldwide
+
+    # === TECHNOLOGY - HARDWARE & SEMICONDUCTORS (12) ===
+    'HPQ',    # HP Inc.
+    'HPE',    # Hewlett Packard Enterprise
+    'DELL',   # Dell Technologies
+    'WDC',    # Western Digital
+    'STX',    # Seagate Technology
+    'NTAP',   # NetApp
+    'KEYS',   # Keysight Technologies
+    'ANSS',   # ANSYS
+    'CDNS',   # Cadence Design Systems
+    'SNPS',   # Synopsys
+    'KLAC',   # KLA Corporation
+    'LRCX',   # Lam Research
+
+    # === ENERGY - PIPELINES & E&P (10) ===
+    'WMB',    # Williams Companies
+    'KMI',    # Kinder Morgan
+    'OKE',    # ONEOK
+    'ET',     # Energy Transfer
+    'EPD',    # Enterprise Products Partners
+    'PXD',    # Pioneer Natural Resources
+    'EOG',    # EOG Resources
+    'COP',    # ConocoPhillips
+    'HES',    # Hess Corporation
+    'FANG',   # Diamondback Energy
+
+    # === MATERIALS - CHEMICALS, METALS (8) ===
+    'APD',    # Air Products & Chemicals
+    'ECL',    # Ecolab
+    'SHW',    # Sherwin-Williams
+    'PPG',    # PPG Industries
+    'ALB',    # Albemarle
+    'CF',     # CF Industries
+    'MOS',    # Mosaic Company
+    'BALL',   # Ball Corporation
+
+    # === COMMUNICATION SERVICES (5) ===
+    'TMUS',   # T-Mobile US
+    'CHTR',   # Charter Communications
+    'CMCSA',  # Comcast
+    'WBD',    # Warner Bros. Discovery
+    'NFLX',   # Netflix
+
+    # === INTERNATIONAL ADRs (5) ===
+    'TM',     # Toyota Motor
+    'SNY',    # Sanofi
+    'NVS',    # Novartis
+    'UL',     # Unilever
+    'BTI',    # British American Tobacco
+
+
 ]
 
 
