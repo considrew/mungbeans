@@ -26034,9 +26034,9 @@
       "avg_weeks_below": 23.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ZION",
-      "sector": "",
-      "ir_url": ""
+      "name": "Zions Bancorporation",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://www.zionsbancorporation.com/investor-relations"
     },
     {
       "symbol": "CMA",
@@ -26217,9 +26217,9 @@
       "avg_weeks_below": 15.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "CMA",
-      "sector": "",
-      "ir_url": ""
+      "name": "Comerica Incorporated",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://investor.comerica.com"
     },
     {
       "symbol": "FHN",
@@ -26421,9 +26421,9 @@
       "avg_weeks_below": 12.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "FHN",
-      "sector": "",
-      "ir_url": ""
+      "name": "First Horizon Corporation",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://ir.firsthorizon.com"
     },
     {
       "symbol": "EWBC",
@@ -26520,9 +26520,9 @@
       "avg_weeks_below": 26.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "EWBC",
-      "sector": "",
-      "ir_url": ""
+      "name": "East West Bancorp Inc.",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://investor.eastwestbank.com"
     },
     {
       "symbol": "WAL",
@@ -26640,9 +26640,9 @@
       "avg_weeks_below": 20.9,
       "last_updated": "2026-01-09",
       "data_weeks": 872,
-      "name": "WAL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Western Alliance Bancorporation",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://www.westernalliancebancorporation.com/investor-relations"
     },
     {
       "symbol": "BOKF",
@@ -26872,9 +26872,9 @@
       "avg_weeks_below": 6.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BOKF",
-      "sector": "",
-      "ir_url": ""
+      "name": "BOK Financial Corporation",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://www.bokf.com/investor-relations"
     },
     {
       "symbol": "FNB",
@@ -27083,9 +27083,9 @@
       "avg_weeks_below": 11.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "FNB",
-      "sector": "",
-      "ir_url": ""
+      "name": "F.N.B. Corporation",
+      "sector": "Financial Services - Banking",
+      "ir_url": "https://www.fnb-online.com/about-us/investor-relations"
     },
     {
       "symbol": "TROW",
@@ -27259,9 +27259,9 @@
       "avg_weeks_below": 12.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "TROW",
-      "sector": "",
-      "ir_url": ""
+      "name": "T. Rowe Price Group Inc.",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://investors.troweprice.com"
     },
     {
       "symbol": "IVZ",
@@ -27484,9 +27484,9 @@
       "avg_weeks_below": 17.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "IVZ",
-      "sector": "",
-      "ir_url": ""
+      "name": "Invesco Ltd.",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://ir.invesco.com"
     },
     {
       "symbol": "BEN",
@@ -27660,9 +27660,9 @@
       "avg_weeks_below": 19.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BEN",
-      "sector": "",
-      "ir_url": ""
+      "name": "Franklin Resources Inc.",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://investors.franklinresources.com"
     },
     {
       "symbol": "NTRS",
@@ -27892,9 +27892,9 @@
       "avg_weeks_below": 13.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "NTRS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Northern Trust Corporation",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://www.northerntrust.com/united-states/about-us/investor-relations"
     },
     {
       "symbol": "STT",
@@ -28103,9 +28103,9 @@
       "avg_weeks_below": 14.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "STT",
-      "sector": "",
-      "ir_url": ""
+      "name": "State Street Corporation",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://investors.statestreet.com"
     },
     {
       "symbol": "AMG",
@@ -28223,9 +28223,9 @@
       "avg_weeks_below": 26.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "AMG",
-      "sector": "",
-      "ir_url": ""
+      "name": "Affiliated Managers Group Inc.",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://www.amg.com/investors"
     },
     {
       "symbol": "SEIC",
@@ -28427,9 +28427,9 @@
       "avg_weeks_below": 11.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "SEIC",
-      "sector": "",
-      "ir_url": ""
+      "name": "SEI Investments Company",
+      "sector": "Financial Services - Asset Management",
+      "ir_url": "https://seic.com/investor-relations"
     },
     {
       "symbol": "CBOE",
@@ -28484,9 +28484,9 @@
       "avg_weeks_below": 9.4,
       "last_updated": "2026-01-09",
       "data_weeks": 613,
-      "name": "CBOE",
-      "sector": "",
-      "ir_url": ""
+      "name": "Cboe Global Markets Inc.",
+      "sector": "Financial Services - Exchanges",
+      "ir_url": "https://ir.cboe.com"
     },
     {
       "symbol": "BIIB",
@@ -28780,9 +28780,9 @@
       "avg_weeks_below": 13.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BIIB",
-      "sector": "",
-      "ir_url": ""
+      "name": "Biogen Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "ir_url": "https://investors.biogen.com"
     },
     {
       "symbol": "REGN",
@@ -28970,9 +28970,9 @@
       "avg_weeks_below": 14.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "REGN",
-      "sector": "",
-      "ir_url": ""
+      "name": "Regeneron Pharmaceuticals Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "ir_url": "https://investor.regeneron.com"
     },
     {
       "symbol": "VRTX",
@@ -29125,9 +29125,9 @@
       "avg_weeks_below": 10.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "VRTX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Vertex Pharmaceuticals Incorporated",
+      "sector": "Healthcare - Biotechnology",
+      "ir_url": "https://investors.vrtx.com"
     },
     {
       "symbol": "MRNA",
@@ -29162,9 +29162,9 @@
       "avg_weeks_below": 70.5,
       "last_updated": "2026-01-09",
       "data_weeks": 171,
-      "name": "MRNA",
-      "sector": "",
-      "ir_url": ""
+      "name": "Moderna Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "ir_url": "https://investors.modernatx.com"
     },
     {
       "symbol": "ILMN",
@@ -29262,9 +29262,9 @@
       "avg_weeks_below": 25.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1129,
-      "name": "ILMN",
-      "sector": "",
-      "ir_url": ""
+      "name": "Illumina Inc.",
+      "sector": "Healthcare - Life Sciences",
+      "ir_url": "https://investor.illumina.com"
     },
     {
       "symbol": "DXCM",
@@ -29355,9 +29355,9 @@
       "avg_weeks_below": 17.7,
       "last_updated": "2026-01-09",
       "data_weeks": 883,
-      "name": "DXCM",
-      "sector": "",
-      "ir_url": ""
+      "name": "DexCom Inc.",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://investors.dexcom.com"
     },
     {
       "symbol": "IDXX",
@@ -29468,9 +29468,9 @@
       "avg_weeks_below": 8.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "IDXX",
-      "sector": "",
-      "ir_url": ""
+      "name": "IDEXX Laboratories Inc.",
+      "sector": "Healthcare - Diagnostics",
+      "ir_url": "https://www.idexx.com/en/about-idexx/investors/"
     },
     {
       "symbol": "MTD",
@@ -29574,9 +29574,9 @@
       "avg_weeks_below": 10.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "MTD",
-      "sector": "",
-      "ir_url": ""
+      "name": "Mettler-Toledo International Inc.",
+      "sector": "Healthcare - Life Sciences",
+      "ir_url": "https://investor.mt.com"
     },
     {
       "symbol": "STE",
@@ -29757,9 +29757,9 @@
       "avg_weeks_below": 3.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "STE",
-      "sector": "",
-      "ir_url": ""
+      "name": "Steris plc",
+      "sector": "Healthcare - Medical Equipment",
+      "ir_url": "https://investors.steris.com"
     },
     {
       "symbol": "BAX",
@@ -29920,9 +29920,9 @@
       "avg_weeks_below": 17.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BAX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Baxter International Inc.",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://investor.baxter.com"
     },
     {
       "symbol": "BDX",
@@ -30139,9 +30139,9 @@
       "avg_weeks_below": 6.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BDX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Becton, Dickinson and Company",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://investors.bd.com"
     },
     {
       "symbol": "SYK",
@@ -30252,9 +30252,9 @@
       "avg_weeks_below": 11.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "SYK",
-      "sector": "",
-      "ir_url": ""
+      "name": "Stryker Corporation",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://www.stryker.com/us/en/about/investor-relations.html"
     },
     {
       "symbol": "MDT",
@@ -30407,9 +30407,9 @@
       "avg_weeks_below": 19.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "MDT",
-      "sector": "",
-      "ir_url": ""
+      "name": "Medtronic plc",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://investorrelations.medtronic.com"
     },
     {
       "symbol": "BSX",
@@ -30471,9 +30471,9 @@
       "avg_weeks_below": 68.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BSX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Boston Scientific Corporation",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://investors.bostonscientific.com"
     },
     {
       "symbol": "EW",
@@ -30549,9 +30549,9 @@
       "avg_weeks_below": 25.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1146,
-      "name": "EW",
-      "sector": "",
-      "ir_url": ""
+      "name": "Edwards Lifesciences Corporation",
+      "sector": "Healthcare - Medical Devices",
+      "ir_url": "https://ir.edwards.com"
     },
     {
       "symbol": "ROK",
@@ -30704,9 +30704,9 @@
       "avg_weeks_below": 7.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ROK",
-      "sector": "",
-      "ir_url": ""
+      "name": "Rockwell Automation Inc.",
+      "sector": "Industrials - Industrial Automation",
+      "ir_url": "https://ir.rockwellautomation.com"
     },
     {
       "symbol": "AME",
@@ -30824,9 +30824,9 @@
       "avg_weeks_below": 5.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "AME",
-      "sector": "",
-      "ir_url": ""
+      "name": "AMETEK Inc.",
+      "sector": "Industrials - Electronic Instruments",
+      "ir_url": "https://investors.ametek.com"
     },
     {
       "symbol": "GNRC",
@@ -30902,9 +30902,9 @@
       "avg_weeks_below": 32.5,
       "last_updated": "2026-01-09",
       "data_weeks": 631,
-      "name": "GNRC",
-      "sector": "",
-      "ir_url": ""
+      "name": "Generac Holdings Inc.",
+      "sector": "Industrials - Electrical Equipment",
+      "ir_url": "https://investors.generac.com"
     },
     {
       "symbol": "IR",
@@ -30923,9 +30923,9 @@
       "avg_weeks_below": null,
       "last_updated": "2026-01-09",
       "data_weeks": 253,
-      "name": "IR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Ingersoll Rand Inc.",
+      "sector": "Industrials - Machinery",
+      "ir_url": "https://investors.irco.com"
     },
     {
       "symbol": "XYL",
@@ -31022,9 +31022,9 @@
       "avg_weeks_below": 3.6,
       "last_updated": "2026-01-09",
       "data_weeks": 544,
-      "name": "XYL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Xylem Inc.",
+      "sector": "Industrials - Water Equipment",
+      "ir_url": "https://www.xylem.com/en-us/investors/"
     },
     {
       "symbol": "GWW",
@@ -31128,9 +31128,9 @@
       "avg_weeks_below": 8.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "GWW",
-      "sector": "",
-      "ir_url": ""
+      "name": "W.W. Grainger Inc.",
+      "sector": "Industrials - Industrial Distribution",
+      "ir_url": "https://invest.grainger.com"
     },
     {
       "symbol": "FAST",
@@ -31227,9 +31227,9 @@
       "avg_weeks_below": 11.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "FAST",
-      "sector": "",
-      "ir_url": ""
+      "name": "Fastenal Company",
+      "sector": "Industrials - Industrial Distribution",
+      "ir_url": "https://investor.fastenal.com"
     },
     {
       "symbol": "URI",
@@ -31424,9 +31424,9 @@
       "avg_weeks_below": 10.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "URI",
-      "sector": "",
-      "ir_url": ""
+      "name": "United Rentals Inc.",
+      "sector": "Industrials - Equipment Rental",
+      "ir_url": "https://www.unitedrentals.com/investor-relations"
     },
     {
       "symbol": "PWR",
@@ -31642,9 +31642,9 @@
       "avg_weeks_below": 10.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "PWR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Quanta Services Inc.",
+      "sector": "Industrials - Construction Services",
+      "ir_url": "https://investors.quantaservices.com"
     },
     {
       "symbol": "J",
@@ -31748,9 +31748,9 @@
       "avg_weeks_below": 24.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "J",
-      "sector": "",
-      "ir_url": ""
+      "name": "Jacobs Solutions Inc.",
+      "sector": "Industrials - Engineering Services",
+      "ir_url": "https://invest.jacobs.com"
     },
     {
       "symbol": "WAB",
@@ -31903,9 +31903,9 @@
       "avg_weeks_below": 9.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "WAB",
-      "sector": "",
-      "ir_url": ""
+      "name": "Westinghouse Air Brake Technologies",
+      "sector": "Industrials - Rail Equipment",
+      "ir_url": "https://ir.wabteccorp.com"
     },
     {
       "symbol": "TT",
@@ -32023,9 +32023,9 @@
       "avg_weeks_below": 9.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "TT",
-      "sector": "",
-      "ir_url": ""
+      "name": "Trane Technologies plc",
+      "sector": "Industrials - HVAC",
+      "ir_url": "https://investors.tranetechnologies.com"
     },
     {
       "symbol": "CARR",
@@ -32059,9 +32059,9 @@
       "avg_weeks_below": 2.5,
       "last_updated": "2026-01-09",
       "data_weeks": 104,
-      "name": "CARR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Carrier Global Corporation",
+      "sector": "Industrials - HVAC",
+      "ir_url": "https://ir.carrier.com"
     },
     {
       "symbol": "OTIS",
@@ -32080,9 +32080,9 @@
       "avg_weeks_below": null,
       "last_updated": "2026-01-09",
       "data_weeks": 104,
-      "name": "OTIS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Otis Worldwide Corporation",
+      "sector": "Industrials - Elevators",
+      "ir_url": "https://investors.otis.com"
     },
     {
       "symbol": "LHX",
@@ -32172,9 +32172,9 @@
       "avg_weeks_below": 13.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "LHX",
-      "sector": "",
-      "ir_url": ""
+      "name": "L3Harris Technologies Inc.",
+      "sector": "Industrials - Defense",
+      "ir_url": "https://www.l3harris.com/investors"
     },
     {
       "symbol": "TJX",
@@ -32271,9 +32271,9 @@
       "avg_weeks_below": 3.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "TJX",
-      "sector": "",
-      "ir_url": ""
+      "name": "The TJX Companies Inc.",
+      "sector": "Consumer Discretionary - Retail",
+      "ir_url": "https://www.tjx.com/investors"
     },
     {
       "symbol": "ROST",
@@ -32405,9 +32405,9 @@
       "avg_weeks_below": 5.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ROST",
-      "sector": "",
-      "ir_url": ""
+      "name": "Ross Stores Inc.",
+      "sector": "Consumer Discretionary - Retail",
+      "ir_url": "https://investors.rossstores.com"
     },
     {
       "symbol": "DG",
@@ -32435,9 +32435,9 @@
       "avg_weeks_below": 137.0,
       "last_updated": "2026-01-09",
       "data_weeks": 644,
-      "name": "DG",
-      "sector": "",
-      "ir_url": ""
+      "name": "Dollar General Corporation",
+      "sector": "Consumer Discretionary - Discount Retail",
+      "ir_url": "https://investor.dollargeneral.com"
     },
     {
       "symbol": "DLTR",
@@ -32625,9 +32625,9 @@
       "avg_weeks_below": 11.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "DLTR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Dollar Tree Inc.",
+      "sector": "Consumer Discretionary - Discount Retail",
+      "ir_url": "https://corporate.dollartree.com/investors"
     },
     {
       "symbol": "ORLY",
@@ -32710,9 +32710,9 @@
       "avg_weeks_below": 8.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ORLY",
-      "sector": "",
-      "ir_url": ""
+      "name": "O'Reilly Automotive Inc.",
+      "sector": "Consumer Discretionary - Auto Parts Retail",
+      "ir_url": "https://corporate.oreillyauto.com/investor-relations"
     },
     {
       "symbol": "AZO",
@@ -32795,9 +32795,9 @@
       "avg_weeks_below": 6.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "AZO",
-      "sector": "",
-      "ir_url": ""
+      "name": "AutoZone Inc.",
+      "sector": "Consumer Discretionary - Auto Parts Retail",
+      "ir_url": "https://investors.autozone.com"
     },
     {
       "symbol": "BBY",
@@ -33028,9 +33028,9 @@
       "avg_weeks_below": 13.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BBY",
-      "sector": "",
-      "ir_url": ""
+      "name": "Best Buy Co. Inc.",
+      "sector": "Consumer Discretionary - Electronics Retail",
+      "ir_url": "https://investors.bestbuy.com"
     },
     {
       "symbol": "LOW",
@@ -33106,9 +33106,9 @@
       "avg_weeks_below": 22.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "LOW",
-      "sector": "",
-      "ir_url": ""
+      "name": "Lowe's Companies Inc.",
+      "sector": "Consumer Discretionary - Home Improvement",
+      "ir_url": "https://ir.lowes.com"
     },
     {
       "symbol": "TGT",
@@ -33304,9 +33304,9 @@
       "avg_weeks_below": 12.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "TGT",
-      "sector": "",
-      "ir_url": ""
+      "name": "Target Corporation",
+      "sector": "Consumer Discretionary - Retail",
+      "ir_url": "https://investors.target.com"
     },
     {
       "symbol": "SBUX",
@@ -33501,9 +33501,9 @@
       "avg_weeks_below": 9.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "SBUX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Starbucks Corporation",
+      "sector": "Consumer Discretionary - Restaurants",
+      "ir_url": "https://investor.starbucks.com"
     },
     {
       "symbol": "CMG",
@@ -33580,9 +33580,9 @@
       "avg_weeks_below": 21.0,
       "last_updated": "2026-01-09",
       "data_weeks": 842,
-      "name": "CMG",
-      "sector": "",
-      "ir_url": ""
+      "name": "Chipotle Mexican Grill Inc.",
+      "sector": "Consumer Discretionary - Restaurants",
+      "ir_url": "https://ir.chipotle.com"
     },
     {
       "symbol": "DPZ",
@@ -33651,9 +33651,9 @@
       "avg_weeks_below": 21.3,
       "last_updated": "2026-01-09",
       "data_weeks": 922,
-      "name": "DPZ",
-      "sector": "",
-      "ir_url": ""
+      "name": "Domino's Pizza Inc.",
+      "sector": "Consumer Discretionary - Restaurants",
+      "ir_url": "https://ir.dominos.com"
     },
     {
       "symbol": "YUM",
@@ -33743,9 +33743,9 @@
       "avg_weeks_below": 2.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "YUM",
-      "sector": "",
-      "ir_url": ""
+      "name": "Yum! Brands Inc.",
+      "sector": "Consumer Discretionary - Restaurants",
+      "ir_url": "https://investors.yum.com"
     },
     {
       "symbol": "MAR",
@@ -33835,9 +33835,9 @@
       "avg_weeks_below": 16.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "MAR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Marriott International Inc.",
+      "sector": "Consumer Discretionary - Hotels",
+      "ir_url": "https://marriott.gcs-web.com"
     },
     {
       "symbol": "HLT",
@@ -33885,9 +33885,9 @@
       "avg_weeks_below": 3.0,
       "last_updated": "2026-01-09",
       "data_weeks": 431,
-      "name": "HLT",
-      "sector": "",
-      "ir_url": ""
+      "name": "Hilton Worldwide Holdings Inc.",
+      "sector": "Consumer Discretionary - Hotels",
+      "ir_url": "https://ir.hilton.com"
     },
     {
       "symbol": "HPQ",
@@ -34055,9 +34055,9 @@
       "avg_weeks_below": 18.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "HPQ",
-      "sector": "",
-      "ir_url": ""
+      "name": "HP Inc.",
+      "sector": "Technology - Computer Hardware",
+      "ir_url": "https://investor.hp.com"
     },
     {
       "symbol": "HPE",
@@ -34119,9 +34119,9 @@
       "avg_weeks_below": 10.0,
       "last_updated": "2026-01-09",
       "data_weeks": 334,
-      "name": "HPE",
-      "sector": "",
-      "ir_url": ""
+      "name": "Hewlett Packard Enterprise Company",
+      "sector": "Technology - IT Infrastructure",
+      "ir_url": "https://investors.hpe.com"
     },
     {
       "symbol": "DELL",
@@ -34148,9 +34148,9 @@
       "avg_weeks_below": 3.0,
       "last_updated": "2026-01-09",
       "data_weeks": 169,
-      "name": "DELL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Dell Technologies Inc.",
+      "sector": "Technology - Computer Hardware",
+      "ir_url": "https://investors.delltechnologies.com"
     },
     {
       "symbol": "WDC",
@@ -34296,9 +34296,9 @@
       "avg_weeks_below": 18.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "WDC",
-      "sector": "",
-      "ir_url": ""
+      "name": "Western Digital Corporation",
+      "sector": "Technology - Data Storage",
+      "ir_url": "https://investor.wdc.com"
     },
     {
       "symbol": "STX",
@@ -34451,9 +34451,9 @@
       "avg_weeks_below": 14.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1005,
-      "name": "STX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Seagate Technology Holdings plc",
+      "sector": "Technology - Data Storage",
+      "ir_url": "https://investors.seagate.com"
     },
     {
       "symbol": "NTAP",
@@ -34613,9 +34613,9 @@
       "avg_weeks_below": 19.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "NTAP",
-      "sector": "",
-      "ir_url": ""
+      "name": "NetApp Inc.",
+      "sector": "Technology - Data Storage",
+      "ir_url": "https://investors.netapp.com"
     },
     {
       "symbol": "KEYS",
@@ -34691,9 +34691,9 @@
       "avg_weeks_below": 6.4,
       "last_updated": "2026-01-09",
       "data_weeks": 386,
-      "name": "KEYS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Keysight Technologies Inc.",
+      "sector": "Technology - Electronic Test Equipment",
+      "ir_url": "https://investor.keysight.com"
     },
     {
       "symbol": "ANSS",
@@ -34797,9 +34797,9 @@
       "avg_weeks_below": 7.2,
       "last_updated": "2025-07-17",
       "data_weeks": 1142,
-      "name": "ANSS",
-      "sector": "",
-      "ir_url": ""
+      "name": "ANSYS Inc.",
+      "sector": "Technology - Engineering Software",
+      "ir_url": "https://investors.ansys.com"
     },
     {
       "symbol": "CDNS",
@@ -34847,9 +34847,9 @@
       "avg_weeks_below": 64.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "CDNS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Cadence Design Systems Inc.",
+      "sector": "Technology - EDA Software",
+      "ir_url": "https://investors.cadence.com"
     },
     {
       "symbol": "SNPS",
@@ -34967,9 +34967,9 @@
       "avg_weeks_below": 16.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "SNPS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Synopsys Inc.",
+      "sector": "Technology - EDA Software",
+      "ir_url": "https://investor.synopsys.com"
     },
     {
       "symbol": "KLAC",
@@ -35059,9 +35059,9 @@
       "avg_weeks_below": 22.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "KLAC",
-      "sector": "",
-      "ir_url": ""
+      "name": "KLA Corporation",
+      "sector": "Technology - Semiconductor Equipment",
+      "ir_url": "https://ir.kla.com"
     },
     {
       "symbol": "LRCX",
@@ -35249,9 +35249,9 @@
       "avg_weeks_below": 6.7,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "LRCX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Lam Research Corporation",
+      "sector": "Technology - Semiconductor Equipment",
+      "ir_url": "https://investor.lamresearch.com"
     },
     {
       "symbol": "WMB",
@@ -35362,9 +35362,9 @@
       "avg_weeks_below": 31.5,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "WMB",
-      "sector": "",
-      "ir_url": ""
+      "name": "The Williams Companies Inc.",
+      "sector": "Energy - Pipelines",
+      "ir_url": "https://investor.williams.com"
     },
     {
       "symbol": "KMI",
@@ -35405,9 +35405,9 @@
       "avg_weeks_below": 78.7,
       "last_updated": "2026-01-09",
       "data_weeks": 579,
-      "name": "KMI",
-      "sector": "",
-      "ir_url": ""
+      "name": "Kinder Morgan Inc.",
+      "sector": "Energy - Pipelines",
+      "ir_url": "https://ir.kindermorgan.com"
     },
     {
       "symbol": "OKE",
@@ -35476,9 +35476,9 @@
       "avg_weeks_below": 22.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "OKE",
-      "sector": "",
-      "ir_url": ""
+      "name": "ONEOK Inc.",
+      "sector": "Energy - Pipelines",
+      "ir_url": "https://www.oneok.com/investors"
     },
     {
       "symbol": "ET",
@@ -35638,9 +35638,9 @@
       "avg_weeks_below": 12.8,
       "last_updated": "2026-01-09",
       "data_weeks": 841,
-      "name": "ET",
-      "sector": "",
-      "ir_url": ""
+      "name": "Energy Transfer LP",
+      "sector": "Energy - Pipelines",
+      "ir_url": "https://ir.energytransfer.com"
     },
     {
       "symbol": "EPD",
@@ -35793,9 +35793,9 @@
       "avg_weeks_below": 10.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "EPD",
-      "sector": "",
-      "ir_url": ""
+      "name": "Enterprise Products Partners L.P.",
+      "sector": "Energy - Pipelines",
+      "ir_url": "https://investor.enterpriseproducts.com"
     },
     {
       "symbol": "PXD",
@@ -35885,9 +35885,9 @@
       "avg_weeks_below": 25.3,
       "last_updated": "2024-05-03",
       "data_weeks": 1079,
-      "name": "PXD",
-      "sector": "",
-      "ir_url": ""
+      "name": "Pioneer Natural Resources Company",
+      "sector": "Energy - Oil & Gas E&P",
+      "ir_url": "https://investors.pxd.com"
     },
     {
       "symbol": "EOG",
@@ -36083,9 +36083,9 @@
       "avg_weeks_below": 9.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "EOG",
-      "sector": "",
-      "ir_url": ""
+      "name": "EOG Resources Inc.",
+      "sector": "Energy - Oil & Gas E&P",
+      "ir_url": "https://investors.eogresources.com"
     },
     {
       "symbol": "COP",
@@ -36169,9 +36169,9 @@
       "avg_weeks_below": 36.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "COP",
-      "sector": "",
-      "ir_url": ""
+      "name": "ConocoPhillips",
+      "sector": "Energy - Oil & Gas E&P",
+      "ir_url": "https://www.conocophillips.com/investor-relations/"
     },
     {
       "symbol": "HES",
@@ -36338,9 +36338,9 @@
       "avg_weeks_below": 19.0,
       "last_updated": "2025-07-18",
       "data_weeks": 1142,
-      "name": "HES",
-      "sector": "",
-      "ir_url": ""
+      "name": "Hess Corporation",
+      "sector": "Energy - Oil & Gas E&P",
+      "ir_url": "https://investors.hess.com"
     },
     {
       "symbol": "FANG",
@@ -36437,9 +36437,9 @@
       "avg_weeks_below": 11.0,
       "last_updated": "2026-01-09",
       "data_weeks": 492,
-      "name": "FANG",
-      "sector": "",
-      "ir_url": ""
+      "name": "Diamondback Energy Inc.",
+      "sector": "Energy - Oil & Gas E&P",
+      "ir_url": "https://ir.diamondbackenergy.com"
     },
     {
       "symbol": "APD",
@@ -36543,9 +36543,9 @@
       "avg_weeks_below": 8.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "APD",
-      "sector": "",
-      "ir_url": ""
+      "name": "Air Products and Chemicals Inc.",
+      "sector": "Materials - Industrial Gases",
+      "ir_url": "https://investors.airproducts.com"
     },
     {
       "symbol": "ECL",
@@ -36614,9 +36614,9 @@
       "avg_weeks_below": 19.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ECL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Ecolab Inc.",
+      "sector": "Materials - Specialty Chemicals",
+      "ir_url": "https://investor.ecolab.com"
     },
     {
       "symbol": "SHW",
@@ -36727,9 +36727,9 @@
       "avg_weeks_below": 3.2,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "SHW",
-      "sector": "",
-      "ir_url": ""
+      "name": "The Sherwin-Williams Company",
+      "sector": "Materials - Paints & Coatings",
+      "ir_url": "https://investors.sherwin-williams.com"
     },
     {
       "symbol": "PPG",
@@ -36953,9 +36953,9 @@
       "avg_weeks_below": 7.8,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "PPG",
-      "sector": "",
-      "ir_url": ""
+      "name": "PPG Industries Inc.",
+      "sector": "Materials - Paints & Coatings",
+      "ir_url": "https://investor.ppg.com"
     },
     {
       "symbol": "ALB",
@@ -37073,9 +37073,9 @@
       "avg_weeks_below": 21.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "ALB",
-      "sector": "",
-      "ir_url": ""
+      "name": "Albemarle Corporation",
+      "sector": "Materials - Specialty Chemicals",
+      "ir_url": "https://investors.albemarle.com"
     },
     {
       "symbol": "CF",
@@ -37144,9 +37144,9 @@
       "avg_weeks_below": 24.0,
       "last_updated": "2026-01-09",
       "data_weeks": 866,
-      "name": "CF",
-      "sector": "",
-      "ir_url": ""
+      "name": "CF Industries Holdings Inc.",
+      "sector": "Materials - Fertilizers",
+      "ir_url": "https://www.cfindustries.com/investors"
     },
     {
       "symbol": "MOS",
@@ -37363,9 +37363,9 @@
       "avg_weeks_below": 21.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "MOS",
-      "sector": "",
-      "ir_url": ""
+      "name": "The Mosaic Company",
+      "sector": "Materials - Fertilizers",
+      "ir_url": "https://investors.mosaicco.com"
     },
     {
       "symbol": "BALL",
@@ -37428,9 +37428,9 @@
       "avg_weeks_below": 38.0,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BALL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Ball Corporation",
+      "sector": "Materials - Packaging",
+      "ir_url": "https://investors.ball.com"
     },
     {
       "symbol": "TMUS",
@@ -37485,9 +37485,9 @@
       "avg_weeks_below": 15.8,
       "last_updated": "2026-01-09",
       "data_weeks": 778,
-      "name": "TMUS",
-      "sector": "",
-      "ir_url": ""
+      "name": "T-Mobile US Inc.",
+      "sector": "Communication Services - Telecom",
+      "ir_url": "https://investor.t-mobile.com"
     },
     {
       "symbol": "CHTR",
@@ -37529,9 +37529,9 @@
       "avg_weeks_below": 64.3,
       "last_updated": "2026-01-09",
       "data_weeks": 636,
-      "name": "CHTR",
-      "sector": "",
-      "ir_url": ""
+      "name": "Charter Communications Inc.",
+      "sector": "Communication Services - Cable",
+      "ir_url": "https://ir.charter.com"
     },
     {
       "symbol": "CMCSA",
@@ -37692,9 +37692,9 @@
       "avg_weeks_below": 20.6,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "CMCSA",
-      "sector": "",
-      "ir_url": ""
+      "name": "Comcast Corporation",
+      "sector": "Communication Services - Cable",
+      "ir_url": "https://www.cmcsa.com"
     },
     {
       "symbol": "WBD",
@@ -37812,9 +37812,9 @@
       "avg_weeks_below": 31.0,
       "last_updated": "2026-01-09",
       "data_weeks": 872,
-      "name": "WBD",
-      "sector": "",
-      "ir_url": ""
+      "name": "Warner Bros. Discovery Inc.",
+      "sector": "Communication Services - Media",
+      "ir_url": "https://ir.wbd.com"
     },
     {
       "symbol": "NFLX",
@@ -37939,9 +37939,9 @@
       "avg_weeks_below": 11.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1034,
-      "name": "NFLX",
-      "sector": "",
-      "ir_url": ""
+      "name": "Netflix Inc.",
+      "sector": "Communication Services - Streaming",
+      "ir_url": "https://ir.netflix.net"
     },
     {
       "symbol": "TM",
@@ -38129,9 +38129,9 @@
       "avg_weeks_below": 10.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "TM",
-      "sector": "",
-      "ir_url": ""
+      "name": "Toyota Motor Corporation",
+      "sector": "Consumer Discretionary - Automobiles",
+      "ir_url": "https://global.toyota/en/ir/"
     },
     {
       "symbol": "SNY",
@@ -38263,9 +38263,9 @@
       "avg_weeks_below": 14.9,
       "last_updated": "2026-01-09",
       "data_weeks": 1028,
-      "name": "SNY",
-      "sector": "",
-      "ir_url": ""
+      "name": "Sanofi",
+      "sector": "Healthcare - Pharmaceuticals",
+      "ir_url": "https://www.sanofi.com/en/investors"
     },
     {
       "symbol": "NVS",
@@ -38411,9 +38411,9 @@
       "avg_weeks_below": 8.1,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "NVS",
-      "sector": "",
-      "ir_url": ""
+      "name": "Novartis AG",
+      "sector": "Healthcare - Pharmaceuticals",
+      "ir_url": "https://www.novartis.com/investors"
     },
     {
       "symbol": "UL",
@@ -38552,9 +38552,9 @@
       "avg_weeks_below": 8.4,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "UL",
-      "sector": "",
-      "ir_url": ""
+      "name": "Unilever PLC",
+      "sector": "Consumer Staples - Household Products",
+      "ir_url": "https://www.unilever.com/investors/"
     },
     {
       "symbol": "BTI",
@@ -38693,9 +38693,9 @@
       "avg_weeks_below": 14.3,
       "last_updated": "2026-01-09",
       "data_weeks": 1167,
-      "name": "BTI",
-      "sector": "",
-      "ir_url": ""
+      "name": "British American Tobacco p.l.c.",
+      "sector": "Consumer Staples - Tobacco",
+      "ir_url": "https://www.bat.com/investors "
     }
   ],
   "summary": {
@@ -38846,9 +38846,9 @@
         "avg_weeks_below": 70.5,
         "last_updated": "2026-01-09",
         "data_weeks": 171,
-        "name": "MRNA",
-        "sector": "",
-        "ir_url": ""
+        "name": "Moderna Inc.",
+        "sector": "Healthcare - Biotechnology",
+        "ir_url": "https://investors.modernatx.com"
       },
       {
         "symbol": "WBA",
@@ -39193,9 +39193,9 @@
         "avg_weeks_below": 17.6,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "BAX",
-        "sector": "",
-        "ir_url": ""
+        "name": "Baxter International Inc.",
+        "sector": "Healthcare - Medical Devices",
+        "ir_url": "https://investor.baxter.com"
       },
       {
         "symbol": "CHTR",
@@ -39237,9 +39237,9 @@
         "avg_weeks_below": 64.3,
         "last_updated": "2026-01-09",
         "data_weeks": 636,
-        "name": "CHTR",
-        "sector": "",
-        "ir_url": ""
+        "name": "Charter Communications Inc.",
+        "sector": "Communication Services - Cable",
+        "ir_url": "https://ir.charter.com"
       },
       {
         "symbol": "DOW",
@@ -40247,9 +40247,9 @@
         "avg_weeks_below": 17.7,
         "last_updated": "2026-01-09",
         "data_weeks": 883,
-        "name": "DXCM",
-        "sector": "",
-        "ir_url": ""
+        "name": "DexCom Inc.",
+        "sector": "Healthcare - Medical Devices",
+        "ir_url": "https://investors.dexcom.com"
       },
       {
         "symbol": "GIS",
@@ -40796,9 +40796,9 @@
         "avg_weeks_below": 21.6,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "MOS",
-        "sector": "",
-        "ir_url": ""
+        "name": "The Mosaic Company",
+        "sector": "Materials - Fertilizers",
+        "ir_url": "https://investors.mosaicco.com"
       },
       {
         "symbol": "UNH",
@@ -41287,9 +41287,9 @@
         "avg_weeks_below": 18.0,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "HPQ",
-        "sector": "",
-        "ir_url": ""
+        "name": "HP Inc.",
+        "sector": "Technology - Computer Hardware",
+        "ir_url": "https://investor.hp.com"
       },
       {
         "symbol": "ZTS",
@@ -42113,9 +42113,9 @@
         "avg_weeks_below": 12.2,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "TGT",
-        "sector": "",
-        "ir_url": ""
+        "name": "Target Corporation",
+        "sector": "Consumer Discretionary - Retail",
+        "ir_url": "https://investors.target.com"
       },
       {
         "symbol": "DVN",
@@ -43594,9 +43594,9 @@
         "avg_weeks_below": 13.4,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "BIIB",
-        "sector": "",
-        "ir_url": ""
+        "name": "Biogen Inc.",
+        "sector": "Healthcare - Biotechnology",
+        "ir_url": "https://investors.biogen.com"
       },
       {
         "symbol": "CMCSA",
@@ -43757,9 +43757,9 @@
         "avg_weeks_below": 20.6,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "CMCSA",
-        "sector": "",
-        "ir_url": ""
+        "name": "Comcast Corporation",
+        "sector": "Communication Services - Cable",
+        "ir_url": "https://www.cmcsa.com"
       },
       {
         "symbol": "PPG",
@@ -43983,9 +43983,9 @@
         "avg_weeks_below": 7.8,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "PPG",
-        "sector": "",
-        "ir_url": ""
+        "name": "PPG Industries Inc.",
+        "sector": "Materials - Paints & Coatings",
+        "ir_url": "https://investor.ppg.com"
       },
       {
         "symbol": "BDX",
@@ -44202,9 +44202,9 @@
         "avg_weeks_below": 6.5,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "BDX",
-        "sector": "",
-        "ir_url": ""
+        "name": "Becton, Dickinson and Company",
+        "sector": "Healthcare - Medical Devices",
+        "ir_url": "https://investors.bd.com"
       },
       {
         "symbol": "PEP",
@@ -44884,9 +44884,9 @@
         "avg_weeks_below": 25.5,
         "last_updated": "2026-01-09",
         "data_weeks": 1129,
-        "name": "ILMN",
-        "sector": "",
-        "ir_url": ""
+        "name": "Illumina Inc.",
+        "sector": "Healthcare - Life Sciences",
+        "ir_url": "https://investor.illumina.com"
       },
       {
         "symbol": "CMG",
@@ -44963,9 +44963,9 @@
         "avg_weeks_below": 21.0,
         "last_updated": "2026-01-09",
         "data_weeks": 842,
-        "name": "CMG",
-        "sector": "",
-        "ir_url": ""
+        "name": "Chipotle Mexican Grill Inc.",
+        "sector": "Consumer Discretionary - Restaurants",
+        "ir_url": "https://ir.chipotle.com"
       },
       {
         "symbol": "EOG",
@@ -45161,9 +45161,9 @@
         "avg_weeks_below": 9.1,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "EOG",
-        "sector": "",
-        "ir_url": ""
+        "name": "EOG Resources Inc.",
+        "sector": "Energy - Oil & Gas E&P",
+        "ir_url": "https://investors.eogresources.com"
       },
       {
         "symbol": "CHD",
@@ -46022,9 +46022,9 @@
         "avg_weeks_below": 137.0,
         "last_updated": "2026-01-09",
         "data_weeks": 644,
-        "name": "DG",
-        "sector": "",
-        "ir_url": ""
+        "name": "Dollar General Corporation",
+        "sector": "Consumer Discretionary - Discount Retail",
+        "ir_url": "https://investor.dollargeneral.com"
       },
       {
         "symbol": "COP",
@@ -46108,9 +46108,9 @@
         "avg_weeks_below": 36.6,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "COP",
-        "sector": "",
-        "ir_url": ""
+        "name": "ConocoPhillips",
+        "sector": "Energy - Oil & Gas E&P",
+        "ir_url": "https://www.conocophillips.com/investor-relations/"
       },
       {
         "symbol": "EQR",
@@ -46343,9 +46343,9 @@
         "avg_weeks_below": 38.0,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "BALL",
-        "sector": "",
-        "ir_url": ""
+        "name": "Ball Corporation",
+        "sector": "Materials - Packaging",
+        "ir_url": "https://investors.ball.com"
       },
       {
         "symbol": "AVB",
@@ -46746,9 +46746,9 @@
         "avg_weeks_below": 13.3,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "BBY",
-        "sector": "",
-        "ir_url": ""
+        "name": "Best Buy Co. Inc.",
+        "sector": "Consumer Discretionary - Electronics Retail",
+        "ir_url": "https://investors.bestbuy.com"
       }
     ],
     "approaching_stocks": [
@@ -46854,9 +46854,9 @@
         "avg_weeks_below": 8.3,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "APD",
-        "sector": "",
-        "ir_url": ""
+        "name": "Air Products and Chemicals Inc.",
+        "sector": "Materials - Industrial Gases",
+        "ir_url": "https://investors.airproducts.com"
       },
       {
         "symbol": "PSA",
@@ -47234,9 +47234,9 @@
         "avg_weeks_below": 9.4,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "SBUX",
-        "sector": "",
-        "ir_url": ""
+        "name": "Starbucks Corporation",
+        "sector": "Consumer Discretionary - Restaurants",
+        "ir_url": "https://investor.starbucks.com"
       },
       {
         "symbol": "GNRC",
@@ -47312,9 +47312,9 @@
         "avg_weeks_below": 32.5,
         "last_updated": "2026-01-09",
         "data_weeks": 631,
-        "name": "GNRC",
-        "sector": "",
-        "ir_url": ""
+        "name": "Generac Holdings Inc.",
+        "sector": "Industrials - Electrical Equipment",
+        "ir_url": "https://investors.generac.com"
       },
       {
         "symbol": "NOW",
@@ -47609,9 +47609,9 @@
         "avg_weeks_below": 24.0,
         "last_updated": "2026-01-09",
         "data_weeks": 866,
-        "name": "CF",
-        "sector": "",
-        "ir_url": ""
+        "name": "CF Industries Holdings Inc.",
+        "sector": "Materials - Fertilizers",
+        "ir_url": "https://www.cfindustries.com/investors"
       },
       {
         "symbol": "SWK",
@@ -47793,9 +47793,9 @@
         "avg_weeks_below": 21.3,
         "last_updated": "2026-01-09",
         "data_weeks": 922,
-        "name": "DPZ",
-        "sector": "",
-        "ir_url": ""
+        "name": "Domino's Pizza Inc.",
+        "sector": "Consumer Discretionary - Restaurants",
+        "ir_url": "https://ir.dominos.com"
       },
       {
         "symbol": "FANG",
@@ -47892,9 +47892,9 @@
         "avg_weeks_below": 11.0,
         "last_updated": "2026-01-09",
         "data_weeks": 492,
-        "name": "FANG",
-        "sector": "",
-        "ir_url": ""
+        "name": "Diamondback Energy Inc.",
+        "sector": "Energy - Oil & Gas E&P",
+        "ir_url": "https://ir.diamondbackenergy.com"
       }
     ],
     "oversold_stocks": [
@@ -49293,9 +49293,9 @@
         "avg_weeks_below": 6.3,
         "last_updated": "2026-01-09",
         "data_weeks": 1167,
-        "name": "AZO",
-        "sector": "",
-        "ir_url": ""
+        "name": "AutoZone Inc.",
+        "sector": "Consumer Discretionary - Auto Parts Retail",
+        "ir_url": "https://investors.autozone.com"
       },
       {
         "symbol": "TMUS",
@@ -49350,9 +49350,9 @@
         "avg_weeks_below": 15.8,
         "last_updated": "2026-01-09",
         "data_weeks": 778,
-        "name": "TMUS",
-        "sector": "",
-        "ir_url": ""
+        "name": "T-Mobile US Inc.",
+        "sector": "Communication Services - Telecom",
+        "ir_url": "https://investor.t-mobile.com"
       },
       {
         "symbol": "CHTR",
@@ -49394,9 +49394,9 @@
         "avg_weeks_below": 64.3,
         "last_updated": "2026-01-09",
         "data_weeks": 636,
-        "name": "CHTR",
-        "sector": "",
-        "ir_url": ""
+        "name": "Charter Communications Inc.",
+        "sector": "Communication Services - Cable",
+        "ir_url": "https://ir.charter.com"
       },
       {
         "symbol": "NFLX",
@@ -49521,12 +49521,12 @@
         "avg_weeks_below": 11.1,
         "last_updated": "2026-01-09",
         "data_weeks": 1034,
-        "name": "NFLX",
-        "sector": "",
-        "ir_url": ""
+        "name": "Netflix Inc.",
+        "sector": "Communication Services - Streaming",
+        "ir_url": "https://ir.netflix.net"
       }
     ]
   },
-  "generated": "2026-01-11T03:23:04.269898",
-  "generated_readable": "January 11, 2026"
+  "generated": "2026-01-12T01:34:51.258265",
+  "generated_readable": "January 12, 2026"
 }
