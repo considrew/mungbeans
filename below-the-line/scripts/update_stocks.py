@@ -321,6 +321,250 @@ STOCK_UNIVERSE = [
     'UL',     # Unilever
     'BTI',    # British American Tobacco
 
+# === MID-CAP FINANCIALS (20) ===
+    'FCNCA',  # First Citizens BancShares
+    'SNV',    # Synovus Financial
+    'ONB',    # Old National Bancorp
+    'UBSI',   # United Bankshares
+    'FFIN',   # First Financial Bankshares
+    'GBCI',   # Glacier Bancorp
+    'SBCF',   # Seacoast Banking
+    'HWC',    # Hancock Whitney
+    'SFNC',   # Simmons First National
+    'WTFC',   # Wintrust Financial
+    'PNFP',   # Pinnacle Financial Partners
+    'FBK',    # FB Financial
+    'IBOC',   # International Bancshares
+    'CADE',   # Cadence Bank
+    'AUB',    # Atlantic Union Bankshares
+    'TCBI',   # Texas Capital Bancshares
+    'ABCB',   # Ameris Bancorp
+    'SSB',    # SouthState Corporation
+
+    # === MORE HEALTHCARE - BIOTECH & SERVICES (25) ===
+    'ALNY',   # Alnylam Pharmaceuticals
+    'SRPT',   # Sarepta Therapeutics
+    'BMRN',   # BioMarin Pharmaceutical
+    'INCY',   # Incyte Corporation
+    'EXAS',   # Exact Sciences
+    'TECH',   # Bio-Techne
+    'NTRA',   # Natera
+    'RARE',   # Ultragenyx Pharmaceutical
+    'NBIX',   # Neurocrine Biosciences
+    'PCVX',   # Vaxcyte
+    'KRYS',   # Krystal Biotech
+    'INSM',   # Insmed
+    'IONS',   # Ionis Pharmaceuticals
+    'UTHR',   # United Therapeutics
+    'EXEL',   # Exelixis
+    'ACAD',   # ACADIA Pharmaceuticals
+    'ARVN',   # Arvinas
+    'FOLD',   # Amicus Therapeutics
+    'HALO',   # Halozyme Therapeutics
+    'LGND',   # Ligand Pharmaceuticals
+    'MEDP',   # Medpace Holdings
+    'ICLR',   # ICON plc
+    'CRL',    # Charles River Laboratories
+    'WST',    # West Pharmaceutical Services
+
+    # === MORE CONSUMER DISCRETIONARY (25) ===
+    'GRMN',   # Garmin
+    'DECK',   # Deckers Outdoor
+    'POOL',   # Pool Corporation
+    'WSM',    # Williams-Sonoma
+    'RH',     # RH (Restoration Hardware)
+    'TSCO',   # Tractor Supply
+    'ULTA',   # Ulta Beauty
+    'FIVE',   # Five Below
+    'BOOT',   # Boot Barn Holdings
+    'OLLI',   # Ollie's Bargain Outlet
+    'BURL',   # Burlington Stores
+    'SKX',    # Skechers
+    'CROX',   # Crocs
+    'LULU',   # Lululemon Athletica
+    'NVR',    # NVR Inc (homebuilder)
+    'PHM',    # PulteGroup
+    'LEN',    # Lennar Corporation
+    'DHI',    # D.R. Horton
+    'TOL',    # Toll Brothers
+    'KBH',    # KB Home
+    'MTH',    # Meritage Homes
+    'MDC',    # M.D.C. Holdings
+    'PENN',   # Penn Entertainment
+    'CZR',    # Caesars Entertainment
+    'WYNN',   # Wynn Resorts
+
+    # === MORE INDUSTRIALS (25) ===
+    'ALLE',   # Allegion
+    'AOS',    # A.O. Smith
+    'CR',     # Crane Company
+    'FICO',   # Fair Isaac Corporation
+    'FTV',    # Fortive Corporation
+    'GGG',    # Graco Inc.
+    'IEX',    # IDEX Corporation
+    'MIDD',   # Middleby Corporation
+    'NDSN',   # Nordson Corporation
+    'RBC',    # RBC Bearings
+    'RRX',    # Regal Rexnord
+    'SITE',   # SiteOne Landscape Supply
+    'TTC',    # Toro Company
+    'WCC',    # WESCO International
+    'WWD',    # Woodward Inc.
+    'ZWS',    # Zurn Elkay Water Solutions
+    'AXON',   # Axon Enterprise
+    'TDG',    # TransDigm Group
+    'HEI',    # HEICO Corporation
+    'HEI-A',  # HEICO Class A
+    'BWXT',   # BWX Technologies
+    'HII',    # Huntington Ingalls
+    'LDOS',   # Leidos Holdings
+
+    # === MORE TECHNOLOGY - SOFTWARE & SERVICES (25) ===
+    'TEAM',   # Atlassian
+    'HUBS',   # HubSpot
+    'WDAY',   # Workday
+    'VEEV',   # Veeva Systems
+    'OKTA',   # Okta
+    'TWLO',   # Twilio
+    'DBX',    # Dropbox
+    'ZI',     # ZoomInfo Technologies
+    'ESTC',   # Elastic N.V.
+    'CFLT',   # Confluent
+    'GTLB',   # GitLab
+    'BILL',   # Bill.com Holdings
+    'PAYC',   # Paycom Software
+    'PCTY',   # Paylocity
+    'WK',     # Workiva
+    'APPF',   # AppFolio
+    'MANH',   # Manhattan Associates
+    'SMAR',   # Smartsheet
+    'DOCU',   # DocuSign
+    'BOX',    # Box Inc.
+    'RNG',    # RingCentral
+    'FIVN',   # Five9
+    'NICE',   # NICE Ltd.
+
+    # === MORE TECHNOLOGY - HARDWARE & SEMIS (20) ===
+    'MRVL',   # Marvell Technology
+    'ON',     # ON Semiconductor
+    'SWKS',   # Skyworks Solutions
+    'QRVO',   # Qorvo
+    'MPWR',   # Monolithic Power Systems
+    'ALGM',   # Allegro MicroSystems
+    'CRUS',   # Cirrus Logic
+    'SYNA',   # Synaptics
+    'DIOD',   # Diodes Incorporated
+    'POWI',   # Power Integrations
+    'SMTC',   # Semtech
+    'WOLF',   # Wolfspeed
+    'ACLS',   # Axcelis Technologies
+    'MKSI',   # MKS Instruments
+    'COHR',   # Coherent Corp.
+    'IPGP',   # IPG Photonics
+    'NOVT',   # Novanta
+    'TER',    # Teradyne
+    'ENTG',   # Entegris
+    'AMKR',   # Amkor Technology
+
+    # === MORE ENERGY (15) ===
+    'PSX',    # Phillips 66
+    'TRGP',   # Targa Resources
+    'LNG',    # Cheniere Energy
+    'DINO',   # HF Sinclair
+    'PBF',    # PBF Energy
+    'MTDR',   # Matador Resources
+    'PR',     # Permian Resources
+    'CTRA',   # Coterra Energy
+    'AR',     # Antero Resources
+    'RRC',    # Range Resources
+    'SWN',    # Southwestern Energy
+    'EQT',    # EQT Corporation
+    'CNX',    # CNX Resources
+    'NOG',    # Northern Oil and Gas
+    'CHRD',   # Chord Energy
+
+    # === MORE MATERIALS (15) ===
+    'VMC',    # Vulcan Materials
+    'MLM',    # Martin Marietta
+    'STLD',   # Steel Dynamics
+    'CLF',    # Cleveland-Cliffs
+    'X',      # United States Steel
+    'CMC',    # Commercial Metals
+    'ATI',    # ATI Inc.
+    'RS',     # Reliance Steel
+    'AA',     # Alcoa
+    'CENX',   # Century Aluminum
+    'HUN',    # Huntsman Corporation
+    'OLN',    # Olin Corporation
+    'WLK',    # Westlake Corporation
+    'EMN',    # Eastman Chemical
+    'CE',     # Celanese Corporation
+
+    # === MORE COMMUNICATION SERVICES (10) ===
+    'LBRDK',  # Liberty Broadband
+    'LBRDA',  # Liberty Broadband Class A
+    'FWONK',  # Liberty Formula One
+    'LYV',    # Live Nation Entertainment
+    'MTCH',   # Match Group
+    'IAC',    # IAC Inc.
+    'PARA',   # Paramount Global
+    'FOX',    # Fox Corporation
+    'FOXA',   # Fox Corporation Class A
+    'NYT',    # New York Times
+
+    # === INTERNATIONAL ADRs - EUROPE (15) ===
+    'SAP',    # SAP SE
+    'ASML',   # ASML Holding
+    'AZN',    # AstraZeneca
+    'GSK',    # GSK plc
+    'NVO',    # Novo Nordisk
+    'DEO',    # Diageo
+    'RIO',    # Rio Tinto
+    'BHP',    # BHP Group
+    'VALE',   # Vale S.A.
+    'SHEL',   # Shell plc
+    'BP',     # BP plc
+    'EQNR',   # Equinor
+    'TTE',    # TotalEnergies
+    'SAN',    # Banco Santander
+    'ING',    # ING Groep
+
+    # === INTERNATIONAL ADRs - ASIA & EMERGING (10) ===
+    'INFY',   # Infosys
+    'WIT',    # Wipro
+    'HDB',    # HDFC Bank
+    'IBN',    # ICICI Bank
+    'SONY',   # Sony Group
+    'MUFG',   # Mitsubishi UFJ Financial
+    'SMFG',   # Sumitomo Mitsui Financial
+    'KB',     # KB Financial Group
+    'SHG',    # Shinhan Financial
+    'LFC',    # China Life Insurance
+
+    # === CONSUMER STAPLES - MORE COVERAGE (10) ===
+    'HSY',    # Hershey Company
+    'MNST',   # Monster Beverage
+    'COKE',   # Coca-Cola Consolidated
+    'KDP',    # Keurig Dr Pepper
+    'EL',     # Estee Lauder
+    'KVUE',   # Kenvue
+    'SYY',    # Sysco Corporation
+    'USFD',   # US Foods Holding
+    'PFGC',   # Performance Food Group
+    'CHEF',   # Chefs' Warehouse
+
+    # === MISCELLANEOUS VALUE (10) ===
+    'BRO',    # Brown & Brown Insurance
+    'ERIE',   # Erie Indemnity
+    'WRB',    # W.R. Berkley
+    'RLI',    # RLI Corp
+    'CINF',   # Cincinnati Financial
+    'GL',     # Globe Life
+    'PRI',    # Primerica
+    'AIZ',    # Assurant
+    'FAF',    # First American Financial
+    'FNF',    # Fidelity National Financial
+
 
 ]
 
