@@ -21,8 +21,8 @@
   },
   "RDW": {
     "name": "Redwire Corporation",
-    "sector": "Aerospace",
-    "ir_url": "https://redwirespace.com/investors/"
+    "sector": "Industrials - Space",
+    "ir_url": "https://investors.redwirespace.com"
   },
   "IONQ": {
     "name": "IonQ Inc.",
@@ -81,8 +81,8 @@
   },
   "PATH": {
     "name": "UiPath Inc.",
-    "sector": "Technology - Software",
-    "ir_url": "https://investor.uipath.com"
+    "sector": "Technology - Automation",
+    "ir_url": "https://ir.uipath.com"
   },
   "S": {
     "name": "SentinelOne Inc.",
@@ -96,8 +96,8 @@
   },
   "NET": {
     "name": "Cloudflare Inc.",
-    "sector": "Technology - Cloud Infrastructure",
-    "ir_url": "https://cloudflare.net/investor-relations"
+    "sector": "Technology - Cloud Services",
+    "ir_url": "https://cloudflare.net/ir"
   },
   "DDOG": {
     "name": "Datadog Inc.",
@@ -212,7 +212,7 @@
   "NU": {
     "name": "Nu Holdings Ltd.",
     "sector": "Financial Services - Fintech",
-    "ir_url": "https://investors.nu"
+    "ir_url": "https://investors.nubank.com.br"
   },
   "AON": {
     "name": "Aon plc",
@@ -391,7 +391,7 @@
   },
   "ORCL": {
     "name": "Oracle Corporation",
-    "sector": "Technology - Software",
+    "sector": "Technology - Enterprise Software",
     "ir_url": "https://investor.oracle.com"
   },
   "HON": {
@@ -501,7 +501,7 @@
   },
   "SQ": {
     "name": "Block Inc.",
-    "sector": "Financial Services - Payments",
+    "sector": "Technology - Fintech",
     "ir_url": "https://investors.block.xyz"
   },
   "SHOP": {
@@ -2708,5 +2708,945 @@
     "name": "Fidelity National Financial Inc.",
     "sector": "Financial Services - Title Insurance",
     "ir_url": "https://investors.fnf.com"
+  },
+  "CCL": {
+    "name": "Carnival Corporation",
+    "sector": "Consumer Discretionary - Cruise Lines",
+    "ir_url": "https://www.carnivalcorp.com/investor-relations"
+  },
+  "RCL": {
+    "name": "Royal Caribbean Group",
+    "sector": "Consumer Discretionary - Cruise Lines",
+    "ir_url": "https://www.rclinvestor.com"
+  },
+  "DAL": {
+    "name": "Delta Air Lines Inc.",
+    "sector": "Industrials - Airlines",
+    "ir_url": "https://ir.delta.com"
+  },
+  "UAL": {
+    "name": "United Airlines Holdings Inc.",
+    "sector": "Industrials - Airlines",
+    "ir_url": "https://ir.united.com"
+  },
+  "LUV": {
+    "name": "Southwest Airlines Co.",
+    "sector": "Industrials - Airlines",
+    "ir_url": "https://www.southwestairlinesinvestorrelations.com"
+  },
+  "AAL": {
+    "name": "American Airlines Group Inc.",
+    "sector": "Industrials - Airlines",
+    "ir_url": "https://americanairlines.gcs-web.com"
+  },
+  "JBLU": {
+    "name": "JetBlue Airways Corporation",
+    "sector": "Industrials - Airlines",
+    "ir_url": "https://investor.jetblue.com"
+  },
+  "NCLH": {
+    "name": "Norwegian Cruise Line Holdings Ltd.",
+    "sector": "Consumer Discretionary - Cruise Lines",
+    "ir_url": "https://www.nclhltdinvestor.com"
+  },
+  "ABNB": {
+    "name": "Airbnb Inc.",
+    "sector": "Consumer Discretionary - Travel Services",
+    "ir_url": "https://investors.airbnb.com"
+  },
+  "EXPE": {
+    "name": "Expedia Group Inc.",
+    "sector": "Consumer Discretionary - Travel Services",
+    "ir_url": "https://ir.expediagroup.com"
+  },
+  "TRIP": {
+    "name": "TripAdvisor Inc.",
+    "sector": "Consumer Discretionary - Travel Services",
+    "ir_url": "https://ir.tripadvisor.com"
+  },
+  "TCOM": {
+    "name": "Trip.com Group Limited",
+    "sector": "Consumer Discretionary - Travel Services",
+    "ir_url": "https://investors.trip.com"
+  },
+  "NIO": {
+    "name": "NIO Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://ir.nio.com"
+  },
+  "XPEV": {
+    "name": "XPeng Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://ir.xiaopeng.com"
+  },
+  "LI": {
+    "name": "Li Auto Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://ir.lixiang.com"
+  },
+  "NKLA": {
+    "name": "Nikola Corporation",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://nikolamotor.com/investors"
+  },
+  "GOEV": {
+    "name": "Canoo Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://investors.canoo.com"
+  },
+  "WKHS": {
+    "name": "Workhorse Group Inc.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://workhorse.com/investors"
+  },
+  "HYLN": {
+    "name": "Hyliion Holdings Corp.",
+    "sector": "Consumer Discretionary - Electric Vehicles",
+    "ir_url": "https://ir.hyliion.com"
+  },
+  "CHPT": {
+    "name": "ChargePoint Holdings Inc.",
+    "sector": "Industrials - EV Charging",
+    "ir_url": "https://investors.chargepoint.com"
+  },
+  "BLNK": {
+    "name": "Blink Charging Co.",
+    "sector": "Industrials - EV Charging",
+    "ir_url": "https://ir.blinkcharging.com"
+  },
+  "EVGO": {
+    "name": "EVgo Inc.",
+    "sector": "Industrials - EV Charging",
+    "ir_url": "https://investors.evgo.com"
+  },
+  "QS": {
+    "name": "QuantumScape Corporation",
+    "sector": "Industrials - Batteries",
+    "ir_url": "https://ir.quantumscape.com"
+  },
+  "MVST": {
+    "name": "Microvast Holdings Inc.",
+    "sector": "Industrials - Batteries",
+    "ir_url": "https://ir.microvast.com"
+  },
+  "ENVX": {
+    "name": "Enovix Corporation",
+    "sector": "Industrials - Batteries",
+    "ir_url": "https://ir.enovix.com"
+  },
+  "FREY": {
+    "name": "Freyr Battery Inc.",
+    "sector": "Industrials - Batteries",
+    "ir_url": "https://ir.freyrbattery.com"
+  },
+  "SLDP": {
+    "name": "Solid Power Inc.",
+    "sector": "Industrials - Batteries",
+    "ir_url": "https://ir.solidpowerbattery.com"
+  },
+  "SEDG": {
+    "name": "SolarEdge Technologies Inc.",
+    "sector": "Technology - Solar",
+    "ir_url": "https://investors.solaredge.com"
+  },
+  "ENPH": {
+    "name": "Enphase Energy Inc.",
+    "sector": "Technology - Solar",
+    "ir_url": "https://investor.enphase.com"
+  },
+  "RUN": {
+    "name": "Sunrun Inc.",
+    "sector": "Utilities - Solar",
+    "ir_url": "https://investors.sunrun.com"
+  },
+  "NOVA": {
+    "name": "Sunnova Energy International Inc.",
+    "sector": "Utilities - Solar",
+    "ir_url": "https://investors.sunnova.com"
+  },
+  "ARRY": {
+    "name": "Array Technologies Inc.",
+    "sector": "Technology - Solar",
+    "ir_url": "https://ir.arraytechinc.com"
+  },
+  "FSLR": {
+    "name": "First Solar Inc.",
+    "sector": "Technology - Solar",
+    "ir_url": "https://investor.firstsolar.com"
+  },
+  "JKS": {
+    "name": "JinkoSolar Holding Co. Ltd.",
+    "sector": "Technology - Solar",
+    "ir_url": "https://ir.jinkosolar.com"
+  },
+  "STEM": {
+    "name": "Stem Inc.",
+    "sector": "Technology - Energy Storage",
+    "ir_url": "https://investors.stem.com"
+  },
+  "BE": {
+    "name": "Bloom Energy Corporation",
+    "sector": "Industrials - Fuel Cells",
+    "ir_url": "https://investor.bloomenergy.com"
+  },
+  "FCEL": {
+    "name": "FuelCell Energy Inc.",
+    "sector": "Industrials - Fuel Cells",
+    "ir_url": "https://investor.fuelcellenergy.com"
+  },
+  "MARA": {
+    "name": "Marathon Digital Holdings Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://ir.mara.com"
+  },
+  "CLSK": {
+    "name": "CleanSpark Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://ir.cleanspark.com"
+  },
+  "RIOT": {
+    "name": "Riot Platforms Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://www.riotplatforms.com/investors"
+  },
+  "BITF": {
+    "name": "Bitfarms Ltd.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://bitfarms.com/investors"
+  },
+  "HUT": {
+    "name": "Hut 8 Corp.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://hut8.com/investors"
+  },
+  "CIFR": {
+    "name": "Cipher Mining Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://investors.ciphermining.com"
+  },
+  "WULF": {
+    "name": "TeraWulf Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://ir.terawulf.com"
+  },
+  "CORZ": {
+    "name": "Core Scientific Inc.",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://investors.corescientific.com"
+  },
+  "BTDR": {
+    "name": "Bitdeer Technologies Group",
+    "sector": "Technology - Bitcoin Mining",
+    "ir_url": "https://ir.bitdeer.com"
+  },
+  "IBIT": {
+    "name": "iShares Bitcoin Trust ETF",
+    "sector": "Financial - Crypto ETF",
+    "ir_url": "https://www.ishares.com"
+  },
+  "GBTC": {
+    "name": "Grayscale Bitcoin Trust",
+    "sector": "Financial - Crypto ETF",
+    "ir_url": "https://grayscale.com"
+  },
+  "ETHE": {
+    "name": "Grayscale Ethereum Trust",
+    "sector": "Financial - Crypto ETF",
+    "ir_url": "https://grayscale.com"
+  },
+  "BITO": {
+    "name": "ProShares Bitcoin Strategy ETF",
+    "sector": "Financial - Crypto ETF",
+    "ir_url": "https://www.proshares.com"
+  },
+  "BITX": {
+    "name": "2x Bitcoin Strategy ETF",
+    "sector": "Financial - Crypto ETF",
+    "ir_url": "https://www.volatilityshares.com"
+  },
+  "MSTU": {
+    "name": "T-Rex 2X Long MSTR Daily Target ETF",
+    "sector": "Financial - Leveraged ETF",
+    "ir_url": "https://rfrexetfs.com"
+  },
+  "CRWV": {
+    "name": "CoreWeave Inc.",
+    "sector": "Technology - Cloud Computing",
+    "ir_url": "https://ir.coreweave.com"
+  },
+  "APLD": {
+    "name": "Applied Digital Corporation",
+    "sector": "Technology - Data Centers",
+    "ir_url": "https://ir.applieddigital.com"
+  },
+  "AI": {
+    "name": "C3.ai Inc.",
+    "sector": "Technology - AI Software",
+    "ir_url": "https://ir.c3.ai"
+  },
+  "BBAI": {
+    "name": "BigBear.ai Holdings Inc.",
+    "sector": "Technology - AI Software",
+    "ir_url": "https://ir.bigbear.ai"
+  },
+  "SOUN": {
+    "name": "SoundHound AI Inc.",
+    "sector": "Technology - AI Software",
+    "ir_url": "https://investors.soundhound.com"
+  },
+  "SMCI": {
+    "name": "Super Micro Computer Inc.",
+    "sector": "Technology - Computer Hardware",
+    "ir_url": "https://ir.supermicro.com"
+  },
+  "VRT": {
+    "name": "Vertiv Holdings Co.",
+    "sector": "Industrials - Data Center Infrastructure",
+    "ir_url": "https://investors.vertiv.com"
+  },
+  "ANET": {
+    "name": "Arista Networks Inc.",
+    "sector": "Technology - Networking",
+    "ir_url": "https://investors.arista.com"
+  },
+  "AKAM": {
+    "name": "Akamai Technologies Inc.",
+    "sector": "Technology - Cloud Services",
+    "ir_url": "https://www.akamai.com/company/investor-relations"
+  },
+  "FSLY": {
+    "name": "Fastly Inc.",
+    "sector": "Technology - Cloud Services",
+    "ir_url": "https://investors.fastly.com"
+  },
+  "NEWR": {
+    "name": "New Relic Inc.",
+    "sector": "Technology - Software",
+    "ir_url": "https://ir.newrelic.com"
+  },
+  "LUMN": {
+    "name": "Lumen Technologies Inc.",
+    "sector": "Communication Services - Telecom",
+    "ir_url": "https://ir.lumen.com"
+  },
+  "NBIS": {
+    "name": "Nebius Group N.V.",
+    "sector": "Technology - AI Infrastructure",
+    "ir_url": "https://nebius.com/investors"
+  },
+  "APP": {
+    "name": "AppLovin Corporation",
+    "sector": "Technology - Mobile Apps",
+    "ir_url": "https://investors.applovin.com"
+  },
+  "SPCE": {
+    "name": "Virgin Galactic Holdings Inc.",
+    "sector": "Industrials - Space",
+    "ir_url": "https://investors.virgingalactic.com"
+  },
+  "PL": {
+    "name": "Planet Labs PBC",
+    "sector": "Industrials - Space",
+    "ir_url": "https://investors.planet.com"
+  },
+  "BKSY": {
+    "name": "BlackSky Technology Inc.",
+    "sector": "Industrials - Space",
+    "ir_url": "https://ir.blacksky.com"
+  },
+  "IRDM": {
+    "name": "Iridium Communications Inc.",
+    "sector": "Communication Services - Satellite",
+    "ir_url": "https://investor.iridium.com"
+  },
+  "GSAT": {
+    "name": "Globalstar Inc.",
+    "sector": "Communication Services - Satellite",
+    "ir_url": "https://investors.globalstar.com"
+  },
+  "KTOS": {
+    "name": "Kratos Defense & Security Solutions Inc.",
+    "sector": "Industrials - Defense",
+    "ir_url": "https://ir.kratosdefense.com"
+  },
+  "RCAT": {
+    "name": "Red Cat Holdings Inc.",
+    "sector": "Industrials - Drones",
+    "ir_url": "https://ir.redcatholdings.com"
+  },
+  "JOBY": {
+    "name": "Joby Aviation Inc.",
+    "sector": "Industrials - Air Mobility",
+    "ir_url": "https://ir.jobyaviation.com"
+  },
+  "ACHR": {
+    "name": "Archer Aviation Inc.",
+    "sector": "Industrials - Air Mobility",
+    "ir_url": "https://www.archer.com/investor-relations"
+  },
+  "BLDE": {
+    "name": "Blade Air Mobility Inc.",
+    "sector": "Industrials - Air Mobility",
+    "ir_url": "https://ir.blade.com"
+  },
+  "MNTS": {
+    "name": "Momentus Inc.",
+    "sector": "Industrials - Space",
+    "ir_url": "https://investors.momentus.space"
+  },
+  "QUBT": {
+    "name": "Quantum Computing Inc.",
+    "sector": "Technology - Quantum Computing",
+    "ir_url": "https://quantumcomputinginc.com/investors"
+  },
+  "QBTS": {
+    "name": "D-Wave Quantum Inc.",
+    "sector": "Technology - Quantum Computing",
+    "ir_url": "https://ir.dwavequantum.com"
+  },
+  "TLRY": {
+    "name": "Tilray Brands Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://ir.tilray.com"
+  },
+  "SNDL": {
+    "name": "SNDL Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://sndl.com/investors"
+  },
+  "CGC": {
+    "name": "Canopy Growth Corporation",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://www.canopygrowth.com/investors"
+  },
+  "ACB": {
+    "name": "Aurora Cannabis Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://investor.auroramj.com"
+  },
+  "CRON": {
+    "name": "Cronos Group Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://ir.thecronosgroup.com"
+  },
+  "GRWG": {
+    "name": "GrowGeneration Corp.",
+    "sector": "Consumer Discretionary - Hydroponics",
+    "ir_url": "https://ir.growgeneration.com"
+  },
+  "CURLF": {
+    "name": "Curaleaf Holdings Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://ir.curaleaf.com"
+  },
+  "GTBIF": {
+    "name": "Green Thumb Industries Inc.",
+    "sector": "Healthcare - Cannabis",
+    "ir_url": "https://investors.gtigrows.com"
+  },
+  "NVAX": {
+    "name": "Novavax Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.novavax.com"
+  },
+  "OCGN": {
+    "name": "Ocugen Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.ocugen.com"
+  },
+  "BCRX": {
+    "name": "BioCryst Pharmaceuticals Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.biocryst.com"
+  },
+  "VXRT": {
+    "name": "Vaxart Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.vaxart.com"
+  },
+  "MNKD": {
+    "name": "MannKind Corporation",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.mannkindcorp.com"
+  },
+  "GERN": {
+    "name": "Geron Corporation",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.geron.com"
+  },
+  "FATE": {
+    "name": "Fate Therapeutics Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.fatetherapeutics.com"
+  },
+  "XENE": {
+    "name": "Xenon Pharmaceuticals Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.xenon-pharma.com"
+  },
+  "CORT": {
+    "name": "Corcept Therapeutics Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.corcept.com"
+  },
+  "PRTA": {
+    "name": "Prothena Corporation plc",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.prothena.com"
+  },
+  "IMVT": {
+    "name": "Immunovant Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.immunovant.com"
+  },
+  "VRNA": {
+    "name": "Verona Pharma plc",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.vfrpharma.com"
+  },
+  "AXSM": {
+    "name": "Axsome Therapeutics Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.axsome.com"
+  },
+  "VNDA": {
+    "name": "Vanda Pharmaceuticals Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.vandapharma.com"
+  },
+  "TGTX": {
+    "name": "TG Therapeutics Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://ir.tgtherapeutics.com"
+  },
+  "PCRX": {
+    "name": "Pacira BioSciences Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investor.pacira.com"
+  },
+  "JAZZ": {
+    "name": "Jazz Pharmaceuticals plc",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://investor.jazzpharma.com"
+  },
+  "TEVA": {
+    "name": "Teva Pharmaceutical Industries Ltd.",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://ir.tevapharm.com"
+  },
+  "DNA": {
+    "name": "Ginkgo Bioworks Holdings Inc.",
+    "sector": "Healthcare - Biotechnology",
+    "ir_url": "https://investors.ginkgobioworks.com"
+  },
+  "TEM": {
+    "name": "Tempus AI Inc.",
+    "sector": "Healthcare - AI Diagnostics",
+    "ir_url": "https://ir.tempus.com"
+  },
+  "PDD": {
+    "name": "PDD Holdings Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investor.pddholdings.com"
+  },
+  "JD": {
+    "name": "JD.com Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://ir.jd.com"
+  },
+  "BIDU": {
+    "name": "Baidu Inc.",
+    "sector": "Communication Services - Internet",
+    "ir_url": "https://ir.baidu.com"
+  },
+  "NTES": {
+    "name": "NetEase Inc.",
+    "sector": "Communication Services - Gaming",
+    "ir_url": "https://ir.netease.com"
+  },
+  "BILI": {
+    "name": "Bilibili Inc.",
+    "sector": "Communication Services - Streaming",
+    "ir_url": "https://ir.bilibili.com"
+  },
+  "TME": {
+    "name": "Tencent Music Entertainment Group",
+    "sector": "Communication Services - Music Streaming",
+    "ir_url": "https://ir.tencentmusic.com"
+  },
+  "IQ": {
+    "name": "iQIYI Inc.",
+    "sector": "Communication Services - Streaming",
+    "ir_url": "https://ir.iqiyi.com"
+  },
+  "FUTU": {
+    "name": "Futu Holdings Limited",
+    "sector": "Financial Services - Brokerage",
+    "ir_url": "https://ir.futuholdings.com"
+  },
+  "TIGR": {
+    "name": "UP Fintech Holding Limited",
+    "sector": "Financial Services - Brokerage",
+    "ir_url": "https://ir.itiger.com"
+  },
+  "GRAB": {
+    "name": "Grab Holdings Limited",
+    "sector": "Technology - Super App",
+    "ir_url": "https://investors.grab.com"
+  },
+  "SE": {
+    "name": "Sea Limited",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://www.sea.com/investor/home"
+  },
+  "CPNG": {
+    "name": "Coupang Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://ir.aboutcoupang.com"
+  },
+  "LC": {
+    "name": "LendingClub Corporation",
+    "sector": "Financial Services - Fintech",
+    "ir_url": "https://ir.lendingclub.com"
+  },
+  "MELI": {
+    "name": "MercadoLibre Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investor.mercadolibre.com"
+  },
+  "LMND": {
+    "name": "Lemonade Inc.",
+    "sector": "Financial Services - Insurtech",
+    "ir_url": "https://investor.lemonade.com"
+  },
+  "ROOT": {
+    "name": "Root Inc.",
+    "sector": "Financial Services - Insurtech",
+    "ir_url": "https://ir.joinroot.com"
+  },
+  "OPEN": {
+    "name": "Opendoor Technologies Inc.",
+    "sector": "Real Estate - iBuying",
+    "ir_url": "https://investor.opendoor.com"
+  },
+  "RDFN": {
+    "name": "Redfin Corporation",
+    "sector": "Real Estate - Technology",
+    "ir_url": "https://investors.redfin.com"
+  },
+  "Z": {
+    "name": "Zillow Group Inc.",
+    "sector": "Real Estate - Technology",
+    "ir_url": "https://investors.zillowgroup.com"
+  },
+  "CVNA": {
+    "name": "Carvana Co.",
+    "sector": "Consumer Discretionary - Auto Retail",
+    "ir_url": "https://investors.carvana.com"
+  },
+  "KMX": {
+    "name": "CarMax Inc.",
+    "sector": "Consumer Discretionary - Auto Retail",
+    "ir_url": "https://investors.carmax.com"
+  },
+  "RBLX": {
+    "name": "Roblox Corporation",
+    "sector": "Communication Services - Gaming",
+    "ir_url": "https://ir.roblox.com"
+  },
+  "U": {
+    "name": "Unity Software Inc.",
+    "sector": "Technology - Gaming Software",
+    "ir_url": "https://investors.unity.com"
+  },
+  "TTWO": {
+    "name": "Take-Two Interactive Software Inc.",
+    "sector": "Communication Services - Gaming",
+    "ir_url": "https://ir.take2games.com"
+  },
+  "EA": {
+    "name": "Electronic Arts Inc.",
+    "sector": "Communication Services - Gaming",
+    "ir_url": "https://ir.ea.com"
+  },
+  "DKNG": {
+    "name": "DraftKings Inc.",
+    "sector": "Consumer Discretionary - Sports Betting",
+    "ir_url": "https://draftkings.gcs-web.com"
+  },
+  "RSI": {
+    "name": "Rush Street Interactive Inc.",
+    "sector": "Consumer Discretionary - Sports Betting",
+    "ir_url": "https://ir.rushstreetinteractive.com"
+  },
+  "GENI": {
+    "name": "Genius Sports Limited",
+    "sector": "Technology - Sports Data",
+    "ir_url": "https://investors.geniussports.com"
+  },
+  "ROKU": {
+    "name": "Roku Inc.",
+    "sector": "Communication Services - Streaming",
+    "ir_url": "https://ir.roku.com"
+  },
+  "SPOT": {
+    "name": "Spotify Technology S.A.",
+    "sector": "Communication Services - Music Streaming",
+    "ir_url": "https://investors.spotify.com"
+  },
+  "TTD": {
+    "name": "The Trade Desk Inc.",
+    "sector": "Technology - Digital Advertising",
+    "ir_url": "https://investor.thetradedesk.com"
+  },
+  "MGNI": {
+    "name": "Magnite Inc.",
+    "sector": "Technology - Digital Advertising",
+    "ir_url": "https://investors.magnite.com"
+  },
+  "PUBM": {
+    "name": "PubMatic Inc.",
+    "sector": "Technology - Digital Advertising",
+    "ir_url": "https://investors.pubmatic.com"
+  },
+  "DV": {
+    "name": "DoubleVerify Holdings Inc.",
+    "sector": "Technology - Digital Advertising",
+    "ir_url": "https://ir.doubleverify.com"
+  },
+  "IAS": {
+    "name": "Integral Ad Science Holding Corp.",
+    "sector": "Technology - Digital Advertising",
+    "ir_url": "https://ir.integralads.com"
+  },
+  "RDDT": {
+    "name": "Reddit Inc.",
+    "sector": "Communication Services - Social Media",
+    "ir_url": "https://investor.redditinc.com"
+  },
+  "CHWY": {
+    "name": "Chewy Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investor.chewy.com"
+  },
+  "W": {
+    "name": "Wayfair Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investor.wayfair.com"
+  },
+  "ETSY": {
+    "name": "Etsy Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investors.etsy.com"
+  },
+  "EBAY": {
+    "name": "eBay Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investors.ebayinc.com"
+  },
+  "RVLV": {
+    "name": "Revolve Group Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://investors.revolve.com"
+  },
+  "GPS": {
+    "name": "The Gap Inc.",
+    "sector": "Consumer Discretionary - Apparel Retail",
+    "ir_url": "https://investors.gapinc.com"
+  },
+  "ANF": {
+    "name": "Abercrombie & Fitch Co.",
+    "sector": "Consumer Discretionary - Apparel Retail",
+    "ir_url": "https://corporate.abercrombie.com/investors"
+  },
+  "AEO": {
+    "name": "American Eagle Outfitters Inc.",
+    "sector": "Consumer Discretionary - Apparel Retail",
+    "ir_url": "https://investors.ae.com"
+  },
+  "URBN": {
+    "name": "Urban Outfitters Inc.",
+    "sector": "Consumer Discretionary - Apparel Retail",
+    "ir_url": "https://investor.urbn.com"
+  },
+  "M": {
+    "name": "Macy's Inc.",
+    "sector": "Consumer Discretionary - Department Stores",
+    "ir_url": "https://www.macysinc.com/investors"
+  },
+  "JWN": {
+    "name": "Nordstrom Inc.",
+    "sector": "Consumer Discretionary - Department Stores",
+    "ir_url": "https://investor.nordstrom.com"
+  },
+  "KSS": {
+    "name": "Kohl's Corporation",
+    "sector": "Consumer Discretionary - Department Stores",
+    "ir_url": "https://investors.kohls.com"
+  },
+  "DDS": {
+    "name": "Dillard's Inc.",
+    "sector": "Consumer Discretionary - Department Stores",
+    "ir_url": "https://investor.dillards.com"
+  },
+  "BIG": {
+    "name": "Big Lots Inc.",
+    "sector": "Consumer Discretionary - Discount Retail",
+    "ir_url": "https://investors.biglots.com"
+  },
+  "PTON": {
+    "name": "Peloton Interactive Inc.",
+    "sector": "Consumer Discretionary - Fitness",
+    "ir_url": "https://investor.onepeloton.com"
+  },
+  "GPRO": {
+    "name": "GoPro Inc.",
+    "sector": "Consumer Discretionary - Electronics",
+    "ir_url": "https://investor.gopro.com"
+  },
+  "SNAP": {
+    "name": "Snap Inc.",
+    "sector": "Communication Services - Social Media",
+    "ir_url": "https://investor.snap.com"
+  },
+  "PINS": {
+    "name": "Pinterest Inc.",
+    "sector": "Communication Services - Social Media",
+    "ir_url": "https://investor.pinterestinc.com"
+  },
+  "CLOV": {
+    "name": "Clover Health Investments Corp.",
+    "sector": "Healthcare - Insurance",
+    "ir_url": "https://investors.cloverhealth.com"
+  },
+  "SIRI": {
+    "name": "Sirius XM Holdings Inc.",
+    "sector": "Communication Services - Radio",
+    "ir_url": "https://investor.siriusxm.com"
+  },
+  "NOK": {
+    "name": "Nokia Corporation",
+    "sector": "Technology - Telecom Equipment",
+    "ir_url": "https://www.nokia.com/about-us/investors"
+  },
+  "PLUG": {
+    "name": "Plug Power Inc.",
+    "sector": "Industrials - Fuel Cells",
+    "ir_url": "https://ir.plugpower.com"
+  },
+  "WISH": {
+    "name": "ContextLogic Inc.",
+    "sector": "Consumer Discretionary - E-Commerce",
+    "ir_url": "https://ir.wish.com"
+  },
+  "CPRX": {
+    "name": "Catalyst Pharmaceuticals Inc.",
+    "sector": "Healthcare - Pharmaceuticals",
+    "ir_url": "https://ir.catalystpharma.com"
+  },
+  "RITM": {
+    "name": "Rithm Capital Corp.",
+    "sector": "Financial Services - Mortgage REIT",
+    "ir_url": "https://www.rfrithmcapital.com/investors"
+  },
+  "BMBL": {
+    "name": "Bumble Inc.",
+    "sector": "Communication Services - Dating Apps",
+    "ir_url": "https://ir.bumble.com"
+  },
+  "DUOL": {
+    "name": "Duolingo Inc.",
+    "sector": "Technology - Education",
+    "ir_url": "https://investors.duolingo.com"
+  },
+  "DJT": {
+    "name": "Trump Media & Technology Group Corp.",
+    "sector": "Communication Services - Social Media",
+    "ir_url": "https://ir.tmtgcorp.com"
+  },
+  "CYBR": {
+    "name": "CyberArk Software Ltd.",
+    "sector": "Technology - Cybersecurity",
+    "ir_url": "https://www.cyberark.com/investors"
+  },
+  "TENB": {
+    "name": "Tenable Holdings Inc.",
+    "sector": "Technology - Cybersecurity",
+    "ir_url": "https://investors.tenable.com"
+  },
+  "RPD": {
+    "name": "Rapid7 Inc.",
+    "sector": "Technology - Cybersecurity",
+    "ir_url": "https://investors.rapid7.com"
+  },
+  "VRNS": {
+    "name": "Varonis Systems Inc.",
+    "sector": "Technology - Cybersecurity",
+    "ir_url": "https://ir.varonis.com"
+  },
+  "QLYS": {
+    "name": "Qualys Inc.",
+    "sector": "Technology - Cybersecurity",
+    "ir_url": "https://investor.qualys.com"
+  },
+  "SAIC": {
+    "name": "Science Applications International Corp.",
+    "sector": "Technology - Defense IT",
+    "ir_url": "https://investors.saic.com"
+  },
+  "LVS": {
+    "name": "Las Vegas Sands Corp.",
+    "sector": "Consumer Discretionary - Casinos",
+    "ir_url": "https://investor.sands.com"
+  },
+  "MGM": {
+    "name": "MGM Resorts International",
+    "sector": "Consumer Discretionary - Casinos",
+    "ir_url": "https://investors.mgmresorts.com"
+  },
+  "H": {
+    "name": "Hyatt Hotels Corporation",
+    "sector": "Consumer Discretionary - Hotels",
+    "ir_url": "https://investors.hyatt.com"
+  },
+  "IHG": {
+    "name": "InterContinental Hotels Group PLC",
+    "sector": "Consumer Discretionary - Hotels",
+    "ir_url": "https://www.ihgplc.com/investors"
+  },
+  "CHH": {
+    "name": "Choice Hotels International Inc.",
+    "sector": "Consumer Discretionary - Hotels",
+    "ir_url": "https://investor.choicehotels.com"
+  },
+  "WH": {
+    "name": "Wyndham Hotels & Resorts Inc.",
+    "sector": "Consumer Discretionary - Hotels",
+    "ir_url": "https://investor.wyndhamhotels.com"
+  },
+  "PLYA": {
+    "name": "Playa Hotels & Resorts N.V.",
+    "sector": "Consumer Discretionary - Hotels",
+    "ir_url": "https://investors.playaresorts.com"
+  },
+  "DLB": {
+    "name": "Dolby Laboratories Inc.",
+    "sector": "Technology - Audio",
+    "ir_url": "https://investor.dolby.com"
+  },
+  "APPS": {
+    "name": "Digital Turbine Inc.",
+    "sector": "Technology - Mobile Apps",
+    "ir_url": "https://ir.digitalturbine.com"
+  },
+  "DOCN": {
+    "name": "DigitalOcean Holdings Inc.",
+    "sector": "Technology - Cloud Computing",
+    "ir_url": "https://investors.digitalocean.com"
+  },
+  "MQ": {
+    "name": "Marqeta Inc.",
+    "sector": "Technology - Payments",
+    "ir_url": "https://investors.marqeta.com"
   }
 }

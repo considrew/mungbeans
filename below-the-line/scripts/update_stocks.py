@@ -565,6 +565,237 @@ STOCK_UNIVERSE = [
     'FAF',    # First American Financial
     'FNF',    # Fidelity National Financial
 
+ # === AIRLINES & TRAVEL (12) ===
+    'CCL',    # Carnival Corporation
+    'RCL',    # Royal Caribbean
+    'DAL',    # Delta Air Lines
+    'UAL',    # United Airlines
+    'LUV',    # Southwest Airlines
+    'AAL',    # American Airlines
+    'JBLU',   # JetBlue Airways
+    'NCLH',   # Norwegian Cruise Line
+    'ABNB',   # Airbnb
+    'EXPE',   # Expedia
+    'TRIP',   # TripAdvisor
+    'TCOM',   # Trip.com
+
+    # === EV & CLEAN ENERGY (25) ===
+    'NIO',    # Nio Inc
+    'XPEV',   # XPeng
+    'LI',     # Li Auto
+    'NKLA',   # Nikola
+    'GOEV',   # Canoo
+    'WKHS',   # Workhorse Group
+    'HYLN',   # Hyliion
+    'CHPT',   # ChargePoint
+    'BLNK',   # Blink Charging
+    'EVGO',   # EVgo
+    'QS',     # QuantumScape
+    'MVST',   # Microvast
+    'ENVX',   # Enovix
+    'FREY',   # Freyr Battery
+    'SLDP',   # Solid Power
+    'SEDG',   # SolarEdge
+    'ENPH',   # Enphase Energy
+    'RUN',    # Sunrun
+    'NOVA',   # Sunnova Energy
+    'ARRY',   # Array Technologies
+    'FSLR',   # First Solar
+    'JKS',    # JinkoSolar
+    'STEM',   # Stem Inc
+    'BE',     # Bloom Energy
+    'FCEL',   # FuelCell Energy
+
+    # === BITCOIN MINERS & CRYPTO (15) ===
+    'MARA',   # Marathon Digital
+    'CLSK',   # CleanSpark
+    'RIOT',   # Riot Platforms
+    'BITF',   # Bitfarms
+    'HUT',    # Hut 8 Mining
+    'CIFR',   # Cipher Mining
+    'WULF',   # TeraWulf
+    'CORZ',   # Core Scientific
+    'BTDR',   # Bitdeer Technologies
+    'IBIT',   # iShares Bitcoin Trust ETF
+    'GBTC',   # Grayscale Bitcoin Trust
+    'ETHE',   # Grayscale Ethereum Trust
+    'BITO',   # ProShares Bitcoin Strategy
+    'BITX',   # 2x Bitcoin Strategy ETF
+    'MSTU',   # T-Rex 2X Long MSTR
+
+    # === AI & DATA CENTERS (15) ===
+    'CRWV',   # CoreWeave
+    'APLD',   # Applied Digital
+    'AI',     # C3.ai
+    'BBAI',   # BigBear.ai
+    'SOUN',   # SoundHound AI
+    'SMCI',   # Super Micro Computer
+    'VRT',    # Vertiv Holdings
+    'ANET',   # Arista Networks
+    'AKAM',   # Akamai Technologies
+    'FSLY',   # Fastly
+    'NEWR',   # New Relic
+    'LUMN',   # Lumen Technologies
+    'NBIS',   # Nebius Group
+    'ORCL',   # Oracle (ensure included)
+    'APP',    # AppLovin
+
+    # === SPACE & DEFENSE (12) ===
+    'SPCE',   # Virgin Galactic
+    'PL',     # Planet Labs
+    'BKSY',   # BlackSky Technology
+    'IRDM',   # Iridium Communications
+    'GSAT',   # Globalstar
+    'KTOS',   # Kratos Defense
+    'RCAT',   # Red Cat Holdings
+    'JOBY',   # Joby Aviation
+    'ACHR',   # Archer Aviation
+    'BLDE',   # Blade Air Mobility
+    'RDW',    # Redwire
+    'MNTS',   # Momentus
+
+    # === QUANTUM COMPUTING (4) ===
+    'IONQ',   # IonQ
+    'RGTI',   # Rigetti Computing
+    'QUBT',   # Quantum Computing Inc
+    'QBTS',   # D-Wave Quantum
+
+    # === CANNABIS (8) ===
+    'TLRY',   # Tilray Brands
+    'SNDL',   # SNDL Inc
+    'CGC',    # Canopy Growth
+    'ACB',    # Aurora Cannabis
+    'CRON',   # Cronos Group
+    'GRWG',   # GrowGeneration
+    'CURLF',  # Curaleaf (OTC)
+    'GTBIF',  # Green Thumb (OTC)
+
+    # === BIOTECH RETAIL FAVORITES (20) ===
+    'NVAX',   # Novavax
+    'OCGN',   # Ocugen
+    'BCRX',   # BioCryst Pharmaceuticals
+    'VXRT',   # Vaxart
+    'MNKD',   # MannKind Corporation
+    'GERN',   # Geron Corporation
+    'FATE',   # Fate Therapeutics
+    'XENE',   # Xenon Pharmaceuticals
+    'CORT',   # Corcept Therapeutics
+    'PRTA',   # Prothena
+    'IMVT',   # Immunovant
+    'VRNA',   # Verona Pharma
+    'AXSM',   # Axsome Therapeutics
+    'VNDA',   # Vanda Pharmaceuticals
+    'TGTX',   # TG Therapeutics
+    'PCRX',   # Pacira BioSciences
+    'JAZZ',   # Jazz Pharmaceuticals
+    'TEVA',   # Teva Pharmaceutical
+    'DNA',    # Ginkgo Bioworks
+    'TEM',    # Tempus AI
+
+    # === CHINA TECH ADRs (12) ===
+    'PDD',    # PDD Holdings (Temu)
+    'JD',     # JD.com
+    'BIDU',   # Baidu
+    'NTES',   # NetEase
+    'BILI',   # Bilibili
+    'TME',    # Tencent Music
+    'IQ',     # iQIYI
+    'FUTU',   # Futu Holdings
+    'TIGR',   # UP Fintech
+    'GRAB',   # Grab Holdings
+    'SE',     # Sea Limited
+    'CPNG',   # Coupang
+
+    # === FINTECH (12) ===
+    'LC',     # LendingClub
+    'MELI',   # MercadoLibre
+    'LMND',   # Lemonade
+    'ROOT',   # Root Inc
+    'OPEN',   # Opendoor Technologies
+    'RDFN',   # Redfin
+    'Z',      # Zillow Group
+    'CVNA',   # Carvana
+    'KMX',    # CarMax
+    'SQ',     # Block Inc
+    'NU',     # Nu Holdings
+    'UPST',   # Upstart
+
+    # === GAMING & STREAMING (15) ===
+    'RBLX',   # Roblox
+    'U',      # Unity Software
+    'TTWO',   # Take-Two Interactive
+    'EA',     # Electronic Arts
+    'DKNG',   # DraftKings
+    'RSI',    # Rush Street Interactive
+    'GENI',   # Genius Sports
+    'ROKU',   # Roku
+    'SPOT',   # Spotify
+    'TTD',    # The Trade Desk
+    'MGNI',   # Magnite
+    'PUBM',   # PubMatic
+    'DV',     # DoubleVerify
+    'IAS',    # Integral Ad Science
+    'RDDT',   # Reddit
+
+    # === CONSUMER/RETAIL (18) ===
+    'CHWY',   # Chewy
+    'W',      # Wayfair
+    'ETSY',   # Etsy
+    'EBAY',   # eBay
+    'RVLV',   # Revolve Group
+    'GPS',    # Gap Inc
+    'ANF',    # Abercrombie & Fitch
+    'AEO',    # American Eagle Outfitters
+    'URBN',   # Urban Outfitters
+    'M',      # Macy's
+    'JWN',    # Nordstrom
+    'KSS',    # Kohl's
+    'DDS',    # Dillard's
+    'BIG',    # Big Lots
+    'PTON',   # Peloton
+    'GPRO',   # GoPro
+    'SNAP',   # Snap Inc
+    'PINS',   # Pinterest
+
+    # === MEME & SPECULATIVE (10) ===
+    'CLOV',   # Clover Health
+    'SIRI',   # Sirius XM
+    'NOK',    # Nokia
+    'PLUG',   # Plug Power
+    'WISH',   # ContextLogic
+    'CPRX',   # Catalyst Pharmaceuticals
+    'RITM',   # Rithm Capital
+    'BMBL',   # Bumble
+    'DUOL',   # Duolingo
+    'DJT',    # Trump Media
+
+    # === CYBERSECURITY (8) ===
+    'CYBR',   # CyberArk
+    'TENB',   # Tenable
+    'RPD',    # Rapid7
+    'VRNS',   # Varonis Systems
+    'QLYS',   # Qualys
+    'SAIC',   # Science Applications
+    'S',      # SentinelOne
+    'NET',    # Cloudflare
+
+    # === HOTELS & CASINOS (8) ===
+    'LVS',    # Las Vegas Sands
+    'MGM',    # MGM Resorts
+    'H',      # Hyatt Hotels
+    'IHG',    # InterContinental Hotels
+    'CHH',    # Choice Hotels
+    'WH',     # Wyndham Hotels
+    'PLYA',   # Playa Hotels
+    'WYNN',   # Wynn Resorts
+
+    # === MISC TECH (6) ===
+    'DLB',    # Dolby Laboratories
+    'APPS',   # Digital Turbine
+    'PATH',   # UiPath
+    'DOCN',   # DigitalOcean
+    'GTLB',   # GitLab
+    'MQ',     # Marqeta
 
 ]
 
