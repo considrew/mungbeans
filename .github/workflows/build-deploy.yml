@@ -19,11 +19,9 @@ jobs:
           python-version: '3.11'
 
       - name: Install Python dependencies
-        run: pip install pandas requests
+        run: pip install pandas yfinance
 
       - name: Run stock update script
-        env:
-          ALPHA_VANTAGE_KEY: ${{ secrets.ALPHA_VANTAGE_KEY }}
         run: |
           cd below-the-line
           python scripts/update_stocks.py

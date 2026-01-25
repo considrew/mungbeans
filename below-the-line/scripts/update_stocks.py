@@ -2,7 +2,7 @@
 """
 Below The Line - Weekly Stock Data Pipeline
 
-Fetches weekly price data from Alpha Vantage, calculates:
+Fetches weekly price data from Yahoo Finance, calculates:
 - 200-week moving average
 - Distance from 200WMA (%)
 - Week-over-week directional change
@@ -21,13 +21,11 @@ from pathlib import Path
 from typing import Optional, List
 
 import pandas as pd
-import requests
+import yfinance as yf
 
 # Configuration
-API_KEY = os.environ.get('ALPHA_VANTAGE_KEY')
 OUTPUT_DIR = Path(__file__).parent.parent / 'assets' / 'data'
 COMPANIES_FILE = OUTPUT_DIR / 'companies.json'
-RATE_LIMIT_DELAY = 12  # seconds between calls (5 calls/min limit)
 
 # Load company metadata
 def load_company_metadata():
@@ -86,771 +84,208 @@ STOCK_UNIVERSE = [
     'GILD', 'BMY', 'VZ', 'T', 'WBA', 'PFE', 'F', 'GM', 'O', 'SCHD',
 
     # === NEW VALUE STOCKS - FINANCIALS (20) ===
-    'WFC',    # Wells Fargo
-    'USB',    # U.S. Bancorp
-    'PNC',    # PNC Financial
-    'TFC',    # Truist Financial
-    'SCHW',   # Charles Schwab
-    'MS',     # Morgan Stanley
-    'AIG',    # American International Group
-    'MET',    # MetLife
-    'PRU',    # Prudential Financial
-    'ALL',    # Allstate
-    'TRV',    # Travelers Companies
-    'AFL',    # Aflac
-    'CME',    # CME Group
-    'ICE',    # Intercontinental Exchange
-    'FITB',   # Fifth Third Bancorp
-    'KEY',    # KeyCorp
-    'RF',     # Regions Financial
-    'CFG',    # Citizens Financial
-    'MTB',    # M&T Bank
-    'HBAN',   # Huntington Bancshares
+    'WFC', 'USB', 'PNC', 'TFC', 'SCHW', 'MS', 'AIG', 'MET', 'PRU', 'ALL',
+    'TRV', 'AFL', 'CME', 'ICE', 'FITB', 'KEY', 'RF', 'CFG', 'MTB', 'HBAN',
 
     # === NEW VALUE STOCKS - UTILITIES (15) ===
-    'DUK',    # Duke Energy
-    'SO',     # Southern Company
-    'D',      # Dominion Energy
-    'AEP',    # American Electric Power
-    'XEL',    # Xcel Energy
-    'EXC',    # Exelon
-    'SRE',    # Sempra Energy
-    'ED',     # Consolidated Edison
-    'WEC',    # WEC Energy Group
-    'ES',     # Eversource Energy
-    'PPL',    # PPL Corporation
-    'ETR',    # Entergy
-    'AES',    # AES Corporation
-    'CNP',    # CenterPoint Energy
-    'NI',     # NiSource
+    'DUK', 'SO', 'D', 'AEP', 'XEL', 'EXC', 'SRE', 'ED', 'WEC', 'ES',
+    'PPL', 'ETR', 'AES', 'CNP', 'NI',
 
     # === NEW VALUE STOCKS - CONSUMER STAPLES (15) ===
-    'CL',     # Colgate-Palmolive
-    'GIS',    # General Mills
-    'SJM',    # J.M. Smucker
-    'CPB',    # Campbell Soup
-    'CAG',    # Conagra Brands
-    'HRL',    # Hormel Foods
-    'MKC',    # McCormick & Company
-    'CHD',    # Church & Dwight
-    'CLX',    # Clorox
-    'KMB',    # Kimberly-Clark
-    'TAP',    # Molson Coors
-    'STZ',    # Constellation Brands
-    'BG',     # Bunge Limited
-    'ADM',    # Archer-Daniels-Midland
-    'K',      # Kellanova
+    'CL', 'GIS', 'SJM', 'CPB', 'CAG', 'HRL', 'MKC', 'CHD', 'CLX', 'KMB',
+    'TAP', 'STZ', 'BG', 'ADM', 'K',
 
     # === NEW VALUE STOCKS - HEALTHCARE (10) ===
-    'CVS',    # CVS Health
-    'CI',     # Cigna Group
-    'HUM',    # Humana
-    'CNC',    # Centene
-    'ELV',    # Elevance Health
-    'MCK',    # McKesson
-    'CAH',    # Cardinal Health
-    'VTRS',   # Viatris
-    'ZTS',    # Zoetis
-    'LLY',    # Eli Lilly
+    'CVS', 'CI', 'HUM', 'CNC', 'ELV', 'MCK', 'CAH', 'VTRS', 'ZTS', 'LLY',
 
     # === NEW VALUE STOCKS - INDUSTRIALS (15) ===
-    'MMM',    # 3M Company
-    'EMR',    # Emerson Electric
-    'ETN',    # Eaton Corporation
-    'ITW',    # Illinois Tool Works
-    'PH',     # Parker-Hannifin
-    'SWK',    # Stanley Black & Decker
-    'DOV',    # Dover Corporation
-    'SNA',    # Snap-on
-    'CMI',    # Cummins
-    'PCAR',   # PACCAR
-    'DE',     # Deere & Company
-    'FDX',    # FedEx
-    'UPS',    # United Parcel Service
-    'NSC',    # Norfolk Southern
-    'CSX',    # CSX Corporation
+    'MMM', 'EMR', 'ETN', 'ITW', 'PH', 'SWK', 'DOV', 'SNA', 'CMI', 'PCAR',
+    'DE', 'FDX', 'UPS', 'NSC', 'CSX',
 
     # === NEW VALUE STOCKS - DEFENSE (4) ===
-    'LMT',    # Lockheed Martin
-    'NOC',    # Northrop Grumman
-    'GD',     # General Dynamics
-    'BA',     # Boeing
+    'LMT', 'NOC', 'GD', 'BA',
 
     # === NEW VALUE STOCKS - ENERGY (6) ===
-    'SLB',    # Schlumberger
-    'HAL',    # Halliburton
-    'BKR',    # Baker Hughes
-    'DVN',    # Devon Energy
-    'MPC',    # Marathon Petroleum
-    'VLO',    # Valero Energy
+    'SLB', 'HAL', 'BKR', 'DVN', 'MPC', 'VLO',
 
     # === NEW VALUE STOCKS - REITS (10) ===
-    'SPG',    # Simon Property Group
-    'AMT',    # American Tower
-    'CCI',    # Crown Castle
-    'EQIX',   # Equinix
-    'DLR',    # Digital Realty
-    'PSA',    # Public Storage
-    'AVB',    # AvalonBay Communities
-    'EQR',    # Equity Residential
-    'WELL',   # Welltower
-    'VTR',    # Ventas
+    'SPG', 'AMT', 'CCI', 'EQIX', 'DLR', 'PSA', 'AVB', 'EQR', 'WELL', 'VTR',
 
     # === NEW VALUE STOCKS - MATERIALS (5) ===
-    'NUE',    # Nucor
-    'FCX',    # Freeport-McMoRan
-    'NEM',    # Newmont Corporation
-    'DOW',    # Dow Inc.
-    'LYB',    # LyondellBasell
+    'NUE', 'FCX', 'NEM', 'DOW', 'LYB',
 
-     # === REGIONAL BANKS & ASSET MANAGERS (15) ===
-    'ZION',   # Zions Bancorporation
-    'CMA',    # Comerica
-    'FHN',    # First Horizon
-    'EWBC',   # East West Bancorp
-    'WAL',    # Western Alliance
-    'BOKF',   # BOK Financial
-    'FNB',    # F.N.B. Corporation
-    'TROW',   # T. Rowe Price
-    'IVZ',    # Invesco
-    'BEN',    # Franklin Resources
-    'NTRS',   # Northern Trust
-    'STT',    # State Street
-    'AMG',    # Affiliated Managers Group
-    'SEIC',   # SEI Investments
-    'CBOE',   # Cboe Global Markets
+    # === REGIONAL BANKS & ASSET MANAGERS (15) ===
+    'ZION', 'CMA', 'FHN', 'EWBC', 'WAL', 'BOKF', 'FNB', 'TROW', 'IVZ', 'BEN',
+    'NTRS', 'STT', 'AMG', 'SEIC', 'CBOE',
 
     # === HEALTHCARE - PHARMA, BIOTECH, DEVICES (15) ===
-    'BIIB',   # Biogen
-    'REGN',   # Regeneron Pharmaceuticals
-    'VRTX',   # Vertex Pharmaceuticals
-    'MRNA',   # Moderna
-    'ILMN',   # Illumina
-    'DXCM',   # DexCom
-    'IDXX',   # IDEXX Laboratories
-    'MTD',    # Mettler-Toledo
-    'STE',    # Steris
-    'BAX',    # Baxter International
-    'BDX',    # Becton Dickinson
-    'SYK',    # Stryker
-    'MDT',    # Medtronic
-    'BSX',    # Boston Scientific
-    'EW',     # Edwards Lifesciences
+    'BIIB', 'REGN', 'VRTX', 'MRNA', 'ILMN', 'DXCM', 'IDXX', 'MTD', 'STE', 'BAX',
+    'BDX', 'SYK', 'MDT', 'BSX', 'EW',
 
     # === INDUSTRIALS - MACHINERY, CONSTRUCTION (15) ===
-    'ROK',    # Rockwell Automation
-    'AME',    # AMETEK
-    'GNRC',   # Generac Holdings
-    'IR',     # Ingersoll Rand
-    'XYL',    # Xylem
-    'GWW',    # W.W. Grainger
-    'FAST',   # Fastenal
-    'URI',    # United Rentals
-    'PWR',    # Quanta Services
-    'J',      # Jacobs Solutions
-    'WAB',    # Westinghouse Air Brake
-    'TT',     # Trane Technologies
-    'CARR',   # Carrier Global
-    'OTIS',   # Otis Worldwide
-    'LHX',    # L3Harris Technologies
+    'ROK', 'AME', 'GNRC', 'IR', 'XYL', 'GWW', 'FAST', 'URI', 'PWR', 'J',
+    'WAB', 'TT', 'CARR', 'OTIS', 'LHX',
 
     # === CONSUMER DISCRETIONARY - RETAIL, RESTAURANTS (15) ===
-    'TJX',    # TJX Companies
-    'ROST',   # Ross Stores
-    'DG',     # Dollar General
-    'DLTR',   # Dollar Tree
-    'ORLY',   # O'Reilly Automotive
-    'AZO',    # AutoZone
-    'BBY',    # Best Buy
-    'LOW',    # Lowe's Companies
-    'TGT',    # Target
-    'SBUX',   # Starbucks
-    'CMG',    # Chipotle Mexican Grill
-    'DPZ',    # Domino's Pizza
-    'YUM',    # Yum! Brands
-    'MAR',    # Marriott International
-    'HLT',    # Hilton Worldwide
+    'TJX', 'ROST', 'DG', 'DLTR', 'ORLY', 'AZO', 'BBY', 'LOW', 'TGT', 'SBUX',
+    'CMG', 'DPZ', 'YUM', 'MAR', 'HLT',
 
     # === TECHNOLOGY - HARDWARE & SEMICONDUCTORS (12) ===
-    'HPQ',    # HP Inc.
-    'HPE',    # Hewlett Packard Enterprise
-    'DELL',   # Dell Technologies
-    'WDC',    # Western Digital
-    'STX',    # Seagate Technology
-    'NTAP',   # NetApp
-    'KEYS',   # Keysight Technologies
-    'ANSS',   # ANSYS
-    'CDNS',   # Cadence Design Systems
-    'SNPS',   # Synopsys
-    'KLAC',   # KLA Corporation
-    'LRCX',   # Lam Research
+    'HPQ', 'HPE', 'DELL', 'WDC', 'STX', 'NTAP', 'KEYS', 'ANSS', 'CDNS', 'SNPS',
+    'KLAC', 'LRCX',
 
     # === ENERGY - PIPELINES & E&P (10) ===
-    'WMB',    # Williams Companies
-    'KMI',    # Kinder Morgan
-    'OKE',    # ONEOK
-    'ET',     # Energy Transfer
-    'EPD',    # Enterprise Products Partners
-    'PXD',    # Pioneer Natural Resources
-    'EOG',    # EOG Resources
-    'COP',    # ConocoPhillips
-    'HES',    # Hess Corporation
-    'FANG',   # Diamondback Energy
+    'WMB', 'KMI', 'OKE', 'ET', 'EPD', 'PXD', 'EOG', 'COP', 'HES', 'FANG',
 
     # === MATERIALS - CHEMICALS, METALS (8) ===
-    'APD',    # Air Products & Chemicals
-    'ECL',    # Ecolab
-    'SHW',    # Sherwin-Williams
-    'PPG',    # PPG Industries
-    'ALB',    # Albemarle
-    'CF',     # CF Industries
-    'MOS',    # Mosaic Company
-    'BALL',   # Ball Corporation
+    'APD', 'ECL', 'SHW', 'PPG', 'ALB', 'CF', 'MOS', 'BALL',
 
     # === COMMUNICATION SERVICES (5) ===
-    'TMUS',   # T-Mobile US
-    'CHTR',   # Charter Communications
-    'CMCSA',  # Comcast
-    'WBD',    # Warner Bros. Discovery
-    'NFLX',   # Netflix
+    'TMUS', 'CHTR', 'CMCSA', 'WBD', 'NFLX',
 
     # === INTERNATIONAL ADRs (5) ===
-    'TM',     # Toyota Motor
-    'SNY',    # Sanofi
-    'NVS',    # Novartis
-    'UL',     # Unilever
-    'BTI',    # British American Tobacco
+    'TM', 'SNY', 'NVS', 'UL', 'BTI',
 
-# === MID-CAP FINANCIALS (20) ===
-    'FCNCA',  # First Citizens BancShares
-    'SNV',    # Synovus Financial
-    'ONB',    # Old National Bancorp
-    'UBSI',   # United Bankshares
-    'FFIN',   # First Financial Bankshares
-    'GBCI',   # Glacier Bancorp
-    'SBCF',   # Seacoast Banking
-    'HWC',    # Hancock Whitney
-    'SFNC',   # Simmons First National
-    'WTFC',   # Wintrust Financial
-    'PNFP',   # Pinnacle Financial Partners
-    'FBK',    # FB Financial
-    'IBOC',   # International Bancshares
-    'CADE',   # Cadence Bank
-    'AUB',    # Atlantic Union Bankshares
-    'TCBI',   # Texas Capital Bancshares
-    'ABCB',   # Ameris Bancorp
-    'SSB',    # SouthState Corporation
+    # === MID-CAP FINANCIALS (18) ===
+    'FCNCA', 'SNV', 'ONB', 'UBSI', 'FFIN', 'GBCI', 'SBCF', 'HWC', 'SFNC',
+    'WTFC', 'PNFP', 'FBK', 'IBOC', 'CADE', 'AUB', 'TCBI', 'ABCB', 'SSB',
 
-    # === MORE HEALTHCARE - BIOTECH & SERVICES (25) ===
-    'ALNY',   # Alnylam Pharmaceuticals
-    'SRPT',   # Sarepta Therapeutics
-    'BMRN',   # BioMarin Pharmaceutical
-    'INCY',   # Incyte Corporation
-    'EXAS',   # Exact Sciences
-    'TECH',   # Bio-Techne
-    'NTRA',   # Natera
-    'RARE',   # Ultragenyx Pharmaceutical
-    'NBIX',   # Neurocrine Biosciences
-    'PCVX',   # Vaxcyte
-    'KRYS',   # Krystal Biotech
-    'INSM',   # Insmed
-    'IONS',   # Ionis Pharmaceuticals
-    'UTHR',   # United Therapeutics
-    'EXEL',   # Exelixis
-    'ACAD',   # ACADIA Pharmaceuticals
-    'ARVN',   # Arvinas
-    'FOLD',   # Amicus Therapeutics
-    'HALO',   # Halozyme Therapeutics
-    'LGND',   # Ligand Pharmaceuticals
-    'MEDP',   # Medpace Holdings
-    'ICLR',   # ICON plc
-    'CRL',    # Charles River Laboratories
-    'WST',    # West Pharmaceutical Services
+    # === MORE HEALTHCARE - BIOTECH & SERVICES (24) ===
+    'ALNY', 'SRPT', 'BMRN', 'INCY', 'EXAS', 'TECH', 'NTRA', 'RARE', 'NBIX',
+    'PCVX', 'KRYS', 'INSM', 'IONS', 'UTHR', 'EXEL', 'ACAD', 'ARVN', 'FOLD',
+    'HALO', 'LGND', 'MEDP', 'ICLR', 'CRL', 'WST',
 
     # === MORE CONSUMER DISCRETIONARY (25) ===
-    'GRMN',   # Garmin
-    'DECK',   # Deckers Outdoor
-    'POOL',   # Pool Corporation
-    'WSM',    # Williams-Sonoma
-    'RH',     # RH (Restoration Hardware)
-    'TSCO',   # Tractor Supply
-    'ULTA',   # Ulta Beauty
-    'FIVE',   # Five Below
-    'BOOT',   # Boot Barn Holdings
-    'OLLI',   # Ollie's Bargain Outlet
-    'BURL',   # Burlington Stores
-    'SKX',    # Skechers
-    'CROX',   # Crocs
-    'LULU',   # Lululemon Athletica
-    'NVR',    # NVR Inc (homebuilder)
-    'PHM',    # PulteGroup
-    'LEN',    # Lennar Corporation
-    'DHI',    # D.R. Horton
-    'TOL',    # Toll Brothers
-    'KBH',    # KB Home
-    'MTH',    # Meritage Homes
-    'MDC',    # M.D.C. Holdings
-    'PENN',   # Penn Entertainment
-    'CZR',    # Caesars Entertainment
-    'WYNN',   # Wynn Resorts
+    'GRMN', 'DECK', 'POOL', 'WSM', 'RH', 'TSCO', 'ULTA', 'FIVE', 'BOOT', 'OLLI',
+    'BURL', 'SKX', 'CROX', 'LULU', 'NVR', 'PHM', 'LEN', 'DHI', 'TOL', 'KBH',
+    'MTH', 'MDC', 'PENN', 'CZR', 'WYNN',
 
-    # === MORE INDUSTRIALS (25) ===
-    'ALLE',   # Allegion
-    'AOS',    # A.O. Smith
-    'CR',     # Crane Company
-    'FICO',   # Fair Isaac Corporation
-    'FTV',    # Fortive Corporation
-    'GGG',    # Graco Inc.
-    'IEX',    # IDEX Corporation
-    'MIDD',   # Middleby Corporation
-    'NDSN',   # Nordson Corporation
-    'RBC',    # RBC Bearings
-    'RRX',    # Regal Rexnord
-    'SITE',   # SiteOne Landscape Supply
-    'TTC',    # Toro Company
-    'WCC',    # WESCO International
-    'WWD',    # Woodward Inc.
-    'ZWS',    # Zurn Elkay Water Solutions
-    'AXON',   # Axon Enterprise
-    'TDG',    # TransDigm Group
-    'HEI',    # HEICO Corporation
-    'HEI-A',  # HEICO Class A
-    'BWXT',   # BWX Technologies
-    'HII',    # Huntington Ingalls
-    'LDOS',   # Leidos Holdings
+    # === MORE INDUSTRIALS (23) ===
+    'ALLE', 'AOS', 'CR', 'FICO', 'FTV', 'GGG', 'IEX', 'MIDD', 'NDSN', 'RBC',
+    'RRX', 'SITE', 'TTC', 'WCC', 'WWD', 'ZWS', 'AXON', 'TDG', 'HEI', 'HEI-A',
+    'BWXT', 'HII', 'LDOS',
 
-    # === MORE TECHNOLOGY - SOFTWARE & SERVICES (25) ===
-    'TEAM',   # Atlassian
-    'HUBS',   # HubSpot
-    'WDAY',   # Workday
-    'VEEV',   # Veeva Systems
-    'OKTA',   # Okta
-    'TWLO',   # Twilio
-    'DBX',    # Dropbox
-    'ZI',     # ZoomInfo Technologies
-    'ESTC',   # Elastic N.V.
-    'CFLT',   # Confluent
-    'GTLB',   # GitLab
-    'BILL',   # Bill.com Holdings
-    'PAYC',   # Paycom Software
-    'PCTY',   # Paylocity
-    'WK',     # Workiva
-    'APPF',   # AppFolio
-    'MANH',   # Manhattan Associates
-    'SMAR',   # Smartsheet
-    'DOCU',   # DocuSign
-    'BOX',    # Box Inc.
-    'RNG',    # RingCentral
-    'FIVN',   # Five9
-    'NICE',   # NICE Ltd.
+    # === MORE TECHNOLOGY - SOFTWARE & SERVICES (23) ===
+    'TEAM', 'HUBS', 'WDAY', 'VEEV', 'OKTA', 'TWLO', 'DBX', 'ZI', 'ESTC', 'CFLT',
+    'GTLB', 'BILL', 'PAYC', 'PCTY', 'WK', 'APPF', 'MANH', 'SMAR', 'DOCU', 'BOX',
+    'RNG', 'FIVN', 'NICE',
 
     # === MORE TECHNOLOGY - HARDWARE & SEMIS (20) ===
-    'MRVL',   # Marvell Technology
-    'ON',     # ON Semiconductor
-    'SWKS',   # Skyworks Solutions
-    'QRVO',   # Qorvo
-    'MPWR',   # Monolithic Power Systems
-    'ALGM',   # Allegro MicroSystems
-    'CRUS',   # Cirrus Logic
-    'SYNA',   # Synaptics
-    'DIOD',   # Diodes Incorporated
-    'POWI',   # Power Integrations
-    'SMTC',   # Semtech
-    'WOLF',   # Wolfspeed
-    'ACLS',   # Axcelis Technologies
-    'MKSI',   # MKS Instruments
-    'COHR',   # Coherent Corp.
-    'IPGP',   # IPG Photonics
-    'NOVT',   # Novanta
-    'TER',    # Teradyne
-    'ENTG',   # Entegris
-    'AMKR',   # Amkor Technology
+    'MRVL', 'ON', 'SWKS', 'QRVO', 'MPWR', 'ALGM', 'CRUS', 'SYNA', 'DIOD', 'POWI',
+    'SMTC', 'WOLF', 'ACLS', 'MKSI', 'COHR', 'IPGP', 'NOVT', 'TER', 'ENTG', 'AMKR',
 
     # === MORE ENERGY (15) ===
-    'PSX',    # Phillips 66
-    'TRGP',   # Targa Resources
-    'LNG',    # Cheniere Energy
-    'DINO',   # HF Sinclair
-    'PBF',    # PBF Energy
-    'MTDR',   # Matador Resources
-    'PR',     # Permian Resources
-    'CTRA',   # Coterra Energy
-    'AR',     # Antero Resources
-    'RRC',    # Range Resources
-    'SWN',    # Southwestern Energy
-    'EQT',    # EQT Corporation
-    'CNX',    # CNX Resources
-    'NOG',    # Northern Oil and Gas
-    'CHRD',   # Chord Energy
+    'PSX', 'TRGP', 'LNG', 'DINO', 'PBF', 'MTDR', 'PR', 'CTRA', 'AR', 'RRC',
+    'SWN', 'EQT', 'CNX', 'NOG', 'CHRD',
 
     # === MORE MATERIALS (15) ===
-    'VMC',    # Vulcan Materials
-    'MLM',    # Martin Marietta
-    'STLD',   # Steel Dynamics
-    'CLF',    # Cleveland-Cliffs
-    'X',      # United States Steel
-    'CMC',    # Commercial Metals
-    'ATI',    # ATI Inc.
-    'RS',     # Reliance Steel
-    'AA',     # Alcoa
-    'CENX',   # Century Aluminum
-    'HUN',    # Huntsman Corporation
-    'OLN',    # Olin Corporation
-    'WLK',    # Westlake Corporation
-    'EMN',    # Eastman Chemical
-    'CE',     # Celanese Corporation
+    'VMC', 'MLM', 'STLD', 'CLF', 'X', 'CMC', 'ATI', 'RS', 'AA', 'CENX',
+    'HUN', 'OLN', 'WLK', 'EMN', 'CE',
 
     # === MORE COMMUNICATION SERVICES (10) ===
-    'LBRDK',  # Liberty Broadband
-    'LBRDA',  # Liberty Broadband Class A
-    'FWONK',  # Liberty Formula One
-    'LYV',    # Live Nation Entertainment
-    'MTCH',   # Match Group
-    'IAC',    # IAC Inc.
-    'PARA',   # Paramount Global
-    'FOX',    # Fox Corporation
-    'FOXA',   # Fox Corporation Class A
-    'NYT',    # New York Times
+    'LBRDK', 'LBRDA', 'FWONK', 'LYV', 'MTCH', 'IAC', 'PARA', 'FOX', 'FOXA', 'NYT',
 
     # === INTERNATIONAL ADRs - EUROPE (15) ===
-    'SAP',    # SAP SE
-    'ASML',   # ASML Holding
-    'AZN',    # AstraZeneca
-    'GSK',    # GSK plc
-    'NVO',    # Novo Nordisk
-    'DEO',    # Diageo
-    'RIO',    # Rio Tinto
-    'BHP',    # BHP Group
-    'VALE',   # Vale S.A.
-    'SHEL',   # Shell plc
-    'BP',     # BP plc
-    'EQNR',   # Equinor
-    'TTE',    # TotalEnergies
-    'SAN',    # Banco Santander
-    'ING',    # ING Groep
+    'SAP', 'ASML', 'AZN', 'GSK', 'NVO', 'DEO', 'RIO', 'BHP', 'VALE', 'SHEL',
+    'BP', 'EQNR', 'TTE', 'SAN', 'ING',
 
     # === INTERNATIONAL ADRs - ASIA & EMERGING (10) ===
-    'INFY',   # Infosys
-    'WIT',    # Wipro
-    'HDB',    # HDFC Bank
-    'IBN',    # ICICI Bank
-    'SONY',   # Sony Group
-    'MUFG',   # Mitsubishi UFJ Financial
-    'SMFG',   # Sumitomo Mitsui Financial
-    'KB',     # KB Financial Group
-    'SHG',    # Shinhan Financial
-    'LFC',    # China Life Insurance
+    'INFY', 'WIT', 'HDB', 'IBN', 'SONY', 'MUFG', 'SMFG', 'KB', 'SHG', 'LFC',
 
     # === CONSUMER STAPLES - MORE COVERAGE (10) ===
-    'HSY',    # Hershey Company
-    'MNST',   # Monster Beverage
-    'COKE',   # Coca-Cola Consolidated
-    'KDP',    # Keurig Dr Pepper
-    'EL',     # Estee Lauder
-    'KVUE',   # Kenvue
-    'SYY',    # Sysco Corporation
-    'USFD',   # US Foods Holding
-    'PFGC',   # Performance Food Group
-    'CHEF',   # Chefs' Warehouse
+    'HSY', 'MNST', 'COKE', 'KDP', 'EL', 'KVUE', 'SYY', 'USFD', 'PFGC', 'CHEF',
 
     # === MISCELLANEOUS VALUE (10) ===
-    'BRO',    # Brown & Brown Insurance
-    'ERIE',   # Erie Indemnity
-    'WRB',    # W.R. Berkley
-    'RLI',    # RLI Corp
-    'CINF',   # Cincinnati Financial
-    'GL',     # Globe Life
-    'PRI',    # Primerica
-    'AIZ',    # Assurant
-    'FAF',    # First American Financial
-    'FNF',    # Fidelity National Financial
+    'BRO', 'ERIE', 'WRB', 'RLI', 'CINF', 'GL', 'PRI', 'AIZ', 'FAF', 'FNF',
 
- # === AIRLINES & TRAVEL (12) ===
-    'CCL',    # Carnival Corporation
-    'RCL',    # Royal Caribbean
-    'DAL',    # Delta Air Lines
-    'UAL',    # United Airlines
-    'LUV',    # Southwest Airlines
-    'AAL',    # American Airlines
-    'JBLU',   # JetBlue Airways
-    'NCLH',   # Norwegian Cruise Line
-    'ABNB',   # Airbnb
-    'EXPE',   # Expedia
-    'TRIP',   # TripAdvisor
-    'TCOM',   # Trip.com
+    # === AIRLINES & TRAVEL (12) ===
+    'CCL', 'RCL', 'DAL', 'UAL', 'LUV', 'AAL', 'JBLU', 'NCLH', 'ABNB', 'EXPE',
+    'TRIP', 'TCOM',
 
     # === EV & CLEAN ENERGY (25) ===
-    'NIO',    # Nio Inc
-    'XPEV',   # XPeng
-    'LI',     # Li Auto
-    'NKLA',   # Nikola
-    'GOEV',   # Canoo
-    'WKHS',   # Workhorse Group
-    'HYLN',   # Hyliion
-    'CHPT',   # ChargePoint
-    'BLNK',   # Blink Charging
-    'EVGO',   # EVgo
-    'QS',     # QuantumScape
-    'MVST',   # Microvast
-    'ENVX',   # Enovix
-    'FREY',   # Freyr Battery
-    'SLDP',   # Solid Power
-    'SEDG',   # SolarEdge
-    'ENPH',   # Enphase Energy
-    'RUN',    # Sunrun
-    'NOVA',   # Sunnova Energy
-    'ARRY',   # Array Technologies
-    'FSLR',   # First Solar
-    'JKS',    # JinkoSolar
-    'STEM',   # Stem Inc
-    'BE',     # Bloom Energy
-    'FCEL',   # FuelCell Energy
+    'NIO', 'XPEV', 'LI', 'NKLA', 'GOEV', 'WKHS', 'HYLN', 'CHPT', 'BLNK', 'EVGO',
+    'QS', 'MVST', 'ENVX', 'FREY', 'SLDP', 'SEDG', 'ENPH', 'RUN', 'NOVA', 'ARRY',
+    'FSLR', 'JKS', 'STEM', 'BE', 'FCEL',
 
     # === BITCOIN MINERS & CRYPTO (15) ===
-    'MARA',   # Marathon Digital
-    'CLSK',   # CleanSpark
-    'RIOT',   # Riot Platforms
-    'BITF',   # Bitfarms
-    'HUT',    # Hut 8 Mining
-    'CIFR',   # Cipher Mining
-    'WULF',   # TeraWulf
-    'CORZ',   # Core Scientific
-    'BTDR',   # Bitdeer Technologies
-    'IBIT',   # iShares Bitcoin Trust ETF
-    'GBTC',   # Grayscale Bitcoin Trust
-    'ETHE',   # Grayscale Ethereum Trust
-    'BITO',   # ProShares Bitcoin Strategy
-    'BITX',   # 2x Bitcoin Strategy ETF
-    'MSTU',   # T-Rex 2X Long MSTR
+    'MARA', 'CLSK', 'RIOT', 'BITF', 'HUT', 'CIFR', 'WULF', 'CORZ', 'BTDR', 'IBIT',
+    'GBTC', 'ETHE', 'BITO', 'BITX', 'MSTU',
 
     # === AI & DATA CENTERS (15) ===
-    'CRWV',   # CoreWeave
-    'APLD',   # Applied Digital
-    'AI',     # C3.ai
-    'BBAI',   # BigBear.ai
-    'SOUN',   # SoundHound AI
-    'SMCI',   # Super Micro Computer
-    'VRT',    # Vertiv Holdings
-    'ANET',   # Arista Networks
-    'AKAM',   # Akamai Technologies
-    'FSLY',   # Fastly
-    'NEWR',   # New Relic
-    'LUMN',   # Lumen Technologies
-    'NBIS',   # Nebius Group
-    'ORCL',   # Oracle (ensure included)
-    'APP',    # AppLovin
+    'CRWV', 'APLD', 'AI', 'BBAI', 'SOUN', 'SMCI', 'VRT', 'ANET', 'AKAM', 'FSLY',
+    'NEWR', 'LUMN', 'NBIS', 'APP',
 
-    # === SPACE & DEFENSE (12) ===
-    'SPCE',   # Virgin Galactic
-    'PL',     # Planet Labs
-    'BKSY',   # BlackSky Technology
-    'IRDM',   # Iridium Communications
-    'GSAT',   # Globalstar
-    'KTOS',   # Kratos Defense
-    'RCAT',   # Red Cat Holdings
-    'JOBY',   # Joby Aviation
-    'ACHR',   # Archer Aviation
-    'BLDE',   # Blade Air Mobility
-    'RDW',    # Redwire
-    'MNTS',   # Momentus
+    # === SPACE & DEFENSE (11) ===
+    'SPCE', 'PL', 'BKSY', 'IRDM', 'GSAT', 'KTOS', 'RCAT', 'JOBY', 'ACHR', 'BLDE',
+    'MNTS',
 
-    # === QUANTUM COMPUTING (4) ===
-    'IONQ',   # IonQ
-    'RGTI',   # Rigetti Computing
-    'QUBT',   # Quantum Computing Inc
-    'QBTS',   # D-Wave Quantum
+    # === QUANTUM COMPUTING (2) ===
+    'QUBT', 'QBTS',
 
     # === CANNABIS (8) ===
-    'TLRY',   # Tilray Brands
-    'SNDL',   # SNDL Inc
-    'CGC',    # Canopy Growth
-    'ACB',    # Aurora Cannabis
-    'CRON',   # Cronos Group
-    'GRWG',   # GrowGeneration
-    'CURLF',  # Curaleaf (OTC)
-    'GTBIF',  # Green Thumb (OTC)
+    'TLRY', 'SNDL', 'CGC', 'ACB', 'CRON', 'GRWG', 'CURLF', 'GTBIF',
 
     # === BIOTECH RETAIL FAVORITES (20) ===
-    'NVAX',   # Novavax
-    'OCGN',   # Ocugen
-    'BCRX',   # BioCryst Pharmaceuticals
-    'VXRT',   # Vaxart
-    'MNKD',   # MannKind Corporation
-    'GERN',   # Geron Corporation
-    'FATE',   # Fate Therapeutics
-    'XENE',   # Xenon Pharmaceuticals
-    'CORT',   # Corcept Therapeutics
-    'PRTA',   # Prothena
-    'IMVT',   # Immunovant
-    'VRNA',   # Verona Pharma
-    'AXSM',   # Axsome Therapeutics
-    'VNDA',   # Vanda Pharmaceuticals
-    'TGTX',   # TG Therapeutics
-    'PCRX',   # Pacira BioSciences
-    'JAZZ',   # Jazz Pharmaceuticals
-    'TEVA',   # Teva Pharmaceutical
-    'DNA',    # Ginkgo Bioworks
-    'TEM',    # Tempus AI
+    'NVAX', 'OCGN', 'BCRX', 'VXRT', 'MNKD', 'GERN', 'FATE', 'XENE', 'CORT', 'PRTA',
+    'IMVT', 'VRNA', 'AXSM', 'VNDA', 'TGTX', 'PCRX', 'JAZZ', 'TEVA', 'DNA', 'TEM',
 
     # === CHINA TECH ADRs (12) ===
-    'PDD',    # PDD Holdings (Temu)
-    'JD',     # JD.com
-    'BIDU',   # Baidu
-    'NTES',   # NetEase
-    'BILI',   # Bilibili
-    'TME',    # Tencent Music
-    'IQ',     # iQIYI
-    'FUTU',   # Futu Holdings
-    'TIGR',   # UP Fintech
-    'GRAB',   # Grab Holdings
-    'SE',     # Sea Limited
-    'CPNG',   # Coupang
+    'PDD', 'JD', 'BIDU', 'NTES', 'BILI', 'TME', 'IQ', 'FUTU', 'TIGR', 'GRAB',
+    'SE', 'CPNG',
 
-    # === FINTECH (12) ===
-    'LC',     # LendingClub
-    'MELI',   # MercadoLibre
-    'LMND',   # Lemonade
-    'ROOT',   # Root Inc
-    'OPEN',   # Opendoor Technologies
-    'RDFN',   # Redfin
-    'Z',      # Zillow Group
-    'CVNA',   # Carvana
-    'KMX',    # CarMax
-    'SQ',     # Block Inc
-    'NU',     # Nu Holdings
-    'UPST',   # Upstart
+    # === FINTECH (10) ===
+    'LC', 'MELI', 'LMND', 'ROOT', 'OPEN', 'RDFN', 'Z', 'CVNA', 'KMX',
 
     # === GAMING & STREAMING (15) ===
-    'RBLX',   # Roblox
-    'U',      # Unity Software
-    'TTWO',   # Take-Two Interactive
-    'EA',     # Electronic Arts
-    'DKNG',   # DraftKings
-    'RSI',    # Rush Street Interactive
-    'GENI',   # Genius Sports
-    'ROKU',   # Roku
-    'SPOT',   # Spotify
-    'TTD',    # The Trade Desk
-    'MGNI',   # Magnite
-    'PUBM',   # PubMatic
-    'DV',     # DoubleVerify
-    'IAS',    # Integral Ad Science
-    'RDDT',   # Reddit
+    'RBLX', 'U', 'TTWO', 'EA', 'DKNG', 'RSI', 'GENI', 'ROKU', 'SPOT', 'TTD',
+    'MGNI', 'PUBM', 'DV', 'IAS', 'RDDT',
 
     # === CONSUMER/RETAIL (18) ===
-    'CHWY',   # Chewy
-    'W',      # Wayfair
-    'ETSY',   # Etsy
-    'EBAY',   # eBay
-    'RVLV',   # Revolve Group
-    'GPS',    # Gap Inc
-    'ANF',    # Abercrombie & Fitch
-    'AEO',    # American Eagle Outfitters
-    'URBN',   # Urban Outfitters
-    'M',      # Macy's
-    'JWN',    # Nordstrom
-    'KSS',    # Kohl's
-    'DDS',    # Dillard's
-    'BIG',    # Big Lots
-    'PTON',   # Peloton
-    'GPRO',   # GoPro
-    'SNAP',   # Snap Inc
-    'PINS',   # Pinterest
+    'CHWY', 'W', 'ETSY', 'EBAY', 'RVLV', 'GPS', 'ANF', 'AEO', 'URBN', 'M',
+    'JWN', 'KSS', 'DDS', 'BIG', 'PTON', 'GPRO', 'SNAP', 'PINS',
 
     # === MEME & SPECULATIVE (10) ===
-    'CLOV',   # Clover Health
-    'SIRI',   # Sirius XM
-    'NOK',    # Nokia
-    'PLUG',   # Plug Power
-    'WISH',   # ContextLogic
-    'CPRX',   # Catalyst Pharmaceuticals
-    'RITM',   # Rithm Capital
-    'BMBL',   # Bumble
-    'DUOL',   # Duolingo
-    'DJT',    # Trump Media
+    'CLOV', 'SIRI', 'NOK', 'PLUG', 'WISH', 'CPRX', 'RITM', 'BMBL', 'DUOL', 'DJT',
 
-    # === CYBERSECURITY (8) ===
-    'CYBR',   # CyberArk
-    'TENB',   # Tenable
-    'RPD',    # Rapid7
-    'VRNS',   # Varonis Systems
-    'QLYS',   # Qualys
-    'SAIC',   # Science Applications
-    'S',      # SentinelOne
-    'NET',    # Cloudflare
+    # === CYBERSECURITY (6) ===
+    'CYBR', 'TENB', 'RPD', 'VRNS', 'QLYS', 'SAIC',
 
-    # === HOTELS & CASINOS (8) ===
-    'LVS',    # Las Vegas Sands
-    'MGM',    # MGM Resorts
-    'H',      # Hyatt Hotels
-    'IHG',    # InterContinental Hotels
-    'CHH',    # Choice Hotels
-    'WH',     # Wyndham Hotels
-    'PLYA',   # Playa Hotels
-    'WYNN',   # Wynn Resorts
+    # === HOTELS & CASINOS (7) ===
+    'LVS', 'MGM', 'H', 'IHG', 'CHH', 'WH', 'PLYA',
 
-    # === MISC TECH (6) ===
-    'DLB',    # Dolby Laboratories
-    'APPS',   # Digital Turbine
-    'PATH',   # UiPath
-    'DOCN',   # DigitalOcean
-    'GTLB',   # GitLab
-    'MQ',     # Marqeta
-
+    # === MISC TECH (5) ===
+    'DLB', 'APPS', 'DOCN', 'MQ',
 ]
+
+# Remove duplicates while preserving order
+STOCK_UNIVERSE = list(dict.fromkeys(STOCK_UNIVERSE))
 
 
 def fetch_weekly_data(symbol: str) -> Optional[pd.DataFrame]:
     """
-    Fetch weekly adjusted price data from Alpha Vantage.
+    Fetch weekly price data from Yahoo Finance.
     
-    Uses TIME_SERIES_WEEKLY_ADJUSTED which returns one row per week
-    (Friday close), so rolling(200) = 200 weeks.
-    
-    Returns DataFrame with columns: close, adjusted_close, volume
+    Returns DataFrame with columns: Open, High, Low, Close, Volume
     """
-    url = 'https://www.alphavantage.co/query'
-    params = {
-        'function': 'TIME_SERIES_WEEKLY_ADJUSTED',
-        'symbol': symbol,
-        'apikey': API_KEY
-    }
-    
     try:
-        response = requests.get(url, params=params, timeout=30)
-        data = response.json()
+        ticker = yf.Ticker(symbol)
+        df = ticker.history(period="max", interval="1wk")
         
-        # Check for API errors
-        if 'Error Message' in data:
-            print(f"  ✗ API error for {symbol}: {data['Error Message']}")
-            return None
-        if 'Note' in data:
-            print(f"  ✗ Rate limit hit: {data['Note']}")
-            return None
-        
-        weekly_data = data.get('Weekly Adjusted Time Series', {})
-        if not weekly_data:
+        if df.empty:
             print(f"  ✗ No data returned for {symbol}")
             return None
         
-        df = pd.DataFrame.from_dict(weekly_data, orient='index')
-        df.index = pd.to_datetime(df.index)
-        df = df.sort_index()
-        
-        # Rename columns for clarity
+        # Rename columns for consistency
         df = df.rename(columns={
-            '1. open': 'open',
-            '2. high': 'high',
-            '3. low': 'low',
-            '4. close': 'close',
-            '5. adjusted close': 'adjusted_close',
-            '6. volume': 'volume',
-            '7. dividend amount': 'dividend'
+            'Open': 'open',
+            'High': 'high',
+            'Low': 'low',
+            'Close': 'close',
+            'Volume': 'volume'
         })
         
-        # Convert to numeric
-        for col in ['open', 'high', 'low', 'close', 'adjusted_close', 'volume']:
-            df[col] = pd.to_numeric(df[col], errors='coerce')
+        # Use Close as adjusted_close (yfinance already adjusts by default)
+        df['adjusted_close'] = df['close']
         
         return df
         
@@ -896,8 +331,9 @@ def find_historical_touches(df: pd.DataFrame) -> List[dict]:
     touches = []
     
     # Identify cross-below events
+    df = df.copy()
     df['below_line'] = df['adjusted_close'] < df['WMA_200']
-    df['cross_below'] = (df['below_line']) & (~df['below_line'].shift(1).fillna(False))
+    df['cross_below'] = (df['below_line']) & (~df['below_line'].shift(1).fillna(False).astype(bool))
     
     cross_dates = df[df['cross_below']].index.tolist()
     
@@ -975,30 +411,32 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
     
     if len(df) < 200:
         print(f"  ✗ {symbol}: Only {len(df)} weeks of data (need 200+)")
-        return None
+        # Still process stocks with less data, just won't have full 200WMA history
+        if len(df) < 50:
+            return None
     
     # === 200-WEEK MOVING AVERAGE ===
-    df['WMA_200'] = df['adjusted_close'].rolling(window=200).mean()
+    df['WMA_200'] = df['adjusted_close'].rolling(window=200, min_periods=50).mean()
     
     # === DISTANCE FROM 200WMA ===
     df['pct_from_wma'] = ((df['adjusted_close'] - df['WMA_200']) / df['WMA_200']) * 100
     
     # === WEEK-OVER-WEEK DIRECTIONAL CHANGE ===
-    # Negative = moving toward line (approaching)
-    # Positive = moving away from line
     df['wow_change'] = df['pct_from_wma'] - df['pct_from_wma'].shift(1)
     
     # === 14-WEEK RSI ===
     df['RSI_14'] = calculate_rsi(df['adjusted_close'], periods=14)
     
     # === HISTORICAL TOUCHES ===
-    # Need to calculate after WMA and pct_from_wma are ready
     df_complete = df.dropna(subset=['WMA_200'])
+    if len(df_complete) == 0:
+        print(f"  ✗ {symbol}: No valid WMA data")
+        return None
+    
     historical_touches = find_historical_touches(df_complete.copy())
     
     # Get latest values
     latest = df_complete.iloc[-1]
-    previous = df_complete.iloc[-2] if len(df_complete) > 1 else latest
     
     # Calculate buy threshold (the 200WMA value)
     buy_threshold = latest['WMA_200']
@@ -1031,10 +469,10 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'wma_200': round(float(latest['WMA_200']), 2),
         'buy_threshold': round(float(buy_threshold), 2),
         'pct_from_wma': round(float(latest['pct_from_wma']), 2),
-        'wow_change': round(float(latest['wow_change']), 2),
-        'rsi_14': round(float(latest['RSI_14']), 1),
+        'wow_change': round(float(latest['wow_change']), 2) if pd.notna(latest['wow_change']) else 0.0,
+        'rsi_14': round(float(latest['RSI_14']), 1) if pd.notna(latest['RSI_14']) else 50.0,
         'below_line': bool(latest['adjusted_close'] < latest['WMA_200']),
-        'approaching': float(latest['wow_change']) < 0,
+        'approaching': float(latest['wow_change']) < 0 if pd.notna(latest['wow_change']) else False,
         'zone': zone,
         'historical_touches': historical_touches,
         'touch_count': len(historical_touches),
@@ -1066,7 +504,7 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
         'approaching_count': len(approaching),
         'oversold_count': len(oversold),
         'below_line_stocks': below_sorted,
-        'approaching_stocks': approaching_sorted[:10],  # Top 10 nearest
+        'approaching_stocks': approaching_sorted[:10],
         'oversold_stocks': [s for s in stocks if s['rsi_14'] < 30],
     }
 
@@ -1074,13 +512,9 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
 def main():
     """Main entry point for weekly data update."""
     print("=" * 60)
-    print("Below The Line - Weekly Data Update")
+    print("Below The Line - Weekly Data Update (Yahoo Finance)")
     print(f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
-    
-    if not API_KEY:
-        print("ERROR: ALPHA_VANTAGE_KEY environment variable not set")
-        return
     
     # Load company metadata
     companies = load_company_metadata()
@@ -1110,14 +544,17 @@ def main():
         else:
             errors.append(symbol)
         
-        # Rate limiting - wait between calls
-        if i < len(STOCK_UNIVERSE) - 1:
-            time.sleep(RATE_LIMIT_DELAY)
+        # Small delay to be respectful to Yahoo Finance
+        if i % 50 == 0 and i > 0:
+            print(f"  ... processed {i}/{len(STOCK_UNIVERSE)} stocks")
+            time.sleep(1)
     
     print("-" * 60)
     print(f"Successfully processed: {len(results)}/{len(STOCK_UNIVERSE)}")
     if errors:
-        print(f"Errors: {', '.join(errors)}")
+        print(f"Errors ({len(errors)}): {', '.join(errors[:20])}")
+        if len(errors) > 20:
+            print(f"  ... and {len(errors) - 20} more")
     
     # Generate output
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
