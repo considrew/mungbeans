@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Stocks - mungbeans.io</title>
-  <meta name="description" content="Browse all stocks tracked against their 200-week moving average.">
+  <meta name="description" content="Browse all stocks tracked against their 200-week moving average. Filter by value signals, Yartseva multibagger criteria, and more.">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -67,11 +67,33 @@
       </div>
       
       <div class="filter-group">
+        <label class="filter-label">Special</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="special" data-filter="all">All</button>
+          <button class="filter-btn yartseva-btn" data-filter-group="special" data-filter="yartseva" title="Yartseva Multibagger Screen: Small cap + High FCF yield + Value P/B + Below 200WMA">🎯 Multibagger</button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
         <label class="filter-label">Sector</label>
         <select id="sectorFilter" class="sector-select">
           <option value="all">All Sectors</option>
         </select>
       </div>
+    </div>
+    
+    <!-- Yartseva Info Box (hidden by default, shown when filter active) -->
+    <div id="yartsevaInfo" class="info-box yartseva-info" style="display: none;">
+      <strong>🎯 Yartseva Multibagger Screen</strong>
+      <p>Based on statistical research of 464 stocks that 5-10x'd from 2009-2024. Criteria:</p>
+      <ul>
+        <li>Market cap &lt; $2B (small caps dominated)</li>
+        <li>FCF Yield &gt; 5% (cash generation matters most)</li>
+        <li>Book-to-Market &gt; 0.40 (value pricing)</li>
+        <li>Positive equity (no negative book value)</li>
+        <li>Below 200WMA (near lows = better entry)</li>
+      </ul>
+      <p class="info-note">These stocks meet the quantitative criteria. Always do your own due diligence on qualitative factors like improving margins and reinvestment quality.</p>
     </div>
 
     <!-- Stocks Table -->
@@ -85,6 +107,7 @@
           <th class="sortable" data-sort="rsi">RSI <span class="sort-icon">↕</span></th>
           <th class="sortable" data-sort="touches">Crosses <span class="sort-icon">↕</span></th>
           <th class="sortable" data-sort="avgreturn">Avg Return <span class="sort-icon">↕</span></th>
+          <th class="sortable hide-mobile" data-sort="fcfyield">FCF Yield <span class="sort-icon">↕</span></th>
           <th>Sector</th>
         </tr>
       </thead>
@@ -96,7 +119,7 @@
         {{ range .historical_touches }}
           {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
         {{ end }}
-        <tr class="stock-row zone-{{ .zone }}" 
+        <tr class="stock-row zone-{{ .zone }}{{ if .yartseva_below_line }} yartseva-match{{ end }}" 
             data-symbol="{{ .symbol }}"
             data-name="{{ .name }}"
             data-sector="{{ .sector }}"
@@ -106,14 +129,17 @@
             data-rsi="{{ .rsi_14 }}"
             data-touches="{{ .touch_count }}"
             data-avgreturn="{{ if .avg_return_after_touch }}{{ .avg_return_after_touch }}{{ else }}-999{{ end }}"
+            data-fcfyield="{{ if .fcf_yield }}{{ .fcf_yield }}{{ else }}-999{{ end }}"
             data-approaching="{{ and (not .below_line) (le .pct_from_wma 15.0) }}"
             data-oversold="{{ lt .rsi_14 30.0 }}"
             data-quality="{{ and .below_line (lt $absDepth 50.0) }}"
             data-proven="{{ and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}"
             data-firsttime="{{ and .below_line (le .touch_count 1) }}"
-            data-ongoing="{{ $hasOngoingTouch }}">
+            data-ongoing="{{ $hasOngoingTouch }}"
+            data-yartseva="{{ if .yartseva_below_line }}true{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
+            {{ if .yartseva_below_line }}<span class="badge-inline yartseva-badge" title="Yartseva Multibagger Candidate">🎯</span>{{ end }}
             {{ if .name }}<span class="stock-name">{{ .name }}</span>{{ end }}
           </td>
           <td>
@@ -151,6 +177,13 @@
               —
             {{ end }}
           </td>
+          <td class="mono hide-mobile {{ if and .fcf_yield (gt .fcf_yield 5.0) }}high-fcf{{ end }}">
+            {{ if .fcf_yield }}
+              {{ printf "%.1f%%" .fcf_yield }}
+            {{ else }}
+              —
+            {{ end }}
+          </td>
           <td class="sector-cell">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
         {{ end }}
@@ -158,6 +191,17 @@
     </table>
     
     <p class="results-count" id="resultsCount"></p>
+    
+    <!-- Affiliate CTA -->
+    <div class="affiliate-box">
+      <p class="affiliate-text">Ready to trade? Open a commission-free account:</p>
+      <div class="affiliate-links">
+        <a href="https://robinhood.com/signup" target="_blank" rel="noopener sponsored" class="affiliate-link">Robinhood</a>
+        <a href="https://www.webull.com/introduce" target="_blank" rel="noopener sponsored" class="affiliate-link">Webull</a>
+        <a href="https://www.interactivebrokers.com" target="_blank" rel="noopener sponsored" class="affiliate-link">Interactive Brokers</a>
+      </div>
+      <p class="affiliate-disclosure">Affiliate links. We may earn a commission.</p>
+    </div>
   </main>
 
   <footer class="site-footer">
@@ -165,7 +209,7 @@
   </footer>
 
   <script>
-    // S&P 500 constituents (as of late 2024)
+    // S&P 500 constituents
     const SP500 = new Set([
       'AAPL','ABBV','ABT','ACN','ADBE','ADP','ADSK','AEE','AEP','AES','AFL','AIG','AIZ','AJG','AKAM','ALB','ALGN','ALL','ALLE','AMAT','AMCR','AMD','AME','AMGN','AMP','AMT','AMZN','ANET','ANSS','AON','AOS','APA','APD','APH','APTV','ARE','ATO','AVB','AVGO','AVY','AWK','AXON','AXP','AZO',
       'BA','BAC','BALL','BAX','BBY','BDX','BEN','BF-B','BG','BIIB','BIO','BK','BKNG','BKR','BLDR','BLK','BMY','BR','BRK-B','BRO','BSX','BWA','BX','BXP',
@@ -201,6 +245,7 @@
       signal: 'all',
       quality: 'all',
       history: 'all',
+      special: 'all',
       sector: 'all',
       search: ''
     };
@@ -211,6 +256,7 @@
     const searchInput = document.getElementById('stockSearch');
     const sectorSelect = document.getElementById('sectorFilter');
     const resultsCount = document.getElementById('resultsCount');
+    const yartsevaInfo = document.getElementById('yartsevaInfo');
     
     // Populate sector dropdown
     const sectors = new Set();
@@ -254,6 +300,12 @@
         btn.classList.add('active');
         
         filters[group] = btn.dataset.filter;
+        
+        // Show/hide Yartseva info box
+        if (group === 'special') {
+          yartsevaInfo.style.display = btn.dataset.filter === 'yartseva' ? 'block' : 'none';
+        }
+        
         applyFilters();
       });
     });
@@ -311,14 +363,18 @@
           const isBelow = row.dataset.below === 'true';
           
           if (filters.history === 'firsttime') {
-            // First time = below line with 0-1 prior touches
             show = isBelow && touches <= 1;
           } else if (filters.history === 'rare') {
-            // Rare = 1-2 total historical touches
             show = touches >= 1 && touches <= 2;
           } else if (filters.history === 'frequent') {
-            // Frequent = 5+ touches
             show = touches >= 5;
+          }
+        }
+        
+        // Special filter (Yartseva)
+        if (show && filters.special !== 'all') {
+          if (filters.special === 'yartseva') {
+            show = row.dataset.yartseva === 'true';
           }
         }
         
@@ -380,6 +436,9 @@
         } else if (column === 'avgreturn') {
           aVal = parseFloat(a.dataset.avgreturn);
           bVal = parseFloat(b.dataset.avgreturn);
+        } else if (column === 'fcfyield') {
+          aVal = parseFloat(a.dataset.fcfyield);
+          bVal = parseFloat(b.dataset.fcfyield);
         }
         
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
@@ -393,288 +452,147 @@
   </script>
 
   <style>
-    .stocks-list-page {
-      max-width: 1200px;
-    }
-    
-    .page-desc {
-      color: var(--color-text-muted);
-      margin-bottom: var(--space-lg);
-    }
-    
-    .search-container {
-      margin-bottom: var(--space-lg);
-    }
-    
+    .stocks-list-page { max-width: 1200px; }
+    .page-desc { color: var(--color-text-muted); margin-bottom: var(--space-lg); }
+    .search-container { margin-bottom: var(--space-lg); }
     .search-input {
-      width: 100%;
-      max-width: 350px;
-      padding: var(--space-sm) var(--space-md);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background: var(--color-surface);
-      color: var(--color-text);
-      font-size: 1rem;
+      width: 100%; max-width: 350px; padding: var(--space-sm) var(--space-md);
+      border: 1px solid var(--color-border); border-radius: var(--radius-sm);
+      background: var(--color-surface); color: var(--color-text); font-size: 1rem;
     }
-    
-    .search-input:focus {
-      outline: none;
-      border-color: var(--color-primary, #3b82f6);
-    }
-    
+    .search-input:focus { outline: none; border-color: var(--color-primary, #3b82f6); }
     .filter-section {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
-      margin-bottom: var(--space-xl);
-      padding: var(--space-md);
-      background: var(--color-surface);
-      border-radius: var(--radius-md);
+      display: flex; flex-direction: column; gap: var(--space-md);
+      margin-bottom: var(--space-lg); padding: var(--space-md);
+      background: var(--color-surface); border-radius: var(--radius-md);
     }
-    
-    .filter-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: var(--space-sm);
-    }
-    
+    .filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
     .filter-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-text-muted);
-      min-width: 100px;
+      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--color-text-muted); min-width: 100px;
     }
-    
-    .filter-controls {
-      display: flex;
-      gap: var(--space-xs);
-      flex-wrap: wrap;
-    }
-    
+    .filter-controls { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
     .filter-btn {
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      padding: 6px 12px;
-      color: var(--color-text-muted);
-      cursor: pointer;
-      font-size: 0.8125rem;
-      transition: all 0.15s ease;
+      background: var(--color-bg); border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); padding: 6px 12px;
+      color: var(--color-text-muted); cursor: pointer;
+      font-size: 0.8125rem; transition: all 0.15s ease;
     }
-    
-    .filter-btn:hover {
-      border-color: var(--color-text-muted);
-      color: var(--color-text);
-    }
-    
+    .filter-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
     .filter-btn.active {
       background: var(--color-primary, #3b82f6);
-      border-color: var(--color-primary, #3b82f6);
-      color: white;
+      border-color: var(--color-primary, #3b82f6); color: white;
     }
-    
+    .yartseva-btn {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border-color: #d97706; color: white;
+    }
+    .yartseva-btn:hover {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      border-color: #b45309; color: white;
+    }
+    .yartseva-btn.active {
+      background: linear-gradient(135deg, #b45309 0%, #92400e 100%);
+      border-color: #92400e; box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3);
+    }
     .sector-select {
-      padding: 6px 12px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm);
-      background: var(--color-bg);
-      color: var(--color-text);
-      font-size: 0.8125rem;
-      min-width: 150px;
+      padding: 6px 12px; border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm); background: var(--color-bg);
+      color: var(--color-text); font-size: 0.8125rem; min-width: 150px;
     }
-    
-    .stocks-table {
-      width: 100%;
-      border-collapse: collapse;
+    .info-box { padding: var(--space-md); border-radius: var(--radius-md); margin-bottom: var(--space-lg); }
+    .yartseva-info {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+      border: 1px solid rgba(217, 119, 6, 0.3);
     }
-    
-    .stocks-table th,
-    .stocks-table td {
-      padding: var(--space-sm) var(--space-md);
-      text-align: left;
+    .yartseva-info strong { color: #d97706; font-size: 1rem; }
+    .yartseva-info p { margin: var(--space-sm) 0; font-size: 0.875rem; }
+    .yartseva-info ul { margin: var(--space-sm) 0; padding-left: var(--space-lg); font-size: 0.8125rem; }
+    .yartseva-info li { margin-bottom: 4px; }
+    .info-note { font-size: 0.75rem !important; color: var(--color-text-muted); font-style: italic; }
+    .stocks-table { width: 100%; border-collapse: collapse; }
+    .stocks-table th, .stocks-table td {
+      padding: var(--space-sm) var(--space-md); text-align: left;
       border-bottom: 1px solid var(--color-border);
     }
-    
     .stocks-table th {
-      color: var(--color-text-muted);
-      font-weight: 600;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      position: sticky;
-      top: 0;
-      background: var(--color-bg);
-      z-index: 10;
+      color: var(--color-text-muted); font-weight: 600; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      position: sticky; top: 0; background: var(--color-bg); z-index: 10;
     }
-    
-    .sortable {
-      cursor: pointer;
-      user-select: none;
-    }
-    
-    .sortable:hover {
-      color: var(--color-text);
-    }
-    
-    .sort-icon {
-      opacity: 0.3;
-      margin-left: 4px;
-    }
-    
-    .sortable.sort-asc .sort-icon,
-    .sortable.sort-desc .sort-icon {
-      opacity: 1;
-    }
-    
-    .sortable.sort-asc .sort-icon::after {
-      content: '↑';
-    }
-    
-    .sortable.sort-desc .sort-icon::after {
-      content: '↓';
-    }
-    
-    .sortable.sort-asc .sort-icon,
-    .sortable.sort-desc .sort-icon {
-      font-size: 0;
-    }
-    
-    .sortable.sort-asc .sort-icon::after,
-    .sortable.sort-desc .sort-icon::after {
-      font-size: 0.75rem;
-    }
-    
-    .stocks-table td a {
-      font-weight: 600;
-    }
-    
+    .sortable { cursor: pointer; user-select: none; }
+    .sortable:hover { color: var(--color-text); }
+    .sort-icon { opacity: 0.3; margin-left: 4px; }
+    .sortable.sort-asc .sort-icon, .sortable.sort-desc .sort-icon { opacity: 1; font-size: 0; }
+    .sortable.sort-asc .sort-icon::after { content: '↑'; font-size: 0.75rem; }
+    .sortable.sort-desc .sort-icon::after { content: '↓'; font-size: 0.75rem; }
+    .stocks-table td a { font-weight: 600; }
     .stock-name {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--color-text-muted);
-      font-weight: normal;
-      max-width: 120px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      display: block; font-size: 0.7rem; color: var(--color-text-muted);
+      font-weight: normal; max-width: 120px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
     }
-    
-    .mono {
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-    }
-    
+    .mono { font-family: var(--font-mono); font-size: 0.875rem; }
     .signal-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: var(--radius-sm);
-      font-size: 0.75rem;
-      font-weight: 700;
+      display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm);
+      font-size: 0.75rem; font-weight: 700;
     }
-    
-    .signal-badge.yes {
-      background: var(--color-yes-bg);
-      color: var(--zone-below-line);
-    }
-    
-    .signal-badge.no {
-      background: var(--color-surface);
-      color: var(--color-text-muted);
-    }
-    
-    .direction.approaching {
-      color: var(--color-approaching);
-      font-weight: bold;
-    }
-    
-    .direction.retreating {
-      color: var(--color-text-muted);
-    }
-    
-    td.oversold {
-      color: var(--zone-below-line);
-      font-weight: 600;
-    }
-    
-    td.positive {
-      color: var(--color-success, #16a34a);
-    }
-    
+    .signal-badge.yes { background: var(--color-yes-bg); color: var(--zone-below-line); }
+    .signal-badge.no { background: var(--color-surface); color: var(--color-text-muted); }
+    .direction.approaching { color: var(--color-approaching); font-weight: bold; }
+    .direction.retreating { color: var(--color-text-muted); }
+    td.oversold { color: var(--zone-below-line); font-weight: 600; }
+    td.positive { color: var(--color-success, #16a34a); }
+    td.high-fcf { color: #d97706; font-weight: 600; }
     .badge-inline {
-      display: inline-block;
-      padding: 1px 4px;
-      border-radius: 3px;
-      font-size: 0.625rem;
-      font-weight: 700;
-      margin-left: 4px;
-      vertical-align: middle;
+      display: inline-block; padding: 1px 4px; border-radius: 3px;
+      font-size: 0.625rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
     }
-    
-    .badge-inline.new {
-      background: var(--color-primary, #3b82f6);
-      color: white;
-    }
-    
+    .badge-inline.new { background: var(--color-primary, #3b82f6); color: white; }
+    .yartseva-badge { font-size: 0.75rem; vertical-align: baseline; }
+    .yartseva-match { background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 50%); }
     .sector-cell {
-      font-size: 0.75rem;
-      color: var(--color-text-muted);
-      max-width: 100px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-size: 0.75rem; color: var(--color-text-muted);
+      max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    
-    .stock-row.zone-below_line,
-    .stock-row.zone-deep_value,
-    .stock-row.zone-extreme_value {
+    .stock-row.zone-below_line, .stock-row.zone-deep_value, .stock-row.zone-extreme_value {
       background: var(--color-yes-bg);
     }
-    
-    .results-count {
-      margin-top: var(--space-md);
-      color: var(--color-text-muted);
-      font-size: 0.875rem;
+    .stock-row.yartseva-match.zone-below_line, .stock-row.yartseva-match.zone-deep_value,
+    .stock-row.yartseva-match.zone-extreme_value {
+      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, var(--color-yes-bg) 30%);
     }
-    
-    /* Mobile adjustments */
+    .results-count { margin-top: var(--space-md); color: var(--color-text-muted); font-size: 0.875rem; }
+    .affiliate-box {
+      margin-top: var(--space-xl); padding: var(--space-lg);
+      background: var(--color-surface); border-radius: var(--radius-md);
+      text-align: center; border: 1px solid var(--color-border);
+    }
+    .affiliate-text { margin-bottom: var(--space-md); font-weight: 500; }
+    .affiliate-links {
+      display: flex; justify-content: center; gap: var(--space-md);
+      flex-wrap: wrap; margin-bottom: var(--space-sm);
+    }
+    .affiliate-link {
+      display: inline-block; padding: var(--space-sm) var(--space-lg);
+      background: var(--color-primary, #3b82f6); color: white;
+      border-radius: var(--radius-sm); text-decoration: none;
+      font-weight: 600; font-size: 0.875rem; transition: background 0.15s ease;
+    }
+    .affiliate-link:hover { background: #2563eb; color: white; }
+    .affiliate-disclosure { font-size: 0.75rem; color: var(--color-text-muted); }
     @media (max-width: 900px) {
-      .filter-label {
-        min-width: 70px;
-        font-size: 0.7rem;
-      }
-      
-      .filter-btn {
-        padding: 4px 8px;
-        font-size: 0.75rem;
-      }
-      
-      .stocks-table th:nth-child(7),
-      .stocks-table td:nth-child(7),
-      .stocks-table th:nth-child(8),
-      .stocks-table td:nth-child(8) {
-        display: none;
-      }
+      .filter-label { min-width: 70px; font-size: 0.7rem; }
+      .filter-btn { padding: 4px 8px; font-size: 0.75rem; }
+      .hide-mobile, .stocks-table th:nth-child(7), .stocks-table td:nth-child(7) { display: none; }
+      .sector-cell { display: none; }
     }
-    
     @media (max-width: 600px) {
-      .stocks-table th:nth-child(4),
-      .stocks-table td:nth-child(4),
-      .stocks-table th:nth-child(6),
-      .stocks-table td:nth-child(6) {
-        display: none;
-      }
-      
-      .stock-name {
-        display: none;
-      }
-      
-      .filter-group {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+      .stocks-table th:nth-child(4), .stocks-table td:nth-child(4),
+      .stocks-table th:nth-child(6), .stocks-table td:nth-child(6) { display: none; }
+      .stock-name { display: none; }
+      .filter-group { flex-direction: column; align-items: flex-start; }
+      .yartseva-info ul { padding-left: var(--space-md); }
     }
   </style>
 </body>
