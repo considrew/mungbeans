@@ -23,8 +23,25 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Tuple
 
+import numpy as np
 import pandas as pd
 import yfinance as yf
+
+
+class NumpyEncoder(json.JSONEncoder):
+    """Custom JSON encoder that handles numpy/pandas types."""
+    def default(self, obj):
+        if isinstance(obj, np.bool_):
+            return bool(obj)
+        if isinstance(obj, np.integer):
+            return int(obj)
+        if isinstance(obj, np.floating):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        if isinstance(obj, pd.Timestamp):
+            return obj.isoformat()
+        return super().default(obj)
 
 # Configuration
 OUTPUT_DIR = Path(__file__).parent.parent / 'assets' / 'data'
@@ -2193,7 +2210,7 @@ def main():
     
     output_file = OUTPUT_DIR / 'stocks.json'
     with open(output_file, 'w') as f:
-        json.dump(output, f, indent=2)
+        json.dump(output, f, indent=2, cls=NumpyEncoder)
     
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
