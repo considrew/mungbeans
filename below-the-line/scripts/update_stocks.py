@@ -10,6 +10,7 @@ Fetches weekly price data from Yahoo Finance, calculates:
 - Historical touches of the 200WMA
 - Yartseva multibagger metrics
 - Buffett quality metrics (ROE, debt, margins)
+- Share buyback/dilution tracking
 
 Run weekly on Saturday to capture Friday close data.
 """
@@ -20,7 +21,7 @@ import os
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 import pandas as pd
 import yfinance as yf
@@ -1741,6 +1742,59 @@ def fetch_weekly_data(symbol: str) -> Optional[pd.DataFrame]:
         return None
 
 
+def get_share_change(ticker: yf.Ticker) -> Tuple[Optional[float], Optional[float], Optional[int]]:
+    """
+    Calculate share count change over time to detect buybacks vs dilution.
+    
+    Returns:
+        - yoy_change: Year-over-year share count change (%)
+        - three_yr_change: 3-year share count change (%)
+        - current_shares: Current shares outstanding
+    
+    Negative = buybacks (good)
+    Positive = dilution (bad)
+    """
+    try:
+        bs = ticker.balance_sheet
+        
+        if bs.empty or 'Ordinary Shares Number' not in bs.index:
+            return None, None, None
+        
+        shares = bs.loc['Ordinary Shares Number'].dropna().sort_index(ascending=False)
+        
+        if len(shares) < 2:
+            return None, None, None
+        
+        current = float(shares.iloc[0])
+        
+        # 1-year change
+        yoy_change = None
+        if len(shares) >= 2:
+            year_ago = float(shares.iloc[1])
+            if year_ago > 0:
+                yoy_change = ((current - year_ago) / year_ago) * 100
+        
+        # 3-year change (use oldest available if < 4 years)
+        three_yr_change = None
+        if len(shares) >= 4:
+            three_yr_ago = float(shares.iloc[3])
+            if three_yr_ago > 0:
+                three_yr_change = ((current - three_yr_ago) / three_yr_ago) * 100
+        elif len(shares) >= 3:
+            oldest = float(shares.iloc[-1])
+            if oldest > 0:
+                three_yr_change = ((current - oldest) / oldest) * 100
+        
+        return (
+            round(yoy_change, 1) if yoy_change is not None else None,
+            round(three_yr_change, 1) if three_yr_change is not None else None,
+            int(current)
+        )
+        
+    except Exception:
+        return None, None, None
+
+
 def fetch_fundamental_data(symbol: str) -> dict:
     """
     Fetch fundamental data for quality screening.
@@ -1748,6 +1802,7 @@ def fetch_fundamental_data(symbol: str) -> dict:
     Includes:
     - Yartseva multibagger metrics (FCF yield, P/B, market cap)
     - Buffett quality metrics (ROE, debt/equity, margins)
+    - Share buyback/dilution tracking
     - Dividend info
     """
     try:
@@ -1764,42 +1819,37 @@ def fetch_fundamental_data(symbol: str) -> dict:
         revenue = info.get('totalRevenue')
         
         # Quality metrics (Buffett/Munger style)
-        roe = info.get('returnOnEquity')  # Return on Equity
-        debt_to_equity = info.get('debtToEquity')  # In percentage form
+        roe = info.get('returnOnEquity')
+        debt_to_equity = info.get('debtToEquity')
         gross_margin = info.get('grossMargins')
         current_ratio = info.get('currentRatio')
         dividend_yield = info.get('dividendYield')
         
+        # Share buyback/dilution
+        shares_yoy_change, shares_3yr_change, shares_outstanding = get_share_change(ticker)
+        
         # === DERIVED METRICS ===
         
-        # FCF Yield
         fcf_yield = None
         if fcf and market_cap and market_cap > 0:
             fcf_yield = (fcf / market_cap) * 100
         
-        # Book-to-Market (inverse of P/B)
         book_to_market = None
         if price_to_book and price_to_book > 0:
             book_to_market = 1 / price_to_book
         
-        # Convert ROE to percentage
-        roe_pct = None
-        if roe is not None:
-            roe_pct = roe * 100
-        
-        # Convert gross margin to percentage
-        gross_margin_pct = None
-        if gross_margin is not None:
-            gross_margin_pct = gross_margin * 100
+        roe_pct = roe * 100 if roe is not None else None
+        gross_margin_pct = gross_margin * 100 if gross_margin is not None else None
         
         # === QUALITY FLAGS ===
         
-        # Yartseva flags (multibagger screen)
-        is_small_cap = market_cap is not None and market_cap < 2_000_000_000
-        has_positive_equity = book_value is not None and book_value > 0
-        has_positive_fcf = fcf is not None and fcf > 0
+        # Yartseva flags
+        # Use bool() to convert numpy.bool_ to Python bool for JSON serialization
+        is_small_cap = bool(market_cap is not None and market_cap < 2_000_000_000)
+        has_positive_equity = bool(book_value is not None and book_value > 0)
+        has_positive_fcf = bool(fcf is not None and fcf > 0)
         
-        yartseva_candidate = (
+        yartseva_candidate = bool(
             is_small_cap and
             has_positive_equity and
             has_positive_fcf and
@@ -1807,28 +1857,28 @@ def fetch_fundamental_data(symbol: str) -> dict:
             book_to_market is not None and book_to_market >= 0.4
         )
         
-        # Low Debt flag (debt/equity < 50%, i.e., < 0.5x)
-        low_debt = debt_to_equity is not None and debt_to_equity < 50
+        # Buffett quality flags
+        low_debt = bool(debt_to_equity is not None and debt_to_equity < 50)
+        high_roe = bool(roe_pct is not None and roe_pct > 15)
+        wide_moat = bool(gross_margin_pct is not None and gross_margin_pct > 40 and high_roe)
         
-        # High ROE flag (> 15%)
-        high_roe = roe_pct is not None and roe_pct > 15
-        
-        # Wide Moat flag (high gross margin > 40% + high ROE > 15%)
-        wide_moat = (
-            gross_margin_pct is not None and gross_margin_pct > 40 and
-            high_roe
-        )
-        
-        # Buffett Quality flag (the holy grail combo)
-        # High ROE + Low Debt + Positive FCF + Profitable
-        buffett_quality = (
+        buffett_quality = bool(
             high_roe and
             low_debt and
             has_positive_fcf and
             profit_margin is not None and profit_margin > 0
         )
         
-        # Dividend Aristocrat (from static list)
+        # Share buyback/dilution flags
+        # Buyback: shares decreased by > 2% over 3 years
+        # Dilution: shares increased by > 2% over 3 years
+        is_buying_back = bool(shares_3yr_change is not None and shares_3yr_change < -2)
+        is_diluting = bool(shares_3yr_change is not None and shares_3yr_change > 2)
+        
+        # Cannibal: aggressive buybacks (> 5% reduction over 3 years)
+        is_cannibal = bool(shares_3yr_change is not None and shares_3yr_change < -5)
+        
+        # Dividend Aristocrat
         is_dividend_aristocrat = symbol in DIVIDEND_ARISTOCRATS
         
         return {
@@ -1848,6 +1898,10 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'gross_margin': round(gross_margin_pct, 1) if gross_margin_pct else None,
             'current_ratio': round(current_ratio, 2) if current_ratio else None,
             'dividend_yield': round(dividend_yield * 100, 2) if dividend_yield else None,
+            # Share buyback/dilution
+            'shares_outstanding': shares_outstanding,
+            'shares_change_yoy': shares_yoy_change,
+            'shares_change_3yr': shares_3yr_change,
             # Flags
             'is_small_cap': is_small_cap,
             'has_positive_equity': has_positive_equity,
@@ -1858,6 +1912,9 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'buffett_quality': buffett_quality,
             'dividend_aristocrat': is_dividend_aristocrat,
             'yartseva_candidate': yartseva_candidate,
+            'is_buying_back': is_buying_back,
+            'is_diluting': is_diluting,
+            'is_cannibal': is_cannibal,
         }
         
     except Exception as e:
@@ -1867,11 +1924,13 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'profit_margin': None, 'operating_margin': None, 'revenue': None,
             'roe': None, 'debt_to_equity': None, 'gross_margin': None,
             'current_ratio': None, 'dividend_yield': None,
+            'shares_outstanding': None, 'shares_change_yoy': None, 'shares_change_3yr': None,
             'is_small_cap': False, 'has_positive_equity': False,
             'has_positive_fcf': False, 'low_debt': False, 'high_roe': False,
             'wide_moat': False, 'buffett_quality': False,
             'dividend_aristocrat': symbol in DIVIDEND_ARISTOCRATS,
             'yartseva_candidate': False,
+            'is_buying_back': False, 'is_diluting': False, 'is_cannibal': False,
         }
 
 
@@ -1992,10 +2051,12 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
     avg_return = round(sum(returns) / len(returns), 1) if returns else None
     avg_weeks = round(sum(t['weeks_below'] for t in historical_touches) / len(historical_touches), 1) if historical_touches else None
     
-    # Special combo flags (quality + below line)
-    yartseva_below_line = fundamentals['yartseva_candidate'] and pct < 0
-    buffett_below_line = fundamentals['buffett_quality'] and pct < 0
-    aristocrat_below_line = fundamentals['dividend_aristocrat'] and pct < 0
+    # Combo flags (quality + below line = golden opportunities)
+    below = pct < 0
+    yartseva_below_line = bool(fundamentals['yartseva_candidate'] and below)
+    buffett_below_line = bool(fundamentals['buffett_quality'] and below)
+    aristocrat_below_line = bool(fundamentals['dividend_aristocrat'] and below)
+    cannibal_below_line = bool(fundamentals['is_cannibal'] and below)
     
     result = {
         'symbol': symbol,
@@ -2006,7 +2067,7 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'wow_change': round(float(latest['wow_change']), 2) if pd.notna(latest['wow_change']) else 0.0,
         'rsi_14': round(float(latest['RSI_14']), 1) if pd.notna(latest['RSI_14']) else 50.0,
         'below_line': bool(latest['adjusted_close'] < latest['WMA_200']),
-        'approaching': float(latest['wow_change']) < 0 if pd.notna(latest['wow_change']) else False,
+        'approaching': bool(float(latest['wow_change']) < 0) if pd.notna(latest['wow_change']) else False,
         'zone': zone,
         'historical_touches': historical_touches,
         'touch_count': len(historical_touches),
@@ -2027,6 +2088,10 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'gross_margin': fundamentals['gross_margin'],
         'current_ratio': fundamentals['current_ratio'],
         'dividend_yield': fundamentals['dividend_yield'],
+        # Share buyback/dilution
+        'shares_outstanding': fundamentals['shares_outstanding'],
+        'shares_change_yoy': fundamentals['shares_change_yoy'],
+        'shares_change_3yr': fundamentals['shares_change_3yr'],
         # Quality flags
         'is_small_cap': fundamentals['is_small_cap'],
         'has_positive_fcf': fundamentals['has_positive_fcf'],
@@ -2036,10 +2101,14 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'buffett_quality': fundamentals['buffett_quality'],
         'dividend_aristocrat': fundamentals['dividend_aristocrat'],
         'yartseva_candidate': fundamentals['yartseva_candidate'],
-        # Combo flags (quality + below line = golden opportunities)
+        'is_buying_back': fundamentals['is_buying_back'],
+        'is_diluting': fundamentals['is_diluting'],
+        'is_cannibal': fundamentals['is_cannibal'],
+        # Combo flags
         'yartseva_below_line': yartseva_below_line,
         'buffett_below_line': buffett_below_line,
         'aristocrat_below_line': aristocrat_below_line,
+        'cannibal_below_line': cannibal_below_line,
         # Metadata
         'last_updated': df_complete.index[-1].strftime('%Y-%m-%d'),
         'data_weeks': len(df_complete)
@@ -2047,12 +2116,14 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
     
     # Status flags for logging
     flags = []
-    if yartseva_below_line: flags.append("🎯YART")
+    if cannibal_below_line: flags.append("🦈CANNIBAL")
     if buffett_below_line: flags.append("🏆BUFF")
     if aristocrat_below_line: flags.append("👑ARIST")
+    if yartseva_below_line: flags.append("🎯YART")
+    if fundamentals['is_diluting']: flags.append("⚠️DILUTE")
     flag_str = " " + " ".join(flags) if flags else ""
     
-    print(f"  ✓ {symbol}: {pct:.1f}% from WMA, RSI: {latest['RSI_14']:.0f}, Zone: {zone}{flag_str}")
+    print(f"  ✓ {symbol}: {pct:.1f}% from WMA, Zone: {zone}{flag_str}")
     return result
 
 
@@ -2064,6 +2135,8 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     yartseva = [s for s in stocks if s.get('yartseva_below_line')]
     buffett = [s for s in stocks if s.get('buffett_below_line')]
     aristocrats = [s for s in stocks if s.get('aristocrat_below_line')]
+    cannibals = [s for s in stocks if s.get('cannibal_below_line')]
+    diluting = [s for s in stocks if s.get('is_diluting')]
     
     return {
         'total_tracked': len(stocks),
@@ -2073,6 +2146,8 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
         'yartseva_count': len(yartseva),
         'buffett_count': len(buffett),
         'aristocrat_count': len(aristocrats),
+        'cannibal_count': len(cannibals),
+        'diluting_count': len(diluting),
         'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M UTC')
     }
 
@@ -2125,9 +2200,10 @@ def main():
     print(f"Processed: {len(all_stocks)} stocks")
     print(f"Errors: {len(errors)} stocks")
     print(f"Below line: {summary['below_line_count']}")
-    print(f"Yartseva candidates (below): {summary['yartseva_count']}")
+    print(f"Cannibals (buybacks + below): {summary['cannibal_count']}")
     print(f"Buffett quality (below): {summary['buffett_count']}")
-    print(f"Dividend Aristocrats (below): {summary['aristocrat_count']}")
+    print(f"Aristocrats (below): {summary['aristocrat_count']}")
+    print(f"Diluting stocks: {summary['diluting_count']}")
     print(f"Output: {output_file}")
     if errors:
         print(f"Failed symbols: {', '.join(errors[:20])}")
