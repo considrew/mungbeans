@@ -5,14 +5,14 @@
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Stocks - Below The Line</title>
+  <title>All Stocks - mungbeans.io</title>
   <meta name="description" content="Browse all stocks tracked against their 200-week moving average.">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <header class="site-header">
     <nav>
-      <a href="/" class="logo">Below The Line</a>
+      <a href="/" class="logo">mungbeans.io</a>
       <a href="/stocks/">All Stocks</a>
       <a href="/about/">About</a>
     </nav>
@@ -29,34 +29,92 @@
     <h1>All Stocks</h1>
     <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}.</p>
 
-    <!-- Filter Controls -->
-    <div class="filter-controls">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="below">Below Line ({{ $data.summary.below_line_count }})</button>
-      <button class="filter-btn" data-filter="approaching">Approaching ({{ $data.summary.approaching_count }})</button>
-      <button class="filter-btn" data-filter="oversold">Oversold ({{ $data.summary.oversold_count }})</button>
+    <!-- Search Box -->
+    <div class="search-container">
+      <input type="text" id="stockSearch" placeholder="Search by symbol or name..." class="search-input">
+    </div>
+
+    <!-- Filter Groups -->
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Signal</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="signal" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="below">Below Line</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="quality">Quality Zone</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="approaching">Approaching</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="oversold">Oversold</button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Quality</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="quality" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="sp500">S&P 500</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="proven">Proven Bouncers</button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Cross History</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="history" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="history" data-filter="firsttime">First Time</button>
+          <button class="filter-btn" data-filter-group="history" data-filter="rare">Rare (1-2)</button>
+          <button class="filter-btn" data-filter-group="history" data-filter="frequent">Frequent (5+)</button>
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label class="filter-label">Sector</label>
+        <select id="sectorFilter" class="sector-select">
+          <option value="all">All Sectors</option>
+        </select>
+      </div>
     </div>
 
     <!-- Stocks Table -->
-    <table class="stocks-table">
+    <table class="stocks-table" id="stocksTable">
       <thead>
         <tr>
-          <th>Symbol</th>
+          <th class="sortable" data-sort="symbol">Symbol <span class="sort-icon">↕</span></th>
           <th>Signal</th>
-          <th>Distance</th>
+          <th class="sortable" data-sort="distance">Distance <span class="sort-icon">↕</span></th>
           <th>Direction</th>
-          <th>RSI</th>
-          <th>Touches</th>
+          <th class="sortable" data-sort="rsi">RSI <span class="sort-icon">↕</span></th>
+          <th class="sortable" data-sort="touches">Crosses <span class="sort-icon">↕</span></th>
+          <th class="sortable" data-sort="avgreturn">Avg Return <span class="sort-icon">↕</span></th>
+          <th>Sector</th>
         </tr>
       </thead>
       <tbody>
         {{ range $data.stocks }}
+        {{ $depth := .pct_from_wma }}
+        {{ $absDepth := math.Abs .pct_from_wma }}
+        {{ $hasOngoingTouch := false }}
+        {{ range .historical_touches }}
+          {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
+        {{ end }}
         <tr class="stock-row zone-{{ .zone }}" 
+            data-symbol="{{ .symbol }}"
+            data-name="{{ .name }}"
+            data-sector="{{ .sector }}"
             data-below="{{ .below_line }}" 
+            data-distance="{{ $depth }}"
+            data-abs-distance="{{ $absDepth }}"
+            data-rsi="{{ .rsi_14 }}"
+            data-touches="{{ .touch_count }}"
+            data-avgreturn="{{ if .avg_return_after_touch }}{{ .avg_return_after_touch }}{{ else }}-999{{ end }}"
             data-approaching="{{ and (not .below_line) (le .pct_from_wma 15.0) }}"
-            data-oversold="{{ lt .rsi_14 30.0 }}">
+            data-oversold="{{ lt .rsi_14 30.0 }}"
+            data-quality="{{ and .below_line (lt $absDepth 50.0) }}"
+            data-proven="{{ and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}"
+            data-firsttime="{{ and .below_line (le .touch_count 1) }}"
+            data-ongoing="{{ $hasOngoingTouch }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
+            {{ if .name }}<span class="stock-name">{{ .name }}</span>{{ end }}
           </td>
           <td>
             {{ if .below_line }}
@@ -67,89 +125,365 @@
           </td>
           <td class="mono">
             {{ if .below_line }}
-              {{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below
+              {{ printf "%.1f%%" $absDepth }} below
             {{ else }}
               {{ printf "%.1f%%" .pct_from_wma }} above
             {{ end }}
           </td>
           <td>
             {{ if .approaching }}
-              <span class="direction approaching">↓ Approaching</span>
+              <span class="direction approaching">↓</span>
             {{ else }}
-              <span class="direction retreating">↑ Away</span>
+              <span class="direction retreating">↑</span>
             {{ end }}
           </td>
           <td class="mono {{ if lt .rsi_14 30.0 }}oversold{{ end }}">
             {{ printf "%.0f" .rsi_14 }}
           </td>
-          <td class="mono">{{ .touch_count }}</td>
+          <td class="mono">
+            {{ .touch_count }}
+            {{ if and .below_line (le .touch_count 1) }}<span class="badge-inline new">1st</span>{{ end }}
+          </td>
+          <td class="mono {{ if and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}positive{{ end }}">
+            {{ if .avg_return_after_touch }}
+              {{ if gt .avg_return_after_touch 0.0 }}+{{ end }}{{ printf "%.0f%%" .avg_return_after_touch }}
+            {{ else }}
+              —
+            {{ end }}
+          </td>
+          <td class="sector-cell">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
         {{ end }}
       </tbody>
     </table>
+    
+    <p class="results-count" id="resultsCount"></p>
   </main>
 
   <footer class="site-footer">
-    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
   </footer>
 
   <script>
-    // Simple filter functionality
+    // S&P 500 constituents (as of late 2024)
+    const SP500 = new Set([
+      'AAPL','ABBV','ABT','ACN','ADBE','ADP','ADSK','AEE','AEP','AES','AFL','AIG','AIZ','AJG','AKAM','ALB','ALGN','ALL','ALLE','AMAT','AMCR','AMD','AME','AMGN','AMP','AMT','AMZN','ANET','ANSS','AON','AOS','APA','APD','APH','APTV','ARE','ATO','AVB','AVGO','AVY','AWK','AXON','AXP','AZO',
+      'BA','BAC','BALL','BAX','BBY','BDX','BEN','BF-B','BG','BIIB','BIO','BK','BKNG','BKR','BLDR','BLK','BMY','BR','BRK-B','BRO','BSX','BWA','BX','BXP',
+      'C','CAG','CAH','CARR','CAT','CB','CBOE','CBRE','CCI','CCL','CDNS','CDW','CE','CEG','CF','CFG','CHD','CHRW','CHTR','CI','CINF','CL','CLX','CMA','CMCSA','CME','CMG','CMI','CMS','CNC','CNP','COF','COO','COP','COR','COST','CPAY','CPB','CPRT','CPT','CRL','CRM','CSCO','CSGP','CSX','CTAS','CTLT','CTRA','CTSH','CTVA','CVS','CVX',
+      'D','DAL','DAY','DD','DE','DECK','DFS','DG','DGX','DHI','DHR','DIS','DLR','DLTR','DOC','DOV','DOW','DPZ','DRI','DTE','DUK','DVA','DVN',
+      'DXCM','EA','EBAY','ECL','ED','EFX','EG','EIX','EL','ELV','EMN','EMR','ENPH','EOG','EPAM','EQIX','EQR','EQT','ES','ESS','ETN','ETR','EVRG','EW','EXC','EXPD','EXPE','EXR',
+      'F','FANG','FAST','FCX','FDS','FDX','FE','FFIV','FI','FICO','FIS','FITB','FMC','FOX','FOXA','FRT','FSLR','FTNT','FTV',
+      'GD','GDDY','GE','GEHC','GEN','GEV','GILD','GIS','GL','GLW','GM','GNRC','GOOG','GOOGL','GPC','GPN','GRMN','GS','GWW',
+      'HAL','HAS','HBAN','HCA','HD','HES','HIG','HII','HLT','HOLX','HON','HPE','HPQ','HRL','HSIC','HST','HSY','HUBB','HUM','HWM',
+      'IBM','ICE','IDXX','IEX','IFF','ILMN','INCY','INTC','INTU','INVH','IP','IPG','IQV','IR','IRM','ISRG','IT','ITW','IVZ',
+      'J','JBHT','JBL','JCI','JKHY','JNJ','JNPR','JPM',
+      'K','KDP','KEY','KEYS','KHC','KIM','KKR','KLAC','KMB','KMI','KMX','KO','KR',
+      'L','LDOS','LEN','LH','LHX','LIN','LKQ','LLY','LMT','LNT','LOW','LRCX','LULU','LUV','LVS','LW','LYB','LYV',
+      'MA','MAA','MAR','MAS','MCD','MCHP','MCK','MCO','MDLZ','MDT','MET','META','MGM','MHK','MKC','MKTX','MLM','MMC','MMM','MNST','MO','MOH','MOS','MPC','MPWR','MRK','MRNA','MRO','MS','MSCI','MSFT','MSI','MTB','MTCH','MTD','MU',
+      'NCLH','NDAQ','NDSN','NEE','NEM','NFLX','NI','NKE','NOC','NOW','NRG','NSC','NTAP','NTRS','NUE','NVDA','NVR','NWS','NWSA',
+      'O','ODFL','OKE','OMC','ON','ORCL','ORLY','OTIS','OXY',
+      'PANW','PARA','PAYC','PAYX','PCAR','PCG','PEG','PEP','PFE','PFG','PG','PGR','PH','PHM','PKG','PLD','PLTR','PM','PNC','PNR','PNW','PODD','POOL','PPG','PPL','PRU','PSA','PSX','PTC','PWR','PXD',
+      'QCOM','QRVO',
+      'RCL','REG','REGN','RF','RJF','RL','RMD','ROK','ROL','ROP','ROST','RSG','RTX',
+      'SBAC','SBUX','SCHW','SHW','SJM','SLB','SMCI','SNA','SNPS','SO','SOLV','SPG','SPGI','SRE','STE','STLD','STT','STX','STZ','SWK','SWKS','SYF','SYK','SYY',
+      'T','TAP','TDG','TDY','TECH','TEL','TER','TFC','TFX','TGT','TJX','TMO','TMUS','TPR','TRGP','TRMB','TROW','TRV','TSCO','TSLA','TSN','TT','TTWO','TXN','TXT','TYL',
+      'UAL','UBER','UDR','UHS','ULTA','UNH','UNP','UPS','URI','USB',
+      'V','VICI','VLO','VLTO','VMC','VRSK','VRSN','VRTX','VST','VTR','VTRS','VZ',
+      'WAB','WAT','WBA','WBD','WDC','WEC','WELL','WFC','WM','WMB','WMT','WRB','WRK','WST','WTW','WY','WYNN',
+      'XEL','XOM','XYL',
+      'YUM',
+      'ZBH','ZBRA','ZTS'
+    ]);
+    
+    // State
+    let currentSort = { column: null, direction: 'asc' };
+    let filters = {
+      signal: 'all',
+      quality: 'all',
+      history: 'all',
+      sector: 'all',
+      search: ''
+    };
+    
+    // Elements
+    const table = document.getElementById('stocksTable');
+    const tbody = table.querySelector('tbody');
+    const searchInput = document.getElementById('stockSearch');
+    const sectorSelect = document.getElementById('sectorFilter');
+    const resultsCount = document.getElementById('resultsCount');
+    
+    // Populate sector dropdown
+    const sectors = new Set();
+    document.querySelectorAll('.stock-row').forEach(row => {
+      const sector = row.dataset.sector;
+      if (sector && sector !== '') sectors.add(sector);
+    });
+    Array.from(sectors).sort().forEach(sector => {
+      const opt = document.createElement('option');
+      opt.value = sector;
+      opt.textContent = sector;
+      sectorSelect.appendChild(opt);
+    });
+    
+    // Add S&P 500 data attribute to rows
+    document.querySelectorAll('.stock-row').forEach(row => {
+      row.dataset.sp500 = SP500.has(row.dataset.symbol) ? 'true' : 'false';
+    });
+    
+    // Get all rows as array
+    function getRows() {
+      return Array.from(tbody.querySelectorAll('.stock-row'));
+    }
+    
+    // Update visible count
+    function updateCount() {
+      const visible = getRows().filter(row => row.style.display !== 'none').length;
+      const total = getRows().length;
+      resultsCount.textContent = `Showing ${visible} of ${total} stocks`;
+    }
+    
+    // Filter button clicks
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        const group = btn.dataset.filterGroup;
+        
+        // Update active state within group
+        document.querySelectorAll(`.filter-btn[data-filter-group="${group}"]`).forEach(b => {
+          b.classList.remove('active');
+        });
         btn.classList.add('active');
         
-        const filter = btn.dataset.filter;
-        document.querySelectorAll('.stock-row').forEach(row => {
-          if (filter === 'all') {
-            row.style.display = '';
-          } else if (filter === 'below') {
-            row.style.display = row.dataset.below === 'true' ? '' : 'none';
-          } else if (filter === 'approaching') {
-            row.style.display = row.dataset.approaching === 'true' ? '' : 'none';
-          } else if (filter === 'oversold') {
-            row.style.display = row.dataset.oversold === 'true' ? '' : 'none';
-          }
-        });
+        filters[group] = btn.dataset.filter;
+        applyFilters();
       });
     });
+    
+    // Sector dropdown
+    sectorSelect.addEventListener('change', () => {
+      filters.sector = sectorSelect.value;
+      applyFilters();
+    });
+    
+    // Search
+    searchInput.addEventListener('input', () => {
+      filters.search = searchInput.value.toUpperCase();
+      applyFilters();
+    });
+    
+    function applyFilters() {
+      getRows().forEach(row => {
+        let show = true;
+        
+        // Search filter
+        if (filters.search) {
+          const symbol = row.dataset.symbol || '';
+          const name = (row.dataset.name || '').toUpperCase();
+          if (!symbol.includes(filters.search) && !name.includes(filters.search)) {
+            show = false;
+          }
+        }
+        
+        // Signal filter
+        if (show && filters.signal !== 'all') {
+          if (filters.signal === 'below') {
+            show = row.dataset.below === 'true';
+          } else if (filters.signal === 'quality') {
+            show = row.dataset.quality === 'true';
+          } else if (filters.signal === 'approaching') {
+            show = row.dataset.approaching === 'true';
+          } else if (filters.signal === 'oversold') {
+            show = row.dataset.oversold === 'true';
+          }
+        }
+        
+        // Quality filter
+        if (show && filters.quality !== 'all') {
+          if (filters.quality === 'sp500') {
+            show = row.dataset.sp500 === 'true';
+          } else if (filters.quality === 'proven') {
+            show = row.dataset.proven === 'true';
+          }
+        }
+        
+        // History filter
+        if (show && filters.history !== 'all') {
+          const touches = parseInt(row.dataset.touches) || 0;
+          const isBelow = row.dataset.below === 'true';
+          
+          if (filters.history === 'firsttime') {
+            // First time = below line with 0-1 prior touches
+            show = isBelow && touches <= 1;
+          } else if (filters.history === 'rare') {
+            // Rare = 1-2 total historical touches
+            show = touches >= 1 && touches <= 2;
+          } else if (filters.history === 'frequent') {
+            // Frequent = 5+ touches
+            show = touches >= 5;
+          }
+        }
+        
+        // Sector filter
+        if (show && filters.sector !== 'all') {
+          show = row.dataset.sector === filters.sector;
+        }
+        
+        row.style.display = show ? '' : 'none';
+      });
+      
+      updateCount();
+    }
+    
+    // Sort functionality
+    document.querySelectorAll('.sortable').forEach(th => {
+      th.addEventListener('click', () => {
+        const column = th.dataset.sort;
+        
+        if (currentSort.column === column) {
+          currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSort.column = column;
+          currentSort.direction = 'asc';
+        }
+        
+        document.querySelectorAll('.sortable').forEach(h => {
+          h.classList.remove('sort-asc', 'sort-desc');
+        });
+        th.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+        
+        sortTable(column, currentSort.direction);
+      });
+    });
+    
+    function sortTable(column, direction) {
+      const rows = getRows();
+      
+      rows.sort((a, b) => {
+        let aVal, bVal;
+        
+        if (column === 'symbol') {
+          aVal = a.dataset.symbol;
+          bVal = b.dataset.symbol;
+          return direction === 'asc' 
+            ? aVal.localeCompare(bVal)
+            : bVal.localeCompare(aVal);
+        }
+        
+        if (column === 'distance') {
+          aVal = parseFloat(a.dataset.distance);
+          bVal = parseFloat(b.dataset.distance);
+        } else if (column === 'rsi') {
+          aVal = parseFloat(a.dataset.rsi);
+          bVal = parseFloat(b.dataset.rsi);
+        } else if (column === 'touches') {
+          aVal = parseInt(a.dataset.touches);
+          bVal = parseInt(b.dataset.touches);
+        } else if (column === 'avgreturn') {
+          aVal = parseFloat(a.dataset.avgreturn);
+          bVal = parseFloat(b.dataset.avgreturn);
+        }
+        
+        return direction === 'asc' ? aVal - bVal : bVal - aVal;
+      });
+      
+      rows.forEach(row => tbody.appendChild(row));
+    }
+    
+    // Initial count
+    updateCount();
   </script>
 
   <style>
     .stocks-list-page {
-      max-width: 1000px;
+      max-width: 1200px;
     }
     
     .page-desc {
       color: var(--color-text-muted);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .search-container {
+      margin-bottom: var(--space-lg);
+    }
+    
+    .search-input {
+      width: 100%;
+      max-width: 350px;
+      padding: var(--space-sm) var(--space-md);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-size: 1rem;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: var(--color-primary, #3b82f6);
+    }
+    
+    .filter-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
       margin-bottom: var(--space-xl);
+      padding: var(--space-md);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    
+    .filter-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-muted);
+      min-width: 100px;
     }
     
     .filter-controls {
       display: flex;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
+      gap: var(--space-xs);
       flex-wrap: wrap;
     }
     
     .filter-btn {
-      background: var(--color-surface);
+      background: var(--color-bg);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-sm);
-      padding: var(--space-sm) var(--space-md);
+      padding: 6px 12px;
       color: var(--color-text-muted);
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.8125rem;
+      transition: all 0.15s ease;
     }
     
     .filter-btn:hover {
       border-color: var(--color-text-muted);
+      color: var(--color-text);
     }
     
     .filter-btn.active {
-      background: var(--color-border);
+      background: var(--color-primary, #3b82f6);
+      border-color: var(--color-primary, #3b82f6);
+      color: white;
+    }
+    
+    .sector-select {
+      padding: 6px 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      background: var(--color-bg);
       color: var(--color-text);
+      font-size: 0.8125rem;
+      min-width: 150px;
     }
     
     .stocks-table {
@@ -170,14 +504,67 @@
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      position: sticky;
+      top: 0;
+      background: var(--color-bg);
+      z-index: 10;
+    }
+    
+    .sortable {
+      cursor: pointer;
+      user-select: none;
+    }
+    
+    .sortable:hover {
+      color: var(--color-text);
+    }
+    
+    .sort-icon {
+      opacity: 0.3;
+      margin-left: 4px;
+    }
+    
+    .sortable.sort-asc .sort-icon,
+    .sortable.sort-desc .sort-icon {
+      opacity: 1;
+    }
+    
+    .sortable.sort-asc .sort-icon::after {
+      content: '↑';
+    }
+    
+    .sortable.sort-desc .sort-icon::after {
+      content: '↓';
+    }
+    
+    .sortable.sort-asc .sort-icon,
+    .sortable.sort-desc .sort-icon {
+      font-size: 0;
+    }
+    
+    .sortable.sort-asc .sort-icon::after,
+    .sortable.sort-desc .sort-icon::after {
+      font-size: 0.75rem;
     }
     
     .stocks-table td a {
       font-weight: 600;
     }
     
+    .stock-name {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      font-weight: normal;
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
     .mono {
       font-family: var(--font-mono);
+      font-size: 0.875rem;
     }
     
     .signal-badge {
@@ -200,6 +587,7 @@
     
     .direction.approaching {
       color: var(--color-approaching);
+      font-weight: bold;
     }
     
     .direction.retreating {
@@ -211,10 +599,82 @@
       font-weight: 600;
     }
     
+    td.positive {
+      color: var(--color-success, #16a34a);
+    }
+    
+    .badge-inline {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-size: 0.625rem;
+      font-weight: 700;
+      margin-left: 4px;
+      vertical-align: middle;
+    }
+    
+    .badge-inline.new {
+      background: var(--color-primary, #3b82f6);
+      color: white;
+    }
+    
+    .sector-cell {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
     .stock-row.zone-below_line,
     .stock-row.zone-deep_value,
     .stock-row.zone-extreme_value {
       background: var(--color-yes-bg);
+    }
+    
+    .results-count {
+      margin-top: var(--space-md);
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+    
+    /* Mobile adjustments */
+    @media (max-width: 900px) {
+      .filter-label {
+        min-width: 70px;
+        font-size: 0.7rem;
+      }
+      
+      .filter-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+      }
+      
+      .stocks-table th:nth-child(7),
+      .stocks-table td:nth-child(7),
+      .stocks-table th:nth-child(8),
+      .stocks-table td:nth-child(8) {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .stocks-table th:nth-child(4),
+      .stocks-table td:nth-child(4),
+      .stocks-table th:nth-child(6),
+      .stocks-table td:nth-child(6) {
+        display: none;
+      }
+      
+      .stock-name {
+        display: none;
+      }
+      
+      .filter-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </body>

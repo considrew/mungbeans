@@ -43,6 +43,25 @@
     {{ end }}
   {{ end }}
 
+  {{/* Filter and categorize stocks */}}
+  {{ $allBelow := $data.summary.below_line_stocks }}
+  
+  {{/* Quality picks: -5% to -50% depth, excludes dying stocks */}}
+  {{ $qualityPicks := slice }}
+  {{ $deepValue := slice }}
+  {{ $tooFarGone := slice }}
+  
+  {{ range $allBelow }}
+    {{ $depth := math.Abs .pct_from_wma }}
+    {{ if lt $depth 50.0 }}
+      {{ $qualityPicks = $qualityPicks | append . }}
+    {{ else if lt $depth 70.0 }}
+      {{ $deepValue = $deepValue | append . }}
+    {{ else }}
+      {{ $tooFarGone = $tooFarGone | append . }}
+    {{ end }}
+  {{ end }}
+
   <main class="homepage">
     <!-- Hero Section -->
     <section class="hero">
@@ -51,8 +70,8 @@
       
       <div class="hero-stats">
         <div class="stat">
-          <span class="stat-number">{{ $data.summary.below_line_count }}</span>
-          <span class="stat-label">Below the line</span>
+          <span class="stat-number">{{ len $qualityPicks }}</span>
+          <span class="stat-label">Actionable</span>
         </div>
         <div class="stat">
           <span class="stat-number">{{ $data.summary.approaching_count }}</span>
@@ -60,7 +79,7 @@
         </div>
         <div class="stat">
           <span class="stat-number">{{ $data.summary.total_stocks }}</span>
-          <span class="stat-label">Stocks tracked</span>
+          <span class="stat-label">Tracked</span>
         </div>
       </div>
     </section>
@@ -68,17 +87,43 @@
     <!-- Ad Placement: After Hero -->
     <div class="ad-container ad-container--leaderboard" id="ad-home-top">
       <div class="ad-label">Advertisement</div>
-      <!-- Google AdSense or ad network code goes here -->
     </div>
 
-    <!-- Stocks Below The Line -->
-    {{ if $data.summary.below_line_stocks }}
+    <!-- Quality Picks: Actionable Below-Line Stocks -->
+    {{ if $qualityPicks }}
     <section class="stock-section below-section">
       <h2>📉 Below The Line</h2>
-      <p class="section-desc">These stocks are currently trading below their 200-week moving average.</p>
+      <p class="section-desc">Stocks trading 5-50% below their 200-week moving average — the actionable zone.</p>
       
       <div class="stock-grid">
-        {{ range $data.summary.below_line_stocks }}
+        {{ range $qualityPicks }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-signal">YES</div>
+          <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
+          <div class="card-direction">
+            {{ if .approaching }}↓ Deepening{{ else }}↑ Recovering{{ end }}
+          </div>
+          {{ if lt .rsi_14 30.0 }}
+          <div class="card-badge oversold">RSI {{ printf "%.0f" .rsi_14 }}</div>
+          {{ end }}
+          {{ if and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}
+          <div class="card-badge history">+{{ printf "%.0f%%" .avg_return_after_touch }} avg</div>
+          {{ end }}
+        </a>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+
+    <!-- Deep Value: 50-70% below -->
+    {{ if $deepValue }}
+    <section class="stock-section deep-value-section">
+      <h2>🔻 Deep Value (High Risk)</h2>
+      <p class="section-desc">Stocks 50-70% below their 200WMA. Higher risk — verify fundamentals carefully.</p>
+      
+      <div class="stock-grid">
+        {{ range $deepValue }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
           <div class="card-signal">YES</div>
@@ -119,28 +164,51 @@
     </section>
     {{ end }}
 
-    <!-- Oversold Stocks -->
-    {{ if $data.summary.oversold_stocks }}
+    <!-- Oversold Stocks (from quality picks only) -->
+    {{ $oversoldQuality := slice }}
+    {{ range $qualityPicks }}
+      {{ if lt .rsi_14 30.0 }}
+        {{ $oversoldQuality = $oversoldQuality | append . }}
+      {{ end }}
+    {{ end }}
+    
+    {{ if $oversoldQuality }}
     <section class="stock-section oversold-section">
-      <h2>📊 Oversold (RSI &lt; 30)</h2>
-      <p class="section-desc">Stocks showing oversold conditions on 14-week RSI.</p>
+      <h2>📊 Oversold + Below Line</h2>
+      <p class="section-desc">Below-line stocks also showing RSI &lt; 30. Double signal.</p>
       
       <div class="stock-grid">
-        {{ range $data.summary.oversold_stocks }}
+        {{ range $oversoldQuality }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
-          <div class="card-signal">{{ if .below_line }}YES{{ else }}NO{{ end }}</div>
-          <div class="card-pct">
-            {{ if .below_line }}
-              {{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below
-            {{ else }}
-              {{ printf "%.1f%%" .pct_from_wma }} above
-            {{ end }}
-          </div>
+          <div class="card-signal">YES</div>
+          <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
           <div class="card-badge oversold">RSI {{ printf "%.0f" .rsi_14 }}</div>
         </a>
         {{ end }}
       </div>
+    </section>
+    {{ end }}
+
+    <!-- Too Far Gone (collapsed/hidden by default) -->
+    {{ if $tooFarGone }}
+    <section class="stock-section distressed-section">
+      <details>
+        <summary>
+          <h2 style="display:inline;">⚠️ Distressed ({{ len $tooFarGone }} stocks &gt;70% below)</h2>
+        </summary>
+        <p class="section-desc">These stocks are more than 70% below their 200WMA. Many may be facing serious fundamental issues.</p>
+        
+        <div class="stock-grid">
+          {{ range $tooFarGone }}
+          <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+            <div class="card-symbol">{{ .symbol }}</div>
+            <div class="card-signal">YES</div>
+            <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
+          </a>
+          {{ end }}
+        </div>
+      </details>
     </section>
     {{ end }}
 
@@ -174,19 +242,19 @@
     <!-- All Stocks Link -->
     <section class="all-stocks-cta">
       <!-- Email Signup -->
-    <section class="email-signup">
-      <h2>📬 Get Notified</h2>
-      <p>Get a weekly email when stocks cross below their 200-week line.</p>
-      <form name="notify" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="signup-form">
-        <input type="hidden" name="form-name" value="notify">
-        <p class="hidden" style="display:none;">
-          <label>Don't fill this out: <input name="bot-field"></label>
-        </p>
-        <input type="email" name="email" placeholder="you@example.com" required>
-        <button type="submit">Subscribe</button>
-      </form>
-      <p class="signup-note">No spam. Unsubscribe anytime.</p>
-    </section>
+      <section class="email-signup">
+        <h2>📬 Get Notified</h2>
+        <p>Get a weekly email when stocks cross below their 200-week line.</p>
+        <form name="notify" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="signup-form">
+          <input type="hidden" name="form-name" value="notify">
+          <p class="hidden" style="display:none;">
+            <label>Don't fill this out: <input name="bot-field"></label>
+          </p>
+          <input type="email" name="email" placeholder="you@example.com" required>
+          <button type="submit">Subscribe</button>
+        </form>
+        <p class="signup-note">No spam. Unsubscribe anytime.</p>
+      </section>
       <a href="/stocks/" class="cta-button">View All {{ $data.summary.total_stocks }} Stocks →</a>
     </section>
   </main>
@@ -195,5 +263,35 @@
     <p>Data updated weekly (Friday close). Last update: {{ $data.generated_readable }}</p>
     <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
   </footer>
+
+  <style>
+    .deep-value-section .stock-card {
+      border-color: var(--color-warning, #f59e0b);
+    }
+    
+    .distressed-section {
+      opacity: 0.7;
+    }
+    
+    .distressed-section details {
+      cursor: pointer;
+    }
+    
+    .distressed-section summary {
+      padding: var(--space-md);
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+    }
+    
+    .distressed-section summary:hover {
+      background: var(--color-border);
+    }
+    
+    .card-badge.history {
+      background: var(--color-success-bg, #dcfce7);
+      color: var(--color-success, #16a34a);
+    }
+  </style>
 </body>
 </html>
