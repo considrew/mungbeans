@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Stocks - mungbeans.io</title>
-  <meta name="description" content="Browse all stocks tracked against their 200-week moving average. Filter by value signals, Yartseva multibagger criteria, and more.">
+  <meta name="description" content="Browse all stocks tracked against their 200-week moving average. Filter by Buffett quality, Yartseva multibagger criteria, Dividend Aristocrats, and more.">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -53,6 +53,8 @@
           <button class="filter-btn active" data-filter-group="quality" data-filter="all">All</button>
           <button class="filter-btn" data-filter-group="quality" data-filter="sp500">S&P 500</button>
           <button class="filter-btn" data-filter-group="quality" data-filter="proven">Proven Bouncers</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="lowdebt" title="Debt/Equity < 50%">Low Debt</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="highroe" title="Return on Equity > 15%">High ROE</button>
         </div>
       </div>
       
@@ -70,7 +72,10 @@
         <label class="filter-label">Special</label>
         <div class="filter-controls">
           <button class="filter-btn active" data-filter-group="special" data-filter="all">All</button>
-          <button class="filter-btn yartseva-btn" data-filter-group="special" data-filter="yartseva" title="Yartseva Multibagger Screen: Small cap + High FCF yield + Value P/B + Below 200WMA">🎯 Multibagger</button>
+          <button class="filter-btn buffett-btn" data-filter-group="special" data-filter="buffett" title="High ROE + Low Debt + Positive FCF + Profitable">🏆 Buffett Quality</button>
+          <button class="filter-btn yartseva-btn" data-filter-group="special" data-filter="yartseva" title="Small cap + High FCF yield + Value P/B">🎯 Multibagger</button>
+          <button class="filter-btn aristocrat-btn" data-filter-group="special" data-filter="aristocrat" title="25+ years consecutive dividend increases">👑 Aristocrats</button>
+          <button class="filter-btn moat-btn" data-filter-group="special" data-filter="widemoat" title="Gross Margin > 40% + ROE > 15%">🏰 Wide Moat</button>
         </div>
       </div>
       
@@ -82,18 +87,52 @@
       </div>
     </div>
     
-    <!-- Yartseva Info Box (hidden by default, shown when filter active) -->
+    <!-- Info Boxes (hidden by default) -->
+    <div id="buffettInfo" class="info-box buffett-info" style="display: none;">
+      <strong>🏆 Buffett Quality Screen</strong>
+      <p>Companies meeting Warren Buffett's core investment criteria:</p>
+      <ul>
+        <li>High ROE (&gt; 15%) — efficient use of shareholder capital</li>
+        <li>Low Debt (D/E &lt; 50%) — conservative balance sheet</li>
+        <li>Positive Free Cash Flow — real earnings, not accounting tricks</li>
+        <li>Profitable — actually making money</li>
+      </ul>
+      <p class="info-note">"A truly great business must have an enduring moat that protects excellent returns on invested capital." — Buffett</p>
+    </div>
+    
     <div id="yartsevaInfo" class="info-box yartseva-info" style="display: none;">
       <strong>🎯 Yartseva Multibagger Screen</strong>
-      <p>Based on statistical research of 464 stocks that 5-10x'd from 2009-2024. Criteria:</p>
+      <p>Based on statistical research of 464 stocks that 5-10x'd from 2009-2024:</p>
       <ul>
         <li>Market cap &lt; $2B (small caps dominated)</li>
         <li>FCF Yield &gt; 5% (cash generation matters most)</li>
         <li>Book-to-Market &gt; 0.40 (value pricing)</li>
-        <li>Positive equity (no negative book value)</li>
-        <li>Below 200WMA (near lows = better entry)</li>
+        <li>Positive equity + Below 200WMA (near lows)</li>
       </ul>
-      <p class="info-note">These stocks meet the quantitative criteria. Always do your own due diligence on qualitative factors like improving margins and reinvestment quality.</p>
+      <p class="info-note">These meet quantitative criteria. Always verify improving margins and reinvestment quality.</p>
+    </div>
+    
+    <div id="aristocratInfo" class="info-box aristocrat-info" style="display: none;">
+      <strong>👑 Dividend Aristocrats</strong>
+      <p>S&P 500 companies with 25+ consecutive years of dividend increases:</p>
+      <ul>
+        <li>Proven durability through multiple economic cycles</li>
+        <li>Management committed to returning capital</li>
+        <li>Usually have strong competitive moats</li>
+        <li>When below 200WMA = rare buying opportunity</li>
+      </ul>
+      <p class="info-note">Aristocrats rarely go on sale. A 200WMA cross is often a generational entry point.</p>
+    </div>
+    
+    <div id="moatInfo" class="info-box moat-info" style="display: none;">
+      <strong>🏰 Wide Moat Screen</strong>
+      <p>Companies with durable competitive advantages:</p>
+      <ul>
+        <li>Gross Margin &gt; 40% — strong pricing power</li>
+        <li>ROE &gt; 15% — efficient capital allocation</li>
+        <li>These margins indicate barriers to competition</li>
+      </ul>
+      <p class="info-note">"The key to investing is determining the competitive advantage of any given company and the durability of that advantage." — Buffett</p>
     </div>
 
     <!-- Stocks Table -->
@@ -105,10 +144,10 @@
           <th class="sortable" data-sort="distance">Distance <span class="sort-icon">↕</span></th>
           <th>Direction</th>
           <th class="sortable" data-sort="rsi">RSI <span class="sort-icon">↕</span></th>
-          <th class="sortable" data-sort="touches">Crosses <span class="sort-icon">↕</span></th>
-          <th class="sortable" data-sort="avgreturn">Avg Return <span class="sort-icon">↕</span></th>
-          <th class="sortable hide-mobile" data-sort="fcfyield">FCF Yield <span class="sort-icon">↕</span></th>
-          <th>Sector</th>
+          <th class="sortable" data-sort="roe">ROE <span class="sort-icon">↕</span></th>
+          <th class="sortable hide-mobile" data-sort="debt">D/E <span class="sort-icon">↕</span></th>
+          <th class="sortable hide-mobile" data-sort="fcfyield">FCF% <span class="sort-icon">↕</span></th>
+          <th class="hide-tablet">Sector</th>
         </tr>
       </thead>
       <tbody>
@@ -119,7 +158,7 @@
         {{ range .historical_touches }}
           {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
         {{ end }}
-        <tr class="stock-row zone-{{ .zone }}{{ if .yartseva_below_line }} yartseva-match{{ end }}" 
+        <tr class="stock-row zone-{{ .zone }}{{ if .buffett_below_line }} buffett-match{{ end }}{{ if .yartseva_below_line }} yartseva-match{{ end }}{{ if .aristocrat_below_line }} aristocrat-match{{ end }}" 
             data-symbol="{{ .symbol }}"
             data-name="{{ .name }}"
             data-sector="{{ .sector }}"
@@ -127,19 +166,29 @@
             data-distance="{{ $depth }}"
             data-abs-distance="{{ $absDepth }}"
             data-rsi="{{ .rsi_14 }}"
+            data-roe="{{ if .roe }}{{ .roe }}{{ else }}-999{{ end }}"
+            data-debt="{{ if .debt_to_equity }}{{ .debt_to_equity }}{{ else }}9999{{ end }}"
+            data-fcfyield="{{ if .fcf_yield }}{{ .fcf_yield }}{{ else }}-999{{ end }}"
             data-touches="{{ .touch_count }}"
             data-avgreturn="{{ if .avg_return_after_touch }}{{ .avg_return_after_touch }}{{ else }}-999{{ end }}"
-            data-fcfyield="{{ if .fcf_yield }}{{ .fcf_yield }}{{ else }}-999{{ end }}"
             data-approaching="{{ and (not .below_line) (le .pct_from_wma 15.0) }}"
             data-oversold="{{ lt .rsi_14 30.0 }}"
             data-quality="{{ and .below_line (lt $absDepth 50.0) }}"
             data-proven="{{ and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}"
             data-firsttime="{{ and .below_line (le .touch_count 1) }}"
             data-ongoing="{{ $hasOngoingTouch }}"
-            data-yartseva="{{ if .yartseva_below_line }}true{{ else }}false{{ end }}">
+            data-lowdebt="{{ if .low_debt }}true{{ else }}false{{ end }}"
+            data-highroe="{{ if .high_roe }}true{{ else }}false{{ end }}"
+            data-widemoat="{{ if .wide_moat }}true{{ else }}false{{ end }}"
+            data-buffett="{{ if .buffett_below_line }}true{{ else }}false{{ end }}"
+            data-yartseva="{{ if .yartseva_below_line }}true{{ else }}false{{ end }}"
+            data-aristocrat="{{ if .aristocrat_below_line }}true{{ else }}false{{ end }}"
+            data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
-            {{ if .yartseva_below_line }}<span class="badge-inline yartseva-badge" title="Yartseva Multibagger Candidate">🎯</span>{{ end }}
+            {{ if .buffett_below_line }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
+            {{ if .yartseva_below_line }}<span class="badge-inline yartseva-badge" title="Multibagger Candidate">🎯</span>{{ end }}
+            {{ if .aristocrat_below_line }}<span class="badge-inline aristocrat-badge" title="Dividend Aristocrat">👑</span>{{ end }}
             {{ if .name }}<span class="stock-name">{{ .name }}</span>{{ end }}
           </td>
           <td>
@@ -166,25 +215,16 @@
           <td class="mono {{ if lt .rsi_14 30.0 }}oversold{{ end }}">
             {{ printf "%.0f" .rsi_14 }}
           </td>
-          <td class="mono">
-            {{ .touch_count }}
-            {{ if and .below_line (le .touch_count 1) }}<span class="badge-inline new">1st</span>{{ end }}
+          <td class="mono {{ if and .roe (gt .roe 15.0) }}high-roe{{ end }}">
+            {{ if .roe }}{{ printf "%.0f%%" .roe }}{{ else }}—{{ end }}
           </td>
-          <td class="mono {{ if and .avg_return_after_touch (gt .avg_return_after_touch 0.0) }}positive{{ end }}">
-            {{ if .avg_return_after_touch }}
-              {{ if gt .avg_return_after_touch 0.0 }}+{{ end }}{{ printf "%.0f%%" .avg_return_after_touch }}
-            {{ else }}
-              —
-            {{ end }}
+          <td class="mono hide-mobile {{ if and .debt_to_equity (lt .debt_to_equity 50.0) }}low-debt{{ end }}">
+            {{ if .debt_to_equity }}{{ printf "%.0f%%" .debt_to_equity }}{{ else }}—{{ end }}
           </td>
           <td class="mono hide-mobile {{ if and .fcf_yield (gt .fcf_yield 5.0) }}high-fcf{{ end }}">
-            {{ if .fcf_yield }}
-              {{ printf "%.1f%%" .fcf_yield }}
-            {{ else }}
-              —
-            {{ end }}
+            {{ if .fcf_yield }}{{ printf "%.1f%%" .fcf_yield }}{{ else }}—{{ end }}
           </td>
-          <td class="sector-cell">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
+          <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
         {{ end }}
       </tbody>
@@ -234,21 +274,12 @@
       'UAL','UBER','UDR','UHS','ULTA','UNH','UNP','UPS','URI','USB',
       'V','VICI','VLO','VLTO','VMC','VRSK','VRSN','VRTX','VST','VTR','VTRS','VZ',
       'WAB','WAT','WBA','WBD','WDC','WEC','WELL','WFC','WM','WMB','WMT','WRB','WRK','WST','WTW','WY','WYNN',
-      'XEL','XOM','XYL',
-      'YUM',
-      'ZBH','ZBRA','ZTS'
+      'XEL','XOM','XYL','YUM','ZBH','ZBRA','ZTS'
     ]);
     
     // State
     let currentSort = { column: null, direction: 'asc' };
-    let filters = {
-      signal: 'all',
-      quality: 'all',
-      history: 'all',
-      special: 'all',
-      sector: 'all',
-      search: ''
-    };
+    let filters = { signal: 'all', quality: 'all', history: 'all', special: 'all', sector: 'all', search: '' };
     
     // Elements
     const table = document.getElementById('stocksTable');
@@ -256,7 +287,14 @@
     const searchInput = document.getElementById('stockSearch');
     const sectorSelect = document.getElementById('sectorFilter');
     const resultsCount = document.getElementById('resultsCount');
-    const yartsevaInfo = document.getElementById('yartsevaInfo');
+    
+    // Info boxes
+    const infoBoxes = {
+      buffett: document.getElementById('buffettInfo'),
+      yartseva: document.getElementById('yartsevaInfo'),
+      aristocrat: document.getElementById('aristocratInfo'),
+      widemoat: document.getElementById('moatInfo')
+    };
     
     // Populate sector dropdown
     const sectors = new Set();
@@ -271,21 +309,20 @@
       sectorSelect.appendChild(opt);
     });
     
-    // Add S&P 500 data attribute to rows
+    // Add S&P 500 data attribute
     document.querySelectorAll('.stock-row').forEach(row => {
       row.dataset.sp500 = SP500.has(row.dataset.symbol) ? 'true' : 'false';
     });
     
-    // Get all rows as array
-    function getRows() {
-      return Array.from(tbody.querySelectorAll('.stock-row'));
-    }
+    function getRows() { return Array.from(tbody.querySelectorAll('.stock-row')); }
     
-    // Update visible count
     function updateCount() {
       const visible = getRows().filter(row => row.style.display !== 'none').length;
-      const total = getRows().length;
-      resultsCount.textContent = `Showing ${visible} of ${total} stocks`;
+      resultsCount.textContent = `Showing ${visible} of ${getRows().length} stocks`;
+    }
+    
+    function hideAllInfoBoxes() {
+      Object.values(infoBoxes).forEach(box => { if (box) box.style.display = 'none'; });
     }
     
     // Filter button clicks
@@ -293,161 +330,110 @@
       btn.addEventListener('click', () => {
         const group = btn.dataset.filterGroup;
         
-        // Update active state within group
         document.querySelectorAll(`.filter-btn[data-filter-group="${group}"]`).forEach(b => {
           b.classList.remove('active');
         });
         btn.classList.add('active');
-        
         filters[group] = btn.dataset.filter;
         
-        // Show/hide Yartseva info box
+        // Show/hide info boxes
         if (group === 'special') {
-          yartsevaInfo.style.display = btn.dataset.filter === 'yartseva' ? 'block' : 'none';
+          hideAllInfoBoxes();
+          if (infoBoxes[btn.dataset.filter]) {
+            infoBoxes[btn.dataset.filter].style.display = 'block';
+          }
         }
         
         applyFilters();
       });
     });
     
-    // Sector dropdown
-    sectorSelect.addEventListener('change', () => {
-      filters.sector = sectorSelect.value;
-      applyFilters();
-    });
-    
-    // Search
-    searchInput.addEventListener('input', () => {
-      filters.search = searchInput.value.toUpperCase();
-      applyFilters();
-    });
+    sectorSelect.addEventListener('change', () => { filters.sector = sectorSelect.value; applyFilters(); });
+    searchInput.addEventListener('input', () => { filters.search = searchInput.value.toUpperCase(); applyFilters(); });
     
     function applyFilters() {
       getRows().forEach(row => {
         let show = true;
         
-        // Search filter
+        // Search
         if (filters.search) {
           const symbol = row.dataset.symbol || '';
           const name = (row.dataset.name || '').toUpperCase();
-          if (!symbol.includes(filters.search) && !name.includes(filters.search)) {
-            show = false;
-          }
+          if (!symbol.includes(filters.search) && !name.includes(filters.search)) show = false;
         }
         
-        // Signal filter
+        // Signal
         if (show && filters.signal !== 'all') {
-          if (filters.signal === 'below') {
-            show = row.dataset.below === 'true';
-          } else if (filters.signal === 'quality') {
-            show = row.dataset.quality === 'true';
-          } else if (filters.signal === 'approaching') {
-            show = row.dataset.approaching === 'true';
-          } else if (filters.signal === 'oversold') {
-            show = row.dataset.oversold === 'true';
-          }
+          if (filters.signal === 'below') show = row.dataset.below === 'true';
+          else if (filters.signal === 'quality') show = row.dataset.quality === 'true';
+          else if (filters.signal === 'approaching') show = row.dataset.approaching === 'true';
+          else if (filters.signal === 'oversold') show = row.dataset.oversold === 'true';
         }
         
-        // Quality filter
+        // Quality
         if (show && filters.quality !== 'all') {
-          if (filters.quality === 'sp500') {
-            show = row.dataset.sp500 === 'true';
-          } else if (filters.quality === 'proven') {
-            show = row.dataset.proven === 'true';
-          }
+          if (filters.quality === 'sp500') show = row.dataset.sp500 === 'true';
+          else if (filters.quality === 'proven') show = row.dataset.proven === 'true';
+          else if (filters.quality === 'lowdebt') show = row.dataset.lowdebt === 'true';
+          else if (filters.quality === 'highroe') show = row.dataset.highroe === 'true';
         }
         
-        // History filter
+        // History
         if (show && filters.history !== 'all') {
           const touches = parseInt(row.dataset.touches) || 0;
           const isBelow = row.dataset.below === 'true';
-          
-          if (filters.history === 'firsttime') {
-            show = isBelow && touches <= 1;
-          } else if (filters.history === 'rare') {
-            show = touches >= 1 && touches <= 2;
-          } else if (filters.history === 'frequent') {
-            show = touches >= 5;
-          }
+          if (filters.history === 'firsttime') show = isBelow && touches <= 1;
+          else if (filters.history === 'rare') show = touches >= 1 && touches <= 2;
+          else if (filters.history === 'frequent') show = touches >= 5;
         }
         
-        // Special filter (Yartseva)
+        // Special (quality screens - only shows stocks BELOW the line that meet criteria)
         if (show && filters.special !== 'all') {
-          if (filters.special === 'yartseva') {
-            show = row.dataset.yartseva === 'true';
-          }
+          if (filters.special === 'buffett') show = row.dataset.buffett === 'true';
+          else if (filters.special === 'yartseva') show = row.dataset.yartseva === 'true';
+          else if (filters.special === 'aristocrat') show = row.dataset.aristocrat === 'true';
+          else if (filters.special === 'widemoat') show = row.dataset.widemoat === 'true' && row.dataset.below === 'true';
         }
         
-        // Sector filter
-        if (show && filters.sector !== 'all') {
-          show = row.dataset.sector === filters.sector;
-        }
+        // Sector
+        if (show && filters.sector !== 'all') show = row.dataset.sector === filters.sector;
         
         row.style.display = show ? '' : 'none';
       });
-      
       updateCount();
     }
     
-    // Sort functionality
+    // Sort
     document.querySelectorAll('.sortable').forEach(th => {
       th.addEventListener('click', () => {
         const column = th.dataset.sort;
-        
         if (currentSort.column === column) {
           currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
         } else {
           currentSort.column = column;
           currentSort.direction = 'asc';
         }
-        
-        document.querySelectorAll('.sortable').forEach(h => {
-          h.classList.remove('sort-asc', 'sort-desc');
-        });
+        document.querySelectorAll('.sortable').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
         th.classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
-        
         sortTable(column, currentSort.direction);
       });
     });
     
     function sortTable(column, direction) {
       const rows = getRows();
-      
       rows.sort((a, b) => {
         let aVal, bVal;
-        
         if (column === 'symbol') {
-          aVal = a.dataset.symbol;
-          bVal = b.dataset.symbol;
-          return direction === 'asc' 
-            ? aVal.localeCompare(bVal)
-            : bVal.localeCompare(aVal);
+          return direction === 'asc' ? a.dataset.symbol.localeCompare(b.dataset.symbol) : b.dataset.symbol.localeCompare(a.dataset.symbol);
         }
-        
-        if (column === 'distance') {
-          aVal = parseFloat(a.dataset.distance);
-          bVal = parseFloat(b.dataset.distance);
-        } else if (column === 'rsi') {
-          aVal = parseFloat(a.dataset.rsi);
-          bVal = parseFloat(b.dataset.rsi);
-        } else if (column === 'touches') {
-          aVal = parseInt(a.dataset.touches);
-          bVal = parseInt(b.dataset.touches);
-        } else if (column === 'avgreturn') {
-          aVal = parseFloat(a.dataset.avgreturn);
-          bVal = parseFloat(b.dataset.avgreturn);
-        } else if (column === 'fcfyield') {
-          aVal = parseFloat(a.dataset.fcfyield);
-          bVal = parseFloat(b.dataset.fcfyield);
-        }
-        
+        const map = { distance: 'distance', rsi: 'rsi', roe: 'roe', debt: 'debt', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
+        aVal = parseFloat(a.dataset[map[column]]) || 0;
+        bVal = parseFloat(b.dataset[map[column]]) || 0;
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
       });
-      
       rows.forEach(row => tbody.appendChild(row));
     }
     
-    // Initial count
     updateCount();
   </script>
 
@@ -455,71 +441,56 @@
     .stocks-list-page { max-width: 1200px; }
     .page-desc { color: var(--color-text-muted); margin-bottom: var(--space-lg); }
     .search-container { margin-bottom: var(--space-lg); }
-    .search-input {
-      width: 100%; max-width: 350px; padding: var(--space-sm) var(--space-md);
-      border: 1px solid var(--color-border); border-radius: var(--radius-sm);
-      background: var(--color-surface); color: var(--color-text); font-size: 1rem;
-    }
+    .search-input { width: 100%; max-width: 350px; padding: var(--space-sm) var(--space-md); border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-surface); color: var(--color-text); font-size: 1rem; }
     .search-input:focus { outline: none; border-color: var(--color-primary, #3b82f6); }
-    .filter-section {
-      display: flex; flex-direction: column; gap: var(--space-md);
-      margin-bottom: var(--space-lg); padding: var(--space-md);
-      background: var(--color-surface); border-radius: var(--radius-md);
-    }
+    .filter-section { display: flex; flex-direction: column; gap: var(--space-md); margin-bottom: var(--space-lg); padding: var(--space-md); background: var(--color-surface); border-radius: var(--radius-md); }
     .filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); }
-    .filter-label {
-      font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: 0.05em; color: var(--color-text-muted); min-width: 100px;
-    }
+    .filter-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-text-muted); min-width: 100px; }
     .filter-controls { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
-    .filter-btn {
-      background: var(--color-bg); border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm); padding: 6px 12px;
-      color: var(--color-text-muted); cursor: pointer;
-      font-size: 0.8125rem; transition: all 0.15s ease;
-    }
+    .filter-btn { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 6px 12px; color: var(--color-text-muted); cursor: pointer; font-size: 0.8125rem; transition: all 0.15s ease; }
     .filter-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
-    .filter-btn.active {
-      background: var(--color-primary, #3b82f6);
-      border-color: var(--color-primary, #3b82f6); color: white;
-    }
-    .yartseva-btn {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-      border-color: #d97706; color: white;
-    }
-    .yartseva-btn:hover {
-      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-      border-color: #b45309; color: white;
-    }
-    .yartseva-btn.active {
-      background: linear-gradient(135deg, #b45309 0%, #92400e 100%);
-      border-color: #92400e; box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3);
-    }
-    .sector-select {
-      padding: 6px 12px; border: 1px solid var(--color-border);
-      border-radius: var(--radius-sm); background: var(--color-bg);
-      color: var(--color-text); font-size: 0.8125rem; min-width: 150px;
-    }
+    .filter-btn.active { background: var(--color-primary, #3b82f6); border-color: var(--color-primary, #3b82f6); color: white; }
+    
+    /* Special filter button styles */
+    .buffett-btn { background: linear-gradient(135deg, #059669 0%, #047857 100%); border-color: #047857; color: white; }
+    .buffett-btn:hover { background: linear-gradient(135deg, #047857 0%, #065f46 100%); color: white; }
+    .buffett-btn.active { background: linear-gradient(135deg, #065f46 0%, #064e3b 100%); box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.3); }
+    
+    .yartseva-btn { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #d97706; color: white; }
+    .yartseva-btn:hover { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: white; }
+    .yartseva-btn.active { background: linear-gradient(135deg, #b45309 0%, #92400e 100%); box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3); }
+    
+    .aristocrat-btn { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); border-color: #6d28d9; color: white; }
+    .aristocrat-btn:hover { background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%); color: white; }
+    .aristocrat-btn.active { background: linear-gradient(135deg, #5b21b6 0%, #4c1d95 100%); box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.3); }
+    
+    .moat-btn { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); border-color: #0284c7; color: white; }
+    .moat-btn:hover { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; }
+    .moat-btn.active { background: linear-gradient(135deg, #0369a1 0%, #075985 100%); box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3); }
+    
+    .sector-select { padding: 6px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); font-size: 0.8125rem; min-width: 150px; }
+    
+    /* Info boxes */
     .info-box { padding: var(--space-md); border-radius: var(--radius-md); margin-bottom: var(--space-lg); }
-    .yartseva-info {
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
-      border: 1px solid rgba(217, 119, 6, 0.3);
-    }
-    .yartseva-info strong { color: #d97706; font-size: 1rem; }
-    .yartseva-info p { margin: var(--space-sm) 0; font-size: 0.875rem; }
-    .yartseva-info ul { margin: var(--space-sm) 0; padding-left: var(--space-lg); font-size: 0.8125rem; }
-    .yartseva-info li { margin-bottom: 4px; }
+    .info-box strong { font-size: 1rem; }
+    .info-box p { margin: var(--space-sm) 0; font-size: 0.875rem; }
+    .info-box ul { margin: var(--space-sm) 0; padding-left: var(--space-lg); font-size: 0.8125rem; }
+    .info-box li { margin-bottom: 4px; }
     .info-note { font-size: 0.75rem !important; color: var(--color-text-muted); font-style: italic; }
+    
+    .buffett-info { background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(4, 120, 87, 0.1) 100%); border: 1px solid rgba(5, 150, 105, 0.3); }
+    .buffett-info strong { color: #059669; }
+    .yartseva-info { background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%); border: 1px solid rgba(217, 119, 6, 0.3); }
+    .yartseva-info strong { color: #d97706; }
+    .aristocrat-info { background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(109, 40, 217, 0.1) 100%); border: 1px solid rgba(124, 58, 237, 0.3); }
+    .aristocrat-info strong { color: #7c3aed; }
+    .moat-info { background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%); border: 1px solid rgba(14, 165, 233, 0.3); }
+    .moat-info strong { color: #0ea5e9; }
+    
+    /* Table */
     .stocks-table { width: 100%; border-collapse: collapse; }
-    .stocks-table th, .stocks-table td {
-      padding: var(--space-sm) var(--space-md); text-align: left;
-      border-bottom: 1px solid var(--color-border);
-    }
-    .stocks-table th {
-      color: var(--color-text-muted); font-weight: 600; font-size: 0.75rem;
-      text-transform: uppercase; letter-spacing: 0.05em;
-      position: sticky; top: 0; background: var(--color-bg); z-index: 10;
-    }
+    .stocks-table th, .stocks-table td { padding: var(--space-sm) var(--space-md); text-align: left; border-bottom: 1px solid var(--color-border); }
+    .stocks-table th { color: var(--color-text-muted); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; position: sticky; top: 0; background: var(--color-bg); z-index: 10; }
     .sortable { cursor: pointer; user-select: none; }
     .sortable:hover { color: var(--color-text); }
     .sort-icon { opacity: 0.3; margin-left: 4px; }
@@ -527,72 +498,49 @@
     .sortable.sort-asc .sort-icon::after { content: '↑'; font-size: 0.75rem; }
     .sortable.sort-desc .sort-icon::after { content: '↓'; font-size: 0.75rem; }
     .stocks-table td a { font-weight: 600; }
-    .stock-name {
-      display: block; font-size: 0.7rem; color: var(--color-text-muted);
-      font-weight: normal; max-width: 120px; overflow: hidden;
-      text-overflow: ellipsis; white-space: nowrap;
-    }
+    .stock-name { display: block; font-size: 0.7rem; color: var(--color-text-muted); font-weight: normal; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .mono { font-family: var(--font-mono); font-size: 0.875rem; }
-    .signal-badge {
-      display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm);
-      font-size: 0.75rem; font-weight: 700;
-    }
+    .signal-badge { display: inline-block; padding: 2px 8px; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 700; }
     .signal-badge.yes { background: var(--color-yes-bg); color: var(--zone-below-line); }
     .signal-badge.no { background: var(--color-surface); color: var(--color-text-muted); }
     .direction.approaching { color: var(--color-approaching); font-weight: bold; }
     .direction.retreating { color: var(--color-text-muted); }
     td.oversold { color: var(--zone-below-line); font-weight: 600; }
-    td.positive { color: var(--color-success, #16a34a); }
+    td.high-roe { color: #059669; font-weight: 600; }
+    td.low-debt { color: #059669; }
     td.high-fcf { color: #d97706; font-weight: 600; }
-    .badge-inline {
-      display: inline-block; padding: 1px 4px; border-radius: 3px;
-      font-size: 0.625rem; font-weight: 700; margin-left: 4px; vertical-align: middle;
-    }
-    .badge-inline.new { background: var(--color-primary, #3b82f6); color: white; }
-    .yartseva-badge { font-size: 0.75rem; vertical-align: baseline; }
-    .yartseva-match { background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, transparent 50%); }
-    .sector-cell {
-      font-size: 0.75rem; color: var(--color-text-muted);
-      max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .stock-row.zone-below_line, .stock-row.zone-deep_value, .stock-row.zone-extreme_value {
-      background: var(--color-yes-bg);
-    }
-    .stock-row.yartseva-match.zone-below_line, .stock-row.yartseva-match.zone-deep_value,
-    .stock-row.yartseva-match.zone-extreme_value {
-      background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, var(--color-yes-bg) 30%);
-    }
+    
+    .badge-inline { display: inline-block; padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; margin-left: 3px; vertical-align: baseline; }
+    
+    .sector-cell { font-size: 0.75rem; color: var(--color-text-muted); max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .stock-row.zone-below_line, .stock-row.zone-deep_value, .stock-row.zone-extreme_value { background: var(--color-yes-bg); }
+    
+    /* Quality match highlights */
+    .stock-row.buffett-match { background: linear-gradient(90deg, rgba(5, 150, 105, 0.12) 0%, transparent 40%); }
+    .stock-row.yartseva-match { background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, transparent 40%); }
+    .stock-row.aristocrat-match { background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, transparent 40%); }
+    
     .results-count { margin-top: var(--space-md); color: var(--color-text-muted); font-size: 0.875rem; }
-    .affiliate-box {
-      margin-top: var(--space-xl); padding: var(--space-lg);
-      background: var(--color-surface); border-radius: var(--radius-md);
-      text-align: center; border: 1px solid var(--color-border);
-    }
+    
+    /* Affiliate */
+    .affiliate-box { margin-top: var(--space-xl); padding: var(--space-lg); background: var(--color-surface); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--color-border); }
     .affiliate-text { margin-bottom: var(--space-md); font-weight: 500; }
-    .affiliate-links {
-      display: flex; justify-content: center; gap: var(--space-md);
-      flex-wrap: wrap; margin-bottom: var(--space-sm);
-    }
-    .affiliate-link {
-      display: inline-block; padding: var(--space-sm) var(--space-lg);
-      background: var(--color-primary, #3b82f6); color: white;
-      border-radius: var(--radius-sm); text-decoration: none;
-      font-weight: 600; font-size: 0.875rem; transition: background 0.15s ease;
-    }
+    .affiliate-links { display: flex; justify-content: center; gap: var(--space-md); flex-wrap: wrap; margin-bottom: var(--space-sm); }
+    .affiliate-link { display: inline-block; padding: var(--space-sm) var(--space-lg); background: var(--color-primary, #3b82f6); color: white; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600; font-size: 0.875rem; transition: background 0.15s ease; }
     .affiliate-link:hover { background: #2563eb; color: white; }
     .affiliate-disclosure { font-size: 0.75rem; color: var(--color-text-muted); }
+    
+    /* Responsive */
     @media (max-width: 900px) {
       .filter-label { min-width: 70px; font-size: 0.7rem; }
       .filter-btn { padding: 4px 8px; font-size: 0.75rem; }
-      .hide-mobile, .stocks-table th:nth-child(7), .stocks-table td:nth-child(7) { display: none; }
-      .sector-cell { display: none; }
+      .hide-mobile { display: none; }
     }
     @media (max-width: 600px) {
-      .stocks-table th:nth-child(4), .stocks-table td:nth-child(4),
-      .stocks-table th:nth-child(6), .stocks-table td:nth-child(6) { display: none; }
+      .stocks-table th:nth-child(4), .stocks-table td:nth-child(4) { display: none; }
       .stock-name { display: none; }
       .filter-group { flex-direction: column; align-items: flex-start; }
-      .yartseva-info ul { padding-left: var(--space-md); }
+      .hide-tablet { display: none; }
     }
   </style>
 </body>

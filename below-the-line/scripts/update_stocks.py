@@ -8,7 +8,8 @@ Fetches weekly price data from Yahoo Finance, calculates:
 - Week-over-week directional change
 - 14-week RSI
 - Historical touches of the 200WMA
-- Yartseva multibagger metrics (FCF yield, P/B, market cap)
+- Yartseva multibagger metrics
+- Buffett quality metrics (ROE, debt, margins)
 
 Run weekly on Saturday to capture Friday close data.
 """
@@ -37,7 +38,18 @@ def load_company_metadata():
     return {}
 
 
-# Stock universe - 1,665 stocks (Full S&P 500, Mid-Cap, Small-Cap, Dividend, Growth)
+# Dividend Aristocrats - 25+ consecutive years of dividend increases
+DIVIDEND_ARISTOCRATS = {
+    'ABT', 'ABBV', 'AFL', 'APD', 'ALB', 'AMCR', 'AOS', 'ADP', 'BDX', 'BRO',
+    'BF-B', 'CAH', 'CAT', 'CVX', 'CB', 'CINF', 'CTAS', 'CLX', 'KO', 'CL',
+    'ED', 'DOV', 'ECL', 'EMR', 'ESS', 'EXPD', 'XOM', 'FAST', 'FRT', 'BEN',
+    'GD', 'GPC', 'GWW', 'HRL', 'ITW', 'JNJ', 'KMB', 'LEG', 'LIN', 'LOW',
+    'MKC', 'MCD', 'MDT', 'NEE', 'NUE', 'PNR', 'PEP', 'PPG', 'PG',
+    'O', 'ROP', 'SPGI', 'SHW', 'SWK', 'SYY', 'TROW', 'TGT', 'WMT', 'WBA',
+    'WST', 'CHD', 'ATO', 'CHRW', 'IBM', 'NDSN', 'SJM', 'AWK', 'KVUE'
+}
+
+
 STOCK_UNIVERSE = [
     'A',
     'AA',
@@ -1731,19 +1743,18 @@ def fetch_weekly_data(symbol: str) -> Optional[pd.DataFrame]:
 
 def fetch_fundamental_data(symbol: str) -> dict:
     """
-    Fetch fundamental data for Yartseva multibagger screening.
+    Fetch fundamental data for quality screening.
     
-    Yartseva criteria for 5-10x stocks:
-    - Small cap (< $2B market cap)
-    - High FCF yield (> 5%)
-    - Book-to-Market > 0.40 (P/B < 2.5)
-    - Positive equity (no negative book value)
-    - Near 12-month lows (covered by 200WMA signal)
+    Includes:
+    - Yartseva multibagger metrics (FCF yield, P/B, market cap)
+    - Buffett quality metrics (ROE, debt/equity, margins)
+    - Dividend info
     """
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
         
+        # Basic metrics
         market_cap = info.get('marketCap')
         fcf = info.get('freeCashflow')
         book_value = info.get('bookValue')
@@ -1752,16 +1763,38 @@ def fetch_fundamental_data(symbol: str) -> dict:
         operating_margin = info.get('operatingMargins')
         revenue = info.get('totalRevenue')
         
-        # Calculate derived metrics
+        # Quality metrics (Buffett/Munger style)
+        roe = info.get('returnOnEquity')  # Return on Equity
+        debt_to_equity = info.get('debtToEquity')  # In percentage form
+        gross_margin = info.get('grossMargins')
+        current_ratio = info.get('currentRatio')
+        dividend_yield = info.get('dividendYield')
+        
+        # === DERIVED METRICS ===
+        
+        # FCF Yield
         fcf_yield = None
         if fcf and market_cap and market_cap > 0:
             fcf_yield = (fcf / market_cap) * 100
         
+        # Book-to-Market (inverse of P/B)
         book_to_market = None
         if price_to_book and price_to_book > 0:
             book_to_market = 1 / price_to_book
         
-        # Yartseva flags
+        # Convert ROE to percentage
+        roe_pct = None
+        if roe is not None:
+            roe_pct = roe * 100
+        
+        # Convert gross margin to percentage
+        gross_margin_pct = None
+        if gross_margin is not None:
+            gross_margin_pct = gross_margin * 100
+        
+        # === QUALITY FLAGS ===
+        
+        # Yartseva flags (multibagger screen)
         is_small_cap = market_cap is not None and market_cap < 2_000_000_000
         has_positive_equity = book_value is not None and book_value > 0
         has_positive_fcf = fcf is not None and fcf > 0
@@ -1774,7 +1807,32 @@ def fetch_fundamental_data(symbol: str) -> dict:
             book_to_market is not None and book_to_market >= 0.4
         )
         
+        # Low Debt flag (debt/equity < 50%, i.e., < 0.5x)
+        low_debt = debt_to_equity is not None and debt_to_equity < 50
+        
+        # High ROE flag (> 15%)
+        high_roe = roe_pct is not None and roe_pct > 15
+        
+        # Wide Moat flag (high gross margin > 40% + high ROE > 15%)
+        wide_moat = (
+            gross_margin_pct is not None and gross_margin_pct > 40 and
+            high_roe
+        )
+        
+        # Buffett Quality flag (the holy grail combo)
+        # High ROE + Low Debt + Positive FCF + Profitable
+        buffett_quality = (
+            high_roe and
+            low_debt and
+            has_positive_fcf and
+            profit_margin is not None and profit_margin > 0
+        )
+        
+        # Dividend Aristocrat (from static list)
+        is_dividend_aristocrat = symbol in DIVIDEND_ARISTOCRATS
+        
         return {
+            # Basic
             'market_cap': market_cap,
             'fcf': fcf,
             'fcf_yield': round(fcf_yield, 2) if fcf_yield else None,
@@ -1784,9 +1842,21 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'profit_margin': round(profit_margin * 100, 1) if profit_margin else None,
             'operating_margin': round(operating_margin * 100, 1) if operating_margin else None,
             'revenue': revenue,
+            # Quality metrics
+            'roe': round(roe_pct, 1) if roe_pct else None,
+            'debt_to_equity': round(debt_to_equity, 1) if debt_to_equity else None,
+            'gross_margin': round(gross_margin_pct, 1) if gross_margin_pct else None,
+            'current_ratio': round(current_ratio, 2) if current_ratio else None,
+            'dividend_yield': round(dividend_yield * 100, 2) if dividend_yield else None,
+            # Flags
             'is_small_cap': is_small_cap,
             'has_positive_equity': has_positive_equity,
             'has_positive_fcf': has_positive_fcf,
+            'low_debt': low_debt,
+            'high_roe': high_roe,
+            'wide_moat': wide_moat,
+            'buffett_quality': buffett_quality,
+            'dividend_aristocrat': is_dividend_aristocrat,
             'yartseva_candidate': yartseva_candidate,
         }
         
@@ -1795,8 +1865,13 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'market_cap': None, 'fcf': None, 'fcf_yield': None,
             'book_value': None, 'price_to_book': None, 'book_to_market': None,
             'profit_margin': None, 'operating_margin': None, 'revenue': None,
+            'roe': None, 'debt_to_equity': None, 'gross_margin': None,
+            'current_ratio': None, 'dividend_yield': None,
             'is_small_cap': False, 'has_positive_equity': False,
-            'has_positive_fcf': False, 'yartseva_candidate': False,
+            'has_positive_fcf': False, 'low_debt': False, 'high_roe': False,
+            'wide_moat': False, 'buffett_quality': False,
+            'dividend_aristocrat': symbol in DIVIDEND_ARISTOCRATS,
+            'yartseva_candidate': False,
         }
 
 
@@ -1869,7 +1944,7 @@ def find_historical_touches(df: pd.DataFrame) -> List[dict]:
 
 
 def calculate_stock_signals(symbol: str) -> Optional[dict]:
-    """Calculate all signals for a stock including Yartseva metrics."""
+    """Calculate all signals for a stock including quality metrics."""
     print(f"  Processing {symbol}...")
     
     df = fetch_weekly_data(symbol)
@@ -1917,7 +1992,10 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
     avg_return = round(sum(returns) / len(returns), 1) if returns else None
     avg_weeks = round(sum(t['weeks_below'] for t in historical_touches) / len(historical_touches), 1) if historical_touches else None
     
+    # Special combo flags (quality + below line)
     yartseva_below_line = fundamentals['yartseva_candidate'] and pct < 0
+    buffett_below_line = fundamentals['buffett_quality'] and pct < 0
+    aristocrat_below_line = fundamentals['dividend_aristocrat'] and pct < 0
     
     result = {
         'symbol': symbol,
@@ -1934,6 +2012,7 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'touch_count': len(historical_touches),
         'avg_return_after_touch': avg_return,
         'avg_weeks_below': avg_weeks,
+        # Fundamentals
         'market_cap': fundamentals['market_cap'],
         'fcf': fundamentals['fcf'],
         'fcf_yield': fundamentals['fcf_yield'],
@@ -1942,16 +2021,38 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'book_to_market': fundamentals['book_to_market'],
         'profit_margin': fundamentals['profit_margin'],
         'operating_margin': fundamentals['operating_margin'],
+        # Quality metrics
+        'roe': fundamentals['roe'],
+        'debt_to_equity': fundamentals['debt_to_equity'],
+        'gross_margin': fundamentals['gross_margin'],
+        'current_ratio': fundamentals['current_ratio'],
+        'dividend_yield': fundamentals['dividend_yield'],
+        # Quality flags
         'is_small_cap': fundamentals['is_small_cap'],
         'has_positive_fcf': fundamentals['has_positive_fcf'],
+        'low_debt': fundamentals['low_debt'],
+        'high_roe': fundamentals['high_roe'],
+        'wide_moat': fundamentals['wide_moat'],
+        'buffett_quality': fundamentals['buffett_quality'],
+        'dividend_aristocrat': fundamentals['dividend_aristocrat'],
         'yartseva_candidate': fundamentals['yartseva_candidate'],
+        # Combo flags (quality + below line = golden opportunities)
         'yartseva_below_line': yartseva_below_line,
+        'buffett_below_line': buffett_below_line,
+        'aristocrat_below_line': aristocrat_below_line,
+        # Metadata
         'last_updated': df_complete.index[-1].strftime('%Y-%m-%d'),
         'data_weeks': len(df_complete)
     }
     
-    yart_flag = " 🎯 YARTSEVA" if yartseva_below_line else ""
-    print(f"  ✓ {symbol}: {pct:.1f}% from WMA, RSI: {latest['RSI_14']:.0f}, Zone: {zone}{yart_flag}")
+    # Status flags for logging
+    flags = []
+    if yartseva_below_line: flags.append("🎯YART")
+    if buffett_below_line: flags.append("🏆BUFF")
+    if aristocrat_below_line: flags.append("👑ARIST")
+    flag_str = " " + " ".join(flags) if flags else ""
+    
+    print(f"  ✓ {symbol}: {pct:.1f}% from WMA, RSI: {latest['RSI_14']:.0f}, Zone: {zone}{flag_str}")
     return result
 
 
@@ -1960,14 +2061,18 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     below_line = [s for s in stocks if s['below_line']]
     approaching = [s for s in stocks if s['approaching'] and not s['below_line'] and s['pct_from_wma'] <= 15]
     oversold = [s for s in stocks if s['rsi_14'] < 30]
-    yartseva_candidates = [s for s in stocks if s.get('yartseva_below_line')]
+    yartseva = [s for s in stocks if s.get('yartseva_below_line')]
+    buffett = [s for s in stocks if s.get('buffett_below_line')]
+    aristocrats = [s for s in stocks if s.get('aristocrat_below_line')]
     
     return {
         'total_tracked': len(stocks),
         'below_line_count': len(below_line),
         'approaching_count': len(approaching),
         'oversold_count': len(oversold),
-        'yartseva_count': len(yartseva_candidates),
+        'yartseva_count': len(yartseva),
+        'buffett_count': len(buffett),
+        'aristocrat_count': len(aristocrats),
         'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M UTC')
     }
 
@@ -2020,7 +2125,9 @@ def main():
     print(f"Processed: {len(all_stocks)} stocks")
     print(f"Errors: {len(errors)} stocks")
     print(f"Below line: {summary['below_line_count']}")
-    print(f"Yartseva candidates: {summary['yartseva_count']}")
+    print(f"Yartseva candidates (below): {summary['yartseva_count']}")
+    print(f"Buffett quality (below): {summary['buffett_count']}")
+    print(f"Dividend Aristocrats (below): {summary['aristocrat_count']}")
     print(f"Output: {output_file}")
     if errors:
         print(f"Failed symbols: {', '.join(errors[:20])}")
