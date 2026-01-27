@@ -2148,6 +2148,9 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     """Generate summary data for the landing page."""
     below_line = [s for s in stocks if s['below_line']]
     approaching = [s for s in stocks if s['approaching'] and not s['below_line'] and s['pct_from_wma'] <= 15]
+    # Sort approaching by distance (closest to line first)
+    approaching.sort(key=lambda x: x['pct_from_wma'])
+    
     oversold = [s for s in stocks if s['rsi_14'] < 30]
     yartseva = [s for s in stocks if s.get('yartseva_below_line')]
     buffett = [s for s in stocks if s.get('buffett_below_line')]
@@ -2156,7 +2159,8 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     diluting = [s for s in stocks if s.get('is_diluting')]
     
     return {
-        'total_tracked': len(stocks),
+        # Counts
+        'total_stocks': len(stocks),
         'below_line_count': len(below_line),
         'approaching_count': len(approaching),
         'oversold_count': len(oversold),
@@ -2165,7 +2169,9 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
         'aristocrat_count': len(aristocrats),
         'cannibal_count': len(cannibals),
         'diluting_count': len(diluting),
-        'last_updated': datetime.now().strftime('%Y-%m-%d %H:%M UTC')
+        # Stock arrays for homepage display
+        'below_line_stocks': below_line,
+        'approaching_stocks': approaching[:20],  # Limit to top 20 closest
     }
 
 
@@ -2205,7 +2211,9 @@ def main():
     
     output = {
         'summary': summary,
-        'stocks': all_stocks
+        'stocks': all_stocks,
+        'generated_readable': datetime.now().strftime('%B %d, %Y'),
+        'generated_iso': datetime.now().strftime('%Y-%m-%d')
     }
     
     output_file = OUTPUT_DIR / 'stocks.json'
