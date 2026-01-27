@@ -2196,6 +2196,11 @@ def main():
         try:
             result = calculate_stock_signals(symbol)
             if result:
+                # Merge company metadata (name, sector, ir_url)
+                meta = company_metadata.get(symbol, {})
+                result['name'] = meta.get('name', '')
+                result['sector'] = meta.get('sector', '')
+                result['ir_url'] = meta.get('ir_url', '')
                 all_stocks.append(result)
             else:
                 errors.append(symbol)

@@ -76,6 +76,8 @@
           <button class="filter-btn yartseva-btn" data-filter-group="special" data-filter="yartseva" title="Small cap + High FCF yield + Value P/B">🎯 Multibagger</button>
           <button class="filter-btn aristocrat-btn" data-filter-group="special" data-filter="aristocrat" title="25+ years consecutive dividend increases">👑 Aristocrats</button>
           <button class="filter-btn moat-btn" data-filter-group="special" data-filter="widemoat" title="Gross Margin > 40% + ROE > 15%">🏰 Wide Moat</button>
+          <button class="filter-btn cannibal-btn" data-filter-group="special" data-filter="cannibal" title="Shrinking share count by 5%+ over 3 years">🦈 Cannibals</button>
+          <button class="filter-btn diluter-btn" data-filter-group="special" data-filter="diluter" title="Growing share count by 2%+ over 3 years">⚠️ Diluters</button>
         </div>
       </div>
       
@@ -134,6 +136,30 @@
       </ul>
       <p class="info-note">"The key to investing is determining the competitive advantage of any given company and the durability of that advantage." — Buffett</p>
     </div>
+    
+    <div id="cannibalInfo" class="info-box cannibal-info" style="display: none;">
+      <strong>🦈 Cannibals (Aggressive Buybacks)</strong>
+      <p>Companies aggressively eating their own shares:</p>
+      <ul>
+        <li>Share count reduced by &gt; 5% over 3 years</li>
+        <li>Fewer shares = your slice of profits grows</li>
+        <li>Shows management confidence + shareholder alignment</li>
+        <li>Buffett calls these "cannibal" companies</li>
+      </ul>
+      <p class="info-note">"When stock can be bought below a business's value it is probably the best use of cash." — Buffett</p>
+    </div>
+    
+    <div id="diluterInfo" class="info-box diluter-info" style="display: none;">
+      <strong>⚠️ Diluters (Share Count Growing)</strong>
+      <p>Companies increasing their share count:</p>
+      <ul>
+        <li>Share count increased by &gt; 2% over 3 years</li>
+        <li>Often from stock-based compensation or secondary offerings</li>
+        <li>Dilutes existing shareholders' ownership stake</li>
+        <li>Not always bad, but requires scrutiny</li>
+      </ul>
+      <p class="info-note">Watch for: excessive SBC, frequent capital raises, or acquisitions funded by stock.</p>
+    </div>
 
     <!-- Stocks Table -->
     <table class="stocks-table" id="stocksTable">
@@ -146,6 +172,7 @@
           <th class="sortable" data-sort="rsi">RSI <span class="sort-icon">↕</span></th>
           <th class="sortable" data-sort="roe">ROE <span class="sort-icon">↕</span></th>
           <th class="sortable hide-mobile" data-sort="debt">D/E <span class="sort-icon">↕</span></th>
+          <th class="sortable hide-mobile" data-sort="shares">Shares <span class="sort-icon">↕</span></th>
           <th class="sortable hide-mobile" data-sort="fcfyield">FCF% <span class="sort-icon">↕</span></th>
           <th class="hide-tablet">Sector</th>
         </tr>
@@ -158,7 +185,7 @@
         {{ range .historical_touches }}
           {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
         {{ end }}
-        <tr class="stock-row zone-{{ .zone }}{{ if .buffett_below_line }} buffett-match{{ end }}{{ if .yartseva_below_line }} yartseva-match{{ end }}{{ if .aristocrat_below_line }} aristocrat-match{{ end }}" 
+        <tr class="stock-row zone-{{ .zone }}{{ if .buffett_below_line }} buffett-match{{ end }}{{ if .yartseva_below_line }} yartseva-match{{ end }}{{ if .aristocrat_below_line }} aristocrat-match{{ end }}{{ if .cannibal_below_line }} cannibal-match{{ end }}" 
             data-symbol="{{ .symbol }}"
             data-name="{{ .name }}"
             data-sector="{{ .sector }}"
@@ -183,12 +210,16 @@
             data-buffett="{{ if .buffett_below_line }}true{{ else }}false{{ end }}"
             data-yartseva="{{ if .yartseva_below_line }}true{{ else }}false{{ end }}"
             data-aristocrat="{{ if .aristocrat_below_line }}true{{ else }}false{{ end }}"
+            data-cannibal="{{ if .cannibal_below_line }}true{{ else }}false{{ end }}"
+            data-diluter="{{ if .is_diluting }}true{{ else }}false{{ end }}"
+            data-shares="{{ if .shares_change_3yr }}{{ .shares_change_3yr }}{{ else }}0{{ end }}"
             data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
             {{ if .buffett_below_line }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
             {{ if .yartseva_below_line }}<span class="badge-inline yartseva-badge" title="Multibagger Candidate">🎯</span>{{ end }}
             {{ if .aristocrat_below_line }}<span class="badge-inline aristocrat-badge" title="Dividend Aristocrat">👑</span>{{ end }}
+            {{ if .cannibal_below_line }}<span class="badge-inline cannibal-badge" title="Cannibal (Buybacks)">🦈</span>{{ end }}
             {{ if .name }}<span class="stock-name">{{ .name }}</span>{{ end }}
           </td>
           <td>
@@ -220,6 +251,9 @@
           </td>
           <td class="mono hide-mobile {{ if and .debt_to_equity (lt .debt_to_equity 50.0) }}low-debt{{ end }}">
             {{ if .debt_to_equity }}{{ printf "%.0f%%" .debt_to_equity }}{{ else }}—{{ end }}
+          </td>
+          <td class="mono hide-mobile {{ if and .shares_change_3yr (lt .shares_change_3yr -2.0) }}buyback{{ else if and .shares_change_3yr (gt .shares_change_3yr 2.0) }}diluting{{ end }}">
+            {{ if .shares_change_3yr }}{{ printf "%+.0f%%" .shares_change_3yr }}{{ else }}—{{ end }}
           </td>
           <td class="mono hide-mobile {{ if and .fcf_yield (gt .fcf_yield 5.0) }}high-fcf{{ end }}">
             {{ if .fcf_yield }}{{ printf "%.1f%%" .fcf_yield }}{{ else }}—{{ end }}
@@ -293,7 +327,9 @@
       buffett: document.getElementById('buffettInfo'),
       yartseva: document.getElementById('yartsevaInfo'),
       aristocrat: document.getElementById('aristocratInfo'),
-      widemoat: document.getElementById('moatInfo')
+      widemoat: document.getElementById('moatInfo'),
+      cannibal: document.getElementById('cannibalInfo'),
+      diluter: document.getElementById('diluterInfo')
     };
     
     // Populate sector dropdown
@@ -393,6 +429,8 @@
           else if (filters.special === 'yartseva') show = row.dataset.yartseva === 'true';
           else if (filters.special === 'aristocrat') show = row.dataset.aristocrat === 'true';
           else if (filters.special === 'widemoat') show = row.dataset.widemoat === 'true' && row.dataset.below === 'true';
+          else if (filters.special === 'cannibal') show = row.dataset.cannibal === 'true';
+          else if (filters.special === 'diluter') show = row.dataset.diluter === 'true';
         }
         
         // Sector
@@ -426,7 +464,7 @@
         if (column === 'symbol') {
           return direction === 'asc' ? a.dataset.symbol.localeCompare(b.dataset.symbol) : b.dataset.symbol.localeCompare(a.dataset.symbol);
         }
-        const map = { distance: 'distance', rsi: 'rsi', roe: 'roe', debt: 'debt', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
+        const map = { distance: 'distance', rsi: 'rsi', roe: 'roe', debt: 'debt', shares: 'shares', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
         aVal = parseFloat(a.dataset[map[column]]) || 0;
         bVal = parseFloat(b.dataset[map[column]]) || 0;
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
@@ -468,6 +506,14 @@
     .moat-btn:hover { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; }
     .moat-btn.active { background: linear-gradient(135deg, #0369a1 0%, #075985 100%); box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.3); }
     
+    .cannibal-btn { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); border-color: #0891b2; color: white; }
+    .cannibal-btn:hover { background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); color: white; }
+    .cannibal-btn.active { background: linear-gradient(135deg, #0e7490 0%, #155e75 100%); box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.3); }
+    
+    .diluter-btn { background: linear-gradient(135deg, #f87171 0%, #ef4444 100%); border-color: #ef4444; color: white; }
+    .diluter-btn:hover { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; }
+    .diluter-btn.active { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3); }
+    
     .sector-select { padding: 6px 12px; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); color: var(--color-text); font-size: 0.8125rem; min-width: 150px; }
     
     /* Info boxes */
@@ -486,6 +532,10 @@
     .aristocrat-info strong { color: #7c3aed; }
     .moat-info { background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%); border: 1px solid rgba(14, 165, 233, 0.3); }
     .moat-info strong { color: #0ea5e9; }
+    .cannibal-info { background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(8, 145, 178, 0.1) 100%); border: 1px solid rgba(6, 182, 212, 0.3); }
+    .cannibal-info strong { color: #06b6d4; }
+    .diluter-info { background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .diluter-info strong { color: #ef4444; }
     
     /* Table */
     .stocks-table { width: 100%; border-collapse: collapse; }
@@ -509,6 +559,8 @@
     td.high-roe { color: #059669; font-weight: 600; }
     td.low-debt { color: #059669; }
     td.high-fcf { color: #d97706; font-weight: 600; }
+    td.buyback { color: #06b6d4; font-weight: 600; }
+    td.diluting { color: #ef4444; font-weight: 600; }
     
     .badge-inline { display: inline-block; padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; margin-left: 3px; vertical-align: baseline; }
     
@@ -519,6 +571,7 @@
     .stock-row.buffett-match { background: linear-gradient(90deg, rgba(5, 150, 105, 0.12) 0%, transparent 40%); }
     .stock-row.yartseva-match { background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, transparent 40%); }
     .stock-row.aristocrat-match { background: linear-gradient(90deg, rgba(124, 58, 237, 0.12) 0%, transparent 40%); }
+    .stock-row.cannibal-match { background: linear-gradient(90deg, rgba(6, 182, 212, 0.12) 0%, transparent 40%); }
     
     .results-count { margin-top: var(--space-md); color: var(--color-text-muted); font-size: 0.875rem; }
     
