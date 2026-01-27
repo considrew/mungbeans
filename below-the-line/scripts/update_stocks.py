@@ -2210,7 +2210,7 @@ def main():
     
     output_file = OUTPUT_DIR / 'stocks.json'
     with open(output_file, 'w') as f:
-        json.dump(output, f, indent=2, cls=NumpyEncoder)
+        json.dump(output, f, separators=(',', ':'), cls=NumpyEncoder)
     
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
