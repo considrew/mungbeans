@@ -1963,58 +1963,108 @@ def calculate_rsi(prices: pd.Series, periods: int = 14) -> pd.Series:
     return rsi
 
 
-def find_historical_touches(df: pd.DataFrame) -> List[dict]:
-    """Find all historical instances where price crossed below 200WMA."""
+def find_historical_touches(df: pd.DataFrame, recovery_weeks: int = 2) -> List[dict]:
+    """Find historical episodes where price spent time below 200WMA.
+    
+    Uses hysteresis to avoid noise: a stock must stay ABOVE the 200WMA
+    for at least `recovery_weeks` consecutive weeks before we consider
+    the episode over. Brief 1-week bounces above the line get merged
+    into the same episode.
+    
+    Each touch records:
+    - date: when the episode started (first week below)
+    - recovery_date: when the episode ended (first sustained week above)
+    - weeks_below: total weeks in the episode (including brief bounces)
+    - max_depth: deepest % below the 200WMA during the episode
+    - return_1yr: price return 1 year after the episode started
+    - ongoing: True if the stock is still in this episode
+    """
     df = df.copy()
     df['below'] = df['adjusted_close'] < df['WMA_200']
-    df['cross_below'] = df['below'] & ~df['below'].shift(1).fillna(False)
     
     touches = []
-    cross_dates = df[df['cross_below']].index.tolist()
+    i = 0
+    n = len(df)
     
-    for cross_date in cross_dates:
-        touch_start_idx = df.index.get_loc(cross_date)
-        subsequent = df.iloc[touch_start_idx:]
-        cross_above = subsequent[~subsequent['below']]
+    while i < n:
+        # Scan forward until we find a week that's below the line
+        if not df.iloc[i]['below']:
+            i += 1
+            continue
         
-        if len(cross_above) > 0:
-            touch_end_date = cross_above.index[0]
-            touch_end_idx = df.index.get_loc(touch_end_date)
-            touch_data = df.iloc[touch_start_idx:touch_end_idx]
-            weeks_below = len(touch_data)
-            min_pct = touch_data['pct_from_wma'].min()
+        # Found the start of an episode
+        episode_start = i
+        
+        # Now scan forward to find the end of the episode.
+        # The episode ends when we see `recovery_weeks` consecutive
+        # weeks ABOVE the line. Until then, brief bounces above
+        # are still part of this episode.
+        j = i + 1
+        consecutive_above = 0
+        episode_end = None  # will be set to first week of the sustained recovery
+        
+        while j < n:
+            if not df.iloc[j]['below']:
+                consecutive_above += 1
+                if consecutive_above >= recovery_weeks:
+                    # Recovery is real — episode ended at start of this above-streak
+                    episode_end = j - consecutive_above + 1
+                    break
+            else:
+                consecutive_above = 0
+            j += 1
+        
+        # Gather episode data
+        start_date = df.index[episode_start]
+        
+        if episode_end is not None:
+            # Completed episode
+            episode_data = df.iloc[episode_start:episode_end]
+            weeks_below = len(episode_data)
+            min_pct = episode_data['pct_from_wma'].min()
             max_depth = abs(min_pct)
+            recovery_date = df.index[episode_end].strftime('%b %Y')
             
-            one_year_later_idx = touch_start_idx + 52
-            if one_year_later_idx < len(df):
-                entry_price = df.iloc[touch_start_idx]['adjusted_close']
+            # 1-year return from episode start
+            one_year_later_idx = episode_start + 52
+            if one_year_later_idx < n:
+                entry_price = df.iloc[episode_start]['adjusted_close']
                 exit_price = df.iloc[one_year_later_idx]['adjusted_close']
                 return_1yr = ((exit_price - entry_price) / entry_price) * 100
             else:
                 return_1yr = None
             
             touches.append({
-                'date': cross_date.strftime('%b %Y'),
-                'date_iso': cross_date.strftime('%Y-%m-%d'),
+                'date': start_date.strftime('%b %Y'),
+                'date_iso': start_date.strftime('%Y-%m-%d'),
+                'recovery_date': recovery_date,
                 'weeks_below': int(weeks_below),
                 'max_depth': round(float(max_depth), 1),
                 'return_1yr': round(float(return_1yr), 1) if return_1yr is not None else None,
                 'ongoing': False
             })
+            
+            # Jump past the episode
+            i = episode_end
         else:
-            touch_data = subsequent[subsequent['below']]
-            weeks_below = len(touch_data)
-            min_pct = touch_data['pct_from_wma'].min()
+            # Ongoing episode (hasn't recovered yet)
+            episode_data = df.iloc[episode_start:]
+            weeks_below = len(episode_data)
+            min_pct = episode_data['pct_from_wma'].min()
             max_depth = abs(min_pct)
             
             touches.append({
-                'date': cross_date.strftime('%b %Y'),
-                'date_iso': cross_date.strftime('%Y-%m-%d'),
+                'date': start_date.strftime('%b %Y'),
+                'date_iso': start_date.strftime('%Y-%m-%d'),
+                'recovery_date': None,
                 'weeks_below': int(weeks_below),
                 'max_depth': round(float(max_depth), 1),
                 'return_1yr': None,
                 'ongoing': True
             })
+            
+            # We've reached the end of the data
+            break
     
     return touches
 
