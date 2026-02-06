@@ -40,6 +40,8 @@
   </script>
   
   <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3" defer></script>
 </head>
 <body>
   <header class="site-header">
@@ -230,7 +232,132 @@
         {{- end }}
       </p>
       {{ end }}
+
+      {{/* === Paragraph 5: Growth vs S&P 500 === */}}
+      {{ with .Params.growth_chart }}
+      {{ if .stock_total_return }}
+      <p>
+        Over the past {{ .years }} years, a hypothetical investment of $100 in {{ $.Params.symbol }} would have grown to
+        ${{ printf "%.0f" (add 100 .stock_total_return) }}, compared to ${{ printf "%.0f" (add 100 .spy_total_return) }} for the S&P 500.
+        {{ if .beats_spy -}}
+          That represents an annualized return of {{ printf "%.1f%%" .stock_annual_return }} vs {{ printf "%.1f%%" .spy_annual_return }} for the index —
+          confirming {{ $.Params.symbol }} as a market-beating investment and the kind of quality company where buying during
+          200-week moving average touches has historically been rewarded.
+        {{- else -}}
+          {{ $.Params.symbol }} has returned {{ printf "%.1f%%" .stock_annual_return }} annualized vs {{ printf "%.1f%%" .spy_annual_return }} for the index,
+          underperforming the broader market over this period.
+        {{- end }}
+      </p>
+      {{ end }}
+      {{ end }}
     </section>
+
+    <!-- Growth Chart: Stock vs S&P 500 -->
+    {{ with .Params.growth_chart }}
+    <section class="growth-chart-section">
+      <h2>Growth of $100: {{ $.Params.symbol }} vs S&amp;P 500</h2>
+      <div class="chart-container" style="position:relative; height:350px; max-width:800px;">
+        <canvas id="growthChart"></canvas>
+      </div>
+      <p class="chart-note">Monthly data normalized to $100 at start. Vertical dashed lines mark 200-week MA touches.</p>
+    </section>
+
+    <script id="growthData" type="application/json">
+      {{ . | jsonify }}
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var raw = document.getElementById('growthData');
+      if (!raw) return;
+      var data = JSON.parse(raw.textContent);
+      if (!data || !data.s || !data.b) return;
+
+      var dollar = '\u0024';
+      var parts = data.start.split('-');
+      var startYear = parseInt(parts[0], 10);
+      var startMonth = parseInt(parts[1], 10);
+      var labels = data.s.map(function(_, i) {
+        var d = new Date(startYear, startMonth - 1 + i, 1);
+        return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+      });
+
+      var annotations = {};
+      (data.t || []).forEach(function(idx, i) {
+        annotations['touch' + i] = {
+          type: 'line',
+          xMin: idx,
+          xMax: idx,
+          borderColor: 'rgba(239, 68, 68, 0.35)',
+          borderWidth: 1.5,
+          borderDash: [4, 4],
+          label: { display: false }
+        };
+      });
+
+      new Chart(document.getElementById('growthChart'), {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '{{ $.Params.symbol }}',
+              data: data.s,
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              fill: true,
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.3
+            },
+            {
+              label: 'S&P 500',
+              data: data.b,
+              borderColor: '#9ca3af',
+              backgroundColor: 'transparent',
+              fill: false,
+              borderWidth: 1.5,
+              borderDash: [5, 3],
+              pointRadius: 0,
+              tension: 0.3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: {
+              ticks: { maxTicksLimit: 10, maxRotation: 0 },
+              grid: { display: false }
+            },
+            y: {
+              title: { display: true, text: 'Growth of ' + dollar + '100' },
+              ticks: {
+                callback: function(v) { return dollar + v; }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: { usePointStyle: true, padding: 20 }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return ctx.dataset.label + ': ' + dollar + ctx.parsed.y;
+                }
+              }
+            },
+            annotation: { annotations: annotations }
+          }
+        }
+      });
+    });
+    </script>
+    {{ end }}
 
     <!-- Ad Placement: Rectangle -->
     <div class="ad-container ad-container--leaderboard" id="ad-stock-top">

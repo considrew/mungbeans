@@ -2069,7 +2069,102 @@ def find_historical_touches(df: pd.DataFrame, recovery_weeks: int = 2) -> List[d
     return touches
 
 
-def calculate_stock_signals(symbol: str) -> Optional[dict]:
+def fetch_spy_monthly() -> pd.Series:
+    """Fetch SPY monthly close data once for benchmark comparisons."""
+    print("Fetching SPY benchmark data...")
+    spy = yf.Ticker('SPY')
+    df = spy.history(period='max', interval='1mo')
+    if df.empty:
+        print("  ✗ Could not fetch SPY data")
+        return pd.Series(dtype=float)
+    series = df['Close'].dropna()
+    series.index = series.index.to_period('M')
+    print(f"  ✓ SPY: {len(series)} months of data")
+    return series
+
+
+def build_growth_chart(df: pd.DataFrame, spy_monthly: pd.Series,
+                       touches: List[dict]) -> Optional[dict]:
+    """Build normalized $100 growth chart data for stock vs SPY.
+    
+    Returns compact dict:
+      start: "YYYY-MM" first month
+      s: [100, 103, ...] stock growth, integers
+      b: [100, 101, ...] SPY benchmark growth, integers  
+      t: [36, 182, ...]  monthly indices where touches occurred
+    """
+    try:
+        # Resample stock to monthly (last close per month)
+        monthly = df['adjusted_close'].resample('MS').last().dropna()
+        if len(monthly) < 12:
+            return None
+        
+        monthly.index = monthly.index.to_period('M')
+        
+        # Find overlapping date range with SPY
+        common_start = max(monthly.index.min(), spy_monthly.index.min())
+        common_end = min(monthly.index.max(), spy_monthly.index.max())
+        
+        stock_aligned = monthly[(monthly.index >= common_start) & (monthly.index <= common_end)]
+        spy_aligned = spy_monthly[(spy_monthly.index >= common_start) & (spy_monthly.index <= common_end)]
+        
+        # Use only months present in both
+        common_periods = stock_aligned.index.intersection(spy_aligned.index)
+        if len(common_periods) < 12:
+            return None
+        
+        stock_aligned = stock_aligned[common_periods]
+        spy_aligned = spy_aligned[common_periods]
+        
+        # Normalize to $100
+        stock_norm = (stock_aligned / stock_aligned.iloc[0]) * 100
+        spy_norm = (spy_aligned / spy_aligned.iloc[0]) * 100
+        
+        # Round to integers for compact JSON
+        stock_values = [int(round(v)) for v in stock_norm.values]
+        spy_values = [int(round(v)) for v in spy_norm.values]
+        
+        # Map touch dates to monthly indices
+        touch_indices = []
+        period_list = list(common_periods)
+        for touch in touches:
+            try:
+                touch_period = pd.Period(touch['date_iso'][:7], freq='M')
+                # Find closest month
+                for idx, p in enumerate(period_list):
+                    if p >= touch_period:
+                        touch_indices.append(idx)
+                        break
+            except (ValueError, KeyError):
+                continue
+        
+        # Total return comparison for prose
+        stock_total_return = round(((stock_norm.iloc[-1] / 100) - 1) * 100, 1)
+        spy_total_return = round(((spy_norm.iloc[-1] / 100) - 1) * 100, 1)
+        years = len(common_periods) / 12
+        
+        # Annualized returns
+        stock_annual = round(((stock_norm.iloc[-1] / 100) ** (1 / years) - 1) * 100, 1) if years > 0 else None
+        spy_annual = round(((spy_norm.iloc[-1] / 100) ** (1 / years) - 1) * 100, 1) if years > 0 else None
+        
+        return {
+            'start': str(common_periods[0]),
+            's': stock_values,
+            'b': spy_values,
+            't': touch_indices,
+            'stock_total_return': stock_total_return,
+            'spy_total_return': spy_total_return,
+            'stock_annual_return': stock_annual,
+            'spy_annual_return': spy_annual,
+            'years': round(years, 1),
+            'beats_spy': stock_total_return > spy_total_return
+        }
+    except Exception as e:
+        print(f"    ⚠ Growth chart error: {e}")
+        return None
+
+
+def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optional[dict]:
     """Calculate all signals for a stock including quality metrics."""
     print(f"  Processing {symbol}...")
     
@@ -2093,6 +2188,12 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         return None
     
     historical_touches = find_historical_touches(df_complete.copy())
+    
+    # Build growth chart vs SPY
+    growth_chart = None
+    if spy_monthly is not None and not spy_monthly.empty:
+        growth_chart = build_growth_chart(df_complete, spy_monthly, historical_touches)
+    
     fundamentals = fetch_fundamental_data(symbol)
     
     latest = df_complete.iloc[-1]
@@ -2176,6 +2277,8 @@ def calculate_stock_signals(symbol: str) -> Optional[dict]:
         'buffett_below_line': buffett_below_line,
         'aristocrat_below_line': aristocrat_below_line,
         'cannibal_below_line': cannibal_below_line,
+        # Growth chart vs SPY
+        'growth_chart': growth_chart,
         # Metadata
         'last_updated': df_complete.index[-1].strftime('%Y-%m-%d'),
         'data_weeks': len(df_complete)
@@ -2236,6 +2339,9 @@ def main():
     company_metadata = load_company_metadata()
     print(f"Loaded {len(company_metadata)} company records")
     
+    # Fetch SPY benchmark data once
+    spy_monthly = fetch_spy_monthly()
+    
     all_stocks = []
     errors = []
     
@@ -2244,7 +2350,7 @@ def main():
         print(f"\n[{i+1}/{total}]", end="")
         
         try:
-            result = calculate_stock_signals(symbol)
+            result = calculate_stock_signals(symbol, spy_monthly=spy_monthly)
             if result:
                 # Merge company metadata (name, sector, ir_url)
                 meta = company_metadata.get(symbol, {})
