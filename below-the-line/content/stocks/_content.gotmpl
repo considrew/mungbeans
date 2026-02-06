@@ -52,6 +52,12 @@
       "shares_change_3yr" .shares_change_3yr
       "has_positive_fcf" .has_positive_fcf
       "growth_chart" .growth_chart
+      "growth_years" (index (default (dict) .growth_chart) "years")
+      "growth_beats_spy" (index (default (dict) .growth_chart) "beats_spy")
+      "growth_stock_total" (index (default (dict) .growth_chart) "stock_total_return")
+      "growth_spy_total" (index (default (dict) .growth_chart) "spy_total_return")
+      "growth_stock_annual" (index (default (dict) .growth_chart) "stock_annual_return")
+      "growth_spy_annual" (index (default (dict) .growth_chart) "spy_annual_return")
     )
   }}
   {{ $.AddPage $page }}

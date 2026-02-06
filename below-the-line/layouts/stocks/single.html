@@ -234,21 +234,19 @@
       {{ end }}
 
       {{/* === Paragraph 5: Growth vs S&P 500 === */}}
-      {{ with .Params.growth_chart }}
-      {{ if .stock_total_return }}
+      {{ if .Params.growth_stock_total }}
       <p>
-        Over the past {{ .years }} years, a hypothetical investment of $100 in {{ $.Params.symbol }} would have grown to
-        ${{ printf "%.0f" (add 100 .stock_total_return) }}, compared to ${{ printf "%.0f" (add 100 .spy_total_return) }} for the S&P 500.
-        {{ if .beats_spy -}}
-          That represents an annualized return of {{ printf "%.1f%%" .stock_annual_return }} vs {{ printf "%.1f%%" .spy_annual_return }} for the index —
-          confirming {{ $.Params.symbol }} as a market-beating investment and the kind of quality company where buying during
+        Over the past {{ .Params.growth_years }} years, a hypothetical investment of $100 in {{ .Params.symbol }} would have grown to
+        ${{ printf "%.0f" (add 100 .Params.growth_stock_total) }}, compared to ${{ printf "%.0f" (add 100 .Params.growth_spy_total) }} for the S&amp;P 500.
+        {{ if .Params.growth_beats_spy -}}
+          That represents an annualized return of {{ printf "%.1f%%" .Params.growth_stock_annual }} vs {{ printf "%.1f%%" .Params.growth_spy_annual }} for the index —
+          confirming {{ .Params.symbol }} as a market-beating investment and the kind of quality company where buying during
           200-week moving average touches has historically been rewarded.
         {{- else -}}
-          {{ $.Params.symbol }} has returned {{ printf "%.1f%%" .stock_annual_return }} annualized vs {{ printf "%.1f%%" .spy_annual_return }} for the index,
+          {{ .Params.symbol }} has returned {{ printf "%.1f%%" .Params.growth_stock_annual }} annualized vs {{ printf "%.1f%%" .Params.growth_spy_annual }} for the index,
           underperforming the broader market over this period.
         {{- end }}
       </p>
-      {{ end }}
       {{ end }}
     </section>
 
@@ -263,7 +261,7 @@
     </section>
 
     <script id="growthData" type="application/json">
-      {{ . | jsonify }}
+      {{ . | jsonify | safeHTML }}
     </script>
 
     <script>
@@ -271,6 +269,7 @@
       var raw = document.getElementById('growthData');
       if (!raw) return;
       var data = JSON.parse(raw.textContent);
+      if (typeof data === 'string') data = JSON.parse(data);
       if (!data || !data.s || !data.b) return;
 
       var dollar = '\u0024';
