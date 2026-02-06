@@ -130,6 +130,108 @@
       </div>
     </div>
 
+    <!-- Stock Analysis Prose -->
+    <section class="stock-prose">
+      {{/* === Paragraph 1: Current Signal Status === */}}
+      <p>
+        {{ .Params.name }} ({{ .Params.symbol }}) closed at ${{ printf "%.2f" .Params.close }} as of {{ .Params.last_updated }},
+        {{ if .Params.below_line -}}
+          trading {{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}.
+          This places {{ .Params.symbol }} in the <strong>{{ replace .Params.zone "_" " " }}</strong> zone.
+        {{- else -}}
+          trading {{ printf "%.1f%%" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}.
+        {{- end }}
+        {{ if .Params.approaching -}}
+          The stock is currently moving closer to the line, down from {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week.
+        {{- else -}}
+          The stock moved further from the line this week, up from {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week.
+        {{- end }}
+        {{ if lt .Params.rsi_14 30.0 -}}
+          With a 14-week RSI of {{ printf "%.0f" .Params.rsi_14 }}, {{ .Params.symbol }} is in oversold territory.
+        {{- else if gt .Params.rsi_14 70.0 -}}
+          With a 14-week RSI of {{ printf "%.0f" .Params.rsi_14 }}, {{ .Params.symbol }} is in overbought territory.
+        {{- else -}}
+          The 14-week RSI sits at {{ printf "%.0f" .Params.rsi_14 }}, indicating neutral momentum.
+        {{- end }}
+      </p>
+
+      {{/* === Paragraph 2: Historical Touch Context === */}}
+      {{ if gt .Params.touch_count 0 }}
+      <p>
+        Over the past {{ .Params.data_weeks }} weeks of data, {{ .Params.symbol }} has crossed below its 200-week moving average
+        {{ .Params.touch_count }} time{{ if gt .Params.touch_count 1 }}s{{ end }}.
+        {{ if .Params.avg_weeks_below -}}
+          On average, these episodes lasted {{ printf "%.0f" .Params.avg_weeks_below }} weeks.
+        {{- end }}
+        {{ if .Params.avg_return_after_touch -}}
+          {{ if gt .Params.avg_return_after_touch 0.0 -}}
+            Historically, investors who bought {{ .Params.symbol }} at the start of these episodes saw an average one-year return of {{ printf "+%.1f%%" .Params.avg_return_after_touch }}.
+          {{- else -}}
+            The average one-year return after crossing below was {{ printf "%.1f%%" .Params.avg_return_after_touch }}, suggesting these dips have not historically been reliable buying opportunities for this stock.
+          {{- end }}
+        {{- end }}
+      </p>
+      {{ else }}
+      <p>
+        In {{ .Params.data_weeks }} weeks of available data, {{ .Params.symbol }} has never crossed below its 200-week moving average.
+        This suggests the stock has maintained a strong long-term uptrend throughout its history.
+      </p>
+      {{ end }}
+
+      {{/* === Paragraph 3: Fundamentals Snapshot === */}}
+      {{ if or .Params.market_cap .Params.fcf_yield .Params.roe }}
+      <p>
+        {{ if .Params.market_cap -}}
+          {{ if ge .Params.market_cap 1e12 -}}
+            With a market cap of ${{ printf "%.1f" (div .Params.market_cap 1e12) }} trillion, {{ .Params.symbol }} is a mega-cap stock.
+          {{- else if ge .Params.market_cap 1e10 -}}
+            With a market cap of ${{ printf "%.1f" (div .Params.market_cap 1e9) }} billion, {{ .Params.symbol }} is a large-cap stock.
+          {{- else if ge .Params.market_cap 2e9 -}}
+            With a market cap of ${{ printf "%.1f" (div .Params.market_cap 1e9) }} billion, {{ .Params.symbol }} is a mid-cap stock.
+          {{- else if .Params.market_cap -}}
+            With a market cap of ${{ printf "%.0f" (div .Params.market_cap 1e6) }} million, {{ .Params.symbol }} is a small-cap stock.
+          {{- end }}
+        {{- end }}
+        {{ if .Params.fcf_yield -}}
+          {{ if gt .Params.fcf_yield 0.0 -}}
+            The company generates a free cash flow yield of {{ printf "%.1f%%" .Params.fcf_yield }}{{ if ge .Params.fcf_yield 8.0 }}, which is notably high{{ else if ge .Params.fcf_yield 5.0 }}, which is healthy{{ end }}.
+          {{- else -}}
+            Free cash flow yield is currently negative, meaning the company is burning cash.
+          {{- end }}
+        {{- end }}
+        {{ if .Params.roe -}}
+          Return on equity stands at {{ printf "%.1f%%" .Params.roe }}{{ if ge .Params.roe 20.0 }}, indicating strong profitability{{ else if ge .Params.roe 15.0 }}, a solid level{{ end }}.
+        {{- end }}
+        {{ if .Params.price_to_book -}}
+          The stock trades at {{ printf "%.1f" .Params.price_to_book }}x book value.
+        {{- end }}
+      </p>
+      {{ end }}
+
+      {{/* === Paragraph 4: Quality Flags & Shareholder Returns === */}}
+      {{ if or .Params.dividend_aristocrat .Params.buffett_quality .Params.is_cannibal .Params.is_diluting .Params.yartseva_candidate }}
+      <p>
+        {{ if .Params.dividend_aristocrat -}}
+          {{ .Params.symbol }} is a Dividend Aristocrat, having increased its dividend for 25 or more consecutive years.
+          {{ if .Params.dividend_yield }}The current yield is {{ printf "%.2f%%" .Params.dividend_yield }}.{{ end }}
+        {{- end }}
+        {{ if .Params.is_cannibal -}}
+          The company has been aggressively buying back shares, reducing its share count by {{ printf "%.1f%%" (math.Abs .Params.shares_change_3yr) }} over the past three years.
+        {{- else if .Params.is_buying_back -}}
+          Management has been repurchasing shares, with a {{ printf "%.1f%%" (math.Abs .Params.shares_change_3yr) }} reduction over three years.
+        {{- else if .Params.is_diluting -}}
+          Share count has increased {{ printf "%.1f%%" .Params.shares_change_3yr }} over three years, indicating dilution.
+        {{- end }}
+        {{ if .Params.buffett_quality -}}
+          {{ .Params.symbol }} passes our Buffett quality screen: high return on equity, low debt, and positive free cash flow.
+        {{- end }}
+        {{ if .Params.yartseva_candidate -}}
+          This stock also meets the Yartseva multibagger criteria as a small-cap with strong free cash flow yield and reasonable book value.
+        {{- end }}
+      </p>
+      {{ end }}
+    </section>
+
     <!-- Ad Placement: Rectangle -->
     <div class="ad-container ad-container--leaderboard" id="ad-stock-top">
       <div class="ad-label">Advertisement</div>
@@ -151,8 +253,9 @@
       <table class="touches-table">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Weeks Below</th>
+            <th>Crossed Below</th>
+            <th>Recovered</th>
+            <th>Weeks</th>
             <th>Max Depth</th>
             <th>1-Year Return</th>
           </tr>
@@ -161,6 +264,7 @@
           {{ range .Params.historical_touches }}
           <tr{{ if .ongoing }} class="ongoing"{{ end }}>
             <td>{{ .date }}</td>
+            <td>{{ if .ongoing }}<em>Ongoing</em>{{ else if .recovery_date }}{{ .recovery_date }}{{ else }}—{{ end }}</td>
             <td>{{ .weeks_below }}{{ if .ongoing }}+{{ end }}</td>
             <td>{{ printf "%.1f%%" .max_depth }}</td>
             <td>
@@ -181,7 +285,8 @@
         <tfoot>
           <tr>
             <td><strong>Average</strong></td>
-            <td>{{ printf "%.1f" .Params.avg_weeks_below }}</td>
+            <td></td>
+            <td>{{ printf "%.0f" .Params.avg_weeks_below }}</td>
             <td>—</td>
             <td><strong>{{ printf "+%.1f%%" .Params.avg_return_after_touch }}</strong></td>
           </tr>
