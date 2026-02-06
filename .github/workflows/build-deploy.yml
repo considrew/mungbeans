@@ -37,6 +37,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
           git diff --staged --quiet || git commit -m "Update stock data $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
           git push
 
       - name: Setup Hugo
