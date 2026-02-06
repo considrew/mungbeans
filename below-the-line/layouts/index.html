@@ -93,10 +93,10 @@
     {{ if $qualityPicks }}
     <section class="stock-section below-section">
       <h2>📉 Below The Line</h2>
-      <p class="section-desc">Stocks trading 5-50% below their 200-week moving average — the actionable zone.</p>
+      <p class="section-desc">Stocks trading 5–50% below their 200-week moving average — the actionable zone.</p>
       
       <div class="stock-grid">
-        {{ range $qualityPicks }}
+        {{ range first 10 $qualityPicks }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
           <div class="card-signal">YES</div>
@@ -113,6 +113,9 @@
         </a>
         {{ end }}
       </div>
+      {{ if gt (len $qualityPicks) 10 }}
+      <a href="/stocks/?filter=below" class="section-view-all">View all {{ len $qualityPicks }} below-the-line stocks →</a>
+      {{ end }}
     </section>
     {{ end }}
 
@@ -123,7 +126,7 @@
       <p class="section-desc">Stocks 50-70% below their 200WMA. Higher risk — verify fundamentals carefully.</p>
       
       <div class="stock-grid">
-        {{ range $deepValue }}
+        {{ range first 10 $deepValue }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
           <div class="card-signal">YES</div>
@@ -137,6 +140,9 @@
         </a>
         {{ end }}
       </div>
+      {{ if gt (len $deepValue) 10 }}
+      <a href="/stocks/?filter=deep-value" class="section-view-all">View all {{ len $deepValue }} deep value stocks →</a>
+      {{ end }}
     </section>
     {{ end }}
 
@@ -147,7 +153,7 @@
       <p class="section-desc">Stocks within 15% of their 200-week line, sorted by proximity.</p>
       
       <div class="stock-grid">
-        {{ range $data.summary.approaching_stocks }}
+        {{ range first 10 $data.summary.approaching_stocks }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
           <div class="card-signal">NO</div>
@@ -161,6 +167,9 @@
         </a>
         {{ end }}
       </div>
+      {{ if gt (len $data.summary.approaching_stocks) 10 }}
+      <a href="/stocks/?filter=approaching" class="section-view-all">View all {{ len $data.summary.approaching_stocks }} approaching stocks →</a>
+      {{ end }}
     </section>
     {{ end }}
 
@@ -178,7 +187,7 @@
       <p class="section-desc">Below-line stocks also showing RSI &lt; 30. Double signal.</p>
       
       <div class="stock-grid">
-        {{ range $oversoldQuality }}
+        {{ range first 10 $oversoldQuality }}
         <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
           <div class="card-symbol">{{ .symbol }}</div>
           <div class="card-signal">YES</div>
@@ -187,6 +196,9 @@
         </a>
         {{ end }}
       </div>
+      {{ if gt (len $oversoldQuality) 10 }}
+      <a href="/stocks/?filter=oversold" class="section-view-all">View all {{ len $oversoldQuality }} oversold stocks →</a>
+      {{ end }}
     </section>
     {{ end }}
 
@@ -200,7 +212,7 @@
         <p class="section-desc">These stocks are more than 70% below their 200WMA. Many may be facing serious fundamental issues.</p>
         
         <div class="stock-grid">
-          {{ range $tooFarGone }}
+          {{ range first 10 $tooFarGone }}
           <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
             <div class="card-symbol">{{ .symbol }}</div>
             <div class="card-signal">YES</div>
@@ -208,6 +220,9 @@
           </a>
           {{ end }}
         </div>
+        {{ if gt (len $tooFarGone) 10 }}
+        <a href="/stocks/?filter=distressed" class="section-view-all">View all {{ len $tooFarGone }} distressed stocks →</a>
+        {{ end }}
       </details>
     </section>
     {{ end }}
