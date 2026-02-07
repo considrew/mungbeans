@@ -5,14 +5,16 @@
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ .Params.name }} ({{ .Params.symbol }}) - Is It Below The 200-Week Line?</title>
-  <meta name="description" content="Is {{ .Params.name }} ({{ .Params.symbol }}) below its 200-week moving average? Check the signal, RSI, and historical touch data for value investors.">
+  <title>{{ .Params.symbol }} 200-Week Moving Average | {{ .Params.name }} {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} Below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} Above{{ end }} - mungbeans.io</title>
+  <meta name="description" content="{{ .Params.name }} ({{ .Params.symbol }}) is {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} above{{ end }} its 200-week moving average at ${{ printf "%.2f" .Params.close }}. {{ if .Params.below_line }}Signal: YES.{{ else }}Signal: NO.{{ end }} {{ if gt .Params.touch_count 0 }}{{ .Params.touch_count }} historical touches with {{ printf "%+.1f%%" .Params.avg_return_after_touch }} avg 1-year return.{{ end }} Updated weekly.">
+  <link rel="canonical" href="{{ .Permalink }}">
   
   <!-- Open Graph -->
-  <meta property="og:title" content="{{ .Params.symbol }} {{ .Params.name }} - Below The Line">
-  <meta property="og:description" content="Is {{ .Params.name }} below its 200-week moving average? Current signal: {{ if .Params.below_line }}YES - {{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below{{ else }}NO - {{ printf "%.1f%%" .Params.pct_from_wma }} above{{ end }}">
+  <meta property="og:title" content="{{ .Params.symbol }} {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} Below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} Above{{ end }} 200-Week MA | {{ .Params.name }}">
+  <meta property="og:description" content="{{ .Params.name }} at ${{ printf "%.2f" .Params.close }}. {{ if .Params.below_line }}Below the line — actionable signal.{{ else }}Above the line — watching.{{ end }}{{ if gt .Params.touch_count 0 }} {{ .Params.touch_count }} historical touches, {{ printf "%+.1f%%" .Params.avg_return_after_touch }} avg return.{{ end }}">
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="mungbeans.io">
   
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
