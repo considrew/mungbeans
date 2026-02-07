@@ -30,13 +30,16 @@ jobs:
         run: |
           cd below-the-line
           python scripts/update_stocks.py
+        env:
+          SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
 
       - name: Commit and push updated data
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
-          git diff --staged --quiet || git commit -m "Update stock data $(date +'%Y-%m-%d')"
+          git add below-the-line/content/blog/
+          git diff --staged --quiet || git commit -m "Update stock data + weekly blog $(date +'%Y-%m-%d')"
           git pull --rebase origin main
           git push
 

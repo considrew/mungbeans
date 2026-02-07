@@ -2862,6 +2862,152 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     }
 
 
+def load_previous_stocks(output_dir: Path) -> dict:
+    """Load previous week's stocks.json for crossing detection."""
+    output_file = output_dir / 'stocks.json'
+    if output_file.exists():
+        try:
+            with open(output_file) as f:
+                data = json.load(f)
+            # Build lookup: symbol -> below_line status
+            return {s['symbol']: s for s in data.get('stocks', [])}
+        except Exception as e:
+            print(f"  Warning: Could not load previous stocks.json: {e}")
+    return {}
+
+
+def detect_crossings(current_stocks: list, previous_stocks: dict) -> dict:
+    """Detect stocks that newly crossed below or recovered above the 200WMA."""
+    newly_below = []
+    newly_recovered = []
+    
+    for stock in current_stocks:
+        symbol = stock['symbol']
+        prev = previous_stocks.get(symbol)
+        if not prev:
+            continue  # New stock, no comparison possible
+        
+        was_below = prev.get('below_line', False)
+        is_below = stock.get('below_line', False)
+        
+        if is_below and not was_below:
+            newly_below.append(stock)
+        elif not is_below and was_below:
+            newly_recovered.append(stock)
+    
+    # Sort newly below by depth (deepest first)
+    newly_below.sort(key=lambda x: x['pct_from_wma'])
+    # Sort recovered by how far above (closest to line first)
+    newly_recovered.sort(key=lambda x: x['pct_from_wma'])
+    
+    return {
+        'newly_below': newly_below,
+        'newly_recovered': newly_recovered
+    }
+
+
+def generate_weekly_blog_post(crossings: dict, date_str: str, content_dir: Path):
+    """Generate a Hugo markdown blog post for weekly crossings."""
+    newly_below = crossings['newly_below']
+    newly_recovered = crossings['newly_recovered']
+    
+    if not newly_below and not newly_recovered:
+        print("\n  📝 No crossings this week — skipping blog post.")
+        return None
+    
+    blog_dir = content_dir / 'blog'
+    blog_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Create _index.md if it doesn't exist
+    index_file = blog_dir / '_index.md'
+    if not index_file.exists():
+        with open(index_file, 'w') as f:
+            f.write("""---
+title: "Weekly Signal Reports"
+description: "Weekly updates on stocks crossing their 200-week moving average."
+---
+""")
+    
+    # Build the post
+    slug = f"{date_str}-weekly-signal-report"
+    post_file = blog_dir / f"{slug}.md"
+    
+    # Frontmatter
+    lines = []
+    lines.append('---')
+    lines.append(f'title: "Weekly Signal Report — {datetime.strptime(date_str, "%Y-%m-%d").strftime("%B %d, %Y")}"')
+    lines.append(f'date: {date_str}')
+    lines.append(f'slug: "{slug}"')
+    lines.append(f'description: "{len(newly_below)} stock{"s" if len(newly_below) != 1 else ""} crossed below and {len(newly_recovered)} recovered above the 200-week moving average this week."')
+    
+    # Store structured data in frontmatter for template use
+    lines.append(f'newly_below_count: {len(newly_below)}')
+    lines.append(f'newly_recovered_count: {len(newly_recovered)}')
+    
+    # Newly below symbols for frontmatter
+    if newly_below:
+        lines.append('newly_below:')
+        for s in newly_below:
+            lines.append(f'  - symbol: "{s["symbol"]}"')
+            lines.append(f'    name: "{s.get("name", s["symbol"])}"')
+            lines.append(f'    close: {s["close"]}')
+            lines.append(f'    pct_below: {abs(s["pct_from_wma"]):.1f}')
+            lines.append(f'    wma_200: {s["wma_200"]:.2f}')
+            lines.append(f'    rsi_14: {s["rsi_14"]:.0f}')
+            lines.append(f'    touch_count: {s.get("touch_count", 0)}')
+            lines.append(f'    avg_return_after_touch: {s.get("avg_return_after_touch", 0):.1f}')
+            lines.append(f'    buffett_quality: {str(bool(s.get("buffett_quality", False))).lower()}')
+            lines.append(f'    dividend_aristocrat: {str(bool(s.get("dividend_aristocrat", False))).lower()}')
+            lines.append(f'    yartseva_candidate: {str(bool(s.get("yartseva_candidate", False))).lower()}')
+            lines.append(f'    fcf_trend: "{s.get("fcf_trend", "unknown")}"')
+            lines.append(f'    fcf_yield: {s.get("fcf_yield", 0):.1f}')
+            lines.append(f'    has_conviction_buy: {str(bool(s.get("has_conviction_buy", False))).lower()}')
+            lines.append(f'    sector: "{s.get("sector", "")}"')
+            # Market cap as readable string
+            mc = s.get('market_cap', 0) or 0
+            if mc >= 1e12:
+                lines.append(f'    market_cap_display: "${mc/1e12:.1f}T"')
+            elif mc >= 1e9:
+                lines.append(f'    market_cap_display: "${mc/1e9:.1f}B"')
+            elif mc >= 1e6:
+                lines.append(f'    market_cap_display: "${mc/1e6:.0f}M"')
+            else:
+                lines.append(f'    market_cap_display: "N/A"')
+    
+    if newly_recovered:
+        lines.append('newly_recovered:')
+        for s in newly_recovered:
+            lines.append(f'  - symbol: "{s["symbol"]}"')
+            lines.append(f'    name: "{s.get("name", s["symbol"])}"')
+            lines.append(f'    close: {s["close"]}')
+            lines.append(f'    pct_above: {s["pct_from_wma"]:.1f}')
+            lines.append(f'    wma_200: {s["wma_200"]:.2f}')
+    
+    lines.append('---')
+    lines.append('')
+    
+    # Body content — a brief intro (the template will render the structured data)
+    if newly_below:
+        lines.append(f'This week, {len(newly_below)} stock{"s" if len(newly_below) != 1 else ""} crossed below {"their" if len(newly_below) != 1 else "its"} 200-week moving average — entering what we call "deep value territory." This is the signal our screener is built to detect: quality companies trading below a price level that has historically represented a floor over the prior four years.')
+        lines.append('')
+        lines.append('Not every stock that crosses the line is a buy. Some are cheap for good reason. The 200-week moving average is a starting point for research, not a buy signal. Below, we break down each new crossing with the context you need to decide whether it\'s opportunity or a warning.')
+        lines.append('')
+    
+    if newly_recovered:
+        if newly_below:
+            lines.append(f'On the other side, {len(newly_recovered)} stock{"s" if len(newly_recovered) != 1 else ""} climbed back above the line this week — exiting deep value territory.')
+        else:
+            lines.append(f'No stocks crossed below the line this week, but {len(newly_recovered)} stock{"s" if len(newly_recovered) != 1 else ""} climbed back above — exiting deep value territory.')
+        lines.append('')
+    
+    with open(post_file, 'w') as f:
+        f.write('\n'.join(lines))
+    
+    print(f"\n  📝 Blog post generated: {post_file.name}")
+    print(f"     {len(newly_below)} newly below, {len(newly_recovered)} recovered")
+    return post_file
+
+
 def main():
     """Main pipeline."""
     print("=" * 60)
@@ -2872,6 +3018,10 @@ def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     company_metadata = load_company_metadata()
     print(f"Loaded {len(company_metadata)} company records")
+    
+    # Load previous week's data BEFORE overwriting
+    previous_stocks = load_previous_stocks(OUTPUT_DIR)
+    print(f"Loaded {len(previous_stocks)} previous stock records for crossing detection")
     
     # Fetch SPY benchmark data once
     spy_monthly = fetch_spy_monthly()
@@ -2914,6 +3064,18 @@ def main():
     output_file = OUTPUT_DIR / 'stocks.json'
     with open(output_file, 'w') as f:
         json.dump(output, f, separators=(',', ':'), cls=NumpyEncoder)
+    
+    # Detect crossings and generate blog post
+    skip_blog = os.environ.get('SKIP_BLOG', 'false').lower() == 'true'
+    if skip_blog:
+        print("\n  📝 SKIP_BLOG set — skipping blog generation (manual run).")
+    elif previous_stocks:
+        crossings = detect_crossings(all_stocks, previous_stocks)
+        content_dir = Path(__file__).parent.parent / 'content'
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        generate_weekly_blog_post(crossings, date_str, content_dir)
+    else:
+        print("\n  📝 No previous data — skipping blog generation (first run).")
     
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
