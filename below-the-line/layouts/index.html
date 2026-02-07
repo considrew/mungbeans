@@ -84,6 +84,7 @@
   }
   </script>
   
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -91,6 +92,7 @@
     <nav>
       <a href="/" class="logo">mungbeans.io</a>
       <a href="/stocks/">All Stocks</a>
+      <a href="/blog/">Weekly Reports</a>
       <a href="/about/">About</a>
     </nav>
   </header>
@@ -432,7 +434,7 @@
 
   <footer class="site-footer">
     <p>Data updated weekly (Friday close). Last update: {{ $data.generated_readable }}</p>
-    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
   </footer>
 
   <style>

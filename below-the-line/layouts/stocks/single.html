@@ -8,6 +8,7 @@
   <title>{{ .Params.symbol }} 200-Week Moving Average | {{ .Params.name }} {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} Below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} Above{{ end }} - mungbeans.io</title>
   <meta name="description" content="{{ .Params.name }} ({{ .Params.symbol }}) is {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} above{{ end }} its 200-week moving average at ${{ printf "%.2f" .Params.close }}. {{ if .Params.below_line }}Signal: YES.{{ else }}Signal: NO.{{ end }} {{ if gt .Params.touch_count 0 }}{{ .Params.touch_count }} historical touches with {{ printf "%+.1f%%" .Params.avg_return_after_touch }} avg 1-year return.{{ end }} Updated weekly.">
   <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   
   <!-- Open Graph -->
   <meta property="og:title" content="{{ .Params.symbol }} {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} Below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} Above{{ end }} 200-Week MA | {{ .Params.name }}">
@@ -48,8 +49,9 @@
 <body>
   <header class="site-header">
     <nav>
-      <a href="/" class="logo">Below The Line</a>
+      <a href="/" class="logo">mungbeans.io</a>
       <a href="/stocks/">All Stocks</a>
+      <a href="/blog/">Weekly Reports</a>
       <a href="/about/">About</a>
     </nav>
   </header>
@@ -664,12 +666,12 @@
         Past performance does not guarantee future results. 
         Do your own research before making investment decisions.
       </p>
-      <p class="last-updated">Data as of Friday close, {{ .Params.last_updated }}</p>
+      <p class="last-updated">Data as of week of {{ .Params.last_updated }}</p>
     </div>
   </main>
 
   <footer class="site-footer">
-    <p>© {{ now.Year }} Below The Line. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
   </footer>
 </body>
 </html>

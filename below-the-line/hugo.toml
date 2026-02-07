@@ -1,10 +1,10 @@
 baseURL = 'https://mungbeans.io/'
 languageCode = 'en-us'
-title = 'Mung Beans - 200-Week Moving Average Stock Signals'
+title = 'mungbeans.io - 200-Week Moving Average Stock Signals'
 
 [params]
   description = "Track when quality stocks drop below their 200-week moving average. A simple signal inspired by value investing principles."
-  author = "Below The Line"
+  author = "mungbeans.io"
   
 [markup.goldmark.renderer]
   unsafe = true

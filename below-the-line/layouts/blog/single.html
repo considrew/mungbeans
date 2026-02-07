@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }} | mungbeans.io</title>
+  <meta name="description" content="{{ .Description }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="mungbeans.io">
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02" }}">
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ .Title }}",
+    "description": "{{ .Description }}",
+    "datePublished": "{{ .Date.Format "2006-01-02" }}",
+    "url": "{{ .Permalink }}",
+    "publisher": {
+      "@type": "Organization",
+      "name": "mungbeans.io",
+      "url": "{{ .Site.BaseURL }}"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "Weekly Reports", "item": "{{ .Site.BaseURL }}blog/"},
+        {"@type": "ListItem", "position": 3, "name": "{{ .Title }}"}
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">mungbeans.io</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/blog/">Weekly Reports</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="blog-post">
+    <div class="breadcrumb">
+      <a href="/">Home</a> → <a href="/blog/">Weekly Reports</a> → {{ .Date.Format "Jan 2, 2006" }}
+    </div>
+
+    <article>
+      <header class="post-header">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        <h1>{{ .Title }}</h1>
+        <div class="post-summary-stats">
+          {{ if .Params.newly_below_count }}
+          <span class="stat-badge below">📉 {{ .Params.newly_below_count }} crossed below</span>
+          {{ end }}
+          {{ if .Params.newly_recovered_count }}
+          <span class="stat-badge recovered">📈 {{ .Params.newly_recovered_count }} recovered</span>
+          {{ end }}
+        </div>
+      </header>
+
+      <!-- Prose intro from markdown body -->
+      <div class="post-intro">
+        {{ .Content }}
+      </div>
+
+      <!-- What is Deep Value Territory? (collapsible primer) -->
+      {{ if .Params.newly_below }}
+      <details class="theory-primer" open>
+        <summary><strong>What is deep value territory?</strong></summary>
+        <p>The 200-week moving average represents roughly four years of price history. When a stock drops below this level, it means the current price is lower than the average investor paid over the last four years. For quality companies, these moments are rare — most stocks only cross below the 200-week line a handful of times in their history.</p>
+        <p>Our data shows that while 12-month returns from a crossing can be modest, 24-month returns are often significantly higher. The strategy requires patience. Not every crossing is a buying opportunity — some stocks are cheap because the business is deteriorating. That's why we pair the signal with quality metrics like free cash flow trends, insider buying, and return on equity.</p>
+      </details>
+      {{ end }}
+
+      <!-- Newly Below the Line -->
+      {{ if .Params.newly_below }}
+      <section class="crossing-section">
+        <h2>📉 Newly Below the Line</h2>
+
+        {{ range .Params.newly_below }}
+        <div class="crossing-card">
+          <div class="crossing-header">
+            <div>
+              <h3><a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>{{ if .name }} — {{ .name }}{{ end }}</h3>
+              {{ if .sector }}<span class="sector-tag">{{ .sector }}</span>{{ end }}
+              {{ if .market_cap_display }}<span class="mcap-tag">{{ .market_cap_display }}</span>{{ end }}
+            </div>
+            <div class="crossing-signal">
+              <span class="pct-below">{{ .pct_below }}% below</span>
+              <span class="price">${{ printf "%.2f" .close }} → 200WMA ${{ printf "%.2f" .wma_200 }}</span>
+            </div>
+          </div>
+
+          <div class="crossing-body">
+            <!-- Historical Context -->
+            <div class="crossing-context">
+              <h4>Historical Context</h4>
+              {{ if gt .touch_count 0 }}
+              <p>This is the {{ if eq .touch_count 1 }}first{{ else if eq .touch_count 2 }}second{{ else if eq .touch_count 3 }}third{{ else }}{{ .touch_count }}th{{ end }} time {{ .symbol }} has crossed below its 200-week moving average.
+              {{ if ne .avg_return_after_touch 0.0 }}
+                {{ if gt .avg_return_after_touch 0.0 }}
+                  Previous crossings produced an average 1-year return of <strong>+{{ .avg_return_after_touch }}%</strong>. History favors the patient buyer here.
+                {{ else }}
+                  Previous crossings produced an average 1-year return of <strong>{{ .avg_return_after_touch }}%</strong>. History has not rewarded buying this stock at the 200-week line — extra caution warranted.
+                {{ end }}
+              {{ end }}
+              </p>
+              {{ else }}
+              <p>This is the <strong>first time</strong> {{ .symbol }} has crossed below its 200-week moving average in our data. No historical precedent to reference — this is uncharted territory for this stock.</p>
+              {{ end }}
+            </div>
+
+            <!-- Quality Flags -->
+            <div class="crossing-quality">
+              <h4>Quality Signals</h4>
+              <div class="flag-row">
+                {{ if .buffett_quality }}<span class="flag flag-positive">🏆 Buffett Quality</span>{{ end }}
+                {{ if .dividend_aristocrat }}<span class="flag flag-positive">👑 Dividend Aristocrat</span>{{ end }}
+                {{ if .yartseva_candidate }}<span class="flag flag-positive">🎯 Yartseva Multibagger</span>{{ end }}
+                {{ if .has_conviction_buy }}<span class="flag flag-positive">🔍 Insider Buying</span>{{ end }}
+                {{ if eq .fcf_trend "growing" }}<span class="flag flag-positive">📈 FCF Growing</span>{{ end }}
+                {{ if gt .fcf_yield 5.0 }}<span class="flag flag-positive">💰 {{ .fcf_yield }}% FCF Yield</span>{{ end }}
+
+                {{/* Warnings */}}
+                {{ if eq .fcf_trend "declining" }}<span class="flag flag-warning">⚠️ FCF Declining</span>{{ end }}
+                {{ if lt .rsi_14 30.0 }}<span class="flag flag-caution">📉 RSI {{ printf "%.0f" .rsi_14 }} (Oversold)</span>{{ end }}
+                {{ if and (gt .touch_count 2) (lt .avg_return_after_touch 5.0) }}<span class="flag flag-warning">🔄 Frequent Crosser — Weak Recoveries</span>{{ end }}
+              </div>
+              {{ if not (or .buffett_quality .dividend_aristocrat .yartseva_candidate .has_conviction_buy (eq .fcf_trend "growing") (gt .fcf_yield 5.0)) }}
+              <p class="no-flags">No quality flags detected. This stock crossed below the line without any of our positive quality signals — approach with extra caution.</p>
+              {{ end }}
+            </div>
+
+            <!-- Reservations -->
+            <div class="crossing-reservations">
+              <h4>Things to Watch</h4>
+              <ul>
+                {{ if lt .rsi_14 30.0 }}
+                <li><strong>Oversold (RSI {{ printf "%.0f" .rsi_14 }}):</strong> The stock is already deeply oversold on a weekly basis. This could mean a bounce is near, but it could also mean momentum is strongly negative. Don't catch a falling knife without a thesis.</li>
+                {{ else if gt .rsi_14 50.0 }}
+                <li><strong>RSI still elevated ({{ printf "%.0f" .rsi_14 }}):</strong> The stock just crossed below the line but isn't oversold yet. It may have further to fall before reaching a bottom.</li>
+                {{ end }}
+                {{ if eq .fcf_trend "declining" }}
+                <li><strong>Cash flow is deteriorating:</strong> Free cash flow is trending downward. The stock might be cheap for a reason — verify whether this is a temporary or structural issue.</li>
+                {{ end }}
+                {{ if and (gt .touch_count 3) (lt .avg_return_after_touch 10.0) }}
+                <li><strong>Cycling pattern:</strong> {{ .symbol }} has crossed below the 200-week MA {{ .touch_count }} times with modest average returns. This stock may oscillate around the line rather than bounce decisively — consider whether this is a value trap.</li>
+                {{ end }}
+                {{ if and (not .buffett_quality) (not .dividend_aristocrat) }}
+                <li><strong>No quality floor:</strong> This stock doesn't pass our Buffett quality screen or have a long dividend track record. The business quality is less certain, which means the 200-week MA crossing carries less predictive weight.</li>
+                {{ end }}
+                <li>The 200-week moving average is a starting point, not a buy signal. Always research the company's fundamentals, competitive position, and recent news before acting.</li>
+              </ul>
+            </div>
+
+            <a href="/stocks/{{ .symbol | lower }}/" class="crossing-cta">View full {{ .symbol }} analysis →</a>
+          </div>
+        </div>
+        {{ end }}
+      </section>
+      {{ end }}
+
+      <!-- Recovered Above the Line -->
+      {{ if .Params.newly_recovered }}
+      <section class="crossing-section recovered-section">
+        <h2>📈 Recovered Above the Line</h2>
+        <p>These stocks climbed back above their 200-week moving average this week. If you bought during their time below the line, this is a milestone — though not necessarily a sell signal.</p>
+
+        <div class="recovered-grid">
+          {{ range .Params.newly_recovered }}
+          <a href="/stocks/{{ .symbol | lower }}/" class="recovered-card">
+            <div class="recovered-symbol">{{ .symbol }}</div>
+            {{ if .name }}<div class="recovered-name">{{ .name }}</div>{{ end }}
+            <div class="recovered-detail">{{ .pct_above }}% above · ${{ printf "%.2f" .close }}</div>
+          </a>
+          {{ end }}
+        </div>
+      </section>
+      {{ end }}
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <p><strong>Not financial advice.</strong> This is an educational tool. Past performance does not guarantee future results. Do your own research before making investment decisions.</p>
+      </div>
+
+      <!-- Post Navigation -->
+      <nav class="post-nav">
+        {{ with .PrevInSection }}
+        <a href="{{ .Permalink }}" class="post-nav-prev">← {{ .Title }}</a>
+        {{ end }}
+        {{ with .NextInSection }}
+        <a href="{{ .Permalink }}" class="post-nav-next">{{ .Title }} →</a>
+        {{ end }}
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+</body>
+</html>

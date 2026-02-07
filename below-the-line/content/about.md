@@ -15,22 +15,25 @@ Whether or not Munger actually said this, the concept is sound: the 200-week mov
 
 ## What This Tool Does
 
-mungbeans.io answers one simple question for each stock:
+mungbeans.io tracks over 1,600 stocks against their 200-week moving average and answers one simple question for each:
 
-**Is it below its 200-week moving average? Yes or no.**
+**Is it below the line? Yes or no.**
 
-We also show:
+Beyond that core signal, we provide a range of metrics and screens to help you evaluate what you're looking at:
 
-- **Direction**: Is it approaching the line or moving away?
-- **14-Week RSI**: A short-term indicator of oversold conditions
-- **Historical Touches**: Every time this stock has touched the 200-week line, and what happened afterward
+- **Distance & Direction**: How far from the line, and whether the stock is recovering or deepening this week
+- **14-Week RSI**: A momentum gauge for oversold conditions
+- **Historical Touches**: Every time this stock has crossed below the 200-week line, and what happened afterward
+- **Quality Screens**: Buffett Quality, Wide Moat, Dividend Aristocrats, Yartseva Multibagger candidates
+- **Cash Flow Analysis**: Free cash flow yield, FCF trends, and growing-FCF-while-below-line signals
+- **Insider Activity**: Conviction insider purchases (open-market buys over $500K)
+- **Share Count Tracking**: Cannibals (aggressive buybacks) vs. Diluters (growing share count)
 
 ## What This Tool Doesn't Do
 
 - We don't tell you what to buy
-- We don't determine if a stock is "quality" or not
 - We don't predict future performance
-- We don't provide real-time data (updated weekly on Saturdays)
+- We don't provide real-time data (updated weekly)
 
 A stock being below its 200-week average could mean opportunity—or it could mean the business is deteriorating. **Always do your own research.**
 
@@ -41,12 +44,20 @@ A stock being below its 200-week average could mean opportunity—or it could me
 | Zone | Description |
 |------|-------------|
 | 15%+ above | Far from the line |
-| 10-15% above | Approaching range |
-| 5-10% above | Getting close |
-| 0-5% above | At the doorstep |
-| 0-5% below | **Below the line** |
-| 5-10% below | Deep value territory |
-| 10%+ below | Extreme value territory |
+| 5–15% above | Approaching range |
+| 0–5% above | At the doorstep |
+| 0–50% below | **Below the line** |
+| 50–70% below | Deep value territory |
+| 70%+ below | Distressed |
+
+### Direction
+
+The direction indicator is context-aware:
+
+- **↑ Recovering**: Below the line and moved up this week (heading back toward the line)
+- **↓ Deepening**: Below the line and dropped further this week
+- **↓ Approaching**: Above the line and moving toward it
+- **↑ Away**: Above the line and moving further above
 
 ### 14-Week RSI
 
@@ -56,22 +67,16 @@ The Relative Strength Index on weekly data:
 - **Below 20**: Extremely oversold (rare)
 - **Above 70**: Overbought
 
-### Direction Indicator
-
-Shows week-over-week change in distance from the 200WMA:
-
-- **↓ Approaching**: Moving closer to the line
-- **↑ Moving away**: Moving further from the line
-
 ## Data Sources
 
-- Stock prices: Alpha Vantage (weekly adjusted close)
-- Data updated: Every Saturday (Friday close data)
-- Stocks tracked: Berkshire Hathaway holdings + major S&P 500 names
+- **Stock prices**: [yfinance](https://github.com/ranaroussi/yfinance) (weekly adjusted close)
+- **Insider transactions**: SEC Form 4 filings
+- **Update schedule**: Weekly (typically Saturday mornings, based on Friday close data)
+- **Stocks tracked**: 1,600+ names across all sectors, including S&P 500 constituents, Berkshire Hathaway holdings, Dividend Aristocrats, and additional mid/small-cap stocks
 
-## Open Source
+## Built With
 
-This project is built with Hugo and deployed as a static site. The code is available on GitHub.
+This project is a static site built with [Hugo](https://gohugo.io/), with data processing in Python and interactive charts using [Chart.js](https://www.chartjs.org/). Data updates are automated via GitHub Actions and the site is deployed on [Netlify](https://www.netlify.com/).
 
 ---
 

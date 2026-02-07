@@ -8,6 +8,7 @@
   <title>All Stocks - 200-Week Moving Average Screener | mungbeans.io</title>
   <meta name="description" content="Screen 1,700+ stocks against their 200-week moving average. Filter by signal status, insider buying, free cash flow trends, Buffett quality, and Dividend Aristocrats. Updated weekly.">
   <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -15,6 +16,7 @@
     <nav>
       <a href="/" class="logo">mungbeans.io</a>
       <a href="/stocks/">All Stocks</a>
+      <a href="/blog/">Weekly Reports</a>
       <a href="/about/">About</a>
     </nav>
   </header>
@@ -45,6 +47,9 @@
           <button class="filter-btn" data-filter-group="signal" data-filter="quality">Quality Zone</button>
           <button class="filter-btn" data-filter-group="signal" data-filter="approaching">Approaching</button>
           <button class="filter-btn" data-filter-group="signal" data-filter="oversold">Oversold</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="deep-value">Deep Value</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="distressed">Distressed</button>
+          <button class="filter-btn" data-filter-group="signal" data-filter="recovering">Recovering</button>
         </div>
       </div>
       
@@ -79,6 +84,8 @@
           <button class="filter-btn moat-btn" data-filter-group="special" data-filter="widemoat" title="Gross Margin > 40% + ROE > 15%">🏰 Wide Moat</button>
           <button class="filter-btn cannibal-btn" data-filter-group="special" data-filter="cannibal" title="Shrinking share count by 5%+ over 3 years">🦈 Cannibals</button>
           <button class="filter-btn diluter-btn" data-filter-group="special" data-filter="diluter" title="Growing share count by 2%+ over 3 years">⚠️ Diluters</button>
+          <button class="filter-btn insider-btn" data-filter-group="special" data-filter="insider-below" title="Insider conviction buys ($500K+) while below 200WMA">🔍 Insider Buying</button>
+          <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow growing while below 200WMA">📈 FCF Growing</button>
         </div>
       </div>
       
@@ -161,20 +168,68 @@
       </ul>
       <p class="info-note">Watch for: excessive SBC, frequent capital raises, or acquisitions funded by stock.</p>
     </div>
+    
+    <div id="insiderBelowInfo" class="info-box insider-below-info" style="display: none;">
+      <strong>🔍 Insider Buying + Below Line</strong>
+      <p>Corporate insiders making conviction purchases while the stock is below its 200-week MA:</p>
+      <ul>
+        <li>Open-market purchases over $500K in the last 12 months</li>
+        <li>Insiders have the deepest knowledge of a company's prospects</li>
+        <li>Buying with their own money while the market is pessimistic</li>
+        <li>One of the strongest combinations of signals on this site</li>
+      </ul>
+      <p class="info-note">"Insiders might sell their shares for any number of reasons, but they buy them for only one: they think the price will rise." — Peter Lynch</p>
+    </div>
+    
+    <div id="fcfGrowingInfo" class="info-box fcf-growing-info" style="display: none;">
+      <strong>📈 Growing Free Cash Flow + Below Line</strong>
+      <p>The business is generating more cash while the stock price is depressed:</p>
+      <ul>
+        <li>Free cash flow trending upward over recent years</li>
+        <li>Stock trading below its 200-week moving average</li>
+        <li>Suggests the market may be mispricing the business</li>
+        <li>Growing FCF can fund buybacks, dividends, or debt paydown</li>
+      </ul>
+      <p class="info-note">A stock below the line with growing cash flow is a business getting healthier while the market looks the other way.</p>
+    </div>
 
     <!-- Stocks Table -->
     <table class="stocks-table" id="stocksTable">
       <thead>
         <tr>
           <th class="sortable" data-sort="symbol">Symbol <span class="sort-icon">↕</span></th>
-          <th>Signal</th>
-          <th class="sortable" data-sort="distance">Distance <span class="sort-icon">↕</span></th>
-          <th>Direction</th>
-          <th class="sortable" data-sort="rsi">RSI <span class="sort-icon">↕</span></th>
-          <th class="sortable" data-sort="roe">ROE <span class="sort-icon">↕</span></th>
-          <th class="sortable hide-mobile" data-sort="debt">D/E <span class="sort-icon">↕</span></th>
-          <th class="sortable hide-mobile" data-sort="shares">Shares <span class="sort-icon">↕</span></th>
-          <th class="sortable hide-mobile" data-sort="fcfyield">FCF% <span class="sort-icon">↕</span></th>
+          <th class="has-tooltip">
+            Signal
+            <span class="col-tooltip">Is the stock currently trading below its 200-week moving average? YES = below the line (potential opportunity). NO = above.</span>
+          </th>
+          <th class="sortable has-tooltip" data-sort="distance">
+            Distance <span class="sort-icon">↕</span>
+            <span class="col-tooltip">How far the stock is from its 200-week moving average, as a percentage. Negative = below the line.</span>
+          </th>
+          <th class="has-tooltip">
+            Direction
+            <span class="col-tooltip">For stocks below the line: ↑ Recovering = price moved up this week (heading back toward the line). ↓ Deepening = price dropped further below. For stocks above: ↓ Approaching = moving toward the line. ↑ Away = moving further above.</span>
+          </th>
+          <th class="sortable has-tooltip" data-sort="rsi">
+            RSI <span class="sort-icon">↕</span>
+            <span class="col-tooltip">14-week Relative Strength Index. Below 30 = oversold (more selling pressure than usual). Above 70 = overbought. It’s a momentum gauge, not a buy/sell signal on its own.</span>
+          </th>
+          <th class="sortable has-tooltip" data-sort="roe">
+            ROE <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Return on Equity — how much profit a company earns for each dollar of shareholder equity. Above 15% is generally considered strong. Think of it as the company’s efficiency at turning your investment into profit.</span>
+          </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="debt">
+            D/E <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Debt-to-Equity ratio — how much debt the company carries relative to shareholder equity. Below 50% = conservatively financed. High debt can be dangerous if the business hits a rough patch.</span>
+          </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="shares">
+            Shares <span class="sort-icon">↕</span>
+            <span class="col-tooltip">3-year change in shares outstanding. Negative = company is buying back stock (your slice of the pie grows). Positive = company is issuing new shares (diluting your ownership).</span>
+          </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="fcfyield">
+            FCF% <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Free Cash Flow Yield — how much free cash flow you get per dollar of market cap. Above 5% is attractive. This is the real cash the business generates after paying for operations and equipment.</span>
+          </th>
           <th class="hide-tablet">Sector</th>
         </tr>
       </thead>
@@ -213,6 +268,10 @@
             data-aristocrat="{{ if .aristocrat_below_line }}true{{ else }}false{{ end }}"
             data-cannibal="{{ if .cannibal_below_line }}true{{ else }}false{{ end }}"
             data-diluter="{{ if .is_diluting }}true{{ else }}false{{ end }}"
+            data-insider-below="{{ if .insider_below_line }}true{{ else }}false{{ end }}"
+            data-fcf-growing-below="{{ if .fcf_growing_below_line }}true{{ else }}false{{ end }}"
+            data-wow="{{ .wow_change }}"
+            data-recovering="{{ and .below_line (not .approaching) }}"
             data-shares="{{ if .shares_change_3yr }}{{ .shares_change_3yr }}{{ else }}0{{ end }}"
             data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}">
           <td>
@@ -238,10 +297,18 @@
             {{ end }}
           </td>
           <td>
-            {{ if .approaching }}
-              <span class="direction approaching">↓</span>
+            {{ if .below_line }}
+              {{ if .approaching }}
+                <span class="direction deepening">↓ Deepening</span>
+              {{ else }}
+                <span class="direction recovering">↑ Recovering</span>
+              {{ end }}
             {{ else }}
-              <span class="direction retreating">↑</span>
+              {{ if .approaching }}
+                <span class="direction approaching">↓ Approaching</span>
+              {{ else }}
+                <span class="direction away">↑ Away</span>
+              {{ end }}
             {{ end }}
           </td>
           <td class="mono {{ if lt .rsi_14 30.0 }}oversold{{ end }}">
@@ -256,7 +323,7 @@
           <td class="mono hide-mobile {{ if and .shares_change_3yr (lt .shares_change_3yr -2.0) }}buyback{{ else if and .shares_change_3yr (gt .shares_change_3yr 2.0) }}diluting{{ end }}">
             {{ if .shares_change_3yr }}{{ printf "%+.0f%%" .shares_change_3yr }}{{ else }}—{{ end }}
           </td>
-          <td class="mono hide-mobile {{ if and .fcf_yield (gt .fcf_yield 5.0) }}high-fcf{{ end }}">
+          <td class="mono hide-mobile {{ if .fcf_yield }}{{ if gt .fcf_yield 5.0 }}high-fcf{{ else if gt .fcf_yield 0.0 }}ok-fcf{{ else }}neg-fcf{{ end }}{{ end }}">
             {{ if .fcf_yield }}{{ printf "%.1f%%" .fcf_yield }}{{ else }}—{{ end }}
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
@@ -330,7 +397,9 @@
       aristocrat: document.getElementById('aristocratInfo'),
       widemoat: document.getElementById('moatInfo'),
       cannibal: document.getElementById('cannibalInfo'),
-      diluter: document.getElementById('diluterInfo')
+      diluter: document.getElementById('diluterInfo'),
+      'insider-below': document.getElementById('insiderBelowInfo'),
+      'fcf-growing': document.getElementById('fcfGrowingInfo')
     };
     
     // Populate sector dropdown
@@ -405,6 +474,17 @@
           else if (filters.signal === 'quality') show = row.dataset.quality === 'true';
           else if (filters.signal === 'approaching') show = row.dataset.approaching === 'true';
           else if (filters.signal === 'oversold') show = row.dataset.oversold === 'true';
+          else if (filters.signal === 'deep-value') {
+            const abs = parseFloat(row.dataset.absDistance) || 0;
+            show = row.dataset.below === 'true' && abs >= 50 && abs < 70;
+          }
+          else if (filters.signal === 'distressed') {
+            const abs = parseFloat(row.dataset.absDistance) || 0;
+            show = row.dataset.below === 'true' && abs >= 70;
+          }
+          else if (filters.signal === 'recovering') {
+            show = row.dataset.recovering === 'true';
+          }
         }
         
         // Quality
@@ -432,6 +512,8 @@
           else if (filters.special === 'widemoat') show = row.dataset.widemoat === 'true' && row.dataset.below === 'true';
           else if (filters.special === 'cannibal') show = row.dataset.cannibal === 'true';
           else if (filters.special === 'diluter') show = row.dataset.diluter === 'true';
+          else if (filters.special === 'insider-below') show = row.dataset.insiderBelow === 'true';
+          else if (filters.special === 'fcf-growing') show = row.dataset.fcfGrowingBelow === 'true';
         }
         
         // Sector
@@ -473,7 +555,45 @@
       rows.forEach(row => tbody.appendChild(row));
     }
     
-    updateCount();
+    // Read URL parameters and activate matching filter on page load
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const filterParam = params.get('filter');
+      if (!filterParam) { updateCount(); return; }
+      
+      const filterMap = {
+        'below': { group: 'signal', filter: 'below' },
+        'quality': { group: 'signal', filter: 'quality' },
+        'approaching': { group: 'signal', filter: 'approaching' },
+        'oversold': { group: 'signal', filter: 'oversold' },
+        'deep-value': { group: 'signal', filter: 'deep-value' },
+        'distressed': { group: 'signal', filter: 'distressed' },
+        'recovering': { group: 'signal', filter: 'recovering' },
+        'buffett': { group: 'special', filter: 'buffett' },
+        'yartseva': { group: 'special', filter: 'yartseva' },
+        'aristocrat': { group: 'special', filter: 'aristocrat' },
+        'widemoat': { group: 'special', filter: 'widemoat' },
+        'cannibal': { group: 'special', filter: 'cannibal' },
+        'diluter': { group: 'special', filter: 'diluter' },
+        'insider-below': { group: 'special', filter: 'insider-below' },
+        'insider': { group: 'special', filter: 'insider-below' },
+        'fcf-growing': { group: 'special', filter: 'fcf-growing' },
+        'sp500': { group: 'quality', filter: 'sp500' },
+        'proven': { group: 'quality', filter: 'proven' },
+        'lowdebt': { group: 'quality', filter: 'lowdebt' },
+        'highroe': { group: 'quality', filter: 'highroe' }
+      };
+      
+      const mapping = filterMap[filterParam];
+      if (!mapping) { updateCount(); return; }
+      
+      // Simulate clicking the button (activates filter + info box + updateCount)
+      const btn = document.querySelector(
+        `.filter-btn[data-filter-group="${mapping.group}"][data-filter="${mapping.filter}"]`
+      );
+      if (btn) btn.click();
+      else updateCount();
+    })();
   </script>
 
   <style>
@@ -538,6 +658,26 @@
     .diluter-info { background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); border: 1px solid rgba(239, 68, 68, 0.3); }
     .diluter-info strong { color: #ef4444; }
     
+    /* Column tooltips */
+    .has-tooltip { position: relative; cursor: help; }
+    .col-tooltip { display: none; position: absolute; top: 100%; left: 0; z-index: 20; background: var(--color-surface, #1a1a2e); color: var(--color-text, #e0e0e0); border: 1px solid var(--color-border, #333); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; font-weight: normal; text-transform: none; letter-spacing: normal; line-height: 1.5; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: normal; }
+    .has-tooltip:hover .col-tooltip, .has-tooltip:focus .col-tooltip { display: block; }
+    
+    /* New filter button styles */
+    .insider-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-color: #7c3aed; color: white; }
+    .insider-btn:hover { background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%); color: white; }
+    .insider-btn.active { background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%); box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3); }
+    
+    .fcf-btn { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #059669; color: white; }
+    .fcf-btn:hover { background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; }
+    .fcf-btn.active { background: linear-gradient(135deg, #047857 0%, #065f46 100%); box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3); }
+    
+    /* New info box styles */
+    .insider-below-info { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(124, 58, 237, 0.1) 100%); border: 1px solid rgba(139, 92, 246, 0.3); }
+    .insider-below-info strong { color: #8b5cf6; }
+    .fcf-growing-info { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .fcf-growing-info strong { color: #10b981; }
+    
     /* Table */
     .stocks-table { width: 100%; border-collapse: collapse; }
     .stocks-table th, .stocks-table td { padding: var(--space-sm) var(--space-md); text-align: left; border-bottom: 1px solid var(--color-border); }
@@ -555,11 +695,15 @@
     .signal-badge.yes { background: var(--color-yes-bg); color: var(--zone-below-line); }
     .signal-badge.no { background: var(--color-surface); color: var(--color-text-muted); }
     .direction.approaching { color: var(--color-approaching); font-weight: bold; }
-    .direction.retreating { color: var(--color-text-muted); }
+    .direction.deepening { color: #ef4444; font-weight: bold; }
+    .direction.recovering { color: #10b981; font-weight: bold; }
+    .direction.away { color: var(--color-text-muted); }
     td.oversold { color: var(--zone-below-line); font-weight: 600; }
     td.high-roe { color: #059669; font-weight: 600; }
     td.low-debt { color: #059669; }
     td.high-fcf { color: #d97706; font-weight: 600; }
+    td.ok-fcf { color: var(--color-text); }
+    td.neg-fcf { color: #ef4444; }
     td.buyback { color: #06b6d4; font-weight: 600; }
     td.diluting { color: #ef4444; font-weight: 600; }
     

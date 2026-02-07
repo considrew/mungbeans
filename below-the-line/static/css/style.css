@@ -726,3 +726,338 @@ main {
   color: var(--color-text-muted);
   line-height: 1.6;
 }
+
+/* Blog List */
+.blog-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+.blog-intro {
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2xl);
+  line-height: 1.6;
+}
+
+.blog-posts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.blog-card {
+  display: block;
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.blog-card:hover {
+  border-color: var(--color-link);
+}
+
+.blog-card time {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.blog-card h2 {
+  font-size: 1.2rem;
+  margin: var(--space-xs) 0 var(--space-sm) 0;
+  color: var(--color-text);
+}
+
+.blog-card p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.blog-card-stats {
+  margin-top: var(--space-sm);
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.stat-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.stat-badge.below {
+  background: var(--color-yes-bg);
+  color: var(--color-yes);
+}
+
+.stat-badge.recovered {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--color-link);
+}
+
+.no-posts {
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-2xl);
+}
+
+/* Blog Post */
+.blog-post {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-2xl) var(--space-md);
+}
+
+.post-header {
+  margin-bottom: var(--space-xl);
+}
+
+.post-header time {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.post-header h1 {
+  margin: var(--space-xs) 0 var(--space-md) 0;
+}
+
+.post-summary-stats {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.post-intro {
+  line-height: 1.7;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.post-intro p {
+  margin-bottom: var(--space-md);
+}
+
+/* Theory Primer */
+.theory-primer {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+}
+
+.theory-primer summary {
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.theory-primer p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-top: var(--space-md);
+}
+
+/* Crossing Section */
+.crossing-section {
+  margin-bottom: var(--space-2xl);
+}
+
+.crossing-section h2 {
+  margin-bottom: var(--space-lg);
+}
+
+/* Crossing Card */
+.crossing-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-yes);
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: var(--space-lg);
+  overflow: hidden;
+}
+
+.crossing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: var(--space-lg);
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.crossing-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.crossing-header h3 a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.crossing-header h3 a:hover {
+  color: var(--color-link);
+}
+
+.sector-tag, .mcap-tag {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-right: var(--space-sm);
+}
+
+.crossing-signal {
+  text-align: right;
+}
+
+.pct-below {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-yes);
+}
+
+.crossing-signal .price {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.crossing-body {
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.crossing-context,
+.crossing-quality,
+.crossing-reservations {
+  margin-bottom: var(--space-lg);
+}
+
+.crossing-body h4 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.crossing-context p,
+.crossing-reservations li {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.crossing-reservations ul {
+  padding-left: var(--space-lg);
+}
+
+.crossing-reservations li {
+  margin-bottom: var(--space-sm);
+}
+
+/* Quality Flags */
+.flag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.flag {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.flag-positive {
+  background: var(--color-yes-bg);
+  color: var(--color-yes);
+}
+
+.flag-warning {
+  background: rgba(210, 153, 34, 0.15);
+  color: var(--color-approaching);
+}
+
+.flag-caution {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.no-flags {
+  color: var(--color-text-muted);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+.crossing-cta {
+  display: inline-block;
+  color: var(--color-link);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.crossing-cta:hover {
+  text-decoration: underline;
+}
+
+/* Recovered Section */
+.recovered-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+.recovered-card {
+  display: block;
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-link);
+  border-radius: var(--radius-md, 8px);
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.recovered-card:hover {
+  border-color: var(--color-link);
+}
+
+.recovered-symbol {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.recovered-name {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.recovered-detail {
+  font-size: 0.8rem;
+  color: var(--color-link);
+  margin-top: var(--space-xs);
+}
+
+/* Post Navigation */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+.post-nav a {
+  color: var(--color-link);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.post-nav a:hover {
+  text-decoration: underline;
+}
