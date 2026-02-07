@@ -202,6 +202,68 @@
     </section>
     {{ end }}
 
+    <!-- Insider Buying: Below the Line + Insider Conviction Buys -->
+    {{ $insiderBelow := $data.summary.insider_below_stocks }}
+    {{ $insiderAll := $data.summary.insider_buying_stocks }}
+    {{ if $insiderBelow }}
+    <section class="stock-section insider-section">
+      <h2>🔍 Insider Buying + Below Line</h2>
+      <p class="section-desc">Insiders are buying their own stock with conviction ($500K+ purchases) while the stock trades below its 200-week MA. The market says it's broken — they disagree.</p>
+      
+      <div class="stock-grid">
+        {{ range first 10 $insiderBelow }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-signal">YES</div>
+          <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
+          <div class="card-badge insider">🔍 Insider Buy</div>
+        </a>
+        {{ end }}
+      </div>
+      {{ if gt (len $insiderBelow) 10 }}
+      <a href="/stocks/?filter=insider-below" class="section-view-all">View all {{ len $insiderBelow }} insider + below-line stocks →</a>
+      {{ end }}
+    </section>
+    {{ else if $insiderAll }}
+    <section class="stock-section insider-section">
+      <h2>🔍 Insider Buying</h2>
+      <p class="section-desc">Corporate insiders making conviction purchases ($500K+). No stocks currently combine insider buying with a below-the-line signal.</p>
+      
+      <div class="stock-grid">
+        {{ range first 10 $insiderAll }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-badge insider">🔍 Insider Buy</div>
+        </a>
+        {{ end }}
+      </div>
+      {{ if gt (len $insiderAll) 10 }}
+      <a href="/stocks/?filter=insider" class="section-view-all">View all {{ len $insiderAll }} insider buying stocks →</a>
+      {{ end }}
+    </section>
+    {{ end }}
+
+    <!-- FCF Growing + Below the Line -->
+    {{ $fcfGrowingBelow := $data.summary.fcf_growing_below_stocks }}
+    {{ if $fcfGrowingBelow }}
+    <section class="stock-section fcf-section">
+      <h2>📈 Growing Cash Flow + Below Line</h2>
+      <p class="section-desc">Free cash flow is growing while the stock trades below its 200-week MA. The business is getting healthier — the market hasn't noticed yet.</p>
+      <div class="stock-grid">
+        {{ range first 10 $fcfGrowingBelow }}
+        <a href="/stocks/{{ .symbol | lower }}/" class="stock-card zone-{{ .zone }}">
+          <div class="card-symbol">{{ .symbol }}</div>
+          <div class="card-badge fcf">📈 FCF+</div>
+          <div class="card-pct">{{ printf "%.1f%%" (math.Abs .pct_from_wma) }} below</div>
+        </a>
+        {{ end }}
+      </div>
+      {{ if gt (len $fcfGrowingBelow) 10 }}
+      <a href="/stocks/?filter=fcf-growing" class="section-view-all">View all {{ len $fcfGrowingBelow }} growing FCF + below-line stocks →</a>
+      {{ end }}
+    </section>
+    {{ end }}
+
     <!-- Too Far Gone (collapsed/hidden by default) -->
     {{ if $tooFarGone }}
     <section class="stock-section distressed-section">

@@ -248,6 +248,43 @@
         {{- end }}
       </p>
       {{ end }}
+
+      {{/* === Paragraph 6: Insider Buying === */}}
+      {{ if .Params.has_conviction_buy }}
+      <p>
+        In the past 12 months, corporate insiders have made {{ .Params.insider_buy_count_12m }} open-market
+        purchase{{ if gt .Params.insider_buy_count_12m 1 }}s{{ end }} totaling
+        ${{ lang.FormatNumber 0 .Params.insider_buy_total_12m }}.
+        {{ if .Params.has_cluster_buy -}}
+          Multiple insiders purchased within a 30-day window — a cluster buy pattern that
+          historically signals management confidence in the company's prospects.
+        {{- end }}
+        {{ if .Params.insider_below_line -}}
+          Notably, these purchases occurred while {{ .Params.symbol }} is trading below its 200-week moving average —
+          insiders are buying when the market is most pessimistic.
+        {{- end }}
+      </p>
+      {{ end }}
+
+      {{/* === Paragraph 7: Free Cash Flow Trend === */}}
+      {{ if and .Params.fcf_trend (ne .Params.fcf_trend "insufficient_data") }}
+      <p>
+        {{ if eq .Params.fcf_trend "growing" -}}
+          Free cash flow has been growing{{ if .Params.fcf_cagr_3yr }} at a {{ .Params.fcf_cagr_3yr }}% compound annual rate{{ end }},
+          with {{ .Params.fcf_consecutive_positive }} consecutive year{{ if gt .Params.fcf_consecutive_positive 1 }}s{{ end }} of positive cash generation.
+          {{ if .Params.fcf_growing_below_line -}}
+            A business generating more cash every year while trading below its 200-week moving average
+            is exactly the kind of disconnect value investors look for.
+          {{- end }}
+        {{- else if eq .Params.fcf_trend "declining" -}}
+          Free cash flow has been declining{{ if .Params.fcf_cagr_3yr }} at a {{ .Params.fcf_cagr_3yr }}% compound annual rate{{ end }}.
+          A deteriorating cash flow trend warrants extra scrutiny — the stock may be cheap for a reason.
+        {{- else -}}
+          Free cash flow has been volatile over the past several years, making the quality of earnings
+          harder to assess.
+        {{- end }}
+      </p>
+      {{ end }}
     </section>
 
     <!-- Growth Chart: Stock vs S&P 500 -->
@@ -358,11 +395,191 @@
     </script>
     {{ end }}
 
+    <!-- Touch Overlay Chart: What happens after crossing below the line -->
+    {{ with .Params.touch_chart }}
+    <section class="touch-chart-section">
+      <h2>What Happens After {{ $.Params.symbol }} Crosses Below the Line?</h2>
+
+      {{ if $.Params.touch_avg_return_12m }}
+      <p>
+        Across {{ $.Params.touch_total_episodes }} historical episodes, buying {{ $.Params.symbol }} when it crossed below its
+        200-week moving average produced an average return of
+        <strong>{{ printf "%+.1f%%" $.Params.touch_avg_return_12m }}</strong> after 12 months
+        (median {{ printf "%+.1f%%" $.Params.touch_median_return_12m }}),
+        compared to <strong>{{ printf "%+.1f%%" $.Params.touch_spy_avg_return_12m }}</strong> for the S&amp;P 500 over the same periods.
+        {{ if $.Params.touch_pct_positive_12m }}{{ printf "%.0f" $.Params.touch_pct_positive_12m }}% of those episodes were profitable after one year.{{ end }}
+        {{ if $.Params.touch_avg_return_24m }}
+        After 24 months, the average return was {{ printf "%+.1f%%" $.Params.touch_avg_return_24m }}
+        vs {{ printf "%+.1f%%" $.Params.touch_spy_avg_return_24m }} for the index.
+        {{ end }}
+      </p>
+      {{ end }}
+
+      <div class="chart-container" style="position:relative; height:350px; max-width:800px;">
+        <canvas id="touchOverlayChart"></canvas>
+      </div>
+      <p class="chart-note">Each line shows $100 invested at the moment {{ $.Params.symbol }} crossed below its 200-week MA. Bold blue = stock average. Gray dashed = S&amp;P 500 average over same periods.</p>
+    </section>
+
+    <script id="touchChartData" type="application/json">
+      {{ . | jsonify | safeHTML }}
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var raw = document.getElementById('touchChartData');
+      if (!raw) return;
+      var data = JSON.parse(raw.textContent);
+      if (typeof data === 'string') data = JSON.parse(data);
+      if (!data || !data.episodes) return;
+
+      var dollar = '\u0024';
+      // X-axis labels: Month 0, 1, 2, ... 24
+      var maxMonths = Math.max(data.stock_avg.length, 25);
+      var labels = [];
+      for (var i = 0; i < maxMonths; i++) {
+        labels.push(i === 0 ? 'Touch' : 'M' + i);
+      }
+
+      var datasets = [];
+
+      // Individual episode lines (thin, semi-transparent)
+      var colors = [
+        'rgba(59,130,246,0.25)', 'rgba(16,185,129,0.25)', 'rgba(245,158,11,0.25)',
+        'rgba(139,92,246,0.25)', 'rgba(236,72,153,0.25)', 'rgba(20,184,166,0.25)',
+        'rgba(99,102,241,0.25)', 'rgba(244,63,94,0.25)', 'rgba(34,197,94,0.25)',
+        'rgba(168,85,247,0.25)'
+      ];
+      data.episodes.forEach(function(ep, idx) {
+        datasets.push({
+          label: ep.date,
+          data: ep.s,
+          borderColor: colors[idx % colors.length],
+          borderWidth: 1.5,
+          pointRadius: 0,
+          tension: 0.3,
+          fill: false
+        });
+      });
+
+      // Stock average line (bold blue)
+      datasets.push({
+        label: '{{ $.Params.symbol }} Avg',
+        data: data.stock_avg,
+        borderColor: '#2563eb',
+        borderWidth: 3,
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false
+      });
+
+      // SPY average line (gray dashed)
+      datasets.push({
+        label: 'S&P 500 Avg',
+        data: data.spy_avg,
+        borderColor: '#6b7280',
+        borderWidth: 2.5,
+        borderDash: [6, 3],
+        pointRadius: 0,
+        tension: 0.3,
+        fill: false
+      });
+
+      // $100 baseline
+      var baseline = new Array(maxMonths).fill(100);
+      datasets.push({
+        label: dollar + '100 baseline',
+        data: baseline,
+        borderColor: 'rgba(0,0,0,0.15)',
+        borderWidth: 1,
+        borderDash: [3, 3],
+        pointRadius: 0,
+        fill: false
+      });
+
+      new Chart(document.getElementById('touchOverlayChart'), {
+        type: 'line',
+        data: { labels: labels, datasets: datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: {
+              title: { display: true, text: 'Months since crossing below 200-week MA' },
+              grid: { display: false }
+            },
+            y: {
+              title: { display: true, text: 'Value of ' + dollar + '100' },
+              ticks: { callback: function(v) { return dollar + v; } }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                filter: function(item) {
+                  // Only show avg lines and baseline in legend, not individual episodes
+                  return item.text.indexOf('Avg') !== -1 || item.text.indexOf('baseline') !== -1;
+                },
+                usePointStyle: true, padding: 15
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return ctx.dataset.label + ': ' + dollar + ctx.parsed.y;
+                }
+              }
+            }
+          }
+        }
+      });
+    });
+    </script>
+    {{ end }}
+
     <!-- Ad Placement: Rectangle -->
     <div class="ad-container ad-container--leaderboard" id="ad-stock-top">
       <div class="ad-label">Advertisement</div>
       <!-- Google AdSense or ad network code goes here -->
     </div>
+
+    <!-- Insider Buying Table -->
+    {{ if .Params.has_conviction_buy }}
+    <section class="insider-buying">
+      <h2>Insider Buying Activity</h2>
+      <p class="insider-summary">
+        <strong>{{ len .Params.insider_buys }} conviction buy{{ if gt (len .Params.insider_buys) 1 }}s{{ end }}</strong>
+        in the past 12 months (purchases over $500K with meaningful position increases).
+        {{ if .Params.has_cluster_buy }}<span class="cluster-flag">🔥 Cluster Buy Detected</span>{{ end }}
+      </p>
+      <table class="insider-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Insider</th>
+            <th>Title</th>
+            <th>Value</th>
+            <th>Shares</th>
+            <th>Position +%</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Params.insider_buys }}
+          <tr>
+            <td>{{ .date }}</td>
+            <td>{{ .name }}</td>
+            <td>{{ .title }}</td>
+            <td>${{ lang.FormatNumber 0 .value }}</td>
+            <td>{{ lang.FormatNumber 0 .shares }}</td>
+            <td>{{ if .pct_position_increase }}{{ printf "+%.1f%%" .pct_position_increase }}{{ else }}<em>N/A</em>{{ end }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </section>
+    {{ end }}
 
     <!-- Historical Touches -->
     {{ if .Params.historical_touches }}
@@ -384,6 +601,7 @@
             <th>Weeks</th>
             <th>Max Depth</th>
             <th>1-Year Return</th>
+            <th>Return Since Touch</th>
           </tr>
         </thead>
         <tbody>
@@ -404,6 +622,15 @@
                 <em>N/A</em>
               {{ end }}
             </td>
+            <td>
+              {{ if .return_to_now }}
+                <span class="return {{ if gt .return_to_now 0.0 }}positive{{ else }}negative{{ end }}">
+                  {{ if gt .return_to_now 0.0 }}+{{ end }}{{ printf "%.1f%%" .return_to_now }}
+                </span>
+              {{ else }}
+                <em>N/A</em>
+              {{ end }}
+            </td>
           </tr>
           {{ end }}
         </tbody>
@@ -415,6 +642,7 @@
             <td>{{ printf "%.0f" .Params.avg_weeks_below }}</td>
             <td>—</td>
             <td><strong>{{ printf "+%.1f%%" .Params.avg_return_after_touch }}</strong></td>
+            <td>—</td>
           </tr>
         </tfoot>
         {{ end }}

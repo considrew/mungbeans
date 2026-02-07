@@ -58,6 +58,26 @@
       "growth_spy_total" (index (default (dict) .growth_chart) "spy_total_return")
       "growth_stock_annual" (index (default (dict) .growth_chart) "stock_annual_return")
       "growth_spy_annual" (index (default (dict) .growth_chart) "spy_annual_return")
+      "touch_chart" .touch_chart
+      "touch_total_episodes" (index (default (dict) .touch_chart) "total_episodes")
+      "touch_avg_return_12m" (index (default (dict) .touch_chart) "avg_return_12m")
+      "touch_median_return_12m" (index (default (dict) .touch_chart) "median_return_12m")
+      "touch_pct_positive_12m" (index (default (dict) .touch_chart) "pct_positive_12m")
+      "touch_avg_return_24m" (index (default (dict) .touch_chart) "avg_return_24m")
+      "touch_pct_positive_24m" (index (default (dict) .touch_chart) "pct_positive_24m")
+      "touch_spy_avg_return_12m" (index (default (dict) .touch_chart) "spy_avg_return_12m")
+      "touch_spy_avg_return_24m" (index (default (dict) .touch_chart) "spy_avg_return_24m")
+      "insider_buys" .insider_buys
+      "has_conviction_buy" .has_conviction_buy
+      "has_cluster_buy" .has_cluster_buy
+      "largest_buy_value" .largest_buy_value
+      "insider_buy_count_12m" .insider_buy_count_12m
+      "insider_buy_total_12m" .insider_buy_total_12m
+      "insider_below_line" .insider_below_line
+      "fcf_trend" .fcf_trend
+      "fcf_cagr_3yr" .fcf_cagr_3yr
+      "fcf_consecutive_positive" .fcf_consecutive_positive
+      "fcf_growing_below_line" .fcf_growing_below_line
     )
   }}
   {{ $.AddPage $page }}

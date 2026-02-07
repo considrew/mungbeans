@@ -1812,6 +1812,99 @@ def get_share_change(ticker: yf.Ticker) -> Tuple[Optional[float], Optional[float
         return None, None, None
 
 
+def get_fcf_trend(ticker) -> dict:
+    """Calculate free cash flow trend from annual cashflow statements.
+    
+    Returns:
+        dict with fcf_trend ('growing'|'declining'|'volatile'|'insufficient_data'),
+        fcf_cagr_3yr (compound annual growth rate), fcf_consecutive_positive (years),
+        and fcf_history (list of {year, fcf} dicts).
+    """
+    empty = {
+        'fcf_trend': 'insufficient_data',
+        'fcf_cagr_3yr': None,
+        'fcf_consecutive_positive': 0,
+        'fcf_history': [],
+    }
+    try:
+        cf = ticker.cashflow
+        if cf is None or cf.empty:
+            return empty
+        
+        # yfinance cashflow: rows are line items, columns are fiscal year dates
+        # Look for Free Cash Flow row
+        fcf_row = None
+        for label in ['Free Cash Flow', 'FreeCashFlow']:
+            if label in cf.index:
+                fcf_row = cf.loc[label]
+                break
+        
+        if fcf_row is None:
+            return empty
+        
+        # Sort by date ascending (oldest first), drop NaN
+        fcf_row = fcf_row.dropna().sort_index(ascending=True)
+        
+        if len(fcf_row) < 3:
+            return empty
+        
+        # Build history (most recent 4 years max)
+        fcf_values = fcf_row.tail(4)
+        history = []
+        for date, val in fcf_values.items():
+            year = date.year if hasattr(date, 'year') else pd.Timestamp(date).year
+            history.append({'year': year, 'fcf': round(float(val))})
+        
+        # Consecutive positive years (counting from most recent backward)
+        consecutive_positive = 0
+        for entry in reversed(history):
+            if entry['fcf'] > 0:
+                consecutive_positive += 1
+            else:
+                break
+        
+        # 3-year CAGR: use oldest and newest of the last 4 data points
+        cagr = None
+        if len(history) >= 3:
+            oldest_fcf = float(fcf_values.iloc[0])
+            newest_fcf = float(fcf_values.iloc[-1])
+            years_span = len(fcf_values) - 1  # gaps between points
+            if oldest_fcf > 0 and newest_fcf > 0 and years_span > 0:
+                cagr = round(((newest_fcf / oldest_fcf) ** (1 / years_span) - 1) * 100, 1)
+            elif oldest_fcf > 0 and newest_fcf <= 0:
+                cagr = -100.0  # went from positive to negative
+        
+        # Trend classification using year-over-year changes
+        yoy_changes = []
+        vals = list(fcf_values)
+        for i in range(1, len(vals)):
+            prev = float(vals[i-1])
+            curr = float(vals[i])
+            if prev != 0:
+                yoy_changes.append(curr > prev)
+            else:
+                yoy_changes.append(curr > 0)
+        
+        ups = sum(yoy_changes)
+        downs = len(yoy_changes) - ups
+        
+        if ups >= 2 and (cagr is not None and cagr > 0):
+            trend = 'growing'
+        elif downs >= 2 and (cagr is None or cagr < 0):
+            trend = 'declining'
+        else:
+            trend = 'volatile'
+        
+        return {
+            'fcf_trend': trend,
+            'fcf_cagr_3yr': cagr,
+            'fcf_consecutive_positive': consecutive_positive,
+            'fcf_history': history,
+        }
+    except Exception:
+        return empty
+
+
 def fetch_fundamental_data(symbol: str) -> dict:
     """
     Fetch fundamental data for quality screening.
@@ -1821,6 +1914,7 @@ def fetch_fundamental_data(symbol: str) -> dict:
     - Buffett quality metrics (ROE, debt/equity, margins)
     - Share buyback/dilution tracking
     - Dividend info
+    - Free cash flow trend
     """
     try:
         ticker = yf.Ticker(symbol)
@@ -1844,6 +1938,9 @@ def fetch_fundamental_data(symbol: str) -> dict:
         
         # Share buyback/dilution
         shares_yoy_change, shares_3yr_change, shares_outstanding = get_share_change(ticker)
+        
+        # Free cash flow trend
+        fcf_trend_data = get_fcf_trend(ticker)
         
         # === DERIVED METRICS ===
         
@@ -1932,6 +2029,11 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'is_buying_back': is_buying_back,
             'is_diluting': is_diluting,
             'is_cannibal': is_cannibal,
+            # FCF trend
+            'fcf_trend': fcf_trend_data['fcf_trend'],
+            'fcf_cagr_3yr': fcf_trend_data['fcf_cagr_3yr'],
+            'fcf_consecutive_positive': fcf_trend_data['fcf_consecutive_positive'],
+            'fcf_history': fcf_trend_data['fcf_history'],
         }
         
     except Exception as e:
@@ -1948,7 +2050,153 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'dividend_aristocrat': symbol in DIVIDEND_ARISTOCRATS,
             'yartseva_candidate': False,
             'is_buying_back': False, 'is_diluting': False, 'is_cannibal': False,
+            'fcf_trend': 'insufficient_data', 'fcf_cagr_3yr': None,
+            'fcf_consecutive_positive': 0, 'fcf_history': [],
         }
+
+
+def fetch_insider_data(symbol: str) -> dict:
+    """
+    Fetch insider buying data from SEC Form 4 filings via yfinance.
+    
+    Filters for open-market purchases that signal conviction:
+    - Transaction value >= $500K
+    - Position increase >= 10%
+    - Only direct purchases (not grants, awards, or option exercises)
+    
+    Also detects cluster buys: 3+ insiders purchasing within 30 days.
+    """
+    empty_result = {
+        'insider_buys': [],
+        'has_conviction_buy': False,
+        'has_cluster_buy': False,
+        'largest_buy_value': None,
+        'insider_buy_count_12m': 0,
+        'insider_buy_total_12m': 0,
+    }
+    
+    try:
+        ticker = yf.Ticker(symbol)
+        
+        # Get transaction history
+        transactions = ticker.insider_transactions
+        if transactions is None or transactions.empty:
+            return empty_result
+        
+        # Get roster for total position sizes (to calculate % increase)
+        roster = None
+        try:
+            roster = ticker.insider_roster_holders
+        except Exception:
+            pass
+        
+        # Build lookup of total shares owned by insider name
+        position_lookup = {}
+        if roster is not None and not roster.empty:
+            for _, row in roster.iterrows():
+                name = str(row.get('Name', '')).strip().upper()
+                direct = row.get('Shares Owned Directly')
+                indirect = row.get('Shares Owned Indirectly')
+                total = 0
+                if pd.notna(direct):
+                    total += float(direct)
+                if pd.notna(indirect):
+                    total += float(indirect)
+                if total > 0:
+                    position_lookup[name] = total
+        
+        # Filter for open-market purchases only
+        cutoff_12m = pd.Timestamp.now() - pd.Timedelta(days=365)
+        conviction_buys = []
+        all_purchase_dates = []
+        total_buy_value = 0
+        
+        for _, row in transactions.iterrows():
+            text = str(row.get('Text', ''))
+            
+            # Only open-market purchases — skip grants, awards, options, sales
+            if 'Purchase' not in text:
+                continue
+            
+            value = row.get('Value')
+            if pd.isna(value) or value is None:
+                continue
+            value = float(value)
+            
+            shares = row.get('Shares')
+            if pd.isna(shares) or shares is None:
+                continue
+            shares = float(shares)
+            
+            date_raw = row.get('Start Date')
+            if pd.isna(date_raw):
+                continue
+            tx_date = pd.Timestamp(date_raw)
+            
+            # Only last 12 months
+            if tx_date < cutoff_12m:
+                continue
+            
+            insider_name = str(row.get('Insider', 'Unknown')).strip()
+            position = str(row.get('Position', 'Unknown')).strip()
+            
+            # Calculate position increase %
+            pct_increase = None
+            name_upper = insider_name.upper()
+            if name_upper in position_lookup:
+                total_owned = position_lookup[name_upper]
+                prior_shares = total_owned - shares
+                if prior_shares > 0:
+                    pct_increase = round((shares / prior_shares) * 100, 1)
+            
+            all_purchase_dates.append(tx_date)
+            total_buy_value += value
+            
+            # Conviction buy logic:
+            # - $2M+ purchase = always conviction (large holders may have small % increase)
+            # - $500K-$2M purchase = conviction only if >= 10% position increase or unknown
+            is_conviction = (
+                value >= 2_000_000 or
+                (value >= 500_000 and (pct_increase is None or pct_increase >= 10))
+            )
+            
+            if is_conviction:
+                conviction_buys.append({
+                    'name': insider_name,
+                    'title': position,
+                    'date': tx_date.strftime('%Y-%m-%d'),
+                    'shares': int(shares),
+                    'value': round(value),
+                    'pct_position_increase': pct_increase,
+                })
+        
+        # Cluster buy detection: 3+ separate insiders buying within any 30-day window
+        has_cluster = False
+        if len(all_purchase_dates) >= 3:
+            sorted_dates = sorted(all_purchase_dates)
+            for i in range(len(sorted_dates) - 2):
+                window = sorted_dates[i] + pd.Timedelta(days=30)
+                buys_in_window = sum(1 for d in sorted_dates if sorted_dates[i] <= d <= window)
+                if buys_in_window >= 3:
+                    has_cluster = True
+                    break
+        
+        # Sort conviction buys by date (most recent first)
+        conviction_buys.sort(key=lambda x: x['date'], reverse=True)
+        
+        largest = max((b['value'] for b in conviction_buys), default=None)
+        
+        return {
+            'insider_buys': conviction_buys,
+            'has_conviction_buy': len(conviction_buys) > 0,
+            'has_cluster_buy': has_cluster,
+            'largest_buy_value': largest,
+            'insider_buy_count_12m': len(all_purchase_dates),
+            'insider_buy_total_12m': round(total_buy_value),
+        }
+        
+    except Exception as e:
+        return empty_result
 
 
 def calculate_rsi(prices: pd.Series, periods: int = 14) -> pd.Series:
@@ -2164,6 +2412,138 @@ def build_growth_chart(df: pd.DataFrame, spy_monthly: pd.Series,
         return None
 
 
+def build_touch_overlay_chart(df: pd.DataFrame, spy_monthly: pd.Series,
+                               touches: List[dict], months: int = 24,
+                               max_chart_episodes: int = 10) -> Optional[dict]:
+    """Build overlaid touch chart: what happened after each 200WMA crossing.
+    
+    Each touch is normalized to $100 at crossing date.
+    X-axis = months since crossing (0 to 24).
+    Shows stock line per episode + average stock line + average SPY line.
+    
+    Returns compact dict:
+      episodes: [{date, s: [100,95,...], months_available}]  (capped at 10 most recent)
+      stock_avg: [100, 97, ...]    average stock across ALL episodes
+      spy_avg:   [100, 101, ...]   average SPY across ALL episodes
+      total_episodes: N
+      episodes_shown: min(N, 10)
+      avg_return_12m, median_return_12m, pct_positive_12m
+      avg_return_24m, median_return_24m, pct_positive_24m
+    """
+    try:
+        # Resample stock to monthly
+        monthly = df['adjusted_close'].resample('MS').last().dropna()
+        if len(monthly) < 12:
+            return None
+        monthly.index = monthly.index.to_period('M')
+        
+        episodes = []
+        all_stock_arrays = []
+        all_spy_arrays = []
+        
+        for touch in touches:
+            try:
+                start_period = pd.Period(touch['date_iso'][:7], freq='M')
+            except (ValueError, KeyError):
+                continue
+            
+            # Get up to months+1 data points starting from touch month
+            stock_slice = monthly[monthly.index >= start_period].head(months + 1)
+            spy_slice = spy_monthly[spy_monthly.index >= start_period].head(months + 1)
+            
+            if len(stock_slice) < 3 or len(spy_slice) < 3:
+                continue
+            
+            # Align to common periods
+            common = stock_slice.index.intersection(spy_slice.index)
+            if len(common) < 3:
+                continue
+            
+            stock_vals = stock_slice[common]
+            spy_vals = spy_slice[common]
+            
+            # Normalize to $100
+            stock_norm = [int(round((v / stock_vals.iloc[0]) * 100))
+                          for v in stock_vals.values]
+            spy_norm = [int(round((v / spy_vals.iloc[0]) * 100))
+                        for v in spy_vals.values]
+            
+            ep = {
+                'date': touch['date'],
+                's': stock_norm,
+                'months': len(stock_norm) - 1,
+            }
+            episodes.append(ep)
+            all_stock_arrays.append(stock_norm)
+            all_spy_arrays.append(spy_norm)
+        
+        if not episodes:
+            return None
+        
+        # Average lines across all episodes (handles varying lengths)
+        max_len = min(months + 1, max(len(a) for a in all_stock_arrays))
+        
+        def avg_line(arrays, length):
+            result = []
+            for i in range(length):
+                vals = [a[i] for a in arrays if i < len(a)]
+                if vals:
+                    result.append(int(round(sum(vals) / len(vals))))
+            return result
+        
+        stock_avg = avg_line(all_stock_arrays, max_len)
+        spy_avg = avg_line(all_spy_arrays, max_len)
+        
+        # Stats at 12-month and 24-month marks across ALL episodes
+        def get_returns_at(arrays, month_idx):
+            """Get return (value - 100) at a given month index."""
+            return [a[month_idx] - 100 for a in arrays if len(a) > month_idx]
+        
+        returns_12m = get_returns_at(all_stock_arrays, 12)
+        returns_24m = get_returns_at(all_stock_arrays, 24)
+        spy_returns_12m = get_returns_at(all_spy_arrays, 12)
+        spy_returns_24m = get_returns_at(all_spy_arrays, 24)
+        
+        def stat_block(returns):
+            if not returns:
+                return {'avg': None, 'median': None, 'pct_positive': None}
+            s = sorted(returns)
+            return {
+                'avg': round(sum(s) / len(s), 1),
+                'median': round(s[len(s) // 2], 1),
+                'pct_positive': round(sum(1 for r in s if r > 0) / len(s) * 100, 0),
+            }
+        
+        stats_12m = stat_block(returns_12m)
+        stats_24m = stat_block(returns_24m)
+        spy_stats_12m = stat_block(spy_returns_12m)
+        spy_stats_24m = stat_block(spy_returns_24m)
+        
+        # Cap chart episodes to most recent N
+        shown = episodes[-max_chart_episodes:] if len(episodes) > max_chart_episodes else episodes
+        
+        return {
+            'episodes': shown,
+            'stock_avg': stock_avg,
+            'spy_avg': spy_avg,
+            'total_episodes': len(episodes),
+            'episodes_shown': len(shown),
+            # Stock stats
+            'avg_return_12m': stats_12m['avg'],
+            'median_return_12m': stats_12m['median'],
+            'pct_positive_12m': stats_12m['pct_positive'],
+            'avg_return_24m': stats_24m['avg'],
+            'median_return_24m': stats_24m['median'],
+            'pct_positive_24m': stats_24m['pct_positive'],
+            # SPY comparison stats
+            'spy_avg_return_12m': spy_stats_12m['avg'],
+            'spy_avg_return_24m': spy_stats_24m['avg'],
+        }
+    except Exception as e:
+        print(f"    \u26a0 Touch overlay error: {e}")
+        return None
+
+
 def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optional[dict]:
     """Calculate all signals for a stock including quality metrics."""
     print(f"  Processing {symbol}...")
@@ -2191,10 +2571,32 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     
     # Build growth chart vs SPY
     growth_chart = None
+    touch_chart = None
     if spy_monthly is not None and not spy_monthly.empty:
         growth_chart = build_growth_chart(df_complete, spy_monthly, historical_touches)
+        if historical_touches:
+            touch_chart = build_touch_overlay_chart(df_complete, spy_monthly, historical_touches)
+    
+    # Add return_to_now for each historical touch
+    current_price = float(df_complete.iloc[-1]['adjusted_close'])
+    for touch in historical_touches:
+        try:
+            touch_date = pd.Timestamp(touch['date_iso'])
+            # Match timezone of dataframe index (yfinance returns tz-aware)
+            if df_complete.index.tz is not None and touch_date.tz is None:
+                touch_date = touch_date.tz_localize(df_complete.index.tz)
+            # Find the closest weekly row to the touch date
+            mask = df_complete.index >= touch_date
+            if mask.any():
+                entry_price = float(df_complete.loc[mask].iloc[0]['adjusted_close'])
+                touch['return_to_now'] = round(((current_price - entry_price) / entry_price) * 100, 1)
+            else:
+                touch['return_to_now'] = None
+        except Exception:
+            touch['return_to_now'] = None
     
     fundamentals = fetch_fundamental_data(symbol)
+    insider = fetch_insider_data(symbol)
     
     latest = df_complete.iloc[-1]
     buy_threshold = latest['WMA_200']
@@ -2225,6 +2627,8 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     buffett_below_line = bool(fundamentals['buffett_quality'] and below)
     aristocrat_below_line = bool(fundamentals['dividend_aristocrat'] and below)
     cannibal_below_line = bool(fundamentals['is_cannibal'] and below)
+    insider_below_line = bool(insider['has_conviction_buy'] and below)
+    fcf_growing_below_line = bool(fundamentals['fcf_trend'] == 'growing' and below)
     
     result = {
         'symbol': symbol,
@@ -2277,8 +2681,23 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
         'buffett_below_line': buffett_below_line,
         'aristocrat_below_line': aristocrat_below_line,
         'cannibal_below_line': cannibal_below_line,
+        # Insider buying
+        'insider_buys': insider['insider_buys'],
+        'has_conviction_buy': insider['has_conviction_buy'],
+        'has_cluster_buy': insider['has_cluster_buy'],
+        'largest_buy_value': insider['largest_buy_value'],
+        'insider_buy_count_12m': insider['insider_buy_count_12m'],
+        'insider_buy_total_12m': insider['insider_buy_total_12m'],
+        'insider_below_line': insider_below_line,
+        # FCF trend
+        'fcf_trend': fundamentals['fcf_trend'],
+        'fcf_cagr_3yr': fundamentals['fcf_cagr_3yr'],
+        'fcf_consecutive_positive': fundamentals['fcf_consecutive_positive'],
+        'fcf_growing_below_line': fcf_growing_below_line,
         # Growth chart vs SPY
         'growth_chart': growth_chart,
+        # Touch overlay chart
+        'touch_chart': touch_chart,
         # Metadata
         'last_updated': df_complete.index[-1].strftime('%Y-%m-%d'),
         'data_weeks': len(df_complete)
@@ -2290,6 +2709,8 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     if buffett_below_line: flags.append("🏆BUFF")
     if aristocrat_below_line: flags.append("👑ARIST")
     if yartseva_below_line: flags.append("🎯YART")
+    if insider_below_line: flags.append("🔍INSIDER")
+    if fcf_growing_below_line: flags.append("📈FCF+")
     if fundamentals['is_diluting']: flags.append("⚠️DILUTE")
     flag_str = " " + " ".join(flags) if flags else ""
     
@@ -2310,6 +2731,14 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     aristocrats = [s for s in stocks if s.get('aristocrat_below_line')]
     cannibals = [s for s in stocks if s.get('cannibal_below_line')]
     diluting = [s for s in stocks if s.get('is_diluting')]
+    insider_buying = [s for s in stocks if s.get('has_conviction_buy')]
+    insider_below = [s for s in stocks if s.get('insider_below_line')]
+    # Sort insider buys by largest transaction value
+    insider_buying.sort(key=lambda x: x.get('largest_buy_value') or 0, reverse=True)
+    insider_below.sort(key=lambda x: x.get('largest_buy_value') or 0, reverse=True)
+    fcf_growing_below = [s for s in stocks if s.get('fcf_growing_below_line')]
+    # Sort by FCF CAGR (strongest growers first)
+    fcf_growing_below.sort(key=lambda x: x.get('fcf_cagr_3yr') or 0, reverse=True)
     
     return {
         # Counts
@@ -2322,9 +2751,15 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
         'aristocrat_count': len(aristocrats),
         'cannibal_count': len(cannibals),
         'diluting_count': len(diluting),
+        'insider_buying_count': len(insider_buying),
+        'insider_below_count': len(insider_below),
+        'fcf_growing_below_count': len(fcf_growing_below),
         # Stock arrays for homepage display
         'below_line_stocks': below_line,
         'approaching_stocks': approaching[:20],  # Limit to top 20 closest
+        'insider_buying_stocks': insider_buying,
+        'insider_below_stocks': insider_below,
+        'fcf_growing_below_stocks': fcf_growing_below,
     }
 
 
