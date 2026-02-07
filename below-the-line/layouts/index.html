@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ .Site.BaseURL }}">
   
-  <!-- JSON-LD -->
+  <!-- JSON-LD: WebSite -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -22,6 +22,64 @@
     "name": "mungbeans.io",
     "description": "Track when quality stocks drop below their 200-week moving average",
     "url": "{{ .Site.BaseURL }}"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the 200-week moving average?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The 200-week moving average (200WMA) is the average closing price of a stock over the last 200 weeks — roughly 4 years. It smooths out short-term volatility and acts as a long-term support level. When a quality stock drops below this line, it often signals a significant buying opportunity that may only occur a handful of times per decade for any given company."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the below-the-line stock screener work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The screener tracks over 1,700 stocks and checks two things each week: is the stock currently trading below its 200-week moving average, and is it moving toward or away from that line. Stocks are categorized as actionable (5–50% below), deep value (50–70% below), or distressed (70%+ below). Additional signals like RSI, insider buying, and free cash flow trends help identify the strongest opportunities."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is buying stocks below the 200-week moving average a good strategy?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Historically, buying quality stocks near their 200-week moving average has produced strong long-term returns. Our data shows that while 12-month returns from a touch can be modest, 24-month returns are often significantly higher. However, not every stock that drops below the line is a good buy — some are declining for fundamental reasons. This tool is a starting point for research, not a buy signal on its own."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does it mean when insiders buy stock below the 200-week moving average?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When corporate insiders — executives, directors, or large shareholders — make significant open-market purchases (over $500K) while the stock is below its 200-week moving average, it can be a strong conviction signal. These insiders have the most detailed knowledge of the company's prospects and are putting their own money at risk, suggesting they believe the stock is undervalued."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How often is the stock data updated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Stock data is updated weekly after the Friday market close. The screener recalculates 200-week moving averages, RSI readings, insider buying activity, and free cash flow trends for all tracked stocks. This weekly cadence matches the long-term nature of the strategy — daily fluctuations are noise at this time horizon."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is free cash flow and why does it matter for value investing?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Free cash flow (FCF) is the cash a company generates after paying for operations and capital expenditures. It matters because a stock can trade below its 200-week moving average for two very different reasons: temporary market pessimism or genuine business deterioration. Growing free cash flow while below the line suggests the business is actually getting healthier even as the stock price declines — meaning the market may be wrong."
+        }
+      }
+    ]
   }
   </script>
   
@@ -314,6 +372,41 @@
         average could mean opportunity—or it could mean the business is deteriorating. 
         Always do your own research.
       </p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2>Frequently Asked Questions</h2>
+      
+      <details class="faq-item">
+        <summary>What is the 200-week moving average?</summary>
+        <p>The 200-week moving average (200WMA) is the average closing price of a stock over the last 200 weeks — roughly 4 years. It smooths out short-term volatility and acts as a long-term support level. When a quality stock drops below this line, it often signals a significant buying opportunity that may only occur a handful of times per decade for any given company.</p>
+      </details>
+      
+      <details class="faq-item">
+        <summary>How does the below-the-line stock screener work?</summary>
+        <p>The screener tracks over 1,700 stocks and checks two things each week: is the stock currently trading below its 200-week moving average, and is it moving toward or away from that line. Stocks are categorized as actionable (5–50% below), deep value (50–70% below), or distressed (70%+ below). Additional signals like RSI, insider buying, and free cash flow trends help identify the strongest opportunities.</p>
+      </details>
+      
+      <details class="faq-item">
+        <summary>Is buying stocks below the 200-week moving average a good strategy?</summary>
+        <p>Historically, buying quality stocks near their 200-week moving average has produced strong long-term returns. Our data shows that while 12-month returns from a touch can be modest, 24-month returns are often significantly higher. However, not every stock that drops below the line is a good buy — some are declining for fundamental reasons. This tool is a starting point for research, not a buy signal on its own.</p>
+      </details>
+      
+      <details class="faq-item">
+        <summary>What does it mean when insiders buy stock below the 200-week moving average?</summary>
+        <p>When corporate insiders — executives, directors, or large shareholders — make significant open-market purchases (over $500K) while the stock is below its 200-week moving average, it can be a strong conviction signal. These insiders have the most detailed knowledge of the company's prospects and are putting their own money at risk, suggesting they believe the stock is undervalued.</p>
+      </details>
+      
+      <details class="faq-item">
+        <summary>How often is the stock data updated?</summary>
+        <p>Stock data is updated weekly after the Friday market close. The screener recalculates 200-week moving averages, RSI readings, insider buying activity, and free cash flow trends for all tracked stocks. This weekly cadence matches the long-term nature of the strategy — daily fluctuations are noise at this time horizon.</p>
+      </details>
+      
+      <details class="faq-item">
+        <summary>What is free cash flow and why does it matter for value investing?</summary>
+        <p>Free cash flow (FCF) is the cash a company generates after paying for operations and capital expenditures. It matters because a stock can trade below its 200-week moving average for two very different reasons: temporary market pessimism or genuine business deterioration. Growing free cash flow while below the line suggests the business is actually getting healthier even as the stock price declines — meaning the market may be wrong.</p>
+      </details>
     </section>
 
     <!-- All Stocks Link -->
