@@ -5,8 +5,8 @@
      crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekly Signal Reports - mungbeans.io</title>
-  <meta name="description" content="Weekly updates on stocks crossing their 200-week moving average. New deep value signals and recovery alerts for value investors.">
+  <title>Deep Dives - mungbeans.io</title>
+  <meta name="description" content="Forensic stock analysis using the mungbeans.io five-layer value trap screening framework.">
   <link rel="canonical" href="{{ .Permalink }}">
   <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -22,8 +22,8 @@
   </header>
 
   <main class="blog-list">
-    <h1>Weekly Signal Reports</h1>
-    <p class="blog-intro">Every week, we check which stocks have newly crossed below their 200-week moving average — and which have climbed back above. Each report breaks down the crossings with historical context, quality flags, and reservations.</p>
+    <h1>Deep Dives</h1>
+    <p class="blog-intro">Forensic analysis of stocks flagged by our 200-week moving average screener. Each deep dive runs the five-layer value trap screening framework to determine whether a stock is genuinely undervalued or cheap for a reason.</p>
 
     <div class="blog-posts">
       {{ range .Pages.ByDate.Reverse }}
@@ -32,11 +32,11 @@
         <h2>{{ .Title }}</h2>
         <p>{{ .Description }}</p>
         <div class="blog-card-stats">
-          {{ if .Params.newly_below_count }}
-          <span class="stat-badge below">{{ .Params.newly_below_count }} crossed below</span>
+          {{ if .Params.ticker }}
+          <span class="stat-badge">{{ .Params.ticker }}</span>
           {{ end }}
-          {{ if .Params.newly_recovered_count }}
-          <span class="stat-badge recovered">{{ .Params.newly_recovered_count }} recovered</span>
+          {{ if .Params.verdict }}
+          <span class="stat-badge {{ if eq .Params.verdict "deep-value" }}recovered{{ else if eq .Params.verdict "value-trap" }}below{{ else }}approaching{{ end }}">{{ .Params.verdict_label | default .Params.verdict }}</span>
           {{ end }}
         </div>
       </a>
@@ -44,7 +44,7 @@
     </div>
 
     {{ if not .Pages }}
-    <p class="no-posts">No reports yet. The first report will be generated after the next weekly data update.</p>
+    <p class="no-posts">No deep dives yet. Check back soon.</p>
     {{ end }}
   </main>
 

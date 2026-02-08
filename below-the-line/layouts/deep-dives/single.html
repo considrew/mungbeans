@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }} | mungbeans.io</title>
+  <meta name="description" content="{{ .Description }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="mungbeans.io">
+  <meta property="article:published_time" content="{{ .Date.Format "2006-01-02" }}">
+  {{ if .Params.tags }}
+  {{ range .Params.tags }}
+  <meta property="article:tag" content="{{ . }}">
+  {{ end }}
+  {{ end }}
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ .Title }}",
+    "description": "{{ .Description }}",
+    "datePublished": "{{ .Date.Format "2006-01-02" }}",
+    "url": "{{ .Permalink }}",
+    "publisher": {
+      "@type": "Organization",
+      "name": "mungbeans.io",
+      "url": "{{ .Site.BaseURL }}"
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "Deep Dives", "item": "{{ .Site.BaseURL }}deep-dives/"},
+        {"@type": "ListItem", "position": 3, "name": "{{ .Title }}"}
+      ]
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">mungbeans.io</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/blog/">Weekly Reports</a>
+      <a href="/deep-dives/">Deep Dives</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="blog-post">
+    <div class="breadcrumb">
+      <a href="/">Home</a> → <a href="/deep-dives/">Deep Dives</a> → {{ .Title }}
+    </div>
+
+    <article>
+      <header class="post-header">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        <h1>{{ .Title }}</h1>
+        <div class="post-summary-stats">
+          {{ if .Params.ticker }}
+          <span class="stat-badge">{{ .Params.ticker }}</span>
+          {{ end }}
+          {{ if .Params.verdict }}
+          <span class="stat-badge {{ if eq .Params.verdict "deep-value" }}recovered{{ else if eq .Params.verdict "value-trap" }}below{{ else }}approaching{{ end }}">{{ .Params.verdict_label | default .Params.verdict }}</span>
+          {{ end }}
+          {{ if .Params.pct_below_200wma }}
+          <span class="stat-badge below">{{ .Params.pct_below_200wma }}% below 200WMA</span>
+          {{ end }}
+        </div>
+      </header>
+
+      <div class="post-intro">
+        {{ .Content }}
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer">
+        <p><strong>Not financial advice.</strong> This is an educational tool. Past performance does not guarantee future results. Do your own research before making investment decisions.</p>
+      </div>
+
+      <!-- Post Navigation -->
+      <nav class="post-nav">
+        {{ with .PrevInSection }}
+        <a href="{{ .Permalink }}" class="post-nav-prev">← {{ .Title }}</a>
+        {{ end }}
+        {{ with .NextInSection }}
+        <a href="{{ .Permalink }}" class="post-nav-next">{{ .Title }} →</a>
+        {{ end }}
+      </nav>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
+  </footer>
+</body>
+</html>
