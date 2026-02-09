@@ -14,7 +14,7 @@ pct_below_200wma: "28"
 
 Nike stock has been a wealth destroyer for four straight years. Down 30% in 2022, 7% in 2023, 30% in 2024, and roughly 20% in 2025. All told, the stock has shed approximately 62% from its November 2021 all-time high of $166 to trade around $64 today.
 
-The problems are not subtle. Revenue declined 10% in fiscal 2025. Greater China sales have fallen for six consecutive quarters. Gross margins just took a 300 basis point hit from tariffs. Competitors like Hoka and On Running are growing 20-30% while Nike treads water. The Converse brand is in freefall. And the turnaround under CEO Elliott Hill is, by his own admission, still in the "middle innings."
+The problems are not subtle. Revenue declined 10% in fiscal 2025. Greater China sales have fallen for six consecutive quarters. Gross margins just took a 300 basis point hit from tariffs. Competitors like Hoka and [On Running](/stocks/onon/) are growing 20-30% while Nike treads water. The Converse brand is in freefall. And the turnaround under CEO Elliott Hill is, by his own admission, still in the "middle innings."
 
 But there's a counternarrative. Tim Cook — Apple's CEO and Nike's lead independent director for two decades — nearly doubled his personal stake in December, spending $2.95 million on open-market purchases. CEO Hill bought $1 million in shares. Director Robert Swan added $500K. Director Knudstorp added roughly $1 million more. That's over $5.4 million in insider purchases in the span of a week, at prices between $57 and $61.
 
@@ -102,7 +102,7 @@ Between 2023 and 2025, while Nike was pursuing its DTC strategy and over-relying
 
 **Hoka** (Deckers, ~$2B revenue): International sales surging 30%, spring 2026 order book "remains strong" per Needham. The brand has built genuine community through running clubs and flagship retail experiences.
 
-**On Running** (~$2B revenue): 32% revenue growth, brand awareness jumping to 13% globally. Targeting the high-spend "performance-lifestyle" demographic that was once Nike's exclusive territory.
+**[On Running](/stocks/onon/)** (~$2B revenue): 32% revenue growth, brand awareness jumping to 13% globally. Targeting the high-spend "performance-lifestyle" demographic that was once Nike's exclusive territory.
 
 **Adidas**: Record-breaking Q3 2025 results under CEO Bjorn Gulden. Market share growing to approximately 8.9%, largely at Nike's expense in lifestyle footwear (Samba, Gazelle).
 
@@ -282,3 +282,11 @@ The 2026 World Cup is a potential marketing catalyst — Nike sponsors 5 of FIFA
 | Full normalization (30x normalized EPS) | ~$105 | +64% |
 
 Nike has the narrowest upside/downside range — it's the "safest" from a catastrophic loss perspective (it pays a dividend, it's not going to zero), but also has the most modest upside unless margins fully normalize. The insider buying cluster provides conviction that the floor is probably closer than the ceiling.
+
+---
+
+*This analysis is for informational purposes only and does not constitute investment advice. The author does not hold a position in NKE. Always do your own research before making investment decisions.*
+
+*[View Nike on the mungbeans.io screener →](/stocks/nke/)*
+
+*Analysis methodology: [mungbeans.io five-layer value trap screening framework](https://mungbeans.io)*

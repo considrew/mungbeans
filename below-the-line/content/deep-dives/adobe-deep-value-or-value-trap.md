@@ -71,10 +71,10 @@ WACC for Adobe is roughly 9-11%. The ROIC-WACC spread of approximately 48-50 per
 | Company | ROIC | P/E | Revenue Growth | Signal |
 |---|---|---|---|---|
 | Adobe (ADBE) | 58.8% | 16.1x | 11% | Massive disconnect |
-| Microsoft (MSFT) | ~27% | ~32x | ~16% | Premium priced |
-| Salesforce (CRM) | ~15% | ~30x | ~9% | Premium priced |
-| Intuit (INTU) | ~25% | ~30x | ~13% | Premium priced |
-| Autodesk (ADSK) | ~35% | ~28x | ~12% | Premium priced |
+| [Microsoft (MSFT)](/stocks/msft/) | ~27% | ~32x | ~16% | Premium priced |
+| [Salesforce (CRM)](/stocks/crm/) | ~15% | ~30x | ~9% | Premium priced |
+| [Intuit (INTU)](/stocks/intu/) | ~25% | ~30x | ~13% | Premium priced |
+| [Autodesk (ADSK)](/stocks/adsk/) | ~35% | ~28x | ~12% | Premium priced |
 
 Adobe generates higher returns on capital than every listed peer except arguably Autodesk, yet trades at roughly half the multiple. The market is pricing in moat erosion that has not materialized in the financial statements.
 
@@ -290,5 +290,7 @@ Roughly 24-33% downside to the floor vs. 54-142% upside. Adobe has arguably the 
 ---
 
 *This analysis uses data available as of February 7, 2026. This is not financial advice. Always do your own research before making investment decisions. The author may take a position in securities discussed.*
+
+*[View Adobe on the mungbeans.io screener →](/stocks/adbe/)*
 
 *Analysis methodology: [Mungbeans Five-Layer Forensic Screening Framework](/about)*

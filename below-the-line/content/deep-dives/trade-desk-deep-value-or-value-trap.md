@@ -90,11 +90,11 @@ That said, switching costs are not absolute. Sophisticated agencies do run campa
 
 ### Competitive Landscape
 
-**Amazon** is the most serious threat. Amazon DSP leverages its massive first-party shopping data — something TTD cannot replicate. Amazon's partnership with Netflix for ad-supported streaming adds premium inventory. Amazon also competes for the same CTV dollars TTD is chasing.
+**[Amazon](/stocks/amzn/)** is the most serious threat. Amazon DSP leverages its massive first-party shopping data — something TTD cannot replicate. Amazon's partnership with Netflix for ad-supported streaming adds premium inventory. Amazon also competes for the same CTV dollars TTD is chasing.
 
-**Google's DV360** holds approximately 41% DSP market share versus TTD's roughly 20%. However, Google faces antitrust remedies from the DOJ case that could force divestiture of its ad-tech assets — a potential tailwind for TTD if it plays out.
+**[Google's](/stocks/goog/) DV360** holds approximately 41% DSP market share versus TTD's roughly 20%. However, Google faces antitrust remedies from the DOJ case that could force divestiture of its ad-tech assets — a potential tailwind for TTD if it plays out.
 
-**AppLovin** has emerged as a competing performance-advertising platform, though primarily in mobile gaming rather than premium CTV and display.
+**[AppLovin](/stocks/app/)** has emerged as a competing performance-advertising platform, though primarily in mobile gaming rather than premium CTV and display.
 
 The competitive picture is genuinely more crowded than it was three years ago, but TTD's position as the *independent* alternative to walled gardens remains differentiated.
 
@@ -114,7 +114,7 @@ Management has guided Q4 2025 revenue of at least $840 million with adjusted EBI
 
 Connected TV is the single biggest growth driver and also the largest source of uncertainty. CTV is TTD's biggest channel (approximately 50% of spend when including all video), and the shift from linear TV to streaming should be a multi-year tailwind. But CTV competition is intensifying — streaming services may move toward direct-sold advertising, cutting out intermediaries like TTD.
 
-TTD's Ventura OS (a proprietary CTV operating system) is an ambitious attempt to move up the supply chain, but competing against Roku, Google TV, and Amazon Fire TV is a massive undertaking.
+TTD's Ventura OS (a proprietary CTV operating system) is an ambitious attempt to move up the supply chain, but competing against [Roku](/stocks/roku/), Google TV, and Amazon Fire TV is a massive undertaking.
 
 **Layer 4 Verdict: MODERATE CAUTION.** Customer retention of 95%+ for a decade is genuinely impressive and provides real downside protection. Switching costs are meaningful but not impenetrable. Amazon competition is the most credible structural threat. Leadership instability is a near-term concern. Growth deceleration is real but the business is not shrinking — it's growing at 18-22%, just not at the 25%+ the old valuation demanded.
 
@@ -187,7 +187,7 @@ The 95%+ customer retention rate is the most important number in this analysis. 
 
 At 14x forward earnings with a PEG of 0.47, the valuation has gone from absurdly expensive to arguably cheap for a high-quality, asset-light growth business. But the leadership instability and lack of insider buying make it harder to pound the table.
 
-This is not like PayPal or Adobe where management is actively buying shares at depressed prices and the businesses generate enormous free cash flow. TTD's insiders are selling, not buying — and that matters.
+This is not like [PayPal](/deep-dives/paypal-deep-value-or-value-trap/) or [Adobe](/deep-dives/adobe-deep-value-or-value-trap/) where management is actively buying shares at depressed prices and the businesses generate enormous free cash flow. TTD's insiders are selling, not buying — and that matters.
 
 **Position sizing discipline is essential.** The upside if growth reaccelerates is significant (analysts see 100% upside to fair value). The downside if Amazon captures more share and growth continues slowing is that a 30x trailing P/E can compress further. A small, starter position with room to add on execution proof feels appropriate.
 
@@ -254,3 +254,11 @@ The Feb 25, 2026 earnings report is binary. A strong Q4 beat with solid 2026 gui
 | Full re-rating (40x normalized EPS) | ~$100 | +270% |
 
 The widest range of the four stocks. 33-56% downside to the floor vs. 144-270% upside to recovery scenarios. TTD is the highest-risk, highest-reward name in this series. It's in uncharted territory below its 200WMA, which means historical patterns are less useful for gauging the floor. But if growth holds and the multiple normalizes even partially, the upside is massive.
+
+---
+
+*This analysis is for informational purposes only and does not constitute investment advice. The author does not hold a position in TTD. Always do your own research before making investment decisions.*
+
+*[View The Trade Desk on the mungbeans.io screener →](/stocks/ttd/)*
+
+*Analysis methodology: [mungbeans.io five-layer value trap screening framework](https://mungbeans.io)*

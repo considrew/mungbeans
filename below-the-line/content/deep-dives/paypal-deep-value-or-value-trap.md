@@ -61,8 +61,8 @@ This is where things get interesting.
 Return on invested capital (ROIC) measures whether management is creating or destroying value with the capital entrusted to them. PayPal's ROIC is 23.59%. That is exceptional. The company's weighted average cost of capital (WACC) is roughly 9-10%. The spread of +13-14 percentage points means PayPal is creating substantial economic value.
 
 For comparison:
-- **Visa (V):** ROIC ~35%, but trades at 24x earnings
-- **Mastercard (MA):** ROIC ~45%, trades at 28x earnings
+- **[Visa (V)](/stocks/v/):** ROIC ~35%, but trades at 24x earnings
+- **[Mastercard (MA)](/stocks/ma/):** ROIC ~45%, trades at 28x earnings
 - **Block (SQ):** ROIC ~5%, trades at 18x earnings
 - **PayPal (PYPL):** ROIC ~24%, trades at 7.4x earnings
 
@@ -88,7 +88,7 @@ Why is this happening? Three factors:
 
 1. **Consumer fatigue.** Younger shoppers increasingly pay with Apple Pay or stored card credentials. The extra step of logging into PayPal feels like friction.
 2. **Merchant integration issues.** PayPal's interim CEO admitted on the earnings call that "execution has not been where it needs to be" on merchant integrations during high-volume shopping periods.
-3. **Competition.** Apple Pay now holds 14.2% of online payments. Stripe processes 80% of IT company integrations. Shop Pay (Shopify) controls 12-16% of online payment processing. The moat is narrowing.
+3. **Competition.** [Apple](/stocks/aapl/) Pay now holds 14.2% of online payments. Stripe processes 80% of IT company integrations. Shop Pay ([Shopify](/stocks/shop/)) controls 12-16% of online payment processing. The moat is narrowing.
 
 ### Market Share: Still Dominant, But Eroding
 
@@ -118,7 +118,7 @@ Venmo is evolving from a peer-to-peer app into a commerce platform. This is the 
 
 ### Buy Now, Pay Later
 
-BNPL total payment volume is forecasted to $40 billion in 2025, up over 20% year-over-year. This is another growth engine that doesn't get enough credit. For comparable size and increase as a base metric, see the total payment volume of Affirm (AFRM) at similar scale, $10.4B in TPV per quarter (market cap = $19B), and Block (XYZ) $9.7B in TPV per quarter, indicating it is likely undervalued within the PYPL stock value due to the potential erosion from competitors building a platform around their BNPL structure.
+BNPL total payment volume is forecasted to $40 billion in 2025, up over 20% year-over-year. This is another growth engine that doesn't get enough credit. For comparable size and increase as a base metric, see the total payment volume of [Affirm (AFRM)](/stocks/afrm/) at similar scale, $10.4B in TPV per quarter (market cap = $19B), and Block (XYZ) $9.7B in TPV per quarter, indicating it is likely undervalued within the PYPL stock value due to the potential erosion from competitors building a platform around their BNPL structure.
 
 **Layer 4 Verdict: CAUTION.** Branded checkout deceleration is real and concerning. CEO instability adds uncertainty. But the business is more diversified than the market gives it credit for — Venmo, BNPL, enterprise payments, and unbranded processing are all growing.
 
@@ -265,5 +265,7 @@ Roughly 33-41% downside to the floor vs. 56-142% upside to various recovery scen
 ---
 
 *This analysis uses data available as of February 7, 2026. This is not financial advice. Always do your own research before making investment decisions. The author may take a position in securities discussed.*
+
+*[View PayPal on the mungbeans.io screener →](/stocks/pypl/)*
 
 *Analysis methodology: [Mungbeans Five-Layer Forensic Screening Framework](/about)*

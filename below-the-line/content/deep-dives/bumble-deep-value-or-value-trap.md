@@ -72,7 +72,7 @@ Capital allocation is uninspiring. There's no dividend, and the company hasn't b
 
 This is the section that matters most for Bumble, because the core investment question isn't about the balance sheet or the current quarter — it's about whether online dating as a category, and Bumble's position within it, is structurally impaired.
 
-The competitive landscape is brutal and getting worse. Bumble and Tinder are nearly tied in U.S. market share at roughly 25% and 24% respectively, but both are declining. The winner is Hinge, owned by Match Group, which grew revenue 23% in Q1 2025 while Bumble's fell 10%. Hinge has captured the "relationship-focused" positioning that Bumble once owned. Meanwhile, Grindr is growing 26% annually in its niche. New entrants continue to emerge, and the barriers to entry in dating apps are relatively low — all you need is a mobile app and a critical mass of users, and the latter can be bootstrapped with aggressive marketing.
+The competitive landscape is brutal and getting worse. Bumble and Tinder are nearly tied in U.S. market share at roughly 25% and 24% respectively, but both are declining. The winner is Hinge, owned by [Match Group](/stocks/mtch/), which grew revenue 23% in Q1 2025 while Bumble's fell 10%. Hinge has captured the "relationship-focused" positioning that Bumble once owned. Meanwhile, Grindr is growing 26% annually in its niche. New entrants continue to emerge, and the barriers to entry in dating apps are relatively low — all you need is a mobile app and a critical mass of users, and the latter can be bootstrapped with aggressive marketing.
 
 Switching costs in dating apps are essentially zero. Users routinely run multiple apps simultaneously. There is no data lock-in, no accumulated content library, no workflow dependency — nothing that makes it painful to leave. Bumble's "women message first" mechanic was a genuine differentiator at launch, but it hasn't proven to be an enduring moat. The company is experimenting with removing this restriction in some markets, which tells you even they recognize it may have become a limitation rather than an advantage.
 
@@ -88,7 +88,7 @@ The decline here feels more structural than cyclical. A cyclical decline would m
 
 The insider activity picture is unambiguously negative. There has been zero insider buying at any price level during the stock's decline. When a stock falls 96% and not a single insider puts their own money in, that is a signal worth paying attention to.
 
-Instead, insiders have been selling. Blackstone, the largest shareholder, dumped 16.6 million shares in August 2025 at $6.26 per share — a $104.5 million exit. CEO Whitney Wolfe Herd sold $8.5 million worth on the same day. Directors Sissie Hsiao and Ann Mather have made smaller sales. The pattern is consistent: everyone with inside knowledge of the business is reducing their exposure, and nobody is adding.
+Instead, insiders have been selling. [Blackstone](/stocks/bx/), the largest shareholder, dumped 16.6 million shares in August 2025 at $6.26 per share — a $104.5 million exit. CEO Whitney Wolfe Herd sold $8.5 million worth on the same day. Directors Sissie Hsiao and Ann Mather have made smaller sales. The pattern is consistent: everyone with inside knowledge of the business is reducing their exposure, and nobody is adding.
 
 Short interest stands at 26.6% of the float — extremely elevated. The short ratio (days to cover) is 4.54, meaning it would take over four trading days for all shorts to close their positions. This level of short interest reflects deep skepticism from sophisticated investors. It also creates the technical possibility of a short squeeze, but short squeezes don't fix broken businesses — they create temporary price spikes that revert.
 
@@ -164,5 +164,7 @@ The asymmetry is notable: the worst case is roughly -20% to -60%, while the upsi
 ---
 
 *This analysis is for informational purposes only and does not constitute investment advice. The author does not hold a position in BMBL. Always do your own research before making investment decisions.*
+
+*[View Bumble on the mungbeans.io screener →](/stocks/bmbl/)*
 
 *Analysis methodology: [mungbeans.io five-layer value trap screening framework](https://mungbeans.io)*
