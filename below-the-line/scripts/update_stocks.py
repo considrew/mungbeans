@@ -3053,13 +3053,24 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     return result
 
 
+def _slim_stock(stock: dict) -> dict:
+    """Strip heavy fields from a stock dict for summary lists.
+
+    The homepage only reads a handful of fields (symbol, zone, pct_from_wma,
+    approaching, rsi_14, avg_return_after_touch). Dropping the chart/history
+    data from summary lists saves ~9 MB in stocks.json.
+    """
+    heavy_fields = {'growth_chart', 'touch_chart', 'historical_touches', 'insider_buys'}
+    return {k: v for k, v in stock.items() if k not in heavy_fields}
+
+
 def generate_landing_page_data(stocks: List[dict]) -> dict:
     """Generate summary data for the landing page."""
     below_line = [s for s in stocks if s['below_line']]
     approaching = [s for s in stocks if s['approaching'] and not s['below_line'] and s['pct_from_wma'] <= 15]
     # Sort approaching by distance (closest to line first)
     approaching.sort(key=lambda x: x['pct_from_wma'])
-    
+
     oversold = [s for s in stocks if s['rsi_14'] < 30]
     yartseva = [s for s in stocks if s.get('yartseva_below_line')]
     buffett = [s for s in stocks if s.get('buffett_below_line')]
@@ -3074,7 +3085,7 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
     fcf_growing_below = [s for s in stocks if s.get('fcf_growing_below_line')]
     # Sort by FCF CAGR (strongest growers first)
     fcf_growing_below.sort(key=lambda x: x.get('fcf_cagr_3yr') or 0, reverse=True)
-    
+
     return {
         # Counts
         'total_stocks': len(stocks),
@@ -3089,12 +3100,12 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
         'insider_buying_count': len(insider_buying),
         'insider_below_count': len(insider_below),
         'fcf_growing_below_count': len(fcf_growing_below),
-        # Stock arrays for homepage display
-        'below_line_stocks': below_line,
-        'approaching_stocks': approaching[:20],  # Limit to top 20 closest
-        'insider_buying_stocks': insider_buying,
-        'insider_below_stocks': insider_below,
-        'fcf_growing_below_stocks': fcf_growing_below,
+        # Stock arrays for homepage display (slimmed — no chart/history data)
+        'below_line_stocks': [_slim_stock(s) for s in below_line],
+        'approaching_stocks': [_slim_stock(s) for s in approaching[:20]],
+        'insider_buying_stocks': [_slim_stock(s) for s in insider_buying],
+        'insider_below_stocks': [_slim_stock(s) for s in insider_below],
+        'fcf_growing_below_stocks': [_slim_stock(s) for s in fcf_growing_below],
     }
 
 
