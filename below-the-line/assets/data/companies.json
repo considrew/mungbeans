@@ -794,6 +794,11 @@
     "name": "ASML Holding N.V.",
     "sector": "Technology - Semiconductor Equipment"
   },
+  "ASPI": {
+    "ir_url": "https://aspisotopes.com/investors/",
+    "name": "ASP Isotopes Inc.",
+    "sector": "Energy - Isotope Enrichment"
+  },
   "ASPN": {
     "ir_url": "https://www.aerogel.com/investors",
     "name": "Aspen Aerogels, Inc.",
@@ -3444,6 +3449,11 @@
     "name": "Etsy Inc.",
     "sector": "Consumer Discretionary - E-Commerce"
   },
+  "EU": {
+    "ir_url": "https://www.encoreenergy.com/investors/",
+    "name": "enCore Energy Corp.",
+    "sector": "Energy - Uranium Mining"
+  },
   "EVC": {
     "ir_url": "https://www.entravision.com/investors",
     "name": "Entravision Communications Corporation",
@@ -3708,6 +3718,11 @@
     "ir_url": "https://investor.fluor.com",
     "name": "Fluor Corporation",
     "sector": "Industrials - Engineering & Construction"
+  },
+  "FLS": {
+    "ir_url": "https://investor.flowserve.com/",
+    "name": "Flowserve Corporation",
+    "sector": "Industrials - Pumps & Valves"
   },
   "FLWS": {
     "ir_url": "https://www.1800flowers.com/investors",
@@ -5924,6 +5939,11 @@
     "name": "Liberty Media Corp. (SiriusXM Series C)",
     "sector": "Communication Services - Media"
   },
+  "LTBR": {
+    "ir_url": "https://www.ltbridge.com/investors",
+    "name": "Lightbridge Corporation",
+    "sector": "Energy - Nuclear Fuel Technology"
+  },
   "LTC": {
     "ir_url": "https://www.LTCreit.com/investors",
     "name": "LTC Properties, Inc.",
@@ -6293,6 +6313,11 @@
     "ir_url": "https://mind-technology.com/investors",
     "name": "MIND Technology, Inc.",
     "sector": "Technology - Scientific & Technical Instruments"
+  },
+  "MIR": {
+    "ir_url": "https://investors.mirion.com/",
+    "name": "Mirion Technologies, Inc.",
+    "sector": "Industrials - Nuclear Detection & Measurement"
   },
   "MIRM": {
     "ir_url": "https://www.mirumpharma.com/investors",
@@ -6984,6 +7009,11 @@
     "name": "Newmark Group, Inc.",
     "sector": "Real Estate - Real Estate Services"
   },
+  "NNE": {
+    "ir_url": "https://nanonuclearenergy.com/investors/",
+    "name": "NANO Nuclear Energy Inc.",
+    "sector": "Energy - Nuclear Reactors"
+  },
   "NNI": {
     "ir_url": "https://nelnetinc.com/investors",
     "name": "Nelnet, Inc.",
@@ -7418,6 +7448,11 @@
     "ir_url": "https://www.oneok.com/investors",
     "name": "ONEOK Inc.",
     "sector": "Energy - Pipelines"
+  },
+  "OKLO": {
+    "ir_url": "https://oklo.com/investors/overview/default.aspx",
+    "name": "Oklo Inc.",
+    "sector": "Energy - Nuclear Reactors"
   },
   "OKTA": {
     "ir_url": "https://investor.okta.com",
@@ -7883,6 +7918,11 @@
     "ir_url": "https://investor.pepsico.com",
     "name": "PepsiCo Inc.",
     "sector": "Consumer Staples - Beverages"
+  },
+  "PESI": {
+    "ir_url": "https://www.perma-fix.com/investors",
+    "name": "Perma-Fix Environmental Services, Inc.",
+    "sector": "Industrials - Nuclear Waste Treatment"
   },
   "PFE": {
     "ir_url": "https://investors.pfizer.com",
@@ -9164,6 +9204,11 @@
     "name": "The TJX Companies Inc.",
     "sector": "Consumer Discretionary - Retail"
   },
+  "TLN": {
+    "ir_url": "https://talenenergy.investorroom.com/",
+    "name": "Talen Energy Corporation",
+    "sector": "Utilities - Nuclear Power Generation"
+  },
   "TLRY": {
     "ir_url": "https://ir.tilray.com",
     "name": "Tilray Brands Inc.",
@@ -9463,6 +9508,11 @@
     "ir_url": "https://investor.urbn.com",
     "name": "Urban Outfitters Inc.",
     "sector": "Consumer Discretionary - Apparel Retail"
+  },
+  "URG": {
+    "ir_url": "https://www.ur-energy.com/investors",
+    "name": "Ur-Energy Inc.",
+    "sector": "Energy - Uranium Mining"
   },
   "URI": {
     "ir_url": "https://www.unitedrentals.com/investor-relations",
