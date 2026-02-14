@@ -3252,16 +3252,16 @@ description: "Weekly updates on stocks crossing their 200-week moving average."
             lines.append(f'    close: {s["close"]}')
             lines.append(f'    pct_below: {abs(s["pct_from_wma"]):.1f}')
             lines.append(f'    wma_200: {s["wma_200"]:.2f}')
-            lines.append(f'    rsi_14: {s["rsi_14"]:.0f}')
-            lines.append(f'    touch_count: {s.get("touch_count", 0)}')
-            lines.append(f'    avg_return_after_touch: {s.get("avg_return_after_touch", 0):.1f}')
+            lines.append(f'    rsi_14: {s.get("rsi_14") or 0:.0f}')
+            lines.append(f'    touch_count: {s.get("touch_count") or 0}')
+            lines.append(f'    avg_return_after_touch: {s.get("avg_return_after_touch") or 0:.1f}')
             lines.append(f'    buffett_quality: {str(bool(s.get("buffett_quality", False))).lower()}')
             lines.append(f'    dividend_aristocrat: {str(bool(s.get("dividend_aristocrat", False))).lower()}')
             lines.append(f'    yartseva_candidate: {str(bool(s.get("yartseva_candidate", False))).lower()}')
-            lines.append(f'    fcf_trend: "{s.get("fcf_trend", "unknown")}"')
-            lines.append(f'    fcf_yield: {s.get("fcf_yield", 0):.1f}')
+            lines.append(f'    fcf_trend: "{s.get("fcf_trend") or "unknown"}"')
+            lines.append(f'    fcf_yield: {s.get("fcf_yield") or 0:.1f}')
             lines.append(f'    has_conviction_buy: {str(bool(s.get("has_conviction_buy", False))).lower()}')
-            lines.append(f'    sector: "{s.get("sector", "")}"')
+            lines.append(f'    sector: "{s.get("sector") or ""}"')
             # Market cap as readable string
             mc = s.get('market_cap', 0) or 0
             if mc >= 1e12:
