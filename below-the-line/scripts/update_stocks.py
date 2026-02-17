@@ -18,8 +18,13 @@ from __future__ import annotations
 
 import json
 import os
+import smtplib
 import time
+import urllib.request
+import urllib.parse
 from datetime import datetime
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional, List, Tuple
 
@@ -3252,7 +3257,7 @@ description: "Weekly updates on stocks crossing their 200-week moving average."
             lines.append(f'    close: {s["close"]}')
             lines.append(f'    pct_below: {abs(s["pct_from_wma"]):.1f}')
             lines.append(f'    wma_200: {s["wma_200"]:.2f}')
-            lines.append(f'    rsi_14: {s.get("rsi_14") or 0:.0f}')
+            lines.append(f'    rsi_14: {s.get("rsi_14") or 0:.1f}')
             lines.append(f'    touch_count: {s.get("touch_count") or 0}')
             lines.append(f'    avg_return_after_touch: {s.get("avg_return_after_touch") or 0:.1f}')
             lines.append(f'    buffett_quality: {str(bool(s.get("buffett_quality", False))).lower()}')
@@ -3366,6 +3371,7 @@ def main():
     
     # Detect crossings and generate blog post
     skip_blog = os.environ.get('SKIP_BLOG', 'false').lower() == 'true'
+    crossings = None
     if skip_blog:
         print("\n  📝 SKIP_BLOG set — skipping blog generation (manual run).")
     elif previous_stocks:
@@ -3375,6 +3381,16 @@ def main():
         generate_weekly_blog_post(crossings, date_str, content_dir)
     else:
         print("\n  📝 No previous data — skipping blog generation (first run).")
+
+    # Send weekly email to subscribers
+    skip_email = os.environ.get('SKIP_EMAIL', 'false').lower() == 'true'
+    if skip_email:
+        print("\n  📧 SKIP_EMAIL set — skipping email send.")
+    elif crossings:
+        date_str = datetime.now().strftime('%Y-%m-%d')
+        send_weekly_email(crossings, date_str)
+    else:
+        print("\n  📧 No crossings data — skipping email send.")
     
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
@@ -3389,6 +3405,232 @@ def main():
     if errors:
         print(f"Failed symbols: {', '.join(errors[:20])}")
     print("=" * 60)
+
+
+def get_subscribers() -> list[str]:
+    """Fetch subscriber emails from Netlify Forms API, minus unsubscribes."""
+    netlify_token = os.environ.get('NETLIFY_API_TOKEN')
+    site_id = os.environ.get('NETLIFY_SITE_ID')
+
+    if not netlify_token or not site_id:
+        print("  ⚠️  Missing NETLIFY_API_TOKEN or NETLIFY_SITE_ID — skipping email.")
+        return []
+
+    # Get forms to find the "notify" form ID
+    try:
+        req = urllib.request.Request(
+            f"https://api.netlify.com/api/v1/sites/{site_id}/forms",
+            headers={"Authorization": f"Bearer {netlify_token}"}
+        )
+        with urllib.request.urlopen(req) as resp:
+            forms = json.loads(resp.read())
+    except Exception as e:
+        print(f"  ⚠️  Failed to fetch forms: {e}")
+        return []
+
+    form_id = None
+    for form in forms:
+        if form.get('name') == 'notify':
+            form_id = form['id']
+            break
+
+    if not form_id:
+        print("  ⚠️  'notify' form not found.")
+        return []
+
+    # Fetch all submissions (paginated)
+    emails = set()
+    page = 1
+    while True:
+        try:
+            req = urllib.request.Request(
+                f"https://api.netlify.com/api/v1/forms/{form_id}/submissions?per_page=100&page={page}",
+                headers={"Authorization": f"Bearer {netlify_token}"}
+            )
+            with urllib.request.urlopen(req) as resp:
+                subs = json.loads(resp.read())
+        except Exception as e:
+            print(f"  ⚠️  Failed to fetch submissions page {page}: {e}")
+            break
+
+        if not subs:
+            break
+
+        for sub in subs:
+            email = sub.get('data', {}).get('email', '').strip().lower()
+            if email:
+                emails.add(email)
+        page += 1
+
+    # Fetch unsubscribes from Netlify Blobs API
+    blobs_token = os.environ.get('NETLIFY_API_TOKEN')
+    unsubscribed = set()
+
+    try:
+        # List blobs in the "unsubscribes" store
+        req = urllib.request.Request(
+            f"https://api.netlify.com/api/v1/blobs/{site_id}/unsubscribes",
+            headers={"Authorization": f"Bearer {blobs_token}"}
+        )
+        with urllib.request.urlopen(req) as resp:
+            blob_data = json.loads(resp.read())
+            for blob in blob_data.get('blobs', []):
+                unsubscribed.add(blob['key'].lower().strip())
+    except Exception as e:
+        # 404 means no unsubscribes yet — that's fine
+        if '404' not in str(e):
+            print(f"  ⚠️  Failed to fetch unsubscribes: {e}")
+
+    active = emails - unsubscribed
+    print(f"  📧 Subscribers: {len(emails)} total, {len(unsubscribed)} unsubscribed, {len(active)} active")
+    return sorted(active)
+
+
+def send_weekly_email(crossings: dict, date_str: str):
+    """Send the weekly signal summary email to all subscribers."""
+    zoho_email = os.environ.get('ZOHO_EMAIL')
+    zoho_password = os.environ.get('ZOHO_APP_PASSWORD')
+
+    if not zoho_email or not zoho_password:
+        print("\n  ⚠️  Missing ZOHO_EMAIL or ZOHO_APP_PASSWORD — skipping email send.")
+        return
+
+    subscribers = get_subscribers()
+    if not subscribers:
+        print("  📧 No subscribers — skipping email send.")
+        return
+
+    newly_below = crossings.get('newly_below', [])
+    newly_recovered = crossings.get('newly_recovered', [])
+
+    if not newly_below and not newly_recovered:
+        print("  📧 No crossings this week — skipping email.")
+        return
+
+    # Build the email content
+    date_display = datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %d, %Y')
+    slug = f"{date_str}-weekly-signal-report"
+    post_url = f"https://mungbeans.io/blog/{slug}/"
+
+    below_rows = ""
+    for s in newly_below[:15]:
+        symbol = s['symbol']
+        name = s.get('name', symbol)
+        pct = abs(s.get('pct_from_wma', 0))
+        rsi = s.get('rsi_14') or 0
+        below_rows += f"""
+        <tr>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#e2b714; font-weight:600;">{symbol}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ccc;">{name}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ff6b6b;">{pct:.1f}%</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#aaa;">{rsi:.0f}</td>
+        </tr>"""
+
+    recovered_rows = ""
+    for s in newly_recovered[:10]:
+        symbol = s['symbol']
+        name = s.get('name', symbol)
+        pct = s.get('pct_from_wma', 0)
+        recovered_rows += f"""
+        <tr>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#e2b714; font-weight:600;">{symbol}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ccc;">{name}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#4ecdc4;">+{pct:.1f}%</td>
+        </tr>"""
+
+    below_section = ""
+    if newly_below:
+        below_section = f"""
+        <p style="margin:24px 0 12px 0; font-size:18px; color:#ffffff; font-weight:600;">⬇ {len(newly_below)} Crossed Below</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+          <tr style="color:#888; font-size:12px; text-transform:uppercase;">
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Ticker</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Name</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Below</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">RSI</td>
+          </tr>
+          {below_rows}
+        </table>"""
+
+    recovered_section = ""
+    if newly_recovered:
+        recovered_section = f"""
+        <p style="margin:24px 0 12px 0; font-size:18px; color:#ffffff; font-weight:600;">⬆ {len(newly_recovered)} Recovered Above</p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+          <tr style="color:#888; font-size:12px; text-transform:uppercase;">
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Ticker</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Name</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Above</td>
+          </tr>
+          {recovered_rows}
+        </table>"""
+
+    subject = f"Weekly Signal Report — {date_display}"
+
+    # Send individually so each person gets their own unsubscribe link
+    print(f"\n  📧 Sending weekly email to {len(subscribers)} subscribers...")
+
+    server = smtplib.SMTP_SSL('smtp.zoho.com', 465)
+    server.login(zoho_email, zoho_password)
+
+    sent = 0
+    failed = 0
+    for recipient in subscribers:
+        unsub_url = f"https://mungbeans.io/.netlify/functions/unsubscribe?email={urllib.parse.quote(recipient)}"
+
+        html = f"""<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0; padding:0; background-color:#0f0f1a; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0f0f1a; padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
+        <tr><td style="padding:0 0 24px 0;">
+          <span style="font-family:monospace; font-size:28px; font-weight:bold; color:#e2b714;">m</span>
+          <span style="font-family:sans-serif; font-size:18px; color:#888; margin-left:8px;">mungbeans.io</span>
+        </td></tr>
+        <tr><td style="color:#e0e0e0; font-size:16px; line-height:1.6;">
+          <p style="margin:0 0 8px 0; font-size:22px; color:#ffffff; font-weight:600;">Weekly Signal Report</p>
+          <p style="margin:0 0 20px 0; color:#888; font-size:14px;">{date_display} — 200-week moving average crossings</p>
+          {below_section}
+          {recovered_section}
+          <p style="margin:28px 0 0 0;">
+            <a href="{post_url}" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">View Full Report →</a>
+          </p>
+        </td></tr>
+        <tr><td style="padding:40px 0 0 0; border-top:1px solid #2a2a3e; margin-top:40px;">
+          <p style="color:#666; font-size:13px; margin:20px 0 0 0;">
+            You're receiving this because you signed up at mungbeans.io.<br>
+            <a href="{unsub_url}" style="color:#888;">Unsubscribe</a>
+          </p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>"""
+
+        msg = MIMEMultipart('alternative')
+        msg['From'] = f'"mungbeans.io" <{zoho_email}>'
+        msg['To'] = recipient
+        msg['Subject'] = subject
+        msg['List-Unsubscribe'] = f'<{unsub_url}>'
+        msg['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click'
+        msg.attach(MIMEText(html, 'html'))
+
+        try:
+            server.sendmail(zoho_email, recipient, msg.as_string())
+            sent += 1
+        except Exception as e:
+            print(f"    ❌ Failed to send to {recipient}: {e}")
+            failed += 1
+
+        # Small delay to avoid rate limits
+        if sent % 10 == 0:
+            time.sleep(1)
+
+    server.quit()
+    print(f"  📧 Sent: {sent}, Failed: {failed}")
 
 
 if __name__ == '__main__':
