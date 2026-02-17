@@ -1,7 +1,7 @@
 ---
 title: "Nike (NKE): Deep Value or Value Trap?"
-date: 2026-02-08
-draft: true
+date: 2026-02-16
+draft: false
 tags: ["deep-dive", "value-trap-analysis", "consumer-discretionary", "NKE"]
 description: "A forensic value analysis of Nike after four consecutive years of stock declines. Tariffs, China weakness, and rising competition from Hoka and On have crushed the stock — but insiders are buying heavily. We apply our five-layer screening framework."
 ticker: "NKE"
