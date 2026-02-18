@@ -1061,3 +1061,9 @@ main {
 .post-nav a:hover {
   text-decoration: underline;
 }
+
+/* Volume Indicators */
+.low-volume { color: #2563eb; }
+.high-volume { color: #f59e0b; font-weight: bold; }
+.accumulation { color: #16a34a; }
+.distribution { color: #dc2626; }

@@ -135,6 +135,22 @@
           {{ if lt .Params.rsi_14 30.0 }} 📉{{ end }}
         </span>
       </div>
+      {{ with .Params.rvol_14 }}
+      <div class="metric">
+        <span class="metric-label">Rel. Volume (14w)</span>
+        <span class="metric-value {{ if lt . 0.5 }}low-volume{{ else if gt . 2.0 }}high-volume{{ end }}">
+          {{ printf "%.1fx" . }}
+        </span>
+      </div>
+      {{ end }}
+      {{ with .Params.accumulation_ratio }}
+      <div class="metric">
+        <span class="metric-label">Accum. Ratio (14w)</span>
+        <span class="metric-value {{ if gt . 1.5 }}accumulation{{ else if lt . 0.7 }}distribution{{ end }}">
+          {{ printf "%.2f" . }}
+        </span>
+      </div>
+      {{ end }}
     </div>
 
     <!-- Stock Analysis Prose -->
@@ -161,6 +177,25 @@
           The 14-week RSI sits at {{ printf "%.0f" .Params.rsi_14 }}, indicating neutral momentum.
         {{- end }}
       </p>
+
+      {{/* === Volume Analysis === */}}
+      {{ if .Params.rvol_14 }}
+      <p>
+        {{ if eq .Params.volume_signal "quiet_accumulation" }}
+          Volume has dried up to {{ printf "%.1fx" .Params.rvol_14 }} of its 14-week average, but what volume exists is skewing toward up-weeks (accumulation ratio {{ printf "%.2f" .Params.accumulation_ratio }}). This quiet accumulation pattern — where sellers have exhausted themselves while buyers nibble — often precedes meaningful price moves.
+        {{ else if eq .Params.volume_signal "capitulation" }}
+          This week saw {{ printf "%.1fx" .Params.rvol_14 }} normal volume on a down week — a potential capitulation signal. High-volume selloffs can mark the end of a decline as the last reluctant holders finally exit.
+        {{ else if eq .Params.volume_signal "breakout_volume" }}
+          Volume surged to {{ printf "%.1fx" .Params.rvol_14 }} of normal on a green week. This kind of high-conviction buying often signals a trend change, especially when a stock is already below its 200-week moving average.
+        {{ else if eq .Params.volume_signal "distribution" }}
+          The accumulation ratio sits at {{ printf "%.2f" .Params.accumulation_ratio }}, meaning down-weeks are carrying more volume than up-weeks. Sellers remain in control, and the decline may not be over yet.
+        {{ else if eq .Params.volume_signal "accumulation" }}
+          The accumulation ratio of {{ printf "%.2f" .Params.accumulation_ratio }} shows more volume on up-weeks than down-weeks over the past 14 weeks — a sign that buyers are showing more conviction than sellers.
+        {{ else }}
+          Volume is running at {{ printf "%.1fx" .Params.rvol_14 }} of its 14-week average{{ with .Params.accumulation_ratio }} with an accumulation ratio of {{ printf "%.2f" . }}{{ end }}, both in the neutral range.
+        {{ end }}
+      </p>
+      {{ end }}
 
       {{/* === Paragraph 2: Historical Touch Context === */}}
       {{ if gt .Params.touch_count 0 }}

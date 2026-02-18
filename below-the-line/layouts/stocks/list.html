@@ -87,6 +87,7 @@
           <button class="filter-btn diluter-btn" data-filter-group="special" data-filter="diluter" title="Growing share count by 2%+ over 3 years">⚠️ Diluters</button>
           <button class="filter-btn insider-btn" data-filter-group="special" data-filter="insider-below" title="Insider conviction buys ($500K+) while below 200WMA">🔍 Insider Buying</button>
           <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow growing while below 200WMA">📈 FCF Growing</button>
+          <button class="filter-btn accumulation-btn" data-filter-group="special" data-filter="quiet-accum" title="Low relative volume + accumulation ratio > 1.2 while below 200WMA">🔇 Quiet Accumulation</button>
         </div>
       </div>
       
@@ -182,6 +183,17 @@
       <p class="info-note">"Insiders might sell their shares for any number of reasons, but they buy them for only one: they think the price will rise." — Peter Lynch</p>
     </div>
     
+    <div id="quietAccumInfo" class="info-box accumulation-info" style="display: none;">
+      <strong>🔇 Quiet Accumulation</strong>
+      <p>Stocks below the 200-week line where volume is drying up and what remains skews toward up-weeks:</p>
+      <ul>
+        <li>Relative Volume &lt; 0.5x — sellers may be exhausted</li>
+        <li>Accumulation Ratio &gt; 1.2 — buyers show more conviction on green weeks</li>
+        <li>Below 200-week moving average — stock is already at a discount</li>
+      </ul>
+      <p class="info-note">Quiet accumulation often precedes a meaningful move. The combination of drying volume and buyer conviction is a setup worth watching.</p>
+    </div>
+
     <div id="fcfGrowingInfo" class="info-box fcf-growing-info" style="display: none;">
       <strong>📈 Growing Free Cash Flow + Below Line</strong>
       <p>The business is generating more cash while the stock price is depressed:</p>
@@ -231,6 +243,14 @@
             FCF% <span class="sort-icon">↕</span>
             <span class="col-tooltip">Free Cash Flow Yield — how much free cash flow you get per dollar of market cap. Above 5% is attractive. This is the real cash the business generates after paying for operations and equipment.</span>
           </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="rvol">
+            RVOL <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Relative Volume — this week's volume vs 14-week average. Below 0.5x = unusually quiet. Above 2x = something happening.</span>
+          </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="accum">
+            Accum. <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Accumulation Ratio — avg volume on up-weeks / avg volume on down-weeks over 14 weeks. Above 1.5 = buyers dominating. Below 0.7 = sellers dominating.</span>
+          </th>
           <th class="hide-tablet">Sector</th>
         </tr>
       </thead>
@@ -274,7 +294,10 @@
             data-wow="{{ .wow_change }}"
             data-recovering="{{ and .below_line (not .approaching) }}"
             data-shares="{{ if .shares_change_3yr }}{{ .shares_change_3yr }}{{ else }}0{{ end }}"
-            data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}">
+            data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}"
+            data-rvol="{{ if .rvol_14 }}{{ .rvol_14 }}{{ else }}-999{{ end }}"
+            data-accum="{{ if .accumulation_ratio }}{{ .accumulation_ratio }}{{ else }}-999{{ end }}"
+            data-quiet-accum="{{ if and .below_line .rvol_14 .accumulation_ratio }}{{ if and (lt .rvol_14 0.5) (gt .accumulation_ratio 1.2) }}true{{ else }}false{{ end }}{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
             {{ if .buffett_below_line }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
@@ -326,6 +349,12 @@
           </td>
           <td class="mono hide-mobile {{ if .fcf_yield }}{{ if gt .fcf_yield 5.0 }}high-fcf{{ else if gt .fcf_yield 0.0 }}ok-fcf{{ else }}neg-fcf{{ end }}{{ end }}">
             {{ if .fcf_yield }}{{ printf "%.1f%%" .fcf_yield }}{{ else }}—{{ end }}
+          </td>
+          <td class="mono hide-mobile {{ if .rvol_14 }}{{ if lt .rvol_14 0.5 }}low-volume{{ else if gt .rvol_14 2.0 }}high-volume{{ end }}{{ end }}">
+            {{ if .rvol_14 }}{{ printf "%.1fx" .rvol_14 }}{{ else }}—{{ end }}
+          </td>
+          <td class="mono hide-mobile {{ if .accumulation_ratio }}{{ if gt .accumulation_ratio 1.5 }}accumulation{{ else if lt .accumulation_ratio 0.7 }}distribution{{ end }}{{ end }}">
+            {{ if .accumulation_ratio }}{{ printf "%.2f" .accumulation_ratio }}{{ else }}—{{ end }}
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
@@ -400,7 +429,8 @@
       cannibal: document.getElementById('cannibalInfo'),
       diluter: document.getElementById('diluterInfo'),
       'insider-below': document.getElementById('insiderBelowInfo'),
-      'fcf-growing': document.getElementById('fcfGrowingInfo')
+      'fcf-growing': document.getElementById('fcfGrowingInfo'),
+      'quiet-accum': document.getElementById('quietAccumInfo')
     };
     
     // Populate sector dropdown
@@ -515,6 +545,7 @@
           else if (filters.special === 'diluter') show = row.dataset.diluter === 'true';
           else if (filters.special === 'insider-below') show = row.dataset.insiderBelow === 'true';
           else if (filters.special === 'fcf-growing') show = row.dataset.fcfGrowingBelow === 'true';
+          else if (filters.special === 'quiet-accum') show = row.dataset.quietAccum === 'true';
         }
         
         // Sector
@@ -548,7 +579,7 @@
         if (column === 'symbol') {
           return direction === 'asc' ? a.dataset.symbol.localeCompare(b.dataset.symbol) : b.dataset.symbol.localeCompare(a.dataset.symbol);
         }
-        const map = { distance: 'distance', rsi: 'rsi', roe: 'roe', debt: 'debt', shares: 'shares', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
+        const map = { distance: 'distance', rsi: 'rsi', rvol: 'rvol', accum: 'accum', roe: 'roe', debt: 'debt', shares: 'shares', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
         aVal = parseFloat(a.dataset[map[column]]) || 0;
         bVal = parseFloat(b.dataset[map[column]]) || 0;
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
@@ -579,6 +610,8 @@
         'insider-below': { group: 'special', filter: 'insider-below' },
         'insider': { group: 'special', filter: 'insider-below' },
         'fcf-growing': { group: 'special', filter: 'fcf-growing' },
+        'quiet-accum': { group: 'special', filter: 'quiet-accum' },
+        'quiet_accum': { group: 'special', filter: 'quiet-accum' },
         'sp500': { group: 'quality', filter: 'sp500' },
         'proven': { group: 'quality', filter: 'proven' },
         'lowdebt': { group: 'quality', filter: 'lowdebt' },

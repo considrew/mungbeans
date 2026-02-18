@@ -141,6 +141,9 @@
                 {{ if eq .fcf_trend "declining" }}<span class="flag flag-warning">⚠️ FCF Declining</span>{{ end }}
                 {{ if lt .rsi_14 30.0 }}<span class="flag flag-caution">📉 RSI {{ printf "%.0f" .rsi_14 }} (Oversold)</span>{{ end }}
                 {{ if and (gt .touch_count 2) (lt .avg_return_after_touch 5.0) }}<span class="flag flag-warning">🔄 Frequent Crosser — Weak Recoveries</span>{{ end }}
+                {{ if eq .volume_signal "quiet_accumulation" }}<span class="flag flag-positive">🔇 Quiet Accumulation</span>{{ end }}
+                {{ if eq .volume_signal "distribution" }}<span class="flag flag-warning">📉 Distribution</span>{{ end }}
+                {{ if eq .volume_signal "capitulation" }}<span class="flag flag-caution">💥 Capitulation Volume</span>{{ end }}
               </div>
               {{ if not (or .buffett_quality .dividend_aristocrat .yartseva_candidate .has_conviction_buy (eq .fcf_trend "growing") (gt .fcf_yield 5.0)) }}
               <p class="no-flags">No quality flags detected. This stock crossed below the line without any of our positive quality signals — approach with extra caution.</p>

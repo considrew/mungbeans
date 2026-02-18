@@ -2954,6 +2954,14 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     df['wow_change'] = df['pct_from_wma'] - df['pct_from_wma'].shift(1)
     df['RSI_14'] = calculate_rsi(df['adjusted_close'], periods=14)
     
+    # --- Volume Indicators ---
+    # Relative Volume: current week's volume vs 14-week average
+    df['vol_avg_14'] = df['volume'].rolling(window=14, min_periods=7).mean()
+    df['rvol_14'] = df['volume'] / df['vol_avg_14']
+    
+    # Accumulation Ratio: avg volume on up-weeks / avg volume on down-weeks (14-week window)
+    df['week_green'] = df['close'] > df['close'].shift(1)  # Close > prior week's close
+    
     df_complete = df.dropna(subset=['WMA_200'])
     if len(df_complete) == 0:
         print(f"  ✗ {symbol}: No valid WMA data")
@@ -3013,6 +3021,32 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
     avg_return = round(sum(returns) / len(returns), 1) if returns else None
     avg_weeks = round(sum(t['weeks_below'] for t in historical_touches) / len(historical_touches), 1) if historical_touches else None
     
+    # --- Volume signal computation ---
+    rvol_val = round(float(latest['rvol_14']), 2) if pd.notna(latest.get('rvol_14')) else None
+    
+    # Accumulation ratio: avg volume on up-weeks / avg volume on down-weeks over last 14 weeks
+    last_14 = df_complete.tail(14)
+    up_weeks = last_14[last_14['week_green'] == True]
+    down_weeks = last_14[last_14['week_green'] == False]
+    avg_up_vol = up_weeks['volume'].mean() if len(up_weeks) > 0 else 0
+    avg_down_vol = down_weeks['volume'].mean() if len(down_weeks) > 0 else 0
+    accum_ratio = round(float(avg_up_vol / avg_down_vol), 2) if avg_down_vol > 0 else None
+    
+    # Determine volume signal
+    week_was_green = bool(last_14.iloc[-1]['week_green']) if len(last_14) > 0 else None
+    if rvol_val is not None and rvol_val < 0.5 and accum_ratio is not None and accum_ratio > 1.2:
+        volume_signal = 'quiet_accumulation'
+    elif rvol_val is not None and rvol_val > 2.0 and week_was_green is False:
+        volume_signal = 'capitulation'
+    elif rvol_val is not None and rvol_val > 2.0 and week_was_green is True:
+        volume_signal = 'breakout_volume'
+    elif accum_ratio is not None and accum_ratio < 0.7:
+        volume_signal = 'distribution'
+    elif accum_ratio is not None and accum_ratio > 1.5:
+        volume_signal = 'accumulation'
+    else:
+        volume_signal = 'neutral'
+    
     # Combo flags (quality + below line = golden opportunities)
     below = pct < 0
     yartseva_below_line = bool(fundamentals['yartseva_candidate'] and below)
@@ -3030,6 +3064,10 @@ def calculate_stock_signals(symbol: str, spy_monthly: pd.Series = None) -> Optio
         'pct_from_wma': round(float(latest['pct_from_wma']), 2),
         'wow_change': round(float(latest['wow_change']), 2) if pd.notna(latest['wow_change']) else 0.0,
         'rsi_14': round(float(latest['RSI_14']), 1) if pd.notna(latest['RSI_14']) else 50.0,
+        # Volume indicators
+        'rvol_14': rvol_val,
+        'accumulation_ratio': accum_ratio,
+        'volume_signal': volume_signal,
         'below_line': bool(latest['adjusted_close'] < latest['WMA_200']),
         'approaching': bool(float(latest['wow_change']) < 0) if pd.notna(latest['wow_change']) else False,
         'zone': zone,
@@ -3258,6 +3296,9 @@ description: "Weekly updates on stocks crossing their 200-week moving average."
             lines.append(f'    pct_below: {abs(s["pct_from_wma"]):.1f}')
             lines.append(f'    wma_200: {s["wma_200"]:.2f}')
             lines.append(f'    rsi_14: {s.get("rsi_14") or 0:.1f}')
+            lines.append(f'    rvol_14: {s.get("rvol_14") or 0:.1f}')
+            lines.append(f'    accumulation_ratio: {s.get("accumulation_ratio") or 0:.2f}')
+            lines.append(f'    volume_signal: "{s.get("volume_signal") or "neutral"}"')
             lines.append(f'    touch_count: {s.get("touch_count") or 0}')
             lines.append(f'    avg_return_after_touch: {s.get("avg_return_after_touch") or 0:.1f}')
             lines.append(f'    buffett_quality: {str(bool(s.get("buffett_quality", False))).lower()}')
