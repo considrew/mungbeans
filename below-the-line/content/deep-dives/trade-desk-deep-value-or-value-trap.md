@@ -1,7 +1,7 @@
 ---
 title: "The Trade Desk (TTD): Deep Value or Value Trap?"
-date: 2026-02-08
-draft: true
+date: 2026-02-17
+draft: false
 tags: ["deep-dive", "value-trap-analysis", "ad-tech", "TTD"]
 description: "A forensic value analysis of The Trade Desk after a 78% collapse from its highs. We apply our five-layer screening framework to determine whether the leading independent demand-side platform is a broken stock or a broken business."
 ticker: "TTD"
@@ -68,7 +68,7 @@ Revenue per employee is strong for a company of approximately 3,500 people gener
 
 ## Layer 4: Structural Fragility — What Could Kill This Business?
 
-This is where the analysis gets interesting — and where your specific question about customer entrenchment matters most.
+This is where the analysis gets interesting.
 
 ### Customer Retention and Switching Costs
 
@@ -130,9 +130,6 @@ CEO Jeff Green sold approximately 278,000 shares over the past 90 days. No meani
 
 Institutional ownership remains at approximately 77%, though hedge funds have been trimming positions. Cathie Wood's ARK ETF has been a notable seller. Institutional interest is high but not increasing at these prices.
 
-### Short Interest
-
-Short interest data is limited, but the stock's steep decline suggests skeptics have been rewarded.
 
 ### Analyst Consensus
 
@@ -187,7 +184,7 @@ The 95%+ customer retention rate is the most important number in this analysis. 
 
 At 14x forward earnings with a PEG of 0.47, the valuation has gone from absurdly expensive to arguably cheap for a high-quality, asset-light growth business. But the leadership instability and lack of insider buying make it harder to pound the table.
 
-This is not like [PayPal](/deep-dives/paypal-deep-value-or-value-trap/) or [Adobe](/deep-dives/adobe-deep-value-or-value-trap/) where management is actively buying shares at depressed prices and the businesses generate enormous free cash flow. TTD's insiders are selling, not buying — and that matters.
+This is not like [PayPal](/deep-dives/paypal-deep-value-or-value-trap/) where management is actively buying shares at depressed prices and the businesses generate enormous free cash flow. TTD's insiders are selling, not buying — and that matters.
 
 **Position sizing discipline is essential.** The upside if growth reaccelerates is significant (analysts see 100% upside to fair value). The downside if Amazon captures more share and growth continues slowing is that a 30x trailing P/E can compress further. A small, starter position with room to add on execution proof feels appropriate.
 
@@ -253,7 +250,7 @@ The Feb 25, 2026 earnings report is binary. A strong Q4 beat with solid 2026 gui
 | Analyst consensus target | ~$66-75 | +144-177% |
 | Full re-rating (40x normalized EPS) | ~$100 | +270% |
 
-The widest range of the four stocks. 33-56% downside to the floor vs. 144-270% upside to recovery scenarios. TTD is the highest-risk, highest-reward name in this series. It's in uncharted territory below its 200WMA, which means historical patterns are less useful for gauging the floor. But if growth holds and the multiple normalizes even partially, the upside is massive.
+33-56% downside to the floor vs. 144-270% upside to recovery scenarios. TTD is the highest-risk, highest-reward name in this series. It's in uncharted territory below its 200WMA, which means historical patterns are less useful for gauging the floor. But if growth holds and the multiple normalizes even partially, the upside is massive.
 
 ---
 
