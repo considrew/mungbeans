@@ -253,6 +253,14 @@ main {
   display: block;
   font-size: 0.875rem;
   color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
+.metric-subtitle {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  opacity: 0.7;
   margin-bottom: var(--space-xs);
 }
 
@@ -1067,3 +1075,41 @@ main {
 .high-volume { color: #f59e0b; font-weight: bold; }
 .accumulation { color: #16a34a; }
 .distribution { color: #dc2626; }
+
+/* FAQ Section */
+.stock-faq {
+  margin: var(--space-xl) 0;
+}
+
+.stock-faq h2 {
+  margin-bottom: var(--space-md);
+}
+
+.stock-faq details {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  background: var(--color-surface);
+}
+
+.stock-faq summary {
+  padding: var(--space-md);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.stock-faq summary:hover {
+  color: var(--color-link);
+}
+
+.stock-faq details[open] summary {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stock-faq details p {
+  padding: var(--space-md);
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}

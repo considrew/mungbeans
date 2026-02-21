@@ -42,6 +42,40 @@
   }
   </script>
   
+  <!-- FAQ Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is {{ .Params.symbol }} below its 200-week moving average?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ if .Params.below_line }}Yes. As of {{ .Params.last_updated }}, {{ .Params.name }} is trading {{ printf \"%.1f%%\" (math.Abs .Params.pct_from_wma) }} below its 200-week moving average of ${{ printf \"%.2f\" .Params.wma_200 }}.{{ else }}No. {{ .Params.name }} is currently {{ printf \"%.1f%%\" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf \"%.2f\" .Params.wma_200 }}.{{ end }}"
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is {{ .Params.symbol }}'s 200-week moving average price?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ .Params.name }}'s 200-week moving average is ${{ printf \"%.2f\" .Params.wma_200 }} as of {{ .Params.last_updated }}."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is {{ .Params.symbol }} a good value right now?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ if .Params.below_line }}{{ .Params.symbol }} is below its 200-week moving average, which is the starting point for value analysis.{{ else }}{{ .Params.symbol }} is above its 200-week moving average, so it does not currently meet the primary signal.{{ end }}{{ if .Params.rsi_14 }} RSI is {{ printf \"%.0f\" .Params.rsi_14 }}.{{ end }}{{ if .Params.fcf_yield }}{{ if gt .Params.fcf_yield 0.0 }} FCF yield is {{ printf \"%.1f%%\" .Params.fcf_yield }}.{{ end }}{{ end }} This is not financial advice."
+        }
+      }
+    ]
+  }
+  </script>
+  
   <link rel="stylesheet" href="/css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3" defer></script>
@@ -138,16 +172,20 @@
       {{ with .Params.rvol_14 }}
       <div class="metric">
         <span class="metric-label">Rel. Volume (14w)</span>
+        <span class="metric-subtitle">This week's trading vs. the 14-week average</span>
         <span class="metric-value {{ if lt . 0.5 }}low-volume{{ else if gt . 2.0 }}high-volume{{ end }}">
           {{ printf "%.1fx" . }}
+          {{ if lt . 0.5 }} — Quiet{{ else if gt . 2.0 }} — Surging{{ end }}
         </span>
       </div>
       {{ end }}
       {{ with .Params.accumulation_ratio }}
       <div class="metric">
-        <span class="metric-label">Accum. Ratio (14w)</span>
+        <span class="metric-label">Buyers vs. Sellers (14w)</span>
+        <span class="metric-subtitle">Are up-weeks or down-weeks getting more volume?</span>
         <span class="metric-value {{ if gt . 1.5 }}accumulation{{ else if lt . 0.7 }}distribution{{ end }}">
           {{ printf "%.2f" . }}
+          {{ if gt . 1.5 }} — Buyers winning{{ else if lt . 0.7 }} — Sellers winning{{ end }}
         </span>
       </div>
       {{ end }}
@@ -182,17 +220,17 @@
       {{ if .Params.rvol_14 }}
       <p>
         {{ if eq .Params.volume_signal "quiet_accumulation" }}
-          Volume has dried up to {{ printf "%.1fx" .Params.rvol_14 }} of its 14-week average, but what volume exists is skewing toward up-weeks (accumulation ratio {{ printf "%.2f" .Params.accumulation_ratio }}). This quiet accumulation pattern — where sellers have exhausted themselves while buyers nibble — often precedes meaningful price moves.
+          Trading activity has gone quiet — just {{ printf "%.1fx" .Params.rvol_14 }} of its usual 14-week average. But the buying that is happening outweighs the selling ({{ printf "%.2f" .Params.accumulation_ratio }} buyers-vs-sellers ratio). When volume dries up but buyers are still showing up more than sellers, it can mean the worst of the selling is over and the stock is quietly building a floor.
         {{ else if eq .Params.volume_signal "capitulation" }}
-          This week saw {{ printf "%.1fx" .Params.rvol_14 }} normal volume on a down week — a potential capitulation signal. High-volume selloffs can mark the end of a decline as the last reluctant holders finally exit.
+          A big spike in selling this week — {{ printf "%.1fx" .Params.rvol_14 }} the usual volume, and the price dropped. Sometimes this kind of heavy selling marks the end of a decline. The idea is that the last reluctant holders have finally sold, leaving fewer sellers left to push the price lower.
         {{ else if eq .Params.volume_signal "breakout_volume" }}
-          Volume surged to {{ printf "%.1fx" .Params.rvol_14 }} of normal on a green week. This kind of high-conviction buying often signals a trend change, especially when a stock is already below its 200-week moving average.
+          A big jump in activity this week — {{ printf "%.1fx" .Params.rvol_14 }} the usual volume, and the price went up. Significantly more people than usual decided to buy. This kind of surge, especially on a stock already below its 200-week average, can be an early sign that sentiment is shifting.
         {{ else if eq .Params.volume_signal "distribution" }}
-          The accumulation ratio sits at {{ printf "%.2f" .Params.accumulation_ratio }}, meaning down-weeks are carrying more volume than up-weeks. Sellers remain in control, and the decline may not be over yet.
+          Over the past 14 weeks, down-weeks have had more trading volume than up-weeks ({{ printf "%.2f" .Params.accumulation_ratio }} buyers-vs-sellers ratio). That means when people are active, they're more often selling than buying. Sellers are still more in control than buyers.
         {{ else if eq .Params.volume_signal "accumulation" }}
-          The accumulation ratio of {{ printf "%.2f" .Params.accumulation_ratio }} shows more volume on up-weeks than down-weeks over the past 14 weeks — a sign that buyers are showing more conviction than sellers.
+          Over the past 14 weeks, up-weeks have carried more volume than down-weeks ({{ printf "%.2f" .Params.accumulation_ratio }} buyers-vs-sellers ratio). When trading picks up, it's more often on days the price is rising — buyers are showing more interest than sellers.
         {{ else }}
-          Volume is running at {{ printf "%.1fx" .Params.rvol_14 }} of its 14-week average{{ with .Params.accumulation_ratio }} with an accumulation ratio of {{ printf "%.2f" . }}{{ end }}, both in the neutral range.
+          Trading volume is running at {{ printf "%.1fx" .Params.rvol_14 }} of its 14-week average, which is in the normal range. The balance between buying and selling volume ({{ printf "%.2f" .Params.accumulation_ratio }} ratio) is neutral — neither side is clearly dominating.
         {{ end }}
       </p>
       {{ end }}
@@ -694,6 +732,83 @@
       <p>{{ .Params.symbol }} has not crossed below its 200-week moving average in the available data ({{ .Params.data_weeks }} weeks).</p>
     </section>
     {{ end }}
+
+    <!-- FAQ Section -->
+    <section class="stock-faq">
+      <h2>Frequently Asked Questions</h2>
+
+      <details>
+        <summary>Is {{ .Params.symbol }} below its 200-week moving average?</summary>
+        <p>
+          {{ if .Params.below_line -}}
+            Yes. As of {{ .Params.last_updated }}, {{ .Params.name }} ({{ .Params.symbol }}) is trading {{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} below its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}. The current price is ${{ printf "%.2f" .Params.close }}.
+          {{- else -}}
+            No. {{ .Params.name }} ({{ .Params.symbol }}) is currently {{ printf "%.1f%%" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}. It would need to fall to ${{ printf "%.2f" .Params.buy_threshold }} to cross below the line.
+          {{- end }}
+        </p>
+      </details>
+
+      <details>
+        <summary>What is {{ .Params.symbol }}'s 200-week moving average price?</summary>
+        <p>
+          {{ .Params.name }}'s 200-week moving average is ${{ printf "%.2f" .Params.wma_200 }} as of {{ .Params.last_updated }}. This is the average weekly closing price over roughly the last 4 years, and it acts as a long-term trend line. When a stock drops below this level, it can signal that the price has fallen far enough from the long-term trend to attract value-oriented investors.
+        </p>
+      </details>
+
+      {{ if gt .Params.touch_count 0 }}
+      <details>
+        <summary>What happens when {{ .Params.symbol }} drops below its 200-week moving average?</summary>
+        <p>
+          {{ .Params.symbol }} has crossed below its 200-week moving average {{ .Params.touch_count }} time{{ if gt .Params.touch_count 1 }}s{{ end }} in our data.
+          {{ if .Params.avg_return_after_touch -}}
+            {{ if gt .Params.avg_return_after_touch 0.0 -}}
+              On average, buying at that moment produced a one-year return of {{ printf "+%.1f%%" .Params.avg_return_after_touch }}. These dips have historically been decent entry points.
+            {{- else -}}
+              The average one-year return after these crossings was {{ printf "%.1f%%" .Params.avg_return_after_touch }}, meaning the dips were not reliable buying signals for this particular stock.
+            {{- end }}
+          {{- end }}
+          {{ if .Params.avg_weeks_below }} These episodes lasted {{ printf "%.0f" .Params.avg_weeks_below }} weeks on average.{{ end }}
+        </p>
+      </details>
+      {{ end }}
+
+      <details>
+        <summary>Is {{ .Params.symbol }} a good value right now?</summary>
+        <p>
+          Here's what our data says about {{ .Params.symbol }} as of {{ .Params.last_updated }}:
+          {{ if .Params.below_line }}The stock is below its 200-week moving average, which is the starting point for our analysis.{{ else }}The stock is above its 200-week moving average, so it doesn't currently meet our primary signal.{{ end }}
+          {{ if .Params.rsi_14 }} The 14-week RSI is {{ printf "%.0f" .Params.rsi_14 }}{{ if lt .Params.rsi_14 30.0 }} (oversold){{ else if gt .Params.rsi_14 70.0 }} (overbought){{ end }}.{{ end -}}
+          {{ if .Params.fcf_yield }}{{ if gt .Params.fcf_yield 0.0 }} Free cash flow yield is {{ printf "%.1f%%" .Params.fcf_yield }}.{{ else }} Free cash flow is currently negative.{{ end }}{{ end -}}
+          {{ if .Params.roe }} Return on equity is {{ printf "%.1f%%" .Params.roe }}.{{ end -}}
+          {{ if .Params.price_to_book }} Price-to-book is {{ printf "%.1f" .Params.price_to_book }}x.{{ end }}
+          This is not a buy or sell recommendation — always do your own research.
+        </p>
+      </details>
+
+      {{ if .Params.growth_stock_total }}
+      <details>
+        <summary>How does {{ .Params.symbol }} compare to the S&amp;P 500?</summary>
+        <p>
+          Over the past {{ .Params.growth_years }} years, $100 invested in {{ .Params.symbol }} would have grown to ${{ printf "%.0f" (add 100 .Params.growth_stock_total) }}, compared to ${{ printf "%.0f" (add 100 .Params.growth_spy_total) }} for the S&amp;P 500. That's {{ printf "%.1f%%" .Params.growth_stock_annual }} annualized vs {{ printf "%.1f%%" .Params.growth_spy_annual }} for the index.
+          {{ if .Params.growth_beats_spy }}{{ .Params.symbol }} has outperformed the broader market over this period.{{ else }}{{ .Params.symbol }} has underperformed the broader market over this period.{{ end }}
+        </p>
+      </details>
+      {{ end }}
+
+      {{ if .Params.dividend_yield }}
+      <details>
+        <summary>Does {{ .Params.symbol }} pay a dividend?</summary>
+        <p>
+          {{ if gt .Params.dividend_yield 0.0 -}}
+            Yes. {{ .Params.name }} currently pays a dividend yield of {{ printf "%.2f%%" .Params.dividend_yield }}.
+            {{ if .Params.dividend_aristocrat }} It is also a Dividend Aristocrat, meaning it has raised its dividend for 25 or more consecutive years.{{ end }}
+          {{- else -}}
+            {{ .Params.name }} does not currently pay a dividend.
+          {{- end }}
+        </p>
+      </details>
+      {{ end }}
+    </section>
 
     <!-- Disclaimer -->
     <div class="disclaimer">
