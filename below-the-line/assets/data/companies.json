@@ -2089,6 +2089,11 @@
     "name": "Cellebrite DI Ltd.",
     "sector": "Technology - Digital Intelligence"
   },
+  "CLCO": {
+    "ir_url": "https://www.coolcompany.com/investors/",
+    "name": "Cool Company",
+    "sector": "Energy"
+  },
   "CLDT": {
     "ir_url": "https://www.chathamlodgingtrust.com/investors",
     "name": "Chatham Lodging Trust",
@@ -2183,6 +2188,11 @@
     "ir_url": "https://ir.cimpress.com",
     "name": "Cimpress plc",
     "sector": "Technology - Mass Customization"
+  },
+  "CMRE": {
+    "ir_url": "https://www.costamare.com/investors",
+    "name": "Costamare",
+    "sector": "Industrials"
   },
   "CMS": {
     "ir_url": "https://www.cmsenergy.com/investors",
@@ -3049,6 +3059,11 @@
     "name": "The Descartes Systems Group Inc.",
     "sector": "Technology - Software - Application"
   },
+  "DSX": {
+    "ir_url": "https://www.dianashippinginc.com/investors",
+    "name": "Diana Shipping",
+    "sector": "Industrials"
+  },
   "DT": {
     "ir_url": "https://ir.dynatrace.com",
     "name": "Dynatrace, Inc.",
@@ -3393,6 +3408,11 @@
     "ir_url": "https://investors.escotechnologies.com",
     "name": "ESCO Technologies Inc.",
     "sector": "Industrials - Utility Solutions"
+  },
+  "ESEA": {
+    "ir_url": "https://www.euroseas.gr/investor-relations.html",
+    "name": "Euroseas",
+    "sector": "Industrials"
   },
   "ESGR": {
     "ir_url": "https://investor.enstargroup.com",
@@ -3834,6 +3854,11 @@
     "name": "First Merchants Corporation",
     "sector": "Financial Services - Banks - Regional"
   },
+  "FRO": {
+    "ir_url": "https://www.frontlineplc.cy/investors",
+    "name": "Frontline",
+    "sector": "Energy"
+  },
   "FROG": {
     "ir_url": "https://www.jfrog.com/investors",
     "name": "JFrog Ltd.",
@@ -3933,6 +3958,11 @@
     "ir_url": "https://www.gladstoneinvestment.com",
     "name": "Gladstone Investment Corporation",
     "sector": "Financial Services - BDC"
+  },
+  "GASS": {
+    "ir_url": "https://www.stealthgas.com/investors",
+    "name": "StealthGas",
+    "sector": "Industrials"
   },
   "GATX": {
     "ir_url": "https://www.gatx.com/investors",
@@ -4309,6 +4339,11 @@
     "name": "GSK plc",
     "sector": "Healthcare - Pharmaceuticals"
   },
+  "GSL": {
+    "ir_url": "https://www.globalshiplease.com/investors",
+    "name": "Global Ship Lease",
+    "sector": "Industrials"
+  },
   "GTBIF": {
     "ir_url": "https://investors.gtigrows.com",
     "name": "Green Thumb Industries Inc.",
@@ -4368,6 +4403,11 @@
     "ir_url": "https://www.hanmi.com/investors",
     "name": "Hanmi Financial Corporation",
     "sector": "Financial Services - Banks - Regional"
+  },
+  "HAFN": {
+    "ir_url": "https://www.hafnia.com/investors",
+    "name": "Hafnia",
+    "sector": "Energy"
   },
   "HAIN": {
     "ir_url": "https://www.hain.com/investors",
@@ -5888,6 +5928,11 @@
     "ir_url": "https://ir.lowes.com",
     "name": "Lowe's Companies Inc.",
     "sector": "Consumer Discretionary - Home Improvement"
+  },
+  "LPG": {
+    "ir_url": "https://www.dorianlpg.com/investors",
+    "name": "Dorian LPG",
+    "sector": "Energy"
   },
   "LPLA": {
     "ir_url": "https://www.lpl.com/investors",
@@ -7729,6 +7774,11 @@
     "name": "Phibro Animal Health Corporation",
     "sector": "Healthcare - Drug Manufacturers - Specialty & Generic"
   },
+  "PANL": {
+    "ir_url": "https://www.pangaeals.com/investors",
+    "name": "Pangaea Logistics Solutions",
+    "sector": "Industrials"
+  },
   "PANW": {
     "ir_url": "https://investors.paloaltonetworks.com",
     "name": "Palo Alto Networks Inc.",
@@ -7748,6 +7798,11 @@
     "ir_url": "https://ir.uipath.com",
     "name": "UiPath Inc.",
     "sector": "Technology - Automation"
+  },
+  "PATI": {
+    "ir_url": "https://patriottrans.com/investors/",
+    "name": "Patriot Transportation Holding",
+    "sector": "Industrials"
   },
   "PATK": {
     "ir_url": "https://ir.patrickind.com/investors",
@@ -8619,6 +8674,11 @@
     "name": "Cassava Sciences, Inc.",
     "sector": "Healthcare - Neuroscience"
   },
+  "SB": {
+    "ir_url": "https://www.safebulkers.com/investors.html",
+    "name": "Safe Bulkers",
+    "sector": "Industrials"
+  },
   "SBAC": {
     "ir_url": "https://www.sbasite.com/investors",
     "name": "SBA Communications Corporation",
@@ -8693,6 +8753,11 @@
     "ir_url": "https://investors.stifel.com",
     "name": "Stifel Financial Corp.",
     "sector": "Financial Services - Investment Banking"
+  },
+  "SFL": {
+    "ir_url": "https://www.sflcorp.com/investors/",
+    "name": "SFL Corporation",
+    "sector": "Industrials"
   },
   "SFM": {
     "ir_url": "https://investors.sprouts.com",
@@ -9244,6 +9309,11 @@
     "name": "The TJX Companies Inc.",
     "sector": "Consumer Discretionary - Retail"
   },
+  "TK": {
+    "ir_url": "https://www.teekay.com/investors/",
+    "name": "Teekay Corporation",
+    "sector": "Energy"
+  },
   "TLN": {
     "ir_url": "https://talenenergy.investorroom.com/",
     "name": "Talen Energy Corporation",
@@ -9293,6 +9363,11 @@
     "ir_url": "https://www.teekaytankers.com/investors",
     "name": "Teekay Tankers Ltd.",
     "sector": "Industrials - Crude Tankers"
+  },
+  "TNP": {
+    "ir_url": "https://www.tenn.gr/en/investor-relations",
+    "name": "Tsakos Energy Navigation",
+    "sector": "Energy"
   },
   "TOL": {
     "ir_url": "https://investors.tollbrothers.com",
@@ -9353,6 +9428,11 @@
     "ir_url": "https://www.trimble.com/investors",
     "name": "Trimble Inc.",
     "sector": "Technology - Scientific & Technical Instruments"
+  },
+  "TRMD": {
+    "ir_url": "https://www.torm.com/investors/",
+    "name": "TORM",
+    "sector": "Energy"
   },
   "TRN": {
     "ir_url": "https://investors.trin.net",
