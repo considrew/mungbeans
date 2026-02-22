@@ -43,6 +43,13 @@
   </script>
   
   <!-- FAQ Schema -->
+  {{ $faqPct := "" }}
+  {{ $faqWma := printf "%.2f" .Params.wma_200 }}
+  {{ $faqRsi := "" }}
+  {{ $faqFcf := "" }}
+  {{ if .Params.below_line }}{{ $faqPct = printf "%.1f%%" (math.Abs .Params.pct_from_wma) }}{{ else }}{{ $faqPct = printf "%.1f%%" .Params.pct_from_wma }}{{ end }}
+  {{ with .Params.rsi_14 }}{{ $faqRsi = printf "%.0f" . }}{{ end }}
+  {{ with .Params.fcf_yield }}{{ if gt . 0.0 }}{{ $faqFcf = printf "%.1f%%" . }}{{ end }}{{ end }}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -53,7 +60,7 @@
         "name": "Is {{ .Params.symbol }} below its 200-week moving average?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "{{ if .Params.below_line }}Yes. As of {{ .Params.last_updated }}, {{ .Params.name }} is trading {{ printf \"%.1f%%\" (math.Abs .Params.pct_from_wma) }} below its 200-week moving average of ${{ printf \"%.2f\" .Params.wma_200 }}.{{ else }}No. {{ .Params.name }} is currently {{ printf \"%.1f%%\" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf \"%.2f\" .Params.wma_200 }}.{{ end }}"
+          "text": "{{ if .Params.below_line }}Yes. As of {{ .Params.last_updated }}, {{ .Params.name }} is trading {{ $faqPct }} below its 200-week moving average of ${{ $faqWma }}.{{ else }}No. {{ .Params.name }} is currently {{ $faqPct }} above its 200-week moving average of ${{ $faqWma }}.{{ end }}"
         }
       },
       {
@@ -61,7 +68,7 @@
         "name": "What is {{ .Params.symbol }}'s 200-week moving average price?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "{{ .Params.name }}'s 200-week moving average is ${{ printf \"%.2f\" .Params.wma_200 }} as of {{ .Params.last_updated }}."
+          "text": "{{ .Params.name }}'s 200-week moving average is ${{ $faqWma }} as of {{ .Params.last_updated }}."
         }
       },
       {
@@ -69,7 +76,7 @@
         "name": "Is {{ .Params.symbol }} a good value right now?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "{{ if .Params.below_line }}{{ .Params.symbol }} is below its 200-week moving average, which is the starting point for value analysis.{{ else }}{{ .Params.symbol }} is above its 200-week moving average, so it does not currently meet the primary signal.{{ end }}{{ if .Params.rsi_14 }} RSI is {{ printf \"%.0f\" .Params.rsi_14 }}.{{ end }}{{ if .Params.fcf_yield }}{{ if gt .Params.fcf_yield 0.0 }} FCF yield is {{ printf \"%.1f%%\" .Params.fcf_yield }}.{{ end }}{{ end }} This is not financial advice."
+          "text": "{{ if .Params.below_line }}{{ .Params.symbol }} is below its 200-week moving average, which is the starting point for value analysis.{{ else }}{{ .Params.symbol }} is above its 200-week moving average, so it does not currently meet the primary signal.{{ end }}{{ if $faqRsi }} RSI is {{ $faqRsi }}.{{ end }}{{ if $faqFcf }} FCF yield is {{ $faqFcf }}.{{ end }} This is not financial advice."
         }
       }
     ]
