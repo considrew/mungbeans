@@ -380,6 +380,310 @@
       {{ end }}
     </section>
 
+    <!-- Business Health Dashboard -->
+    {{ with .Params.health_chart }}
+    <section class="health-dashboard">
+      <h2>Business Health</h2>
+      <p class="health-desc">Annual financials — how the underlying business has performed over the past several years.</p>
+      <div class="health-grid">
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Cash Flow <span class="health-chart-sub">Free cash flow &amp; net income ($M)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthCashChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Revenue <span class="health-chart-sub">Annual revenue ($M) — business growth proxy</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthRevenueChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Total Debt <span class="health-chart-sub">Balance sheet debt ($M)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthDebtChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">ROIC <span class="health-chart-sub">Return on invested capital (%)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthRoicChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">FCF Yield <span class="health-chart-sub">Free cash flow / market cap (%) — Yartseva signal</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthFcfYieldChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Gross Margin <span class="health-chart-sub">Pricing power &amp; competitive moat (%)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthGrossMarginChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Shares Outstanding <span class="health-chart-sub">Buybacks vs dilution (millions)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthSharesChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script id="healthChartData" type="application/json">
+      {{ . | jsonify | safeHTML }}
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var raw = document.getElementById('healthChartData');
+      if (!raw) return;
+      var d = JSON.parse(raw.textContent);
+      if (typeof d === 'string') d = JSON.parse(d);
+      if (!d || !d.years || !d.years.length) return;
+
+      var labels = d.years.map(String);
+
+      // Shared chart defaults
+      var gridColor = 'rgba(255,255,255,0.06)';
+      var tickColor = '#8b949e';
+      var baseOpts = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 12, color: tickColor, font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+          y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } }
+        }
+      };
+
+      function nullToNaN(arr) { return (arr || []).map(function(v) { return v === null ? NaN : v; }); }
+
+      function barColor(val, positiveColor, negativeColor) {
+        if (!Array.isArray(val)) return positiveColor;
+        return val.map(function(v) { return (v !== null && v < 0) ? negativeColor : positiveColor; });
+      }
+
+      // --- Chart 1: Cash Flow (FCF + Net Income) ---
+      new Chart(document.getElementById('healthCashChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Free Cash Flow',
+              data: nullToNaN(d.fcf),
+              backgroundColor: barColor(d.fcf, 'rgba(35,134,54,0.75)', 'rgba(248,81,73,0.75)'),
+              borderColor:     barColor(d.fcf, '#2ea043', '#f85149'),
+              borderWidth: 1,
+              borderRadius: 3
+            },
+            {
+              label: 'Net Income',
+              data: nullToNaN(d.net_income),
+              backgroundColor: barColor(d.net_income, 'rgba(37,99,235,0.55)', 'rgba(248,81,73,0.45)'),
+              borderColor:     barColor(d.net_income, '#2563eb', '#f85149'),
+              borderWidth: 1,
+              borderRadius: 3
+            }
+          ]
+        },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // --- Chart 2: Revenue ---
+      new Chart(document.getElementById('healthRevenueChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Revenue',
+            data: nullToNaN(d.revenue),
+            backgroundColor: 'rgba(56,139,253,0.65)',
+            borderColor: '#388bfd',
+            borderWidth: 1,
+            borderRadius: 3
+          }]
+        },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // --- Chart 3: Total Debt ---
+      new Chart(document.getElementById('healthDebtChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Total Debt',
+            data: nullToNaN(d.total_debt),
+            backgroundColor: 'rgba(210,153,34,0.65)',
+            borderColor: '#d29922',
+            borderWidth: 1,
+            borderRadius: 3
+          }]
+        },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // --- Chart 4: ROIC ---
+      var roicColors = (d.roic || []).map(function(v) {
+        if (v === null) return 'rgba(139,148,158,0.4)';
+        if (v >= 15)   return 'rgba(35,134,54,0.75)';
+        if (v >= 8)    return 'rgba(210,153,34,0.75)';
+        return 'rgba(248,81,73,0.75)';
+      });
+      new Chart(document.getElementById('healthRoicChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'ROIC %',
+            data: nullToNaN(d.roic),
+            backgroundColor: roicColors,
+            borderColor: roicColors.map(function(c) { return c.replace('0.75','1').replace('0.4','0.6'); }),
+            borderWidth: 1,
+            borderRadius: 3
+          }]
+        },
+        options: (function() {
+          var o = JSON.parse(JSON.stringify(baseOpts));
+          o.scales.y.ticks.callback = function(v) { return v + '%'; };
+          // Reference lines at 8% and 15%
+          o.plugins.annotation = { annotations: {
+            line8:  { type: 'line', yMin: 8,  yMax: 8,  borderColor: 'rgba(210,153,34,0.5)', borderWidth: 1, borderDash: [4,4] },
+            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(35,134,54,0.5)',  borderWidth: 1, borderDash: [4,4] }
+          }};
+          return o;
+        })()
+      });
+
+      // --- Chart 5: FCF Yield ---
+      if (d.fcf_yield && d.fcf_yield.some(function(v) { return v !== null; })) {
+        var fcfYieldColors = (d.fcf_yield || []).map(function(v) {
+          if (v === null) return 'rgba(139,148,158,0.4)';
+          if (v >= 8)  return 'rgba(35,134,54,0.75)';
+          if (v >= 5)  return 'rgba(56,139,253,0.65)';
+          if (v >= 0)  return 'rgba(210,153,34,0.75)';
+          return 'rgba(248,81,73,0.75)';
+        });
+        new Chart(document.getElementById('healthFcfYieldChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'FCF Yield %',
+              data: nullToNaN(d.fcf_yield),
+              backgroundColor: fcfYieldColors,
+              borderColor: fcfYieldColors.map(function(c) { return c.replace('0.75','1').replace('0.65','1').replace('0.4','0.6'); }),
+              borderWidth: 1, borderRadius: 3
+            }]
+          },
+          options: (function() {
+            var o = JSON.parse(JSON.stringify(baseOpts));
+            o.scales.y.ticks.callback = function(v) { return v + '%'; };
+            o.plugins.annotation = { annotations: {
+              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(56,139,253,0.5)', borderWidth: 1, borderDash: [4,4] },
+              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(35,134,54,0.5)',  borderWidth: 1, borderDash: [4,4] }
+            }};
+            return o;
+          })()
+        });
+      }
+
+      // --- Chart 6: Gross Margin ---
+      if (d.gross_margin && d.gross_margin.some(function(v) { return v !== null; })) {
+        new Chart(document.getElementById('healthGrossMarginChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Gross Margin %',
+              data: nullToNaN(d.gross_margin),
+              backgroundColor: 'rgba(168,85,247,0.6)',
+              borderColor: '#a855f7',
+              borderWidth: 1, borderRadius: 3
+            }]
+          },
+          options: (function() {
+            var o = JSON.parse(JSON.stringify(baseOpts));
+            o.scales.y.ticks.callback = function(v) { return v + '%'; };
+            o.plugins.annotation = { annotations: {
+              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4], label: { display: false } }
+            }};
+            return o;
+          })()
+        });
+      }
+
+      // --- Chart 7: Shares Outstanding ---
+      if (d.shares && d.shares.some(function(v) { return v !== null; })) {
+        var sData = nullToNaN(d.shares);
+        // Color: green if declining (buybacks), red if growing (dilution)
+        var sColors = [];
+        for (var si = 0; si < sData.length; si++) {
+          if (si === 0 || isNaN(sData[si]) || isNaN(sData[si - 1])) {
+            sColors.push('rgba(56,139,253,0.65)');
+          } else if (sData[si] <= sData[si - 1]) {
+            sColors.push('rgba(35,134,54,0.75)');
+          } else {
+            sColors.push('rgba(248,81,73,0.65)');
+          }
+        }
+        new Chart(document.getElementById('healthSharesChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Shares (M)',
+              data: sData,
+              backgroundColor: sColors,
+              borderColor: sColors.map(function(c) { return c.replace('0.75','1').replace('0.65','1'); }),
+              borderWidth: 1, borderRadius: 3
+            }]
+          },
+          options: JSON.parse(JSON.stringify(baseOpts))
+        });
+      }
+    });
+    </script>
+
+    <style>
+      .health-dashboard { margin-bottom: var(--space-2xl); }
+      .health-dashboard h2 { font-size: 1.25rem; margin-bottom: var(--space-xs); }
+      .health-desc { color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--space-lg); }
+      .health-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+      }
+      .health-chart-wrap {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+      }
+      .health-chart-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--color-text);
+        margin: 0 0 var(--space-sm);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .health-chart-sub {
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: var(--color-text-muted);
+      }
+      .health-chart-container { position: relative; height: 180px; }
+      @media (max-width: 600px) {
+        .health-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+    {{ end }}
+
     <!-- Growth Chart: Stock vs S&P 500 -->
     {{ with .Params.growth_chart }}
     <section class="growth-chart-section">
