@@ -93,9 +93,9 @@
           <button class="filter-btn moat-btn" data-filter-group="special" data-filter="widemoat" title="Gross Margin > 40% + ROE > 15%">🏰 Wide Moat</button>
           <button class="filter-btn cannibal-btn" data-filter-group="special" data-filter="cannibal" title="Shrinking share count by 5%+ over 3 years">🦈 Cannibals</button>
           <button class="filter-btn diluter-btn" data-filter-group="special" data-filter="diluter" title="Growing share count by 2%+ over 3 years">⚠️ Diluters</button>
-          <button class="filter-btn insider-btn" data-filter-group="special" data-filter="insider-below" title="Insider conviction buys ($500K+) while below 200WMA">🔍 Insider Buying</button>
-          <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow growing while below 200WMA">📈 FCF Growing</button>
-          <button class="filter-btn accumulation-btn" data-filter-group="special" data-filter="quiet-accum" title="Low relative volume + accumulation ratio > 1.2 while below 200WMA">🔇 Quiet Accumulation</button>
+          <button class="filter-btn insider-btn" data-filter-group="special" data-filter="insider" title="Insider conviction buys ($500K+) in last 12 months">🔍 Insider Buying</button>
+          <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow trending upward">📈 FCF Growing</button>
+          <button class="filter-btn accumulation-btn" data-filter-group="special" data-filter="quiet-accum" title="Low relative volume + accumulation ratio > 1.2">🔇 Quiet Accumulation</button>
         </div>
       </div>
       
@@ -127,9 +127,9 @@
         <li>Market cap &lt; $2B (small caps dominated)</li>
         <li>FCF Yield &gt; 5% (cash generation matters most)</li>
         <li>Book-to-Market &gt; 0.40 (value pricing)</li>
-        <li>Positive equity + Below 200WMA (near lows)</li>
+        <li>Positive equity</li>
       </ul>
-      <p class="info-note">These meet quantitative criteria. Always verify improving margins and reinvestment quality.</p>
+      <p class="info-note">Combine with "Below Line" signal filter for the full Yartseva setup (near lows). Always verify improving margins and reinvestment quality.</p>
     </div>
     
     <div id="aristocratInfo" class="info-box aristocrat-info" style="display: none;">
@@ -139,9 +139,8 @@
         <li>Proven durability through multiple economic cycles</li>
         <li>Management committed to returning capital</li>
         <li>Usually have strong competitive moats</li>
-        <li>When below 200WMA = rare buying opportunity</li>
       </ul>
-      <p class="info-note">Aristocrats rarely go on sale. A 200WMA cross is often a generational entry point.</p>
+      <p class="info-note">Aristocrats rarely go on sale. Combine with "Below Line" signal filter to find generational entry points.</p>
     </div>
     
     <div id="moatInfo" class="info-box moat-info" style="display: none;">
@@ -180,36 +179,35 @@
     </div>
     
     <div id="insiderBelowInfo" class="info-box insider-below-info" style="display: none;">
-      <strong>🔍 Insider Buying + Below Line</strong>
-      <p>Corporate insiders making conviction purchases while the stock is below its 200-week MA:</p>
+      <strong>🔍 Insider Buying</strong>
+      <p>Corporate insiders making conviction purchases:</p>
       <ul>
         <li>Open-market purchases over $500K in the last 12 months</li>
         <li>Insiders have the deepest knowledge of a company's prospects</li>
-        <li>Buying with their own money while the market is pessimistic</li>
-        <li>One of the strongest combinations of signals on this site</li>
+        <li>Buying with their own money signals confidence</li>
+        <li>Combine with "Below Line" signal filter for the strongest setup</li>
       </ul>
       <p class="info-note">"Insiders might sell their shares for any number of reasons, but they buy them for only one: they think the price will rise." — Peter Lynch</p>
     </div>
     
     <div id="quietAccumInfo" class="info-box accumulation-info" style="display: none;">
       <strong>🔇 Quiet Accumulation</strong>
-      <p>Stocks below the 200-week line where volume is drying up and what remains skews toward up-weeks:</p>
+      <p>Stocks where volume is drying up and what remains skews toward up-weeks:</p>
       <ul>
         <li>Relative Volume &lt; 0.5x — sellers may be exhausted</li>
         <li>Accumulation Ratio &gt; 1.2 — buyers show more conviction on green weeks</li>
-        <li>Below 200-week moving average — stock is already at a discount</li>
+        <li>Combine with "Below Line" signal filter to find discounted setups</li>
       </ul>
       <p class="info-note">Quiet accumulation often precedes a meaningful move. The combination of drying volume and buyer conviction is a setup worth watching.</p>
     </div>
 
     <div id="fcfGrowingInfo" class="info-box fcf-growing-info" style="display: none;">
-      <strong>📈 Growing Free Cash Flow + Below Line</strong>
-      <p>The business is generating more cash while the stock price is depressed:</p>
+      <strong>📈 Growing Free Cash Flow</strong>
+      <p>The business is generating more cash every year:</p>
       <ul>
         <li>Free cash flow trending upward over recent years</li>
-        <li>Stock trading below its 200-week moving average</li>
-        <li>Suggests the market may be mispricing the business</li>
         <li>Growing FCF can fund buybacks, dividends, or debt paydown</li>
+        <li>Combine with "Below Line" signal filter to find mispriced businesses</li>
       </ul>
       <p class="info-note">A stock below the line with growing cash flow is a business getting healthier while the market looks the other way.</p>
     </div>
@@ -270,7 +268,7 @@
         {{ range .historical_touches }}
           {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
         {{ end }}
-        <tr class="stock-row zone-{{ .zone }}{{ if .buffett_below_line }} buffett-match{{ end }}{{ if .yartseva_below_line }} yartseva-match{{ end }}{{ if .aristocrat_below_line }} aristocrat-match{{ end }}{{ if .cannibal_below_line }} cannibal-match{{ end }}" 
+        <tr class="stock-row zone-{{ .zone }}{{ if .buffett_quality }} buffett-match{{ end }}{{ if .yartseva_candidate }} yartseva-match{{ end }}{{ if .dividend_aristocrat }} aristocrat-match{{ end }}{{ if .is_cannibal }} cannibal-match{{ end }}" 
             data-symbol="{{ .symbol }}"
             data-name="{{ .name }}"
             data-sector="{{ .sector }}"
@@ -292,26 +290,26 @@
             data-lowdebt="{{ if .low_debt }}true{{ else }}false{{ end }}"
             data-highroe="{{ if .high_roe }}true{{ else }}false{{ end }}"
             data-widemoat="{{ if .wide_moat }}true{{ else }}false{{ end }}"
-            data-buffett="{{ if .buffett_below_line }}true{{ else }}false{{ end }}"
-            data-yartseva="{{ if .yartseva_below_line }}true{{ else }}false{{ end }}"
-            data-aristocrat="{{ if .aristocrat_below_line }}true{{ else }}false{{ end }}"
-            data-cannibal="{{ if .cannibal_below_line }}true{{ else }}false{{ end }}"
+            data-buffett="{{ if .buffett_quality }}true{{ else }}false{{ end }}"
+            data-yartseva="{{ if .yartseva_candidate }}true{{ else }}false{{ end }}"
+            data-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}"
+            data-cannibal="{{ if .is_cannibal }}true{{ else }}false{{ end }}"
             data-diluter="{{ if .is_diluting }}true{{ else }}false{{ end }}"
-            data-insider-below="{{ if .insider_below_line }}true{{ else }}false{{ end }}"
-            data-fcf-growing-below="{{ if .fcf_growing_below_line }}true{{ else }}false{{ end }}"
+            data-insider="{{ if .has_conviction_buy }}true{{ else }}false{{ end }}"
+            data-fcf-growing="{{ if eq .fcf_trend "growing" }}true{{ else }}false{{ end }}"
             data-wow="{{ .wow_change }}"
             data-recovering="{{ and .below_line (not .approaching) }}"
             data-shares="{{ if .shares_change_3yr }}{{ .shares_change_3yr }}{{ else }}0{{ end }}"
             data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}"
             data-rvol="{{ if .rvol_14 }}{{ .rvol_14 }}{{ else }}-999{{ end }}"
             data-accum="{{ if .accumulation_ratio }}{{ .accumulation_ratio }}{{ else }}-999{{ end }}"
-            data-quiet-accum="{{ if and .below_line .rvol_14 .accumulation_ratio }}{{ if and (lt .rvol_14 0.5) (gt .accumulation_ratio 1.2) }}true{{ else }}false{{ end }}{{ else }}false{{ end }}">
+            data-quiet-accum="{{ if and .rvol_14 .accumulation_ratio }}{{ if and (lt .rvol_14 0.5) (gt .accumulation_ratio 1.2) }}true{{ else }}false{{ end }}{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
-            {{ if .buffett_below_line }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
-            {{ if .yartseva_below_line }}<span class="badge-inline yartseva-badge" title="Multibagger Candidate">🎯</span>{{ end }}
-            {{ if .aristocrat_below_line }}<span class="badge-inline aristocrat-badge" title="Dividend Aristocrat">👑</span>{{ end }}
-            {{ if .cannibal_below_line }}<span class="badge-inline cannibal-badge" title="Cannibal (Buybacks)">🦈</span>{{ end }}
+            {{ if .buffett_quality }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
+            {{ if .yartseva_candidate }}<span class="badge-inline yartseva-badge" title="Multibagger Candidate">🎯</span>{{ end }}
+            {{ if .dividend_aristocrat }}<span class="badge-inline aristocrat-badge" title="Dividend Aristocrat">👑</span>{{ end }}
+            {{ if .is_cannibal }}<span class="badge-inline cannibal-badge" title="Cannibal (Buybacks)">🦈</span>{{ end }}
             {{ if .name }}<span class="stock-name">{{ .name }}</span>{{ end }}
           </td>
           <td>
@@ -419,7 +417,7 @@
     
     // State
     let currentSort = { column: null, direction: 'asc' };
-    let filters = { signal: 'all', quality: 'all', history: 'all', special: 'all', sector: 'all', search: '' };
+    let filters = { signal: 'all', quality: 'all', history: 'all', special: new Set(), sector: 'all', search: '' };
     
     // Elements
     const table = document.getElementById('stocksTable');
@@ -436,7 +434,7 @@
       widemoat: document.getElementById('moatInfo'),
       cannibal: document.getElementById('cannibalInfo'),
       diluter: document.getElementById('diluterInfo'),
-      'insider-below': document.getElementById('insiderBelowInfo'),
+      insider: document.getElementById('insiderBelowInfo'),
       'fcf-growing': document.getElementById('fcfGrowingInfo'),
       'quiet-accum': document.getElementById('quietAccumInfo')
     };
@@ -474,21 +472,45 @@
     document.querySelectorAll('.filter-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const group = btn.dataset.filterGroup;
-        
-        document.querySelectorAll(`.filter-btn[data-filter-group="${group}"]`).forEach(b => {
-          b.classList.remove('active');
-        });
-        btn.classList.add('active');
-        filters[group] = btn.dataset.filter;
-        
-        // Show/hide info boxes
+        const value = btn.dataset.filter;
+
         if (group === 'special') {
-          hideAllInfoBoxes();
-          if (infoBoxes[btn.dataset.filter]) {
-            infoBoxes[btn.dataset.filter].style.display = 'block';
+          // Multi-select toggle for special filters
+          const allBtn = document.querySelector(`.filter-btn[data-filter-group="special"][data-filter="all"]`);
+          if (value === 'all') {
+            // "All" clears everything
+            filters.special.clear();
+            document.querySelectorAll(`.filter-btn[data-filter-group="special"]`).forEach(b => b.classList.remove('active'));
+            allBtn.classList.add('active');
+          } else {
+            // Toggle individual filter
+            allBtn.classList.remove('active');
+            if (filters.special.has(value)) {
+              filters.special.delete(value);
+              btn.classList.remove('active');
+            } else {
+              filters.special.add(value);
+              btn.classList.add('active');
+            }
+            // If nothing selected, revert to "All"
+            if (filters.special.size === 0) {
+              allBtn.classList.add('active');
+            }
           }
+          // Show info boxes for all active special filters
+          hideAllInfoBoxes();
+          filters.special.forEach(f => {
+            if (infoBoxes[f]) infoBoxes[f].style.display = 'block';
+          });
+        } else {
+          // Single-select for other filter groups
+          document.querySelectorAll(`.filter-btn[data-filter-group="${group}"]`).forEach(b => {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+          filters[group] = value;
         }
-        
+
         applyFilters();
       });
     });
@@ -543,17 +565,22 @@
           else if (filters.history === 'frequent') show = touches >= 5;
         }
         
-        // Special (quality screens - only shows stocks BELOW the line that meet criteria)
-        if (show && filters.special !== 'all') {
-          if (filters.special === 'buffett') show = row.dataset.buffett === 'true';
-          else if (filters.special === 'yartseva') show = row.dataset.yartseva === 'true';
-          else if (filters.special === 'aristocrat') show = row.dataset.aristocrat === 'true';
-          else if (filters.special === 'widemoat') show = row.dataset.widemoat === 'true' && row.dataset.below === 'true';
-          else if (filters.special === 'cannibal') show = row.dataset.cannibal === 'true';
-          else if (filters.special === 'diluter') show = row.dataset.diluter === 'true';
-          else if (filters.special === 'insider-below') show = row.dataset.insiderBelow === 'true';
-          else if (filters.special === 'fcf-growing') show = row.dataset.fcfGrowingBelow === 'true';
-          else if (filters.special === 'quiet-accum') show = row.dataset.quietAccum === 'true';
+        // Special (quality screens — multi-select, stock must match ALL active filters)
+        if (show && filters.special.size > 0) {
+          const specialMap = {
+            'buffett': () => row.dataset.buffett === 'true',
+            'yartseva': () => row.dataset.yartseva === 'true',
+            'aristocrat': () => row.dataset.aristocrat === 'true',
+            'widemoat': () => row.dataset.widemoat === 'true',
+            'cannibal': () => row.dataset.cannibal === 'true',
+            'diluter': () => row.dataset.diluter === 'true',
+            'insider': () => row.dataset.insider === 'true',
+            'fcf-growing': () => row.dataset.fcfGrowing === 'true',
+            'quiet-accum': () => row.dataset.quietAccum === 'true'
+          };
+          for (const f of filters.special) {
+            if (specialMap[f] && !specialMap[f]()) { show = false; break; }
+          }
         }
         
         // Sector
@@ -615,8 +642,8 @@
         'widemoat': { group: 'special', filter: 'widemoat' },
         'cannibal': { group: 'special', filter: 'cannibal' },
         'diluter': { group: 'special', filter: 'diluter' },
-        'insider-below': { group: 'special', filter: 'insider-below' },
-        'insider': { group: 'special', filter: 'insider-below' },
+        'insider-below': { group: 'special', filter: 'insider' },
+        'insider': { group: 'special', filter: 'insider' },
         'fcf-growing': { group: 'special', filter: 'fcf-growing' },
         'quiet-accum': { group: 'special', filter: 'quiet-accum' },
         'quiet_accum': { group: 'special', filter: 'quiet-accum' },
