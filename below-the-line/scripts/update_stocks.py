@@ -472,8 +472,10 @@ def get_health_metrics(ticker: yf.Ticker) -> dict:
         if fin is None or fin.empty:
             return empty
 
-        # Use income statement dates as the spine; take last 5, oldest-first
-        dates = sorted(fin.columns)[-5:]
+        # Use income statement dates as the spine; only include fiscal years
+        # ending within the 200-week lookback window (~3.85 years)
+        cutoff = pd.Timestamp.now() - pd.Timedelta(weeks=200)
+        dates = sorted([d for d in fin.columns if pd.Timestamp(d) >= cutoff])
 
         years, revenue, net_income, fcf_vals, total_debt, roic = [], [], [], [], [], []
         gross_margin_pcts, shares_list, fcf_yield_list = [], [], []
