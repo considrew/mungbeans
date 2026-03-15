@@ -43,8 +43,27 @@
           {{ if .Params.ticker }}
           <span class="stat-badge">{{ .Params.ticker }}</span>
           {{ end }}
+          {{ if .Params.ticker_b }}
+          <span class="stat-badge">{{ .Params.ticker_b }}</span>
+          {{ end }}
           {{ if .Params.verdict }}
           <span class="stat-badge {{ if eq .Params.verdict "deep-value" }}recovered{{ else if eq .Params.verdict "value-trap" }}below{{ else }}approaching{{ end }}">{{ .Params.verdict_label | default .Params.verdict }}</span>
+          {{ end }}
+          {{ if .Params.performance_since }}
+          {{ $perf := .Params.performance_since }}
+          {{ $isPositive := hasPrefix $perf "+" }}
+          {{ $isZero := eq $perf "+0.0%" }}
+          <span class="stat-badge performance-badge {{ if $isZero }}perf-neutral{{ else if $isPositive }}perf-positive{{ else }}perf-negative{{ end }}">
+            {{ .Params.ticker }} {{ $perf }}
+          </span>
+          {{ if .Params.performance_since_b }}
+          {{ $perfB := .Params.performance_since_b }}
+          {{ $isPositiveB := hasPrefix $perfB "+" }}
+          {{ $isZeroB := eq $perfB "+0.0%" }}
+          <span class="stat-badge performance-badge {{ if $isZeroB }}perf-neutral{{ else if $isPositiveB }}perf-positive{{ else }}perf-negative{{ end }}">
+            {{ .Params.ticker_b }} {{ $perfB }}
+          </span>
+          {{ end }}
           {{ end }}
         </div>
       </a>

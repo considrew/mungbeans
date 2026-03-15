@@ -87,7 +87,36 @@
           {{ if .Params.pct_below_200wma }}
           <span class="stat-badge below">{{ .Params.pct_below_200wma }}% below 200WMA</span>
           {{ end }}
+          {{ if .Params.ticker_b }}
+          <span class="stat-badge">{{ .Params.ticker_b }}</span>
+          {{ end }}
         </div>
+        {{/* Performance tracking badges */}}
+        {{ if .Params.performance_since }}
+        <div class="post-summary-stats" style="margin-top: 8px;">
+          {{ $perf := .Params.performance_since }}
+          {{ $isPositive := hasPrefix $perf "+" }}
+          {{ $isZero := eq $perf "+0.0%" }}
+          <span class="stat-badge performance-badge {{ if $isZero }}perf-neutral{{ else if $isPositive }}perf-positive{{ else }}perf-negative{{ end }}">
+            <span class="perf-label">Since publish</span> {{ .Params.ticker }} {{ $perf }}
+          </span>
+          {{ if .Params.performance_since_b }}
+          {{ $perfB := .Params.performance_since_b }}
+          {{ $isPositiveB := hasPrefix $perfB "+" }}
+          {{ $isZeroB := eq $perfB "+0.0%" }}
+          <span class="stat-badge performance-badge {{ if $isZeroB }}perf-neutral{{ else if $isPositiveB }}perf-positive{{ else }}perf-negative{{ end }}">
+            <span class="perf-label">Since publish</span> {{ .Params.ticker_b }} {{ $perfB }}
+          </span>
+          {{ end }}
+          <span class="performance-detail">
+            <span>{{ .Params.performance_price_at_publish }} → {{ .Params.performance_price_current }}</span>
+            {{ if .Params.performance_price_at_publish_b }}
+            <span>{{ .Params.performance_price_at_publish_b }} → {{ .Params.performance_price_current_b }}</span>
+            {{ end }}
+            <span>as of {{ .Params.performance_as_of }}</span>
+          </span>
+        </div>
+        {{ end }}
       </header>
 
       <div class="post-intro">
