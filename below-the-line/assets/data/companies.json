@@ -614,6 +614,12 @@
     "name": "Apellis Pharmaceuticals, Inc.",
     "sector": "Healthcare - Biotechnology"
   },
+  "APO": {
+    "name": "Apollo Global Management, Inc.",
+    "sector": "Financial Services",
+    "industry": "Asset Management",
+    "ir_url": "https://www.apollo.com/stockholders"
+  },
   "APOG": {
     "ir_url": "https://ir.apogee.com",
     "name": "Apogee Enterprises, Inc.",
@@ -2434,6 +2440,12 @@
     "name": "Crescent Energy Company",
     "sector": "Energy - Oil & Gas E&P"
   },
+  "CRH": {
+    "name": "CRH plc",
+    "sector": "Basic Materials",
+    "industry": "Building Materials",
+    "ir_url": "https://www.crh.com/investors"
+  },
   "CRI": {
     "ir_url": "https://www.carters.com/investors",
     "name": "Carter's, Inc.",
@@ -2763,11 +2775,6 @@
     "ir_url": "https://dayonebio.com/investors",
     "name": "Day One Biopharmaceuticals, Inc.",
     "sector": "Healthcare - Biotechnology"
-  },
-  "DAY": {
-    "ir_url": "https://www.dayforce.com/investors",
-    "name": "Dayforce, Inc.",
-    "sector": "Technology - Software - Application"
   },
   "DBD": {
     "ir_url": "https://www.dieboldnixdorf.com/investors",
@@ -3554,6 +3561,12 @@
     "name": "Exelon Corporation",
     "sector": "Utilities - Electric"
   },
+  "EXE": {
+    "name": "Expand Energy Corporation",
+    "sector": "Energy",
+    "industry": "Oil & Gas E&P",
+    "ir_url": "https://www.expandenergy.com/investors"
+  },
   "EXEL": {
     "ir_url": "https://ir.exelixis.com",
     "name": "Exelixis Inc.",
@@ -3708,6 +3721,12 @@
     "ir_url": "https://www.fisglobal.com/investors",
     "name": "Fidelity National Information Services, Inc.",
     "sector": "Technology - Information Technology Services"
+  },
+  "FISV": {
+    "name": "Fiserv, Inc.",
+    "sector": "Technology",
+    "industry": "Information Technology Services",
+    "ir_url": "https://investors.fiserv.com"
   },
   "FITB": {
     "ir_url": "https://ir.53.com",
@@ -6404,11 +6423,6 @@
     "name": "Miller Industries, Inc.",
     "sector": "Consumer Cyclical - Auto Parts"
   },
-  "MMC": {
-    "ir_url": "https://www.marshmclennan.com/investors",
-    "name": "Marsh & McLennan Companies, Inc.",
-    "sector": "Financial Services - Insurance Brokers"
-  },
   "MMM": {
     "ir_url": "https://investors.3m.com",
     "name": "3M Company",
@@ -6558,6 +6572,11 @@
     "ir_url": "https://investors.modernatx.com",
     "name": "Moderna Inc.",
     "sector": "Healthcare - Biotechnology"
+  },
+  "MRSH": {
+    "ir_url": "https://www.marshmclennan.com/investors",
+    "name": "Marsh McLennan Companies, Inc.",
+    "sector": "Financial Services - Insurance Brokers"
   },
   "MRSN": {
     "ir_url": "https://www.mersana.com/investors",
@@ -8209,6 +8228,12 @@
     "name": "Paysafe Limited",
     "sector": "Financial Services - Payments"
   },
+  "PSKY": {
+    "name": "Paramount Skydance Corporation",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "ir_url": "https://ir.paramountskydance.com"
+  },
   "PSN": {
     "ir_url": "https://investors.parsons.com",
     "name": "Parsons Corporation",
@@ -8263,6 +8288,12 @@
     "ir_url": "https://investor.pypl.com",
     "name": "PayPal Holdings Inc.",
     "sector": "Financial Services - Payments"
+  },
+  "Q": {
+    "name": "Qnity Electronics, Inc.",
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "ir_url": "https://ir.qnityelectronics.com"
   },
   "QBTS": {
     "ir_url": "https://ir.dwavequantum.com",
@@ -8609,6 +8640,12 @@
     "name": "Revolution Medicines, Inc.",
     "sector": "Healthcare - Oncology"
   },
+  "RVTY": {
+    "name": "Revvity, Inc.",
+    "sector": "Healthcare",
+    "industry": "Diagnostics & Research",
+    "ir_url": "https://www.revvity.com/about/investors"
+  },
   "RXO": {
     "ir_url": "https://investors.rxo.com",
     "name": "RXO, Inc.",
@@ -8914,6 +8951,12 @@
     "name": "Snap Inc.",
     "sector": "Communication Services - Social Media"
   },
+  "SNDK": {
+    "name": "SanDisk Corporation",
+    "sector": "Technology",
+    "industry": "Semiconductors",
+    "ir_url": "https://investor.sandisk.com"
+  },
   "SNDL": {
     "ir_url": "https://sndl.com/investors",
     "name": "SNDL Inc.",
@@ -9114,6 +9157,12 @@
     "name": "Sun Communities, Inc.",
     "sector": "Real Estate - Manufactured Housing"
   },
+  "SW": {
+    "name": "Smurfit Westrock plc",
+    "sector": "Consumer Cyclical",
+    "industry": "Packaging & Containers",
+    "ir_url": "https://www.smurfitwestrock.com/investors"
+  },
   "SWK": {
     "ir_url": "https://www.stanleyblackanddecker.com/investors",
     "name": "Stanley Black & Decker Inc.",
@@ -9313,6 +9362,12 @@
     "ir_url": "https://www.teekay.com/investors/",
     "name": "Teekay Corporation",
     "sector": "Energy"
+  },
+  "TKO": {
+    "name": "TKO Group Holdings, Inc.",
+    "sector": "Communication Services",
+    "industry": "Entertainment",
+    "ir_url": "https://www.tkogrp.com/investors"
   },
   "TLN": {
     "ir_url": "https://talenenergy.investorroom.com/",
@@ -10158,6 +10213,12 @@
     "ir_url": "https://www.xylem.com/en-us/investors/",
     "name": "Xylem Inc.",
     "sector": "Industrials - Water Equipment"
+  },
+  "XYZ": {
+    "name": "Block, Inc.",
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "ir_url": "https://investors.block.xyz"
   },
   "YELP": {
     "ir_url": "https://investors.yelp.com",
