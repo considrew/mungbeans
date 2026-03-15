@@ -353,6 +353,20 @@ main {
   max-width: 1000px;
 }
 
+/* Site Banner */
+.site-banner {
+  max-width: 900px;
+  margin: var(--space-xl) auto 0;
+  padding: 0 var(--space-md);
+}
+
+.site-banner-img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
 .hero {
   text-align: center;
   padding: var(--space-2xl) 0;
