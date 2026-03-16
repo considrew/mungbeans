@@ -78,9 +78,9 @@ The contracts rolling off were signed at $40–50/lb [^9]. New term contracts �
 
 And it's not just the raw U3O8. Nuclear fuel has four cost components: uranium purchase, conversion (U3O8 to UF6), enrichment (SWU), and fabrication into fuel assemblies. Enrichment is where the Russia bottleneck *really* bites — SWU costs have spiked from ~$110 historically to $170+ today, with 44% of global enrichment capacity sanctioned. Conversion and fabrication add another ~$57M per GW of capacity per year. The total fuel bill per GW of nuclear capacity has already jumped from ~$91M/year under old contracts to ~$118M/year at current spot — and that's before uranium goes higher.
 
-### What Happens When Uranium Goes to $200. Or $300. Or Higher.
+### What Happens When Uranium Goes to $200. Or $300.
 
-Let's stop hand-waving about "5–10% of operating costs" and actually model what happens to utility earnings at the uranium prices the supply-demand picture is pointing toward. The government is now competing against utilities for the same feedstock, stockpiling uranium as a critical mineral for the naval fleet. Kazatomprom is cutting production into a deficit. Russia is sanctioned. There are no new mines coming online for years. $200/lb isn't a panic scenario — it's a plausible next step.
+Let's stop hand-waving about "5–10% of operating costs" and actually model what happens to utility earnings at the uranium prices the supply-demand picture is pointing toward. The government is now competing against utilities for the same feedstock, stockpiling uranium as a critical mineral for the naval fleet. Kazatomprom is cutting production into a deficit. Russia is sanctioned. No new mines are coming online for years. $200/lb isn't a panic scenario — it's a plausible sustained price. $300/lb is a plausible spike. We model both below, then stress-test the assumptions.
 
 Here's the total nuclear fuel cost per GW of capacity per year, at various uranium/enrichment price scenarios:
 
@@ -128,6 +128,52 @@ Vistra (VST) is the other landmine. At +82.4% above the line — the most extend
 PPL Corporation (PPL, $38.51) sits at +34.5% above its 200WMA with a forward P/E of 18.2x. Susquehanna's 2.5 GW eats a $224M fuel cost increase at $200/lb — 19% of net income. PPL is a regulated utility, so it can eventually pass fuel costs to ratepayers through rate cases. But "eventually" means 12–18 months of regulatory lag. In the interim, shareholders eat the difference. And rate cases aren't guaranteed — regulators can push back, delay, or cap increases, especially when consumers are already dealing with inflation.
 
 **The key insight:** The utilities with the most nuclear capacity relative to their earnings — CEG and VST — are the most vulnerable and the most extended above their 200WMAs. This isn't a coincidence. The market has bid these stocks up *because* of their nuclear exposure, without pricing in the input cost side of the equation. The narrative is "nuclear power = premium." The math says "nuclear power = uranium buyer in a seller's market."
+
+### Model It Yourself
+
+The tables above use fixed scenarios. Use the calculator below to set any uranium spot price and SWU cost and see the impact on each utility in real time:
+
+<div style="margin: 2rem 0;">
+<iframe src="/tools/uranium-calculator.html" width="100%" height="900" style="border: 1px solid #30363d; border-radius: 8px;" frameborder="0" loading="lazy"></iframe>
+</div>
+
+---
+
+## Stress-Testing the Thesis: What Actually Happens
+
+The tables above model worst-case arithmetic. Before you short Constellation, we owe you the harder questions: Are these prices realistic? Would utilities actually keep running at a loss? And what about the enrichment bottleneck that makes the raw uranium price almost beside the point?
+
+### The Enrichment Problem Is Worse Than the Uranium Problem
+
+Here's what most uranium analysis misses: even if a utility secures yellowcake at a reasonable price, it can't put it in a reactor. Raw U3O8 has to be converted to UF6 gas, then enriched to 3–5% U-235 concentration, then fabricated into fuel assemblies. That process takes 18–24 months from purchase to loaded fuel rod. And the enrichment step is where the entire supply chain breaks.
+
+Global enrichment capacity is roughly 60 million SWU per year [^4]. Russia (Rosatom/TENEX) controls ~44% of that — about 26 million SWU. Urenco (UK/Netherlands/Germany consortium) provides ~18 million SWU. Orano (France) adds ~7.5 million SWU. Centrus Energy (LEU) in the US produces a small and growing amount, but its current capacity is a rounding error against global demand [^16]. China National Nuclear Corporation (CNNC) has significant capacity but uses it domestically — none is available to Western utilities.
+
+When the Russian ban takes full effect in 2028, Western utilities lose access to 26 million SWU of annual enrichment capacity. Urenco and Orano are already booked years out. Centrus is scaling HALEU production for next-gen reactors, not conventional enrichment. There is no spare Western enrichment capacity. A utility could be sitting on a mountain of yellowcake and still not be able to fuel its reactors because there's nobody to enrich it.
+
+This is why the SWU price has spiked from ~$110 to $170+ and keeps climbing. It's also why our fuel cost model includes SWU as a separate variable — the enrichment squeeze is a *distinct* cost driver from the uranium squeeze, and they compound. A utility facing $200/lb uranium *and* $300/SWU is in a fundamentally different position than one facing $200/lb uranium with legacy enrichment contracts still in place.
+
+### Would Utilities Actually Run Reactors at a Loss?
+
+Mostly yes. Shutting down a nuclear reactor costs $500 million to $1 billion in decommissioning and takes a decade to complete. Once you shut down, restarting requires full NRC relicensing — a multi-year process with no guaranteed outcome. Utilities also have grid capacity obligations and, in many cases, long-term PPAs that contractually require power delivery. Constellation's Microsoft deal, for example, commits power delivery regardless of what it costs to produce. Walking away means eating the decommissioning bill *and* breaching power contracts.
+
+This isn't hypothetical. Between 2013 and 2021, a dozen US reactors shut down — Indian Point, Vermont Yankee, Pilgrim, Kewaunee — because cheap natural gas made them uneconomic. But those closures happened at $40–50/lb uranium. The reactors weren't losing money on fuel — they were losing money on *power prices*. Once power prices recovered and states introduced Zero Emission Credit subsidies (New York, Illinois, New Jersey), the remaining fleet stabilized. If uranium spikes cause a similar economic crisis, you'd expect similar political intervention — nuclear is now a national security priority in a way it simply wasn't in 2015.
+
+The more likely response isn't shutdown. It's a combination of stretching fuel cycles from 18 months to 24 months (reducing uranium consumption 10–15%), increasing enrichment levels to use less physical U3O8 (substituting SWU for yellowcake — ironic, given the enrichment bottleneck), filing rate cases to pass costs to ratepayers (with 12–18 months of regulatory lag), and lobbying Congress for emergency intervention. All of which buy time. None of which fix the structural deficit.
+
+### How Realistic Are $200 and $300?
+
+**$200/lb is plausible as a sustained price for 1–3 years.** The supply deficit is real and widening. Secondary supplies are depleting. Kazatomprom is cutting production. The 2028 Russian ban creates a step-function increase in uncovered demand. The DOE is competing against utilities for the same feedstock. At $200/lb, the math works — marginal mines start restarting, but it takes 12–18 months to bring ISR operations online and 3–5 years for conventional mines, so the supply response doesn't catch the price for at least a year.
+
+**$300/lb is plausible as a spike, not a sustained price.** At $300, three things happen simultaneously: every mothballed mine on earth starts producing (adding 20–30 Mlbs within 18 months), utilities aggressively stretch fuel cycles and substitute enrichment for physical uranium, and governments intervene (the DOE has authority to release strategic reserves, and Congress would almost certainly act on grid reliability grounds). The 2007 uranium cycle hit $140/lb and collapsed. A spike to $300 is possible in a panic — say, a Kazatomprom force majeure on top of the Russian ban — but it's unlikely to hold for more than a quarter or two before supply response and demand destruction kick in.
+
+### What Our Model Overstates (and What It Doesn't)
+
+The earnings impact tables above model a scenario where every utility buys 100% of its uranium at the new spot price simultaneously. That's not how fuel procurement works. Utility fuel teams run staggered contract portfolios — some contracts rolling off in 2027, some in 2029, some in 2032. The damage is real, but it phases in over 3–5 years as old $40–50/lb contracts get replaced by $80–150/lb term contracts, not all at once.
+
+What the tables *do* accurately capture is the direction and magnitude of the problem. Constellation will not see a $1.8 billion fuel cost increase in year one — it might see $400–600 million as 20–30% of contracts reprice, growing each subsequent year. But over a full contract cycle, the cumulative damage converges toward those table numbers. And the spot market exposure — the 11.5 million pounds of unfilled requirements in 2028 — hits at whatever the market charges, no stagger, no buffer.
+
+The thesis isn't "utilities go bankrupt next quarter." The thesis is: utilities priced for a nuclear renaissance are actually entering a multi-year cost squeeze that the market hasn't modeled, and the stocks most extended above their 200WMAs have the farthest to fall when forward guidance adjusts.
 
 ---
 
@@ -197,7 +243,7 @@ And the market *knows all of this.* That's why CCJ is at 122% above the line, UU
 
 The 200-week moving average doesn't care about your thesis. It cares about whether you're paying a price that gives you a margin of safety. Right now, in uranium, you're not. You're paying for perfection in a market that has a long history of disappointing the consensus at exactly the moment everyone agrees.
 
-But here's what the framework *does* see: the uranium bull case has a victim class. The miners win. The enrichers win. The utilities — the ones actually buying uranium to keep their reactors running — get destroyed. We modeled the numbers above: at $200/lb uranium, Constellation loses 77% of its net income to fuel cost increases. At $300/lb, the fuel cost increase *exceeds Constellation's entire net income.* Vistra loses 29–46%. PPL and Duke lose 19–31%. These aren't hypothetical stress tests — they're the math of a supply deficit that's widening while the government competes against utilities for the same feedstock. The utilities most extended above their 200WMAs are the ones with the farthest to fall when forward guidance adjusts.
+But here's what the framework *does* see: the uranium bull case has a victim class. The miners win. The enrichers win. The utilities — the ones actually buying uranium to keep their reactors running — get squeezed. We stress-tested the math above: the damage doesn't hit all at once (staggered contracts spread it over 3–5 years), $300/lb is more likely a spike than a sustained price, and utilities have tools to mitigate (fuel cycle stretching, rate cases, lobbying). But the direction is unambiguous. At $200/lb sustained — a plausible scenario — Constellation loses 77% of net income to fuel cost increases as contracts roll. At a $300 spike, it goes net-negative. Vistra loses 29–46%. PPL and Duke lose 19–31%. And the enrichment bottleneck is arguably worse than the uranium price: even with yellowcake in hand, Western enrichment capacity can't process enough fuel once Russia is cut off in 2028. The utilities most extended above their 200WMAs are the ones with the farthest to fall when forward guidance adjusts.
 
 **The framework's uranium playbook:**
 
@@ -205,7 +251,7 @@ But here's what the framework *does* see: the uranium bull case has a victim cla
 
 2. **Watch NuScale (SMR) carefully.** The only nuclear name below the line. Pre-revenue and speculative, but zero debt and $1.25B cash. If it signs a new project to replace CFPP, the re-rating could be dramatic.
 
-3. **Nuclear utilities above the line are the victim class.** CEG (+64%) loses 77% of net income at $200/lb uranium and goes net-negative at $300/lb. VST (+82%) loses 29–46%. The "nuclear renaissance" narrative lifts these stocks, but the uranium cost squeeze eviscerates them. The market is celebrating their reactor fleets without pricing the fuel bill. That's not a collision course — it's a trap.
+3. **Nuclear utilities above the line are the victim class.** CEG (+64%) loses 77% of net income at $200/lb uranium as contracts roll over 3–5 years, and goes net-negative during a $300 spike. VST (+82%) loses 29–46%. The damage phases in gradually — but the enrichment bottleneck compounds it. Even utilities with yellowcake in hand can't get it enriched once Russia is cut off: Urenco and Orano are booked solid, Centrus is focused on HALEU. The market is celebrating reactor fleets without pricing either the fuel bill or the enrichment queue. The "nuclear renaissance" narrative lifts these stocks while the supply chain underneath them fractures.
 
 4. **PCG is the contrarian utility play.** At +12% above and 10.1x forward P/E, PG&E is the closest nuclear utility to the line, the cheapest on forward earnings, and the *least* exposed to uranium cost spikes (only 2,256 MW vs. Constellation's 20,000 MW). If the utility sector sells off on fuel cost fears, PCG reaches the 200WMA first with the least fundamental damage.
 
@@ -216,8 +262,6 @@ But here's what the framework *does* see: the uranium bull case has a victim cla
 ---
 
 *This analysis is for informational purposes only and does not constitute investment advice. The author does not hold positions in any securities discussed. Past performance does not guarantee future results. Always do your own research before making investment decisions.*
-
-*Interactive tool: [Uranium Spot Price Impact Calculator](/tools/uranium-calculator.html) — model how rising U3O8 prices affect each utility's earnings in real time.*
 
 *Framework methodology: [mungbeans.io 200-week moving average screening system](https://mungbeans.io)*
 
