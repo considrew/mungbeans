@@ -18,6 +18,7 @@
   <link rel="canonical" href="{{ .Permalink }}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
+  <style>.col-tooltip{display:none;}.detail-row{display:none;}.detail-row.open{display:table-row;}</style>
 </head>
 <body>
   <header class="site-header">
@@ -233,6 +234,14 @@
             RSI <span class="sort-icon">↕</span>
             <span class="col-tooltip">14-week Relative Strength Index. Below 30 = oversold (more selling pressure than usual). Above 70 = overbought. It’s a momentum gauge, not a buy/sell signal on its own.</span>
           </th>
+          <th class="sortable has-tooltip" data-sort="touches">
+            Touches <span class="sort-icon">↕</span>
+            <span class="col-tooltip">How many times the stock has crossed below its 200-week moving average. Fewer touches = rarer event. Stocks that rarely go below the line may offer better opportunities when they do.</span>
+          </th>
+          <th class="sortable has-tooltip" data-sort="avgreturn">
+            Avg Rtn <span class="sort-icon">↕</span>
+            <span class="col-tooltip">Average one-year return after previous 200WMA crosses. Positive = historically rewarding to buy at these levels. Negative = the stock has not bounced back reliably.</span>
+          </th>
           <th class="sortable has-tooltip" data-sort="roe">
             ROE <span class="sort-icon">↕</span>
             <span class="col-tooltip">Return on Equity — how much profit a company earns for each dollar of shareholder equity. Above 15% is generally considered strong. Think of it as the company’s efficiency at turning your investment into profit.</span>
@@ -344,6 +353,10 @@
           <td class="mono {{ if lt .rsi_14 30.0 }}oversold{{ end }}">
             {{ printf "%.0f" .rsi_14 }}
           </td>
+          <td class="mono" style="text-align:center;">{{ .touch_count }}</td>
+          <td class="mono {{ if .avg_return_after_touch }}{{ if gt .avg_return_after_touch 0.0 }}col-positive{{ else }}col-negative{{ end }}{{ else }}col-neutral{{ end }}">
+            {{ if .avg_return_after_touch }}{{ printf "%+.0f%%" .avg_return_after_touch }}{{ else }}—{{ end }}
+          </td>
           <td class="mono {{ if and .roe (gt .roe 15.0) }}high-roe{{ end }}">
             {{ if .roe }}{{ printf "%.0f%%" .roe }}{{ else }}—{{ end }}
           </td>
@@ -363,6 +376,44 @@
             {{ if .accumulation_ratio }}{{ printf "%.2f" .accumulation_ratio }}{{ else }}—{{ end }}
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
+        </tr>
+        {{/* Expandable detail row — hidden by default, toggled by JS */}}
+        <tr class="detail-row" data-detail-for="{{ .symbol }}">
+          <td colspan="14">
+            <div class="detail-content">
+              <div class="detail-grid">
+                <div class="detail-section">
+                  <h4>Touch History</h4>
+                  <div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">{{ .touch_count }}</span></div>
+                  <div class="detail-metric"><span class="label">Avg return after touch</span><span class="value {{ if .avg_return_after_touch }}{{ if gt .avg_return_after_touch 0.0 }}col-positive{{ else }}col-negative{{ end }}{{ end }}">{{ if .avg_return_after_touch }}{{ printf "%+.1f%%" .avg_return_after_touch }}{{ else }}—{{ end }}</span></div>
+                  <div class="detail-metric"><span class="label">Avg weeks below</span><span class="value">{{ if .avg_weeks_below }}{{ printf "%.0f" .avg_weeks_below }}{{ else }}—{{ end }}</span></div>
+                  <div class="detail-metric"><span class="label">Data history</span><span class="value">{{ .data_weeks }} weeks</span></div>
+                </div>
+                <div class="detail-section">
+                  <h4>Fundamentals</h4>
+                  <div class="detail-metric"><span class="label">Market cap</span><span class="value">{{ if .market_cap }}{{ if ge .market_cap 1e12 }}${{ printf "%.1f" (div .market_cap 1e12) }}T{{ else if ge .market_cap 1e9 }}${{ printf "%.1f" (div .market_cap 1e9) }}B{{ else }}${{ printf "%.0f" (div .market_cap 1e6) }}M{{ end }}{{ else }}—{{ end }}</span></div>
+                  <div class="detail-metric"><span class="label">Sector</span><span class="value">{{ .sector | default "—" }}</span></div>
+                  <div class="detail-metric"><span class="label">FCF trend</span><span class="value {{ if eq .fcf_trend "growing" }}col-positive{{ else if eq .fcf_trend "declining" }}col-negative{{ else }}col-neutral{{ end }}">{{ if and .fcf_trend (ne .fcf_trend "insufficient_data") }}{{ .fcf_trend | title }}{{ else }}—{{ end }}</span></div>
+                  <div class="detail-metric"><span class="label">Gross margin</span><span class="value">{{ if .gross_margin }}{{ printf "%.0f%%" .gross_margin }}{{ else }}—{{ end }}</span></div>
+                </div>
+                <div class="detail-section">
+                  <h4>Quality Flags</h4>
+                  <div class="detail-flags">
+                    {{ if .buffett_quality }}<span class="detail-flag positive">🏆 Buffett Quality</span>{{ end }}
+                    {{ if .wide_moat }}<span class="detail-flag positive">🏰 Wide Moat</span>{{ end }}
+                    {{ if .dividend_aristocrat }}<span class="detail-flag positive">👑 Aristocrat</span>{{ end }}
+                    {{ if .is_cannibal }}<span class="detail-flag positive">🦈 Cannibal</span>{{ end }}
+                    {{ if .yartseva_candidate }}<span class="detail-flag positive">🎯 Multibagger</span>{{ end }}
+                    {{ if .has_conviction_buy }}<span class="detail-flag positive">🔍 Insider Buying</span>{{ end }}
+                    {{ if eq .fcf_trend "growing" }}<span class="detail-flag positive">📈 FCF Growing</span>{{ end }}
+                    {{ if .is_diluting }}<span class="detail-flag warning">⚠️ Diluter</span>{{ end }}
+                    {{ if not (or .buffett_quality .wide_moat .dividend_aristocrat .is_cannibal .yartseva_candidate .has_conviction_buy .is_diluting (eq .fcf_trend "growing")) }}<span class="detail-flag neutral">No special flags</span>{{ end }}
+                  </div>
+                </div>
+              </div>
+              <a href="/stocks/{{ .symbol | lower }}/" class="detail-link">View full analysis →</a>
+            </div>
+          </td>
         </tr>
         {{ end }}
       </tbody>
@@ -456,7 +507,28 @@
     document.querySelectorAll('.stock-row').forEach(row => {
       row.dataset.sp500 = SP500.has(row.dataset.symbol) ? 'true' : 'false';
     });
-    
+
+    // Expandable row click handler
+    document.querySelectorAll('.stock-row').forEach(row => {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', (e) => {
+        // Don't expand if clicking a link
+        if (e.target.closest('a')) return;
+        const sym = row.dataset.symbol;
+        const detailRow = document.querySelector(`.detail-row[data-detail-for="${sym}"]`);
+        if (!detailRow) return;
+        // Close any other open detail row
+        const currentOpen = document.querySelector('.detail-row.open');
+        if (currentOpen && currentOpen !== detailRow) {
+          currentOpen.classList.remove('open');
+          currentOpen.previousElementSibling.classList.remove('row-expanded');
+        }
+        // Toggle this one
+        detailRow.classList.toggle('open');
+        row.classList.toggle('row-expanded');
+      });
+    });
+
     function getRows() { return Array.from(tbody.querySelectorAll('.stock-row')); }
     
     function updateCount() {
@@ -587,6 +659,14 @@
         if (show && filters.sector !== 'all') show = row.dataset.sector === filters.sector;
         
         row.style.display = show ? '' : 'none';
+        // Also hide/close detail row when filtering
+        const detailRow = document.querySelector(`.detail-row[data-detail-for="${row.dataset.symbol}"]`);
+        if (detailRow) {
+          if (!show) {
+            detailRow.classList.remove('open');
+            row.classList.remove('row-expanded');
+          }
+        }
       });
       updateCount();
     }
@@ -619,7 +699,12 @@
         bVal = parseFloat(b.dataset[map[column]]) || 0;
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
       });
-      rows.forEach(row => tbody.appendChild(row));
+      rows.forEach(row => {
+        tbody.appendChild(row);
+        // Keep detail row paired with its stock row
+        const detail = document.querySelector(`.detail-row[data-detail-for="${row.dataset.symbol}"]`);
+        if (detail) tbody.appendChild(detail);
+      });
     }
     
     // Read URL parameters and activate matching filter on page load
@@ -788,6 +873,65 @@
     .stock-row.cannibal-match { background: linear-gradient(90deg, rgba(6, 182, 212, 0.12) 0%, transparent 40%); }
     
     .results-count { margin-top: var(--space-md); color: var(--color-text-muted); font-size: 0.875rem; }
+
+    /* Expandable detail rows */
+    .stock-row { cursor: pointer; transition: background 0.15s; }
+    .stock-row:hover { background: rgba(56, 139, 253, 0.04); }
+    .stock-row.row-expanded { background: rgba(56, 139, 253, 0.06); }
+    .stock-row.row-expanded td { border-bottom: none; }
+    .detail-row td { padding: 0 !important; }
+    .detail-content {
+      padding: 16px 20px 20px;
+      background: rgba(22, 27, 34, 0.8);
+      border-top: 1px solid rgba(56, 139, 253, 0.15);
+      border-bottom: 1px solid var(--color-border);
+      animation: detailSlide 0.2s ease-out;
+    }
+    @keyframes detailSlide {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .detail-section h4 {
+      margin: 0 0 8px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-text-muted);
+    }
+    .detail-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-size: 0.8125rem;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+    }
+    .detail-metric:last-child { border-bottom: none; }
+    .detail-metric .label { color: var(--color-text-muted); }
+    .detail-metric .value { font-family: var(--font-mono); font-weight: 600; }
+    .detail-flags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .detail-flag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .detail-flag.positive { background: rgba(35, 134, 54, 0.15); color: #3fb950; border: 1px solid rgba(35, 134, 54, 0.3); }
+    .detail-flag.warning { background: rgba(210, 153, 34, 0.15); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.3); }
+    .detail-flag.negative { background: rgba(248, 81, 73, 0.15); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.3); }
+    .detail-flag.neutral { background: rgba(139, 148, 158, 0.1); color: var(--color-text-muted); border: 1px solid rgba(139, 148, 158, 0.2); }
+    .detail-link { display: inline-block; margin-top: 12px; font-size: 0.8125rem; }
+    .col-positive { color: #3fb950; }
+    .col-negative { color: #f85149; }
+    .col-neutral { color: var(--color-text-muted); }
+    @media (max-width: 600px) {
+      .detail-grid { grid-template-columns: 1fr; }
+    }
     
     /* Affiliate */
     .affiliate-box { margin-top: var(--space-xl); padding: var(--space-lg); background: var(--color-surface); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--color-border); }

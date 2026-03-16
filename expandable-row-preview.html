@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expandable Row Preview — mungbeans.io</title>
+  <style>
+    :root {
+      --color-bg: #0d1117;
+      --color-surface: #161b22;
+      --color-border: #30363d;
+      --color-text: #e6edf3;
+      --color-text-muted: #8b949e;
+      --color-link: #58a6ff;
+      --color-yes: #238636;
+      --color-yes-bg: rgba(35, 134, 54, 0.15);
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      --font-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: var(--font-sans);
+      font-size: 16px; line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+    a { color: var(--color-link); text-decoration: none; }
+    main { max-width: 1200px; margin: 0 auto; padding: var(--space-xl) var(--space-lg); }
+
+    .preview-banner {
+      background: rgba(210,153,34,0.15);
+      border: 1px solid rgba(210,153,34,0.4);
+      border-radius: var(--radius-md);
+      padding: var(--space-md);
+      margin-bottom: var(--space-xl);
+      text-align: center;
+      font-size: 0.875rem;
+      color: #d29922;
+    }
+
+    h1 { margin: 0 0 var(--space-lg); }
+
+    /* Table */
+    .stocks-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8125rem;
+    }
+    .stocks-table th {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 2px solid var(--color-border);
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      position: relative;
+    }
+    .stocks-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+    .stocks-table tbody tr {
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .stocks-table tbody tr:hover {
+      background: rgba(56, 139, 253, 0.04);
+    }
+    .stocks-table tbody tr.row-expanded {
+      background: rgba(56, 139, 253, 0.06);
+      border-bottom: none;
+    }
+    .stocks-table tbody tr.row-expanded td {
+      border-bottom: none;
+    }
+
+    .signal-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+    .signal-badge.yes {
+      background: var(--color-yes-bg);
+      color: var(--color-yes);
+    }
+    .signal-badge.no {
+      background: rgba(139, 148, 158, 0.15);
+      color: var(--color-text-muted);
+    }
+    .mono { font-family: var(--font-mono); font-size: 0.8125rem; }
+    .direction.recovering { color: #3fb950; }
+    .direction.deepening { color: #f85149; }
+    .direction.approaching { color: #d29922; }
+    .direction.away { color: var(--color-text-muted); }
+
+    .col-positive { color: #3fb950; }
+    .col-negative { color: #f85149; }
+    .col-neutral { color: var(--color-text-muted); }
+
+    .stock-name {
+      display: block;
+      font-size: 0.6875rem;
+      color: var(--color-text-muted);
+      font-weight: normal;
+    }
+
+    .badge-inline {
+      font-size: 0.6875rem;
+      margin-left: 4px;
+    }
+
+    /* NEW: Expandable detail row */
+    .detail-row td {
+      padding: 0 !important;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .detail-content {
+      padding: 16px 20px 20px;
+      background: rgba(22, 27, 34, 0.8);
+      border-top: 1px solid rgba(56, 139, 253, 0.15);
+      animation: slideDown 0.2s ease-out;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; max-height: 0; }
+      to { opacity: 1; max-height: 500px; }
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .detail-section h4 {
+      margin: 0 0 8px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-text-muted);
+    }
+    .detail-metric {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      font-size: 0.8125rem;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+    }
+    .detail-metric:last-child { border-bottom: none; }
+    .detail-metric .label { color: var(--color-text-muted); }
+    .detail-metric .value { font-family: var(--font-mono); font-weight: 600; }
+
+    .detail-flags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .detail-flag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .detail-flag.positive {
+      background: rgba(35, 134, 54, 0.15);
+      color: #3fb950;
+      border: 1px solid rgba(35, 134, 54, 0.3);
+    }
+    .detail-flag.warning {
+      background: rgba(210, 153, 34, 0.15);
+      color: #d29922;
+      border: 1px solid rgba(210, 153, 34, 0.3);
+    }
+    .detail-flag.negative {
+      background: rgba(248, 81, 73, 0.15);
+      color: #f85149;
+      border: 1px solid rgba(248, 81, 73, 0.3);
+    }
+    .detail-flag.neutral {
+      background: rgba(139, 148, 158, 0.1);
+      color: var(--color-text-muted);
+      border: 1px solid rgba(139, 148, 158, 0.2);
+    }
+
+    .detail-link {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 0.8125rem;
+      color: var(--color-link);
+    }
+
+    .detail-prose {
+      font-size: 0.8125rem;
+      color: var(--color-text-muted);
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    /* Column colors for new columns */
+    .col-touches { text-align: center; }
+    .col-avgreturn { text-align: right; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="preview-banner">
+      PREVIEW — Expandable row prototype with new Touches and Avg Return columns. Click any row to expand. Mock data.
+    </div>
+
+    <h1>All Stocks</h1>
+
+    <table class="stocks-table">
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Signal</th>
+          <th>Distance</th>
+          <th>Direction</th>
+          <th>RSI</th>
+          <th>Touches</th>
+          <th>Avg Return</th>
+          <th>ROE</th>
+          <th>D/E</th>
+          <th>FCF%</th>
+        </tr>
+      </thead>
+      <tbody id="stocksBody">
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+  // Mock stock data
+  var stocks = [
+    {
+      symbol: 'NKE', name: 'Nike Inc.', below: true, distance: -32.1, direction: 'recovering',
+      rsi: 28, touches: 3, avgReturn: 24.5, roe: 33.2, de: 89.1, fcfYield: 4.2,
+      sector: 'Consumer Cyclical', marketCap: '$108B',
+      flags: ['buffett', 'aristocrat', 'cannibal'],
+      fcfTrend: 'declining', avgWeeksBelow: 18,
+      prose: 'Nike has crossed below its 200WMA 3 times in 15 years. Previous touches averaged +24.5% one-year returns. Currently oversold with RSI 28. Insider buying activity detected in the last 90 days.'
+    },
+    {
+      symbol: 'PYPL', name: 'PayPal Holdings', below: true, distance: -43.0, direction: 'deepening',
+      rsi: 22, touches: 2, avgReturn: -8.3, roe: 25.7, de: 61.0, fcfYield: 8.7,
+      sector: 'Financial Services', marketCap: '$42B',
+      flags: ['cannibal', 'fcf-growing'],
+      fcfTrend: 'growing', avgWeeksBelow: 45,
+      prose: 'PayPal trades at 7.4x earnings with ROIC of 24%. FCF yield of 8.7% is equity-bond territory. Branded checkout deceleration is the key risk. Aggressive buybacks retiring ~12% of market cap annually.'
+    },
+    {
+      symbol: 'ADBE', name: 'Adobe Inc.', below: false, distance: 8.2, direction: 'approaching',
+      rsi: 38, touches: 1, avgReturn: 42.0, roe: 35.8, de: 28.4, fcfYield: 3.9,
+      sector: 'Technology', marketCap: '$165B',
+      flags: ['buffett', 'widemoat', 'cannibal'],
+      fcfTrend: 'growing', avgWeeksBelow: 12,
+      prose: 'Adobe has only crossed below its 200WMA once — during COVID in 2020 — and delivered +42% in the following year. Currently approaching the line at 8.2% above. Wide moat business with 88% gross margins.'
+    },
+    {
+      symbol: 'DIS', name: 'Walt Disney Co.', below: true, distance: -28.4, direction: 'recovering',
+      rsi: 35, touches: 2, avgReturn: 15.2, roe: 4.1, de: 45.2, fcfYield: 5.8,
+      sector: 'Communication Services', marketCap: '$155B',
+      flags: [],
+      fcfTrend: 'volatile', avgWeeksBelow: 52,
+      prose: 'Disney has been below its 200WMA for over a year. Streaming profitability improving. Parks segment remains strong. Previous touch delivered +15.2% avg return. Low ROE reflects transition costs.'
+    },
+    {
+      symbol: 'SBUX', name: 'Starbucks Corp.', below: true, distance: -18.7, direction: 'deepening',
+      rsi: 31, touches: 4, avgReturn: 19.8, roe: -45.2, de: null, fcfYield: 5.1,
+      sector: 'Consumer Cyclical', marketCap: '$95B',
+      flags: ['fcf-growing'],
+      fcfTrend: 'growing', avgWeeksBelow: 22,
+      prose: 'Starbucks has touched its 200WMA 4 times — a relatively frequent visitor. Avg return of +19.8% after touches. Negative equity (from buybacks exceeding book value) makes ROE/DE misleading. Strong FCF generation.'
+    },
+    {
+      symbol: 'AAPL', name: 'Apple Inc.', below: false, distance: 18.4, direction: 'away',
+      rsi: 58, touches: 2, avgReturn: 38.1, roe: 147.0, de: 151.9, fcfYield: 3.1,
+      sector: 'Technology', marketCap: '$3.4T',
+      flags: ['buffett', 'widemoat', 'cannibal'],
+      fcfTrend: 'growing', avgWeeksBelow: 8,
+      prose: 'Apple rarely goes below its 200WMA — only twice in 15 years. Both times delivered exceptional returns (+38.1% avg). Currently 18.4% above. The ultimate wide moat with $109B in annual FCF.'
+    }
+  ];
+
+  var tbody = document.getElementById('stocksBody');
+  var expandedSymbol = null;
+
+  function renderRows() {
+    tbody.innerHTML = '';
+    stocks.forEach(function(s) {
+      // Main row
+      var tr = document.createElement('tr');
+      tr.className = 'stock-row';
+      if (expandedSymbol === s.symbol) tr.classList.add('row-expanded');
+      tr.onclick = function() { toggleExpand(s.symbol); };
+
+      var absD = Math.abs(s.distance);
+      var distText = s.below ? (absD.toFixed(1) + '% below') : (s.distance.toFixed(1) + '% above');
+      var dirClass = s.below ? (s.direction === 'recovering' ? 'recovering' : 'deepening') : (s.direction === 'approaching' ? 'approaching' : 'away');
+      var dirText = s.below ? (s.direction === 'recovering' ? '↑ Recovering' : '↓ Deepening') : (s.direction === 'approaching' ? '↓ Approaching' : '↑ Away');
+
+      var flagsHtml = '';
+      if (s.flags.indexOf('buffett') >= 0) flagsHtml += '<span class="badge-inline" title="Buffett Quality">🏆</span>';
+      if (s.flags.indexOf('aristocrat') >= 0) flagsHtml += '<span class="badge-inline" title="Dividend Aristocrat">👑</span>';
+      if (s.flags.indexOf('cannibal') >= 0) flagsHtml += '<span class="badge-inline" title="Cannibal">🦈</span>';
+
+      var avgReturnClass = s.avgReturn > 0 ? 'col-positive' : (s.avgReturn < 0 ? 'col-negative' : 'col-neutral');
+      var avgReturnText = s.avgReturn > 0 ? ('+' + s.avgReturn.toFixed(1) + '%') : (s.avgReturn.toFixed(1) + '%');
+
+      tr.innerHTML =
+        '<td><a href="#">' + s.symbol + '</a>' + flagsHtml + '<span class="stock-name">' + s.name + '</span></td>' +
+        '<td><span class="signal-badge ' + (s.below ? 'yes' : 'no') + '">' + (s.below ? 'YES' : 'NO') + '</span></td>' +
+        '<td class="mono">' + distText + '</td>' +
+        '<td><span class="direction ' + dirClass + '">' + dirText + '</span></td>' +
+        '<td class="mono' + (s.rsi < 30 ? ' col-positive' : '') + '">' + s.rsi + '</td>' +
+        '<td class="col-touches mono">' + s.touches + '</td>' +
+        '<td class="col-avgreturn mono ' + avgReturnClass + '">' + avgReturnText + '</td>' +
+        '<td class="mono">' + (s.roe !== null ? s.roe.toFixed(1) + '%' : '—') + '</td>' +
+        '<td class="mono">' + (s.de !== null ? s.de.toFixed(1) + '%' : '—') + '</td>' +
+        '<td class="mono">' + s.fcfYield.toFixed(1) + '%</td>';
+
+      tbody.appendChild(tr);
+
+      // Expanded detail row
+      if (expandedSymbol === s.symbol) {
+        var detailTr = document.createElement('tr');
+        detailTr.className = 'detail-row';
+        var detailTd = document.createElement('td');
+        detailTd.colSpan = 10;
+
+        var flagsListHtml = '';
+        var flagMap = {
+          'buffett': ['🏆 Buffett Quality', 'positive'],
+          'widemoat': ['🏰 Wide Moat', 'positive'],
+          'aristocrat': ['👑 Aristocrat', 'positive'],
+          'cannibal': ['🦈 Cannibal', 'positive'],
+          'fcf-growing': ['📈 FCF Growing', 'positive'],
+          'insider': ['🔍 Insider Buying', 'positive'],
+          'diluter': ['⚠️ Diluter', 'negative']
+        };
+        s.flags.forEach(function(f) {
+          if (flagMap[f]) {
+            flagsListHtml += '<span class="detail-flag ' + flagMap[f][1] + '">' + flagMap[f][0] + '</span>';
+          }
+        });
+        if (!flagsListHtml) {
+          flagsListHtml = '<span class="detail-flag neutral">No special flags</span>';
+        }
+
+        var fcfTrendColor = s.fcfTrend === 'growing' ? 'col-positive' : (s.fcfTrend === 'declining' ? 'col-negative' : 'col-neutral');
+        var fcfTrendLabel = s.fcfTrend.charAt(0).toUpperCase() + s.fcfTrend.slice(1);
+
+        detailTd.innerHTML =
+          '<div class="detail-content">' +
+            '<div class="detail-grid">' +
+              '<div class="detail-section">' +
+                '<h4>Touch History</h4>' +
+                '<div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">' + s.touches + '</span></div>' +
+                '<div class="detail-metric"><span class="label">Avg return after touch</span><span class="value ' + avgReturnClass + '">' + avgReturnText + '</span></div>' +
+                '<div class="detail-metric"><span class="label">Avg weeks below</span><span class="value">' + s.avgWeeksBelow + '</span></div>' +
+              '</div>' +
+              '<div class="detail-section">' +
+                '<h4>Fundamentals</h4>' +
+                '<div class="detail-metric"><span class="label">Market cap</span><span class="value">' + s.marketCap + '</span></div>' +
+                '<div class="detail-metric"><span class="label">Sector</span><span class="value">' + s.sector + '</span></div>' +
+                '<div class="detail-metric"><span class="label">FCF trend</span><span class="value ' + fcfTrendColor + '">' + fcfTrendLabel + '</span></div>' +
+              '</div>' +
+              '<div class="detail-section">' +
+                '<h4>Quality Flags</h4>' +
+                '<div class="detail-flags">' + flagsListHtml + '</div>' +
+              '</div>' +
+            '</div>' +
+            '<p class="detail-prose">' + s.prose + '</p>' +
+            '<a href="#" class="detail-link">View full analysis →</a>' +
+          '</div>';
+
+        detailTr.appendChild(detailTd);
+        tbody.appendChild(detailTr);
+      }
+    });
+  }
+
+  function toggleExpand(symbol) {
+    expandedSymbol = (expandedSymbol === symbol) ? null : symbol;
+    renderRows();
+  }
+
+  renderRows();
+  </script>
+</body>
+</html>
