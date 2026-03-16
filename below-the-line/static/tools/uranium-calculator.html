@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uranium Spot Price Impact Calculator — mungbeans.io</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --red: #f85149;
+    --yellow: #d29922;
+    --orange: #db6d28;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  h1 { font-size: 1.5rem; margin-bottom: 4px; }
+  .subtitle { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+  .subtitle a { color: var(--accent); text-decoration: none; }
+
+  /* Slider section */
+  .controls {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .slider-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    min-width: 100px;
+  }
+  .slider-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    min-width: 120px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+
+  /* Scenario buttons */
+  .scenarios {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .scenario-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+  }
+  .scenario-btn:hover { border-color: var(--accent); color: var(--text); }
+  .scenario-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(88,166,255,0.1); }
+
+  /* Summary cards */
+  .summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .card-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .card-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .card-detail {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* Table */
+  .table-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .table-title {
+    padding: 16px 16px 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    font-variant-numeric: tabular-nums;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover { background: rgba(88,166,255,0.04); }
+  .num { text-align: right; }
+  .ticker { font-weight: 600; color: var(--accent); }
+
+  .bar-cell { position: relative; min-width: 160px; }
+  .bar-bg {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    height: calc(100% - 8px);
+    border-radius: 3px;
+    opacity: 0.15;
+    transition: width 0.3s ease;
+  }
+  .bar-text {
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+  }
+
+  .risk-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  /* Fuel cost breakdown */
+  .fuel-breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 600px) {
+    .fuel-breakdown { grid-template-columns: 1fr; }
+    .slider-row { flex-wrap: wrap; }
+    .slider-value { min-width: auto; }
+  }
+
+  .note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .note a { color: var(--accent); text-decoration: none; }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<h1>Uranium Spot Price Impact Calculator</h1>
+<p class="subtitle">Model how rising U3O8 prices affect nuclear utility earnings — <a href="/deep-dives/uranium-supercycle-utility-squeeze/">full analysis</a></p>
+
+<div class="controls">
+  <div class="slider-row">
+    <span class="slider-label">U3O8 Spot</span>
+    <input type="range" id="u3o8Slider" min="45" max="600" value="86" step="1">
+    <span class="slider-value" id="u3o8Value">$86/lb</span>
+  </div>
+  <div class="slider-row">
+    <span class="slider-label">SWU Price</span>
+    <input type="range" id="swuSlider" min="80" max="500" value="170" step="5">
+    <span class="slider-value" id="swuValue">$170</span>
+  </div>
+  <div class="scenarios" id="scenarioButtons"></div>
+</div>
+
+<div class="summary-cards" id="summaryCards"></div>
+
+<div class="fuel-breakdown">
+  <div class="card">
+    <div class="card-label">Fuel Cost per GW / Year</div>
+    <div class="card-value" id="fuelPerGW">$118M</div>
+    <div class="card-detail" id="fuelPerGWDetail">vs $91M under old contracts</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Fuel Cost per MWh</div>
+    <div class="card-value" id="fuelPerMWh">$14.93</div>
+    <div class="card-detail" id="fuelPerMWhDetail">was $11.57 under old contracts</div>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="table-title">Nuclear Utility Earnings Impact</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Company</th>
+        <th class="num">Nuclear GW</th>
+        <th class="num">Fuel Cost Increase</th>
+        <th class="num">Net Income</th>
+        <th class="bar-cell">% of Net Income Hit</th>
+        <th>Risk</th>
+      </tr>
+    </thead>
+    <tbody id="utilityTable"></tbody>
+  </table>
+  <div class="note">
+    Net income figures from trailing twelve months. Fuel cost increase is calculated as the delta between current slider prices and old contract baseline ($45/lb U3O8, $110/SWU).
+    Model assumes ~470,000 lbs U3O8, ~120,000 SWU, $16/kgU conversion, and $300/kgU fabrication per GW annually.
+    <br><a href="/deep-dives/uranium-supercycle-utility-squeeze/">Read the full uranium supercycle analysis →</a>
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="table-title">Uranium Miners — 200WMA Positioning</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Ticker</th>
+        <th>Company</th>
+        <th class="num">Price</th>
+        <th class="num">200WMA</th>
+        <th class="num">% Above</th>
+        <th class="num">P/E</th>
+        <th class="num">FCF</th>
+      </tr>
+    </thead>
+    <tbody id="minerTable"></tbody>
+  </table>
+  <div class="note">
+    Every uranium miner is 90%+ above its 200-week moving average. The framework doesn't chase.
+  </div>
+</div>
+
+<div class="table-container">
+  <div class="table-title">2028 Contract Cliff — US Unfilled Requirements</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th class="num">Unfilled (Mlbs)</th>
+        <th class="num">% Uncovered</th>
+        <th class="num">Spot Cost at Current Price</th>
+        <th>Event</th>
+      </tr>
+    </thead>
+    <tbody id="cliffTable"></tbody>
+  </table>
+  <div class="note">
+    Source: <a href="https://www.eia.gov/uranium/marketing/">EIA 2024 Uranium Marketing Annual Report</a>.
+    The 2028 jump reflects the Prohibiting Russian Uranium Imports Act taking full effect.
+  </div>
+</div>
+
+<script>
+const scenarios = [
+  { label: "Old contracts", u3o8: 45, swu: 110 },
+  { label: "Current spot", u3o8: 86, swu: 170 },
+  { label: "Stress ($150)", u3o8: 150, swu: 220 },
+  { label: "Stress+ ($200)", u3o8: 200, swu: 250 },
+  { label: "Extreme ($300)", u3o8: 300, swu: 300 },
+  { label: "Panic ($500)", u3o8: 500, swu: 400 },
+];
+
+const utilities = [
+  { ticker: "CEG", name: "Constellation", gw: 20.0, ni: 2319, above200: 63.6 },
+  { ticker: "DUK", name: "Duke Energy", gw: 10.74, ni: 4905, above200: 34.1 },
+  { ticker: "NEE", name: "NextEra", gw: 5.0, ni: 6835, above200: 32.2 },
+  { ticker: "SO", name: "Southern Co", gw: 4.54, ni: 4341, above200: 32.1 },
+  { ticker: "PPL", name: "PPL Corp", gw: 2.5, ni: 1179, above200: 34.5 },
+  { ticker: "VST", name: "Vistra", gw: 2.43, ni: 752, above200: 82.4 },
+  { ticker: "PCG", name: "PG&E", gw: 2.256, ni: 2593, above200: 12.0 },
+];
+
+const miners = [
+  { ticker: "CCJ", name: "Cameco", price: 107.92, wma: 48.68, pe: "109x", fcf: "$480M" },
+  { ticker: "UUUU", name: "Energy Fuels", price: 18.67, wma: 7.93, pe: "N/A", fcf: "-$106M" },
+  { ticker: "UEC", name: "Uranium Energy", price: 13.41, wma: 6.59, pe: "N/A", fcf: "-$88M" },
+  { ticker: "LEU", name: "Centrus Energy", price: 209.64, wma: 91.04, pe: "54x", fcf: "$38M" },
+  { ticker: "DNN", name: "Denison Mines", price: 3.82, wma: 1.79, pe: "N/A", fcf: "-$78M" },
+  { ticker: "NXE", name: "NexGen Energy", price: 12.10, wma: 6.31, pe: "N/A", fcf: "-$216M" },
+];
+
+const cliffData = [
+  { year: 2026, unfilled: 3.2, event: "Current coverage" },
+  { year: 2027, unfilled: 3.4, event: "Contracts rolling off" },
+  { year: 2028, unfilled: 11.5, event: "Russian uranium ban takes effect" },
+];
+
+const BASELINE_U3O8 = 45;
+const BASELINE_SWU = 110;
+const U3O8_PER_GW = 470000;
+const SWU_PER_GW = 120000;
+const CONV_PER_GW = 180000 * 16;
+const FAB_PER_GW = 180000 * 300;
+const MWH_PER_GW = 1000 * 8760 * 0.90;
+
+function fuelCost(u3o8, swu) {
+  return U3O8_PER_GW * u3o8 + SWU_PER_GW * swu + CONV_PER_GW + FAB_PER_GW;
+}
+
+function getRiskLevel(pct) {
+  if (pct > 100) return { label: "CRITICAL", color: var_red };
+  if (pct > 40) return { label: "SEVERE", color: var_red };
+  if (pct > 20) return { label: "HIGH", color: var_orange };
+  if (pct > 10) return { label: "ELEVATED", color: var_yellow };
+  return { label: "MODERATE", color: var_green };
+}
+
+const var_red = "#f85149";
+const var_orange = "#db6d28";
+const var_yellow = "#d29922";
+const var_green = "#3fb950";
+const var_accent = "#58a6ff";
+
+function fmt(n) { return n.toLocaleString('en-US'); }
+function fmtM(n) { return "$" + Math.round(n / 1e6).toLocaleString('en-US') + "M"; }
+
+const u3o8Slider = document.getElementById('u3o8Slider');
+const swuSlider = document.getElementById('swuSlider');
+const u3o8Value = document.getElementById('u3o8Value');
+const swuValue = document.getElementById('swuValue');
+
+// Build scenario buttons
+const btnContainer = document.getElementById('scenarioButtons');
+scenarios.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'scenario-btn' + (i === 1 ? ' active' : '');
+  btn.textContent = s.label;
+  btn.onclick = () => {
+    u3o8Slider.value = s.u3o8;
+    swuSlider.value = s.swu;
+    update();
+  };
+  btnContainer.appendChild(btn);
+});
+
+// Miner table (static)
+const minerBody = document.getElementById('minerTable');
+miners.forEach(m => {
+  const pctAbove = ((m.price / m.wma) - 1) * 100;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td class="ticker">${m.ticker}</td>
+    <td>${m.name}</td>
+    <td class="num">$${m.price.toFixed(2)}</td>
+    <td class="num">$${m.wma.toFixed(2)}</td>
+    <td class="num" style="color:${var_red}">+${pctAbove.toFixed(1)}%</td>
+    <td class="num">${m.pe}</td>
+    <td class="num">${m.fcf}</td>
+  `;
+  minerBody.appendChild(tr);
+});
+
+function update() {
+  const u3o8 = parseInt(u3o8Slider.value);
+  const swu = parseInt(swuSlider.value);
+
+  u3o8Value.textContent = `$${u3o8}/lb`;
+  swuValue.textContent = `$${swu}`;
+
+  // Color the price value based on severity
+  if (u3o8 >= 300) u3o8Value.style.color = var_red;
+  else if (u3o8 >= 200) u3o8Value.style.color = var_orange;
+  else if (u3o8 >= 150) u3o8Value.style.color = var_yellow;
+  else u3o8Value.style.color = var_accent;
+
+  // Update scenario button active state
+  document.querySelectorAll('.scenario-btn').forEach((btn, i) => {
+    const s = scenarios[i];
+    btn.classList.toggle('active', s.u3o8 === u3o8 && s.swu === swu);
+  });
+
+  const currentFuel = fuelCost(u3o8, swu);
+  const baselineFuel = fuelCost(BASELINE_U3O8, BASELINE_SWU);
+  const deltaPerGW = currentFuel - baselineFuel;
+  const fuelMWh = currentFuel / MWH_PER_GW;
+  const baselineMWh = baselineFuel / MWH_PER_GW;
+
+  // Fuel cost cards
+  document.getElementById('fuelPerGW').textContent = fmtM(currentFuel);
+  document.getElementById('fuelPerGWDetail').textContent = `vs ${fmtM(baselineFuel)} under old contracts (+${fmtM(deltaPerGW)})`;
+  document.getElementById('fuelPerMWh').textContent = `$${fuelMWh.toFixed(2)}/MWh`;
+  document.getElementById('fuelPerMWhDetail').textContent = `was $${baselineMWh.toFixed(2)} under old contracts`;
+
+  // Summary cards
+  const totalNIHit = utilities.reduce((sum, u) => sum + (deltaPerGW * u.gw), 0);
+  const worstUtility = utilities.reduce((worst, u) => {
+    const pct = (deltaPerGW * u.gw / (u.ni * 1e6)) * 100;
+    return pct > worst.pct ? { ticker: u.ticker, pct } : worst;
+  }, { ticker: '', pct: 0 });
+
+  const unfilledCost2028 = 11.5e6 * u3o8;
+
+  const cardsHTML = `
+    <div class="card">
+      <div class="card-label">Total US Nuclear Utility NI Impact</div>
+      <div class="card-value" style="color:${var_red}">${fmtM(totalNIHit)}</div>
+      <div class="card-detail">combined fuel cost increase vs old contracts</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Most Exposed Utility</div>
+      <div class="card-value" style="color:${var_red}">${worstUtility.ticker} (${worstUtility.pct.toFixed(1)}%)</div>
+      <div class="card-detail">of net income consumed by fuel cost increase</div>
+    </div>
+    <div class="card">
+      <div class="card-label">2028 Unfilled Spot Cost</div>
+      <div class="card-value" style="color:${u3o8 >= 200 ? var_red : var_yellow}">$${(unfilledCost2028/1e9).toFixed(1)}B</div>
+      <div class="card-detail">11.5M lbs uncovered at $${u3o8}/lb</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Fuel as % of Plant Op Cost</div>
+      <div class="card-value" style="color:${fuelMWh > 30 ? var_red : fuelMWh > 20 ? var_orange : var_accent}">${(fuelMWh / 33 * 100).toFixed(0)}%</div>
+      <div class="card-detail">$${fuelMWh.toFixed(2)} of ~$33/MWh total operating cost</div>
+    </div>
+  `;
+  document.getElementById('summaryCards').innerHTML = cardsHTML;
+
+  // Utility table
+  const tbody = document.getElementById('utilityTable');
+  tbody.innerHTML = '';
+
+  // Sort by NI hit percentage descending
+  const sorted = [...utilities].sort((a, b) => {
+    const pctA = (deltaPerGW * a.gw) / (a.ni * 1e6) * 100;
+    const pctB = (deltaPerGW * b.gw) / (b.ni * 1e6) * 100;
+    return pctB - pctA;
+  });
+
+  sorted.forEach(u => {
+    const totalDelta = deltaPerGW * u.gw;
+    const pctNI = (totalDelta / (u.ni * 1e6)) * 100;
+    const risk = getRiskLevel(pctNI);
+    const barWidth = Math.min(pctNI, 150);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="ticker">${u.ticker}</td>
+      <td>${u.name}</td>
+      <td class="num">${u.gw.toFixed(1)}</td>
+      <td class="num">${totalDelta > 0 ? '+' : ''}${fmtM(totalDelta)}</td>
+      <td class="num">$${fmt(u.ni)}M</td>
+      <td class="bar-cell">
+        <div class="bar-bg" style="width:${barWidth}%;background:${risk.color}"></div>
+        <span class="bar-text" style="color:${risk.color}">${pctNI.toFixed(1)}%</span>
+      </td>
+      <td><span class="risk-badge" style="color:${risk.color};background:${risk.color}22;border:1px solid ${risk.color}44">${risk.label}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Cliff table
+  const cliffBody = document.getElementById('cliffTable');
+  cliffBody.innerHTML = '';
+  cliffData.forEach(c => {
+    const spotCost = c.unfilled * 1e6 * u3o8;
+    const pctUncovered = (c.unfilled / 50) * 100;
+    const isCliff = c.year === 2028;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="${isCliff ? 'font-weight:700;color:'+var_red : ''}">${c.year}</td>
+      <td class="num" style="${isCliff ? 'font-weight:700;color:'+var_red : ''}">${c.unfilled} Mlbs</td>
+      <td class="num" style="${isCliff ? 'font-weight:700;color:'+var_red : ''}">${pctUncovered.toFixed(1)}%</td>
+      <td class="num" style="${isCliff ? 'font-weight:700;color:'+var_red : ''}">$${(spotCost/1e6).toFixed(0)}M</td>
+      <td style="${isCliff ? 'font-weight:700;color:'+var_red : ''}">${c.event}</td>
+    `;
+    cliffBody.appendChild(tr);
+  });
+}
+
+u3o8Slider.addEventListener('input', update);
+swuSlider.addEventListener('input', update);
+update();
+</script>
+
+</body>
+</html>

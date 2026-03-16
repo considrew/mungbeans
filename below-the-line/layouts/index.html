@@ -142,16 +142,12 @@
   {{ end }}
 
   <main class="homepage">
-    <!-- Banner Image -->
-    <div class="site-banner">
-      <img src="/images/og-image.png" alt="mungbeans.io — Value Investing, Mastering the 200W Moving Average" class="site-banner-img">
-    </div>
-
-    <!-- Hero Section -->
+    <!-- Banner + Stats -->
     <section class="hero">
-      <h1>Below The Line</h1>
-      <p class="tagline">Track when quality stocks touch their 200-week moving average.</p>
-      
+      <div class="site-banner">
+        <img src="/images/og-image.png" alt="mungbeans.io — Value Investing, Mastering the 200W Moving Average" class="site-banner-img">
+      </div>
+
       <div class="hero-stats">
         <div class="stat">
           <span class="stat-number">{{ len $qualityPicks }}</span>

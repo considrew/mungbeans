@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesame Seed Trades — Framework Signal Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            padding: 2rem 1rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #7ee787 0%, #58a6ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #8b949e;
+            margin-bottom: 2rem;
+        }
+
+        .table-wrapper {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: #0d1117;
+            border-bottom: 2px solid #30363d;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #58a6ff;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            white-space: nowrap;
+            transition: background-color 0.2s ease;
+        }
+
+        th:hover {
+            background-color: rgba(88, 166, 255, 0.1);
+        }
+
+        th.sortable::after {
+            content: '⇅';
+            position: absolute;
+            right: 0.5rem;
+            opacity: 0.3;
+            font-size: 0.8rem;
+        }
+
+        th.sorted-asc::after {
+            content: '↑';
+            opacity: 1;
+            color: #7ee787;
+        }
+
+        th.sorted-desc::after {
+            content: '↓';
+            opacity: 1;
+            color: #7ee787;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #30363d;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+            position: relative;
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(126, 231, 135, 0.05);
+            transform: translateX(2px);
+        }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Zone-based left border coloring */
+        tbody tr.zone-below-line {
+            border-left: 4px solid #7ee787;
+        }
+
+        tbody tr.zone-doorstep {
+            border-left: 4px solid #d29922;
+        }
+
+        tbody tr.zone-near-line {
+            border-left: 4px solid #d29922;
+        }
+
+        tbody tr.zone-getting-close {
+            border-left: 4px solid #d29922;
+        }
+
+        tbody tr.zone-above-line {
+            border-left: 4px solid #f97316;
+        }
+
+        tbody tr.zone-extended {
+            border-left: 4px solid #f97316;
+        }
+
+        tbody tr.zone-danger {
+            border-left: 4px solid #f85149;
+        }
+
+        /* Ticker & Company columns */
+        .ticker {
+            font-weight: 700;
+            color: #58a6ff;
+            font-family: 'Monaco', 'Courier New', monospace;
+            letter-spacing: 0.05em;
+        }
+
+        .company-name {
+            font-size: 0.85rem;
+            color: #8b949e;
+            margin-top: 0.25rem;
+        }
+
+        /* Zone badge */
+        .zone-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border: 1px solid;
+        }
+
+        .zone-badge.below-line {
+            background-color: rgba(126, 231, 135, 0.15);
+            color: #7ee787;
+            border-color: #7ee787;
+        }
+
+        .zone-badge.doorstep {
+            background-color: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border-color: #d29922;
+        }
+
+        .zone-badge.near-line {
+            background-color: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border-color: #d29922;
+        }
+
+        .zone-badge.getting-close {
+            background-color: rgba(210, 153, 34, 0.15);
+            color: #d29922;
+            border-color: #d29922;
+        }
+
+        .zone-badge.above-line {
+            background-color: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+            border-color: #f97316;
+        }
+
+        .zone-badge.extended {
+            background-color: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+            border-color: #f97316;
+        }
+
+        .zone-badge.danger {
+            background-color: rgba(248, 81, 73, 0.15);
+            color: #f85149;
+            border-color: #f85149;
+        }
+
+        /* WMA Bar Chart */
+        .wma-cell {
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .wma-bar-container {
+            position: relative;
+            width: 100%;
+            height: 28px;
+            background-color: rgba(48, 54, 61, 0.6);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .wma-bar {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding: 0 0.5rem;
+            transition: width 0.4s ease;
+            position: relative;
+        }
+
+        .wma-bar.positive {
+            background: linear-gradient(90deg, #7ee787, rgba(126, 231, 135, 0.4));
+        }
+
+        .wma-bar.negative {
+            background: linear-gradient(90deg, #f85149, rgba(248, 81, 73, 0.4));
+        }
+
+        .wma-bar-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #e6edf3;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+            white-space: nowrap;
+            margin-left: 0.5rem;
+        }
+
+        .wma-indicator {
+            font-size: 0.75rem;
+            color: #8b949e;
+            margin-top: 0.25rem;
+        }
+
+        /* Signal Badge */
+        .signal-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .signal-badge.buy {
+            background-color: rgba(126, 231, 135, 0.2);
+            color: #7ee787;
+            border-color: #7ee787;
+        }
+
+        .signal-badge.hold {
+            background-color: rgba(210, 153, 34, 0.2);
+            color: #d29922;
+            border-color: #d29922;
+        }
+
+        .signal-badge.watch {
+            background-color: rgba(88, 166, 255, 0.2);
+            color: #58a6ff;
+            border-color: #58a6ff;
+        }
+
+        .signal-badge.sell {
+            background-color: rgba(248, 81, 73, 0.2);
+            color: #f85149;
+            border-color: #f85149;
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background-color: #0d1117;
+            color: #e6edf3;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid #30363d;
+            white-space: nowrap;
+            z-index: 1000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        tbody tr:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* Legend */
+        .legend {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+        }
+
+        .legend h3 {
+            font-size: 0.9rem;
+            color: #58a6ff;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .legend-label {
+            font-size: 0.85rem;
+            color: #8b949e;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            th, td {
+                padding: 0.75rem;
+                font-size: 0.8rem;
+            }
+
+            th {
+                font-size: 0.75rem;
+            }
+
+            .table-wrapper {
+                border-radius: 8px;
+            }
+
+            .wma-bar-label {
+                font-size: 0.7rem;
+            }
+
+            .signal-badge {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            .legend-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+
+            .table-wrapper {
+                background-color: white;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+
+            thead {
+                background-color: #f5f5f5;
+            }
+
+            tbody tr:hover {
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sesame Seed Trades — Framework Signal Map</h1>
+            <p class="subtitle">Stocks affected by Strait of Hormuz butterfly effects, ranked by 200WMA proximity</p>
+        </header>
+
+        <div class="table-wrapper">
+            <table id="tradesTable">
+                <thead>
+                    <tr>
+                        <th class="sortable" data-column="ticker">Ticker</th>
+                        <th class="sortable" data-column="chain">Chain</th>
+                        <th class="sortable" data-column="zone">Zone</th>
+                        <th class="sortable" data-column="wma">% vs 200WMA</th>
+                        <th class="sortable" data-column="metric">Key Metric</th>
+                        <th class="sortable" data-column="signal">Framework Signal</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="legend">
+            <h3>Framework Zones</h3>
+            <div class="legend-grid">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #7ee787;"></div>
+                    <span class="legend-label"><strong>Below Line / Deep Value</strong> — Strong buy signals</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #d29922;"></div>
+                    <span class="legend-label"><strong>Doorstep / Near Line</strong> — Approaching entries</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f97316;"></div>
+                    <span class="legend-label"><strong>Above Line / Extended</strong> — Watch for pullback</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f85149;"></div>
+                    <span class="legend-label"><strong>Danger Zone</strong> — Overextended, high risk</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = [
+            {
+                ticker: 'DOW',
+                company: 'Dow Inc.',
+                chain: 'Petrochemical',
+                zone: 'Deep Value (below line)',
+                zoneClass: 'zone-below-line',
+                wmaPercent: -999,
+                wmaLabel: 'Below line',
+                metric: 'Negative FCF',
+                signal: 'Below 200WMA ✓',
+                signalClass: 'signal-badge buy'
+            },
+            {
+                ticker: 'MOS',
+                company: 'Mosaic',
+                chain: 'Fertilizer',
+                zone: 'Extreme Value (below line)',
+                zoneClass: 'zone-below-line',
+                wmaPercent: -999,
+                wmaLabel: 'Below line',
+                metric: 'Negative FCF',
+                signal: 'Below 200WMA ✓',
+                signalClass: 'signal-badge buy'
+            },
+            {
+                ticker: 'SMR',
+                company: 'NuScale Power',
+                chain: 'Uranium/Nuclear',
+                zone: 'Below Line',
+                zoneClass: 'zone-below-line',
+                wmaPercent: -20.3,
+                wmaLabel: '-20.3%',
+                metric: '$1.25B cash, 0 debt',
+                signal: 'Below 200WMA ✓',
+                signalClass: 'signal-badge buy'
+            },
+            {
+                ticker: 'LYB',
+                company: 'LyondellBasell',
+                chain: 'Petrochemical',
+                zone: 'Doorstep',
+                zoneClass: 'zone-doorstep',
+                wmaPercent: 3.4,
+                wmaLabel: '+3.4%',
+                metric: '74% YTD',
+                signal: 'At doorstep',
+                signalClass: 'signal-badge hold'
+            },
+            {
+                ticker: 'PCG',
+                company: 'PG&E',
+                chain: 'Uranium/Nuclear',
+                zone: 'Near Line',
+                zoneClass: 'zone-near-line',
+                wmaPercent: 12.0,
+                wmaLabel: '+12.0%',
+                metric: '10.1x fwd P/E',
+                signal: 'Contrarian play',
+                signalClass: 'signal-badge watch'
+            },
+            {
+                ticker: 'ALB',
+                company: 'Albemarle',
+                chain: 'EV/Lithium',
+                zone: 'Getting Close',
+                zoneClass: 'zone-getting-close',
+                wmaPercent: 8.5,
+                wmaLabel: 'Approaching',
+                metric: 'Lithium cycle bottom',
+                signal: 'Watch for cross',
+                signalClass: 'signal-badge watch'
+            },
+            {
+                ticker: 'GASS',
+                company: 'StealthGas',
+                chain: 'Shipping/Tankers',
+                zone: 'Above Line',
+                zoneClass: 'zone-above-line',
+                wmaPercent: 25.0,
+                wmaLabel: 'Above',
+                metric: '0.46x P/B',
+                signal: 'Existing thesis',
+                signalClass: 'signal-badge hold'
+            },
+            {
+                ticker: 'WRB',
+                company: 'W.R. Berkley',
+                chain: 'Insurance',
+                zone: 'Above Line',
+                zoneClass: 'zone-above-line',
+                wmaPercent: 30.0,
+                wmaLabel: '+30%',
+                metric: '12.83% FCF yield',
+                signal: 'Watchlist',
+                signalClass: 'signal-badge hold'
+            },
+            {
+                ticker: 'CF',
+                company: 'CF Industries',
+                chain: 'Fertilizer',
+                zone: 'Extended',
+                zoneClass: 'zone-extended',
+                wmaPercent: 60.0,
+                wmaLabel: '+60%',
+                metric: 'Buffett quality',
+                signal: 'Too extended',
+                signalClass: 'signal-badge sell'
+            },
+            {
+                ticker: 'CCJ',
+                company: 'Cameco',
+                chain: 'Uranium',
+                zone: 'Extended',
+                zoneClass: 'zone-extended',
+                wmaPercent: 121.7,
+                wmaLabel: '+121.7%',
+                metric: '109x P/E',
+                signal: 'Way too extended',
+                signalClass: 'signal-badge sell'
+            },
+            {
+                ticker: 'CEG',
+                company: 'Constellation',
+                chain: 'Nuclear Utility',
+                zone: 'Danger Zone',
+                zoneClass: 'zone-danger',
+                wmaPercent: 63.6,
+                wmaLabel: '+63.6%',
+                metric: '77% NI hit at $200/lb U',
+                signal: 'Uranium victim',
+                signalClass: 'signal-badge sell'
+            },
+            {
+                ticker: 'VST',
+                company: 'Vistra',
+                chain: 'Nuclear Utility',
+                zone: 'Danger Zone',
+                zoneClass: 'zone-danger',
+                wmaPercent: 82.4,
+                wmaLabel: '+82.4%',
+                metric: '29% NI hit at $200/lb U',
+                signal: 'Uranium victim',
+                signalClass: 'signal-badge sell'
+            }
+        ];
+
+        let currentSort = { column: 'zone', direction: 'asc' };
+
+        function getZoneOrder(zone) {
+            const order = {
+                'zone-below-line': 0,
+                'zone-doorstep': 1,
+                'zone-near-line': 1,
+                'zone-getting-close': 1,
+                'zone-above-line': 2,
+                'zone-extended': 2,
+                'zone-danger': 3
+            };
+            return order[zone] || 999;
+        }
+
+        function sortData(column, direction) {
+            const sorted = [...data].sort((a, b) => {
+                let aVal, bVal;
+
+                if (column === 'zone') {
+                    aVal = getZoneOrder(a.zoneClass);
+                    bVal = getZoneOrder(b.zoneClass);
+                } else if (column === 'wma') {
+                    aVal = a.wmaPercent;
+                    bVal = b.wmaPercent;
+                } else if (column === 'ticker') {
+                    aVal = a.ticker;
+                    bVal = b.ticker;
+                } else {
+                    aVal = a[column];
+                    bVal = b[column];
+                }
+
+                if (typeof aVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                if (aVal < bVal) return direction === 'asc' ? -1 : 1;
+                if (aVal > bVal) return direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            return sorted;
+        }
+
+        function renderTable(dataToRender) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            dataToRender.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = row.zoneClass;
+
+                const wmaWidth = Math.min(Math.abs(row.wmaPercent) / 200 * 100, 100);
+                const isPositive = row.wmaPercent > 0;
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="ticker">${row.ticker}</div>
+                        <div class="company-name">${row.company}</div>
+                    </td>
+                    <td>${row.chain}</td>
+                    <td>
+                        <span class="zone-badge ${row.zoneClass.replace('zone-', '')}">${row.zone}</span>
+                    </td>
+                    <td class="wma-cell">
+                        <div class="wma-bar-container">
+                            <div class="wma-bar ${isPositive ? 'positive' : 'negative'}" style="width: ${wmaWidth}%;">
+                                <span class="wma-bar-label">${row.wmaLabel}</span>
+                            </div>
+                        </div>
+                        <div class="wma-indicator">${row.wmaPercent === -999 ? 'Extreme value' : Math.abs(row.wmaPercent) + '% ' + (isPositive ? 'above' : 'below')}</div>
+                    </td>
+                    <td>${row.metric}</td>
+                    <td><span class="${row.signalClass}">${row.signal}</span></td>
+                    <div class="tooltip">${row.ticker} - ${row.zone}</div>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateSortIndicators() {
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sorted-asc', 'sorted-desc');
+                if (th.getAttribute('data-column') === currentSort.column) {
+                    th.classList.add(`sorted-${currentSort.direction}`);
+                }
+            });
+        }
+
+        function handleSort(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            const sorted = sortData(column, currentSort.direction);
+            renderTable(sorted);
+            updateSortIndicators();
+        }
+
+        // Event listeners
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                handleSort(th.getAttribute('data-column'));
+            });
+        });
+
+        // Initial render
+        const sorted = sortData(currentSort.column, currentSort.direction);
+        renderTable(sorted);
+        updateSortIndicators();
+    </script>
+</body>
+</html>
