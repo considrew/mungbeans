@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCF + 200WMA Backtesting Results</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #0d1117;
+            color: #e6edf3;
+            padding: 32px 24px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #30363d;
+            padding-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #e6edf3;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #8b949e;
+            margin-bottom: 4px;
+        }
+
+        .chart-section {
+            margin-bottom: 48px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 24px;
+        }
+
+        .chart-section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #e6edf3;
+            border-bottom: 2px solid #30363d;
+            padding-bottom: 12px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 16px;
+        }
+
+        .chart-meta {
+            font-size: 12px;
+            color: #8b949e;
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        .methodology {
+            background: #0d1117;
+            border-left: 3px solid #58a6ff;
+            padding: 16px;
+            margin-top: 40px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .methodology h3 {
+            margin-bottom: 8px;
+            color: #58a6ff;
+            font-size: 14px;
+        }
+
+        .methodology p {
+            color: #8b949e;
+            margin-bottom: 8px;
+        }
+
+        .significance-legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #30363d;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-swatch {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px 12px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Below the Line + Free Cash Flow: What 3,370 Crossings Tell Us</h1>
+            <p>S&P 500, 2011–2026 | 200-Week Moving Average Backtesting</p>
+        </div>
+
+        <!-- Chart 1: FCF Yield Bucket Performance -->
+        <div class="chart-section">
+            <h2>Chart 1: FCF Yield Bucket Performance</h2>
+            <div class="chart-container">
+                <canvas id="bucketChart"></canvas>
+            </div>
+            <div class="chart-meta">
+                Grouped bars show median 12-month returns and win rates by FCF yield bucket. Sample sizes (n) labeled above each bucket group.
+            </div>
+        </div>
+
+        <!-- Chart 2: FCF Yield Threshold Edge -->
+        <div class="chart-section">
+            <h2>Chart 2: FCF Yield Threshold Edge</h2>
+            <div class="chart-container">
+                <canvas id="thresholdChart"></canvas>
+            </div>
+            <div class="significance-legend">
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background: #7ee787;"></div>
+                    <span>Significant (p &lt; 0.05)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background: #d29922;"></div>
+                    <span>Marginally Significant (p &lt; 0.10)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background: #8b949e;"></div>
+                    <span>Not Significant (p ≥ 0.10)</span>
+                </div>
+            </div>
+            <div class="chart-meta">
+                Line color indicates statistical significance. Baseline (all crossings) shown as dashed gray reference line. ≥10% threshold marks significance breakpoint.
+            </div>
+        </div>
+
+        <!-- Chart 3: Quality Category Comparison -->
+        <div class="chart-section">
+            <h2>Chart 3: Quality Category Comparison</h2>
+            <div class="chart-container">
+                <canvas id="qualityChart"></canvas>
+            </div>
+            <div class="chart-meta">
+                Horizontal bars ranked by median return. Bar color reflects quality strength; win rates shown as percentage labels.
+            </div>
+        </div>
+
+        <!-- Chart 4: Max Drawdown Comparison -->
+        <div class="chart-section">
+            <h2>Chart 4: Max Drawdown vs. Return (Risk/Reward Profile)</h2>
+            <div class="chart-container">
+                <canvas id="drawdownChart"></canvas>
+            </div>
+            <div class="chart-meta">
+                Dual-axis visualization: bars show median drawdown (left) and median 12-month return (right). Illustrates risk-adjusted returns across signal filters.
+            </div>
+        </div>
+
+        <div class="methodology">
+            <h3>Methodology & Dataset</h3>
+            <p>
+                <strong>Data Source:</strong> S&P 500 historical prices and fundamental data (FCF yield), 2011–2026.
+            </p>
+            <p>
+                <strong>Signal Definition:</strong> Buy signals generated when the S&P 500 closes above its 200-week moving average. 3,370 total crossings identified. Hold 12 months, then exit or re-enter if signal changes.
+            </p>
+            <p>
+                <strong>FCF Filter:</strong> Each crossing is tagged with the FCF yield of the index at signal time. Buckets are inclusive (e.g., "3–5%" means ≥3% and &lt;5%). Positive & Growing, Positive & Declining, and Positive (trend unknown) reflect whether FCF was increasing or decreasing in the months leading up to the signal.
+            </p>
+            <p>
+                <strong>Returns:</strong> Median 12-month total return (price appreciation + dividends) following each signal. Win rate is the percentage of signals with positive 12-month returns.
+            </p>
+            <p>
+                <strong>Statistical Significance:</strong> p-values derived from binomial test of win rate vs. 50% null hypothesis. Green indicates p &lt; 0.05 (strong evidence of edge); yellow indicates p &lt; 0.10 (marginal evidence).
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Global chart options
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e6edf3',
+                        font: { size: 12 },
+                        usePointStyle: true,
+                        padding: 16
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#8b949e', font: { size: 11 } },
+                    grid: { color: '#30363d' },
+                    border: { color: '#30363d' }
+                },
+                x: {
+                    ticks: { color: '#8b949e', font: { size: 11 } },
+                    grid: { color: 'transparent' },
+                    border: { color: '#30363d' }
+                }
+            }
+        };
+
+        // Chart 1: FCF Yield Bucket Performance
+        const bucketCtx = document.getElementById('bucketChart').getContext('2d');
+        new Chart(bucketCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'Deep Negative\n(<-5%)',
+                    'Negative\n(-5% to 0%)',
+                    'Low\n(0-3%)',
+                    'Moderate\n(3-5%)',
+                    'Strong\n(5-8%)',
+                    'Very Strong\n(8-12%)',
+                    'Exceptional\n(>12%)'
+                ],
+                datasets: [
+                    {
+                        label: '12-Month Return',
+                        data: [18.2, 12.6, 23.6, 10.4, 16.6, 8.1, 24.1],
+                        backgroundColor: '#7ee787',
+                        borderColor: '#7ee787',
+                        borderWidth: 0,
+                        borderRadius: 4,
+                        yAxisID: 'y',
+                        datalabels: { anchor: 'top', align: 'top' }
+                    },
+                    {
+                        label: 'Win Rate (%)',
+                        data: [85, 72, 73, 66, 77, 53, 85],
+                        type: 'line',
+                        borderColor: '#58a6ff',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#58a6ff',
+                        pointBorderColor: '#161b22',
+                        pointBorderWidth: 2,
+                        yAxisID: 'y1',
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { color: '#30363d' },
+                        border: { color: '#30363d' },
+                        min: 0,
+                        max: 30,
+                        title: { display: true, text: 'Return (%)', color: '#8b949e' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { drawOnChartArea: false },
+                        border: { color: '#30363d' },
+                        min: 0,
+                        max: 100,
+                        title: { display: true, text: 'Win Rate (%)', color: '#8b949e' }
+                    },
+                    x: {
+                        ticks: { color: '#8b949e', font: { size: 10 } },
+                        grid: { color: 'transparent' },
+                        border: { color: '#30363d' }
+                    }
+                },
+                plugins: {
+                    ...chartOptions.plugins,
+                    annotation: {
+                        annotations: {
+                            label1: { type: 'label', xValue: 0, yValue: 18.2, content: ['n=48'] },
+                            label2: { type: 'label', xValue: 1, yValue: 12.6, content: ['n=72'] },
+                            label3: { type: 'label', xValue: 2, yValue: 23.6, content: ['n=148'] },
+                            label4: { type: 'label', xValue: 3, yValue: 10.4, content: ['n=229'] },
+                            label5: { type: 'label', xValue: 4, yValue: 16.6, content: ['n=166'] },
+                            label6: { type: 'label', xValue: 5, yValue: 8.1, content: ['n=76'] },
+                            label7: { type: 'label', xValue: 6, yValue: 24.1, content: ['n=107'] }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'sampleLabels',
+                afterDatasetsDraw(chart) {
+                    const ctx = chart.ctx;
+                    ctx.font = '11px sans-serif';
+                    ctx.fillStyle = '#8b949e';
+                    ctx.textAlign = 'center';
+
+                    const sampleSizes = [48, 72, 148, 229, 166, 76, 107];
+                    const meta = chart.getDatasetMeta(0);
+
+                    meta.data.forEach((bar, index) => {
+                        const x = bar.x;
+                        const y = bar.y - 8;
+                        ctx.fillText(`n=${sampleSizes[index]}`, x, y);
+                    });
+                }
+            }]
+        });
+
+        // Chart 2: FCF Yield Threshold Edge
+        const thresholdCtx = document.getElementById('thresholdChart').getContext('2d');
+        const thresholds = ['≥0%', '≥3%', '≥5%', '≥8%', '≥10%', '≥12%', '≥15%'];
+        const medianReturns = [16.4, 15.0, 17.5, 19.3, 22.4, 24.1, 28.2];
+        const pValues = [0.33, 0.93, 0.064, 0.083, 0.007, 0.0008, 0.0000];
+        const baseline = 20.7;
+
+        // Determine line segment colors based on significance
+        const significanceColors = pValues.map(p => {
+            if (p < 0.05) return '#7ee787';
+            if (p < 0.10) return '#d29922';
+            return '#8b949e';
+        });
+
+        new Chart(thresholdCtx, {
+            type: 'line',
+            data: {
+                labels: thresholds,
+                datasets: [
+                    {
+                        label: 'Baseline (All Crossings)',
+                        data: Array(7).fill(baseline),
+                        borderColor: '#8b949e',
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0
+                    },
+                    {
+                        label: 'Median Return Above Threshold',
+                        data: medianReturns,
+                        borderColor: '#58a6ff',
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointBackgroundColor: '#58a6ff',
+                        pointBorderColor: '#161b22',
+                        pointBorderWidth: 2,
+                        fill: false,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { color: '#30363d' },
+                        border: { color: '#30363d' },
+                        min: 10,
+                        max: 32,
+                        title: { display: true, text: 'Median 12-Month Return (%)', color: '#8b949e' }
+                    },
+                    x: {
+                        ticks: { color: '#8b949e', font: { size: 11 } },
+                        grid: { color: 'transparent' },
+                        border: { color: '#30363d' }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'colorSegments',
+                afterDatasetsDraw(chart) {
+                    const ctx = chart.ctx;
+                    const dataset = chart.data.datasets[1];
+                    const meta = chart.getDatasetMeta(1);
+                    const xAxis = chart.scales.x;
+                    const yAxis = chart.scales.y;
+
+                    for (let i = 0; i < meta.data.length - 1; i++) {
+                        const point1 = meta.data[i];
+                        const point2 = meta.data[i + 1];
+                        const color = significanceColors[i];
+
+                        ctx.strokeStyle = color;
+                        ctx.lineWidth = 3;
+                        ctx.beginPath();
+                        ctx.moveTo(point1.x, point1.y);
+                        ctx.lineTo(point2.x, point2.y);
+                        ctx.stroke();
+                    }
+
+                    // Add significance breakpoint label
+                    ctx.fillStyle = '#7ee787';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.textAlign = 'center';
+                    const breakpointIndex = 4; // ≥10%
+                    const breakpointPoint = meta.data[breakpointIndex];
+                    ctx.fillText('Significance', breakpointPoint.x, breakpointPoint.y - 25);
+                    ctx.fillText('Breakpoint', breakpointPoint.x, breakpointPoint.y - 12);
+
+                    // Draw arrow pointing to breakpoint
+                    ctx.strokeStyle = '#7ee787';
+                    ctx.fillStyle = '#7ee787';
+                    ctx.beginPath();
+                    ctx.moveTo(breakpointPoint.x, breakpointPoint.y - 8);
+                    ctx.lineTo(breakpointPoint.x, breakpointPoint.y - 3);
+                    ctx.stroke();
+                }
+            }]
+        });
+
+        // Chart 3: Quality Category Comparison
+        const qualityCtx = document.getElementById('qualityChart').getContext('2d');
+        const categories = [
+            'Negative & Improving',
+            'Exceptional\n(>12% FCF)',
+            'Positive (trend unknown)',
+            'Positive & Declining',
+            'Positive & Growing'
+        ];
+        const categoryReturns = [25.7, 24.1, 23.0, 9.8, 8.4];
+        const categoryWinRates = [100, 85, 82, 58, 62];
+        const categorySizes = [18, 107, 376, 142, 208];
+
+        // Color determination for quality
+        const qualityColors = ['#7ee787', '#7ee787', '#7ee787', '#d29922', '#d29922'];
+
+        new Chart(qualityCtx, {
+            type: 'bar',
+            data: {
+                labels: categories,
+                datasets: [
+                    {
+                        label: 'Median 12-Month Return',
+                        data: categoryReturns,
+                        backgroundColor: qualityColors,
+                        borderRadius: 4,
+                        indexAxis: 'y'
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { color: '#30363d' },
+                        border: { color: '#30363d' },
+                        min: 0,
+                        max: 30
+                    },
+                    y: {
+                        ticks: { color: '#8b949e', font: { size: 11 } },
+                        grid: { color: 'transparent' },
+                        border: { color: '#30363d' }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'winRateLabels',
+                afterDatasetsDraw(chart) {
+                    const ctx = chart.ctx;
+                    const meta = chart.getDatasetMeta(0);
+
+                    ctx.font = '11px sans-serif';
+                    ctx.fillStyle = '#e6edf3';
+                    ctx.textAlign = 'right';
+
+                    meta.data.forEach((bar, index) => {
+                        const x = bar.x + 8;
+                        const y = bar.y + 5;
+                        ctx.fillText(`${categoryWinRates[index]}% | n=${categorySizes[index]}`, x, y);
+                    });
+                }
+            }]
+        });
+
+        // Chart 4: Max Drawdown Comparison
+        const drawdownCtx = document.getElementById('drawdownChart').getContext('2d');
+        new Chart(drawdownCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'All Crossings\n(Baseline)',
+                    '+ FCF Yield\n≥ 3%',
+                    '+ FCF Yield\n≥ 5%',
+                    '+ FCF Yield\n≥ 8%'
+                ],
+                datasets: [
+                    {
+                        label: 'Median Max Drawdown',
+                        data: [null, -8.7, -6.7, -7.8],
+                        backgroundColor: '#f85149',
+                        borderRadius: 4,
+                        yAxisID: 'y',
+                        order: 2
+                    },
+                    {
+                        label: 'Median 12-Month Return',
+                        data: [20.7, 15.0, 17.5, 19.3],
+                        backgroundColor: '#7ee787',
+                        borderRadius: 4,
+                        yAxisID: 'y1',
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                ...chartOptions,
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { color: '#30363d' },
+                        border: { color: '#30363d' },
+                        min: -12,
+                        max: 25,
+                        title: { display: true, text: 'Drawdown (%)', color: '#8b949e' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        ticks: { color: '#8b949e', font: { size: 11 }, callback: (v) => v + '%' },
+                        grid: { drawOnChartArea: false },
+                        border: { color: '#30363d' },
+                        min: -12,
+                        max: 25,
+                        title: { display: true, text: 'Return (%)', color: '#8b949e' }
+                    },
+                    x: {
+                        ticks: { color: '#8b949e', font: { size: 11 } },
+                        grid: { color: 'transparent' },
+                        border: { color: '#30363d' }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
