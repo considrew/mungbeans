@@ -1,7 +1,7 @@
 ---
 title: "Below the Line: What 3,370 Crossings Tell Us About Free Cash Flow and the 200-Week Moving Average"
 date: 2026-03-16
-draft: true
+draft: false
 tags: ["framework", "backtesting", "200wma", "free-cash-flow", "methodology", "data"]
 description: "We backtested every S&P 500 stock that crossed below its 200-week moving average over 15 years and asked: does positive free cash flow predict better outcomes? The answer is more complicated — and more useful — than we expected."
 ---
