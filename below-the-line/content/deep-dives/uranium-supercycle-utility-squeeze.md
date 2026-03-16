@@ -34,8 +34,8 @@ Let's get specific about the global competition for uranium. These are the buyer
 
 | Buyer | Annual Requirement | Inventory | Strategy |
 |-------|-------------------|-----------|----------|
-| US utilities (93 reactors) | ~50 Mlbs/year [^9] | 126 Mlbs (~30 months) [^9] | Contracts rolling off; 96% import-dependent [^10] |
-| EU utilities (~100 reactors) | ~40 Mlbs/year | ~104 Mlbs (~2.5 years) [^11] | Better positioned; longer-term contracts |
+| US utilities (93 reactors) | ~50 Mlbs/year [^9] | ~110 Mlbs (~2.2 years) [^9] | Contracts rolling off; 96% import-dependent [^10] |
+| EU utilities (~100 reactors) | ~40 Mlbs/year | ~104 Mlbs (~2.6 years) [^11] | Slightly better positioned; longer-term contracts |
 | China (56 reactors + 27 building) | ~25 Mlbs/year (growing) | ~169 Mlbs (~12 years) [^11] | Aggressively stockpiling; locked down supply |
 | Japan (15 restarted, targeting 30) | ~5 Mlbs/year (growing) | Rebuilding | Restarting after Fukushima; needs to re-enter market |
 | India (8 reactors under construction) | Growing | Minimal | New entrant competing for supply |
@@ -46,7 +46,7 @@ Total demand: ~170 Mlbs/year. Total mine supply: ~145 Mlbs/year. The gap is fill
 
 The market looks balanced on paper: 145 + 25 = 170. But that balance is fragile. Remove any single source — Kazatomprom cutting production, Russia sanctions tightening, a single mine disruption — and demand exceeds supply. And demand is only growing: China's 27 reactors under construction each add ~500,000 lbs/year of permanent demand when they come online. Japan's restart program adds another 5–15 Mlbs/year over the next decade. New US builds at Vogtle are already consuming uranium. AI data center contracts are accelerating reactor life extensions and potential restarts.
 
-The US is in the worst position of any major nuclear power. American utilities hold ~30 months of inventory — compared to the EU's 2.5 years and China's *12 years* [^11]. The US produces only ~2 million pounds domestically [^10], meeting 4% of its own reactor requirements. It imports 96% of its uranium [^10], primarily from Canada, Kazakhstan, Australia, and Russia. And the US government is now *competing against its own utilities* for that same supply, purchasing uranium from Energy Fuels and Uranium Energy Corp for the Strategic Uranium Reserve [^12].
+The US and EU are in roughly the same position on inventory — both sitting on about 2.2–2.6 years of supply [^11]. The difference isn't the stockpile size; it's everything else. The US produces only ~2 million pounds domestically [^10], meeting 4% of its own reactor requirements. It imports 96% of its uranium [^10], primarily from Canada, Kazakhstan, Australia, and Russia. EU utilities generally hold longer-term enrichment and supply contracts through Urenco and Orano, giving them more forward coverage. And critically, the US government is now *competing against its own utilities* for supply, purchasing uranium from Energy Fuels and Uranium Energy Corp for the Strategic Uranium Reserve [^12]. China, meanwhile, holds *12 years* of inventory [^11] — a strategic buffer that no Western nation comes close to matching.
 
 ---
 
@@ -66,7 +66,7 @@ At current spot ($86/lb), 11.5 million uncovered pounds costs $989 million on th
 
 The contracting numbers tell the story of a market in denial. In 2025, utilities placed 116 million pounds under long-term contracts [^14]. The theoretical replacement rate — what you need to contract annually just to maintain coverage — is ~150 million pounds [^14]. They fell short by 34 million pounds. In a single year. They've been falling short for 13 years running. The cumulative hole is now 3.1 billion pounds deep.
 
-This isn't a market where utilities can casually sign new contracts at reasonable prices. This is a market where everyone needs the same uranium, the supply is constrained, the government is competing with you, China has already locked up 12 years of reserves while you're running on 30 months, and the biggest single source of enriched uranium (Russia) just got banned.
+This isn't a market where utilities can casually sign new contracts at reasonable prices. This is a market where everyone needs the same uranium, the supply is constrained, the government is competing with you, China has locked up 12 years of reserves while you're running on 2.2 years, and the biggest single source of enriched uranium (Russia) just got banned.
 
 ---
 
@@ -289,7 +289,7 @@ But here's what the framework *does* see: the uranium bull case has a victim cla
 
 [^10]: U.S. Energy Information Administration (EIA), ["U.S. nuclear generators import nearly all the uranium concentrate they use"](https://www.eia.gov/todayinenergy/detail.php?id=64444). US domestic production ~2 Mlbs/year; 96% import dependence.
 
-[^11]: World Nuclear Association, Nuclear Fuel Report 2025 edition. End-2024 inventory estimates: US ~42,000 tU, EU ~40,000 tU, East Asia ~65,000 tU. EU inventory covers ~2.5 years; China/East Asia covers ~12 years at current consumption rates.
+[^11]: World Nuclear Association, Nuclear Fuel Report 2025 edition. End-2024 inventory estimates: US ~42,000 tU (~110 Mlbs, ~2.2 years at ~50 Mlbs/year consumption), EU ~40,000 tU (~104 Mlbs, ~2.6 years at ~40 Mlbs/year), East Asia ~65,000 tU (~169 Mlbs). China/East Asia covers ~12 years at current consumption rates.
 
 [^12]: U.S. Department of Energy, Strategic Uranium Reserve program. Energy Fuels (UUUU) and Uranium Energy Corp (UEC) confirmed as domestic suppliers. See also: [Investing News, "Trump Admin Pushes for Uranium Stockpile Boost"](https://investingnews.com/trump-admin-uranium-stockpile/).
 
