@@ -18,7 +18,7 @@
   <link rel="canonical" href="{{ .Permalink }}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/css/style.css">
-  <style>.col-tooltip{display:none;}.detail-row{display:none;}.detail-row.open{display:table-row;}</style>
+  <style>.detail-row{display:none;}.detail-row.open{display:table-row;}</style>
 </head>
 <body>
   <header class="site-header">
@@ -218,53 +218,41 @@
       <thead>
         <tr>
           <th class="sortable" data-sort="symbol">Symbol <span class="sort-icon">↕</span></th>
-          <th class="has-tooltip">
+          <th class="has-tooltip" data-tooltip="Is the stock currently trading below its 200-week moving average? YES = below the line (potential opportunity). NO = above.">
             Signal
-            <span class="col-tooltip">Is the stock currently trading below its 200-week moving average? YES = below the line (potential opportunity). NO = above.</span>
           </th>
-          <th class="sortable has-tooltip" data-sort="distance">
+          <th class="sortable has-tooltip" data-sort="distance" data-tooltip="How far the stock is from its 200-week moving average, as a percentage. Negative = below the line.">
             Distance <span class="sort-icon">↕</span>
-            <span class="col-tooltip">How far the stock is from its 200-week moving average, as a percentage. Negative = below the line.</span>
           </th>
-          <th class="has-tooltip">
+          <th class="has-tooltip" data-tooltip="For stocks below the line: ↑ Recovering = price moved up this week (heading back toward the line). ↓ Deepening = price dropped further below. For stocks above: ↓ Approaching = moving toward the line. ↑ Away = moving further above.">
             Direction
-            <span class="col-tooltip">For stocks below the line: ↑ Recovering = price moved up this week (heading back toward the line). ↓ Deepening = price dropped further below. For stocks above: ↓ Approaching = moving toward the line. ↑ Away = moving further above.</span>
           </th>
-          <th class="sortable has-tooltip" data-sort="rsi">
+          <th class="sortable has-tooltip" data-sort="rsi" data-tooltip="14-week Relative Strength Index. Below 30 = oversold (more selling pressure than usual). Above 70 = overbought. It’s a momentum gauge, not a buy/sell signal on its own.">
             RSI <span class="sort-icon">↕</span>
-            <span class="col-tooltip">14-week Relative Strength Index. Below 30 = oversold (more selling pressure than usual). Above 70 = overbought. It’s a momentum gauge, not a buy/sell signal on its own.</span>
           </th>
-          <th class="sortable has-tooltip" data-sort="touches">
+          <th class="sortable has-tooltip" data-sort="touches" data-tooltip="How many times the stock has crossed below its 200-week moving average. Fewer touches = rarer event. Stocks that rarely go below the line may offer better opportunities when they do.">
             Touches <span class="sort-icon">↕</span>
-            <span class="col-tooltip">How many times the stock has crossed below its 200-week moving average. Fewer touches = rarer event. Stocks that rarely go below the line may offer better opportunities when they do.</span>
           </th>
-          <th class="sortable has-tooltip" data-sort="avgreturn">
+          <th class="sortable has-tooltip" data-sort="avgreturn" data-tooltip="Average one-year return after previous 200WMA crosses. Positive = historically rewarding to buy at these levels. Negative = the stock has not bounced back reliably.">
             Avg Rtn <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Average one-year return after previous 200WMA crosses. Positive = historically rewarding to buy at these levels. Negative = the stock has not bounced back reliably.</span>
           </th>
-          <th class="sortable has-tooltip" data-sort="roe">
+          <th class="sortable has-tooltip" data-sort="roe" data-tooltip="Return on Equity — how much profit a company earns for each dollar of shareholder equity. Above 15% is generally considered strong. Think of it as the company’s efficiency at turning your investment into profit.">
             ROE <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Return on Equity — how much profit a company earns for each dollar of shareholder equity. Above 15% is generally considered strong. Think of it as the company’s efficiency at turning your investment into profit.</span>
           </th>
-          <th class="sortable hide-mobile has-tooltip" data-sort="debt">
+          <th class="sortable hide-mobile has-tooltip" data-sort="debt" data-tooltip="Debt-to-Equity ratio — how much debt the company carries relative to shareholder equity. Below 50% = conservatively financed. High debt can be dangerous if the business hits a rough patch.">
             D/E <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Debt-to-Equity ratio — how much debt the company carries relative to shareholder equity. Below 50% = conservatively financed. High debt can be dangerous if the business hits a rough patch.</span>
           </th>
-          <th class="sortable hide-mobile has-tooltip" data-sort="shares">
+          <th class="sortable hide-mobile has-tooltip" data-sort="shares" data-tooltip="3-year change in shares outstanding. Negative = company is buying back stock (your slice of the pie grows). Positive = company is issuing new shares (diluting your ownership).">
             Shares <span class="sort-icon">↕</span>
-            <span class="col-tooltip">3-year change in shares outstanding. Negative = company is buying back stock (your slice of the pie grows). Positive = company is issuing new shares (diluting your ownership).</span>
           </th>
-          <th class="sortable hide-mobile has-tooltip" data-sort="fcfyield">
+          <th class="sortable hide-mobile has-tooltip" data-sort="fcfyield" data-tooltip="Free Cash Flow Yield — how much free cash flow you get per dollar of market cap. Above 5% is attractive. This is the real cash the business generates after paying for operations and equipment.">
             FCF% <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Free Cash Flow Yield — how much free cash flow you get per dollar of market cap. Above 5% is attractive. This is the real cash the business generates after paying for operations and equipment.</span>
           </th>
-          <th class="sortable hide-mobile has-tooltip" data-sort="rvol">
+          <th class="sortable hide-mobile has-tooltip" data-sort="rvol" data-tooltip="Relative Volume — this week’s volume vs 14-week average. Below 0.5x = unusually quiet. Above 2x = something happening.">
             RVOL <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Relative Volume — this week's volume vs 14-week average. Below 0.5x = unusually quiet. Above 2x = something happening.</span>
           </th>
-          <th class="sortable hide-mobile has-tooltip" data-sort="accum">
+          <th class="sortable hide-mobile has-tooltip" data-sort="accum" data-tooltip="Accumulation Ratio — avg volume on up-weeks / avg volume on down-weeks over 14 weeks. Above 1.5 = buyers dominating. Below 0.7 = sellers dominating.">
             Accum. <span class="sort-icon">↕</span>
-            <span class="col-tooltip">Accumulation Ratio — avg volume on up-weeks / avg volume on down-weeks over 14 weeks. Above 1.5 = buyers dominating. Below 0.7 = sellers dominating.</span>
           </th>
           <th class="hide-tablet">Sector</th>
         </tr>
@@ -529,11 +517,19 @@
       });
     });
 
-    function getRows() { return Array.from(tbody.querySelectorAll('.stock-row')); }
-    
+    // Cache rows and build detail-row lookup map for performance
+    const allStockRows = Array.from(tbody.querySelectorAll('.stock-row'));
+    const detailRowMap = {};
+    document.querySelectorAll('.detail-row').forEach(dr => { detailRowMap[dr.dataset.detailFor] = dr; });
+
+    function getRows() { return allStockRows; }
+
     function updateCount() {
-      const visible = getRows().filter(row => row.style.display !== 'none').length;
-      resultsCount.textContent = `Showing ${visible} of ${getRows().length} stocks`;
+      let visible = 0;
+      for (let i = 0; i < allStockRows.length; i++) {
+        if (allStockRows[i].style.display !== 'none') visible++;
+      }
+      resultsCount.textContent = `Showing ${visible} of ${allStockRows.length} stocks`;
     }
     
     function hideAllInfoBoxes() {
@@ -588,7 +584,16 @@
     });
     
     sectorSelect.addEventListener('change', () => { filters.sector = sectorSelect.value; applyFilters(); });
-    searchInput.addEventListener('input', () => { filters.search = searchInput.value.toUpperCase(); applyFilters(); });
+
+    // Debounced search to prevent lag on large tables
+    let searchTimeout = null;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        filters.search = searchInput.value.toUpperCase();
+        applyFilters();
+      }, 200);
+    });
     
     function applyFilters() {
       getRows().forEach(row => {
@@ -659,10 +664,10 @@
         if (show && filters.sector !== 'all') show = row.dataset.sector === filters.sector;
         
         row.style.display = show ? '' : 'none';
-        // Also hide/close detail row when filtering
-        const detailRow = document.querySelector(`.detail-row[data-detail-for="${row.dataset.symbol}"]`);
-        if (detailRow) {
-          if (!show) {
+        // Also hide/close detail row when filtering (using cached map)
+        if (!show) {
+          const detailRow = detailRowMap[row.dataset.symbol];
+          if (detailRow) {
             detailRow.classList.remove('open');
             row.classList.remove('row-expanded');
           }
@@ -702,7 +707,7 @@
       rows.forEach(row => {
         tbody.appendChild(row);
         // Keep detail row paired with its stock row
-        const detail = document.querySelector(`.detail-row[data-detail-for="${row.dataset.symbol}"]`);
+        const detail = detailRowMap[row.dataset.symbol];
         if (detail) tbody.appendChild(detail);
       });
     }
@@ -812,10 +817,10 @@
     .diluter-info { background: linear-gradient(135deg, rgba(248, 113, 113, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%); border: 1px solid rgba(239, 68, 68, 0.3); }
     .diluter-info strong { color: #ef4444; }
     
-    /* Column tooltips */
+    /* Column tooltips — rendered via ::after to prevent flash of unstyled text */
     .has-tooltip { position: relative; cursor: help; }
-    .col-tooltip { display: none; position: absolute; top: 100%; left: 0; z-index: 20; background: var(--color-surface, #1a1a2e); color: var(--color-text, #e0e0e0); border: 1px solid var(--color-border, #333); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; font-weight: normal; text-transform: none; letter-spacing: normal; line-height: 1.5; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: normal; }
-    .has-tooltip:hover .col-tooltip, .has-tooltip:focus .col-tooltip { display: block; }
+    .has-tooltip::after { content: attr(data-tooltip); display: none; position: absolute; top: 100%; left: 0; z-index: 20; background: var(--color-surface, #1a1a2e); color: var(--color-text, #e0e0e0); border: 1px solid var(--color-border, #333); border-radius: 6px; padding: 10px 14px; font-size: 0.8rem; font-weight: normal; text-transform: none; letter-spacing: normal; line-height: 1.5; width: 260px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); white-space: normal; }
+    .has-tooltip:hover::after, .has-tooltip:focus::after { display: block; }
     
     /* New filter button styles */
     .insider-btn { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); border-color: #7c3aed; color: white; }
