@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode Framework Charts</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; padding: 20px; }
+  .chart-section { margin-bottom: 40px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 24px; }
+  .chart-section h3 { color: #58a6ff; font-size: 16px; margin-bottom: 4px; }
+  .chart-section p { color: #8b949e; font-size: 13px; margin-bottom: 16px; }
+  .chart-container { position: relative; height: 320px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+  .stat-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; }
+  .stat-box { background: #21262d; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; flex: 1; min-width: 120px; text-align: center; }
+  .stat-box .value { font-size: 24px; font-weight: 700; color: #58a6ff; }
+  .stat-box .label { font-size: 11px; color: #8b949e; margin-top: 2px; }
+  .stat-box.green .value { color: #3fb950; }
+  .stat-box.red .value { color: #f85149; }
+  .stat-box.yellow .value { color: #d29922; }
+</style>
+</head>
+<body>
+
+<div class="stat-row">
+  <div class="stat-box"><div class="value">3,893</div><div class="label">Total Episodes</div></div>
+  <div class="stat-box green"><div class="value">98.9%</div><div class="label">Recovery Rate</div></div>
+  <div class="stat-box"><div class="value">3 wks</div><div class="label">Median Duration</div></div>
+  <div class="stat-box green"><div class="value">71.8%</div><div class="label">Beat S&P 500</div></div>
+  <div class="stat-box red"><div class="value">-56%</div><div class="label">Median Unrecovered</div></div>
+</div>
+
+<div class="grid">
+
+<div class="chart-section">
+  <h3>Time Is the Signal</h3>
+  <p>Beat rate vs S&P 500 by episode duration — the longer it takes, the worse it gets</p>
+  <div class="chart-container"><canvas id="timeSignal"></canvas></div>
+</div>
+
+<div class="chart-section">
+  <h3>Depth vs Episode Return</h3>
+  <p>Deeper crossings deliver higher total returns through the full episode</p>
+  <div class="chart-container"><canvas id="depthReturn"></canvas></div>
+</div>
+
+<div class="chart-section">
+  <h3>Crossing Frequency</h3>
+  <p>Stocks that rarely cross below the line dramatically outperform chronic crossers</p>
+  <div class="chart-container"><canvas id="frequency"></canvas></div>
+</div>
+
+<div class="chart-section">
+  <h3>Cumulative Resolution</h3>
+  <p>How quickly episodes resolve — and when to reassess</p>
+  <div class="chart-container"><canvas id="resolution"></canvas></div>
+</div>
+
+</div>
+
+<div class="chart-section">
+  <h3>Return Efficiency by Sector</h3>
+  <p>Median episode return per week at risk — how fast each sector converts the dip into returns</p>
+  <div class="chart-container" style="height: 360px;"><canvas id="sectorEfficiency"></canvas></div>
+</div>
+
+<script>
+const colors = {
+  blue: '#58a6ff', green: '#3fb950', red: '#f85149', yellow: '#d29922',
+  purple: '#bc8cff', orange: '#f0883e', gray: '#8b949e', teal: '#39d353',
+  gridColor: '#21262d', textColor: '#8b949e'
+};
+
+const defaultOptions = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { labels: { color: colors.textColor, font: { size: 11 } } } },
+  scales: {
+    x: { ticks: { color: colors.textColor, font: { size: 11 } }, grid: { color: colors.gridColor } },
+    y: { ticks: { color: colors.textColor, font: { size: 11 } }, grid: { color: colors.gridColor } }
+  }
+};
+
+// 1. Time Signal — Beat rate by duration
+new Chart(document.getElementById('timeSignal'), {
+  type: 'bar',
+  data: {
+    labels: ['1 week', '2-4 wks', '5-12 wks', '13-25 wks', '26-51 wks', '52+ wks'],
+    datasets: [{
+      label: 'Beat S&P 500 (%)',
+      data: [88.9, 78.4, 65.5, 57.3, 24.4, 8.9],
+      backgroundColor: [colors.green, colors.green, colors.blue, colors.yellow, colors.red, colors.red],
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...defaultOptions,
+    plugins: {
+      ...defaultOptions.plugins,
+      legend: { display: false },
+      annotation: {}
+    },
+    scales: {
+      ...defaultOptions.scales,
+      y: { ...defaultOptions.scales.y, min: 0, max: 100,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => v + '%' }
+      }
+    }
+  }
+});
+
+// 2. Depth vs Return
+new Chart(document.getElementById('depthReturn'), {
+  type: 'bar',
+  data: {
+    labels: ['0-2%', '2-5%', '5-10%', '10-20%', '20%+'],
+    datasets: [
+      {
+        label: 'Median Episode Return',
+        data: [3.2, 5.6, 10.2, 17.9, 34.2],
+        backgroundColor: colors.blue,
+        borderRadius: 4,
+      },
+      {
+        label: 'Median Excess vs S&P',
+        data: [1.6, 3.2, 5.0, 9.3, 20.3],
+        backgroundColor: colors.green,
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    ...defaultOptions,
+    scales: {
+      ...defaultOptions.scales,
+      y: { ...defaultOptions.scales.y,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => '+' + v + '%' }
+      }
+    }
+  }
+});
+
+// 3. Crossing Frequency
+new Chart(document.getElementById('frequency'), {
+  type: 'bar',
+  data: {
+    labels: ['Rare (1-2)', 'Occasional (3-5)', 'Frequent (6-9)', 'Very Freq (10-14)', 'Chronic (15+)'],
+    datasets: [
+      {
+        label: 'Beat S&P 12mo (%)',
+        data: [80.5, 62.1, 55.3, 49.4, 42.4],
+        backgroundColor: colors.blue,
+        borderRadius: 4,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Median Excess 12mo (%)',
+        data: [18.8, 11.6, 4.1, -0.7, -4.0],
+        backgroundColor: function(context) {
+          return context.parsed.y >= 0 ? colors.green : colors.red;
+        },
+        borderRadius: 4,
+        yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    ...defaultOptions,
+    scales: {
+      x: defaultOptions.scales.x,
+      y: { ...defaultOptions.scales.y, position: 'left', min: 0, max: 100,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => v + '%' },
+        title: { display: true, text: 'Beat Rate', color: colors.textColor }
+      },
+      y1: { ...defaultOptions.scales.y, position: 'right', min: -10, max: 25,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + v + '%' },
+        title: { display: true, text: 'Median Excess', color: colors.textColor },
+        grid: { drawOnChartArea: false }
+      }
+    }
+  }
+});
+
+// 4. Cumulative Resolution
+new Chart(document.getElementById('resolution'), {
+  type: 'line',
+  data: {
+    labels: ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4', 'Wk 5', 'Wk 8', 'Wk 12', 'Wk 13', 'Wk 16', 'Wk 20', 'Wk 26', 'Wk 39', 'Wk 52'],
+    datasets: [
+      {
+        label: '% Resolved',
+        data: [34.2, 46.7, 55.6, 62.0, 66.7, 75.7, 82.2, 83.5, 86.1, 88.7, 90.7, 93.5, 95.8],
+        borderColor: colors.blue, backgroundColor: colors.blue + '20',
+        fill: true, tension: 0.3, pointRadius: 3,
+      },
+      {
+        label: 'Remaining excess return (%)',
+        data: [1.7, 1.2, 0.8, 0.3, -0.1, -1.5, -4.6, -5.1, -7.3, -10.6, -13.3, -18.3, -26.4],
+        borderColor: colors.red, borderDash: [5, 5],
+        tension: 0.3, pointRadius: 3, yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    ...defaultOptions,
+    scales: {
+      x: defaultOptions.scales.x,
+      y: { ...defaultOptions.scales.y, position: 'left', min: 0, max: 100,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => v + '%' },
+        title: { display: true, text: '% Resolved', color: colors.textColor }
+      },
+      y1: { ...defaultOptions.scales.y, position: 'right', min: -30, max: 5,
+        ticks: { ...defaultOptions.scales.y.ticks, callback: v => (v >= 0 ? '+' : '') + v + '%' },
+        title: { display: true, text: 'Remaining Excess', color: colors.textColor },
+        grid: { drawOnChartArea: false }
+      }
+    },
+    plugins: {
+      ...defaultOptions.plugins,
+      annotation: {
+        annotations: {
+          line1: { type: 'line', xMin: 7, xMax: 7, borderColor: colors.yellow, borderWidth: 2, borderDash: [6, 3],
+            label: { content: 'Week 13 Checkpoint', display: true, position: 'start', color: colors.yellow, font: { size: 10 } }
+          }
+        }
+      }
+    }
+  }
+});
+
+// 5. Sector Efficiency
+const sectors = ['Industrials', 'Technology', 'Consumer Cycl.', 'Comm. Services', 'Financial Svc.', 'Utilities', 'Basic Materials', 'Cons. Defensive', 'Real Estate', 'Healthcare', 'Energy'];
+const efficiency = [2.11, 1.94, 1.84, 1.51, 1.53, 1.54, 1.38, 1.36, 1.35, 1.32, 1.12];
+const isCyclical = [true, true, true, false, true, false, false, false, false, false, false];
+
+new Chart(document.getElementById('sectorEfficiency'), {
+  type: 'bar',
+  data: {
+    labels: sectors,
+    datasets: [{
+      label: 'Median Return per Week at Risk (%/wk)',
+      data: efficiency,
+      backgroundColor: isCyclical.map(c => c ? colors.blue : colors.gray),
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...defaultOptions,
+    indexAxis: 'y',
+    plugins: { ...defaultOptions.plugins, legend: { display: false } },
+    scales: {
+      x: { ...defaultOptions.scales.x, min: 0, max: 2.5,
+        ticks: { ...defaultOptions.scales.x.ticks, callback: v => v.toFixed(1) + '%/wk' }
+      },
+      y: { ...defaultOptions.scales.y, grid: { display: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>

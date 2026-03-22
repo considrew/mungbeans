@@ -300,7 +300,19 @@
             data-dividend-aristocrat="{{ if .dividend_aristocrat }}true{{ else }}false{{ end }}"
             data-rvol="{{ if .rvol_14 }}{{ .rvol_14 }}{{ else }}-999{{ end }}"
             data-accum="{{ if .accumulation_ratio }}{{ .accumulation_ratio }}{{ else }}-999{{ end }}"
-            data-quiet-accum="{{ if and .rvol_14 .accumulation_ratio }}{{ if and (lt .rvol_14 0.5) (gt .accumulation_ratio 1.2) }}true{{ else }}false{{ end }}{{ else }}false{{ end }}">
+            data-quiet-accum="{{ if and .rvol_14 .accumulation_ratio }}{{ if and (lt .rvol_14 0.5) (gt .accumulation_ratio 1.2) }}true{{ else }}false{{ end }}{{ else }}false{{ end }}"
+            data-mcap="{{ if .market_cap }}{{ .market_cap }}{{ else }}0{{ end }}"
+            data-gm="{{ if .gross_margin }}{{ .gross_margin }}{{ else }}{{ end }}"
+            data-fcf-trend="{{ .fcf_trend }}"
+            data-avg-weeks="{{ if .avg_weeks_below }}{{ printf "%.0f" .avg_weeks_below }}{{ else }}{{ end }}"
+            data-data-weeks="{{ .data_weeks }}"
+            data-is-buffett="{{ if .buffett_quality }}1{{ end }}"
+            data-is-moat="{{ if .wide_moat }}1{{ end }}"
+            data-is-aristocrat="{{ if .dividend_aristocrat }}1{{ end }}"
+            data-is-cannibal="{{ if .is_cannibal }}1{{ end }}"
+            data-is-yartseva="{{ if .yartseva_candidate }}1{{ end }}"
+            data-is-insider="{{ if .has_conviction_buy }}1{{ end }}"
+            data-is-diluter="{{ if .is_diluting }}1{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
             {{ if .buffett_quality }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
@@ -365,44 +377,7 @@
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
-        {{/* Expandable detail row — hidden by default, toggled by JS */}}
-        <tr class="detail-row" data-detail-for="{{ .symbol }}">
-          <td colspan="14">
-            <div class="detail-content">
-              <div class="detail-grid">
-                <div class="detail-section">
-                  <h4>Touch History</h4>
-                  <div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">{{ .touch_count }}</span></div>
-                  <div class="detail-metric"><span class="label">Avg return after touch</span><span class="value {{ if .avg_return_after_touch }}{{ if gt .avg_return_after_touch 0.0 }}col-positive{{ else }}col-negative{{ end }}{{ end }}">{{ if .avg_return_after_touch }}{{ printf "%+.1f%%" .avg_return_after_touch }}{{ else }}—{{ end }}</span></div>
-                  <div class="detail-metric"><span class="label">Avg weeks below</span><span class="value">{{ if .avg_weeks_below }}{{ printf "%.0f" .avg_weeks_below }}{{ else }}—{{ end }}</span></div>
-                  <div class="detail-metric"><span class="label">Data history</span><span class="value">{{ .data_weeks }} weeks</span></div>
-                </div>
-                <div class="detail-section">
-                  <h4>Fundamentals</h4>
-                  <div class="detail-metric"><span class="label">Market cap</span><span class="value">{{ if .market_cap }}{{ if ge .market_cap 1e12 }}${{ printf "%.1f" (div .market_cap 1e12) }}T{{ else if ge .market_cap 1e9 }}${{ printf "%.1f" (div .market_cap 1e9) }}B{{ else }}${{ printf "%.0f" (div .market_cap 1e6) }}M{{ end }}{{ else }}—{{ end }}</span></div>
-                  <div class="detail-metric"><span class="label">Sector</span><span class="value">{{ .sector | default "—" }}</span></div>
-                  <div class="detail-metric"><span class="label">FCF trend</span><span class="value {{ if eq .fcf_trend "growing" }}col-positive{{ else if eq .fcf_trend "declining" }}col-negative{{ else }}col-neutral{{ end }}">{{ if and .fcf_trend (ne .fcf_trend "insufficient_data") }}{{ .fcf_trend | title }}{{ else }}—{{ end }}</span></div>
-                  <div class="detail-metric"><span class="label">Gross margin</span><span class="value">{{ if .gross_margin }}{{ printf "%.0f%%" .gross_margin }}{{ else }}—{{ end }}</span></div>
-                </div>
-                <div class="detail-section">
-                  <h4>Quality Flags</h4>
-                  <div class="detail-flags">
-                    {{ if .buffett_quality }}<span class="detail-flag positive">🏆 Buffett Quality</span>{{ end }}
-                    {{ if .wide_moat }}<span class="detail-flag positive">🏰 Wide Moat</span>{{ end }}
-                    {{ if .dividend_aristocrat }}<span class="detail-flag positive">👑 Aristocrat</span>{{ end }}
-                    {{ if .is_cannibal }}<span class="detail-flag positive">🦈 Cannibal</span>{{ end }}
-                    {{ if .yartseva_candidate }}<span class="detail-flag positive">🎯 Multibagger</span>{{ end }}
-                    {{ if .has_conviction_buy }}<span class="detail-flag positive">🔍 Insider Buying</span>{{ end }}
-                    {{ if eq .fcf_trend "growing" }}<span class="detail-flag positive">📈 FCF Growing</span>{{ end }}
-                    {{ if .is_diluting }}<span class="detail-flag warning">⚠️ Diluter</span>{{ end }}
-                    {{ if not (or .buffett_quality .wide_moat .dividend_aristocrat .is_cannibal .yartseva_candidate .has_conviction_buy .is_diluting (eq .fcf_trend "growing")) }}<span class="detail-flag neutral">No special flags</span>{{ end }}
-                  </div>
-                </div>
-              </div>
-              <a href="/stocks/{{ .symbol | lower }}/" class="detail-link">View full analysis →</a>
-            </div>
-          </td>
-        </tr>
+        {{/* Detail rows are now built on-the-fly via JS when clicked — saves ~2000 DOM nodes at load */}}
         {{ end }}
       </tbody>
     </table>
@@ -497,30 +472,85 @@
     });
 
     // Expandable row click handler
-    document.querySelectorAll('.stock-row').forEach(row => {
+    // Cache rows — detail rows are built lazily on click
+    const allStockRows = Array.from(tbody.querySelectorAll('.stock-row'));
+    const detailRowMap = {};
+
+    function formatMcap(v) {
+      if (!v || v === '0') return '—';
+      const n = parseFloat(v);
+      if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + 'T';
+      if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+      return '$' + Math.round(n/1e6) + 'M';
+    }
+
+    function buildDetailRow(row) {
+      const d = row.dataset;
+      const sym = d.symbol;
+      const avgRet = d.avgreturn && d.avgreturn !== '-999' ? parseFloat(d.avgreturn) : null;
+      const avgRetStr = avgRet !== null ? (avgRet >= 0 ? '+' : '') + avgRet.toFixed(1) + '%' : '—';
+      const avgRetClass = avgRet !== null ? (avgRet > 0 ? 'col-positive' : 'col-negative') : '';
+      const fcf = d.fcfTrend || '';
+      const fcfDisplay = fcf && fcf !== 'insufficient_data' ? fcf.charAt(0).toUpperCase() + fcf.slice(1) : '—';
+      const fcfClass = fcf === 'growing' ? 'col-positive' : fcf === 'declining' ? 'col-negative' : 'col-neutral';
+      const gm = d.gm ? Math.round(parseFloat(d.gm)) + '%' : '—';
+
+      // Quality flags
+      const flags = [];
+      if (d.isBuffett) flags.push('<span class="detail-flag positive">🏆 Buffett Quality</span>');
+      if (d.isMoat) flags.push('<span class="detail-flag positive">🏰 Wide Moat</span>');
+      if (d.isAristocrat) flags.push('<span class="detail-flag positive">👑 Aristocrat</span>');
+      if (d.isCannibal) flags.push('<span class="detail-flag positive">🦈 Cannibal</span>');
+      if (d.isYartseva) flags.push('<span class="detail-flag positive">🎯 Multibagger</span>');
+      if (d.isInsider) flags.push('<span class="detail-flag positive">🔍 Insider Buying</span>');
+      if (fcf === 'growing') flags.push('<span class="detail-flag positive">📈 FCF Growing</span>');
+      if (d.isDiluter) flags.push('<span class="detail-flag warning">⚠️ Diluter</span>');
+      if (flags.length === 0) flags.push('<span class="detail-flag neutral">No special flags</span>');
+
+      const tr = document.createElement('tr');
+      tr.className = 'detail-row';
+      tr.dataset.detailFor = sym;
+      tr.innerHTML = '<td colspan="14"><div class="detail-content"><div class="detail-grid">' +
+        '<div class="detail-section"><h4>Touch History</h4>' +
+        '<div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">' + (d.touches || '0') + '</span></div>' +
+        '<div class="detail-metric"><span class="label">Avg return after touch</span><span class="value ' + avgRetClass + '">' + avgRetStr + '</span></div>' +
+        '<div class="detail-metric"><span class="label">Avg weeks below</span><span class="value">' + (d.avgWeeks || '—') + '</span></div>' +
+        '<div class="detail-metric"><span class="label">Data history</span><span class="value">' + (d.dataWeeks || '—') + ' weeks</span></div>' +
+        '</div>' +
+        '<div class="detail-section"><h4>Fundamentals</h4>' +
+        '<div class="detail-metric"><span class="label">Market cap</span><span class="value">' + formatMcap(d.mcap) + '</span></div>' +
+        '<div class="detail-metric"><span class="label">Sector</span><span class="value">' + (d.sector || '—') + '</span></div>' +
+        '<div class="detail-metric"><span class="label">FCF trend</span><span class="value ' + fcfClass + '">' + fcfDisplay + '</span></div>' +
+        '<div class="detail-metric"><span class="label">Gross margin</span><span class="value">' + gm + '</span></div>' +
+        '</div>' +
+        '<div class="detail-section"><h4>Quality Flags</h4><div class="detail-flags">' + flags.join('') + '</div></div>' +
+        '</div><a href="/stocks/' + sym.toLowerCase() + '/" class="detail-link">View full analysis →</a></div></td>';
+      return tr;
+    }
+
+    // Expandable row click handler — builds detail row on first click
+    allStockRows.forEach(row => {
       row.style.cursor = 'pointer';
       row.addEventListener('click', (e) => {
-        // Don't expand if clicking a link
         if (e.target.closest('a')) return;
         const sym = row.dataset.symbol;
-        const detailRow = document.querySelector(`.detail-row[data-detail-for="${sym}"]`);
-        if (!detailRow) return;
+        // Build detail row lazily on first click
+        if (!detailRowMap[sym]) {
+          const detail = buildDetailRow(row);
+          row.after(detail);
+          detailRowMap[sym] = detail;
+        }
+        const detailRow = detailRowMap[sym];
         // Close any other open detail row
         const currentOpen = document.querySelector('.detail-row.open');
         if (currentOpen && currentOpen !== detailRow) {
           currentOpen.classList.remove('open');
           currentOpen.previousElementSibling.classList.remove('row-expanded');
         }
-        // Toggle this one
         detailRow.classList.toggle('open');
         row.classList.toggle('row-expanded');
       });
     });
-
-    // Cache rows and build detail-row lookup map for performance
-    const allStockRows = Array.from(tbody.querySelectorAll('.stock-row'));
-    const detailRowMap = {};
-    document.querySelectorAll('.detail-row').forEach(dr => { detailRowMap[dr.dataset.detailFor] = dr; });
 
     function getRows() { return allStockRows; }
 
