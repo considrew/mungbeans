@@ -1,2 +1,7 @@
 .netlify/
 node_modules/
+
+# Bean Score — private tracking data (do not publish)
+assets/data/bean_score_*.json
+static/data/bean_score_*.json
+static/graphics/bean-score-dashboard.html

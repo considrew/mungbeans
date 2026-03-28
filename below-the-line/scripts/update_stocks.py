@@ -1781,6 +1781,20 @@ def main():
     else:
         print("\n  📧 No crossings data — skipping email send.")
     
+    # ── Bean Score: Cash Yield Dislocation tracking ──
+    skip_bean = os.environ.get('SKIP_BEAN_SCORE', 'false').lower() == 'true'
+    if skip_bean:
+        print("\n  🫘 SKIP_BEAN_SCORE set — skipping Bean Score computation.")
+    else:
+        print("\n  🫘 Computing Bean Scores...")
+        try:
+            from bean_score import weekly_bean_score_snapshot
+            bean_tickers = [s['symbol'] for s in all_stocks]
+            bean_snapshot = weekly_bean_score_snapshot(bean_tickers, verbose=True)
+            print(f"  🫘 Bean Score: {bean_snapshot['n_scored']}/{bean_snapshot['n_attempted']} scored")
+        except Exception as e:
+            print(f"  🫘 Bean Score error: {e}")
+
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
     print(f"Processed: {len(all_stocks)} stocks")
