@@ -27,7 +27,9 @@ jobs:
         run: pip install pandas yfinance
 
       - name: Run stock update script
-        run: python scripts/update_stocks.py
+        run: |
+          cd below-the-line
+          python scripts/update_stocks.py
         env:
           SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           SKIP_EMAIL: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
