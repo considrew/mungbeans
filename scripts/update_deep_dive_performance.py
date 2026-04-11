@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import re
 import sys
+import time
 from pathlib import Path
 
 import yfinance as yf
@@ -77,6 +78,7 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
 
     # Fetch price (use cache to avoid duplicate API calls for shared tickers)
     if ticker not in price_cache:
+        time.sleep(2)  # Rate limit buffer — runs after main pipeline's ~2000 calls
         price_cache[ticker] = fetch_current_price(ticker)
     result = price_cache[ticker]
     if result is None:
@@ -106,6 +108,7 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
             pub_price_b = float(pub_price_b_str.replace("$", ""))
 
             if ticker_b not in price_cache:
+                time.sleep(2)
                 price_cache[ticker_b] = fetch_current_price(ticker_b)
             result_b = price_cache[ticker_b]
 
@@ -161,10 +164,10 @@ def main():
     print("=" * 90)
 
     if errors:
-        print(f"\nSkipped due to errors: {', '.join(e['ticker'] for e in errors)}")
-        sys.exit(1)
+        print(f"\nWARNING: Skipped {len(errors)} tickers due to errors (likely rate-limited): {', '.join(e['ticker'] for e in errors)}")
+        print("Continuing — performance data is non-critical and will update next run.")
 
-    print(f"\nUpdated {len(results)} articles successfully.")
+    print(f"\nUpdated {len(results)} articles. Skipped {len(errors)}.")
 
 
 if __name__ == "__main__":
