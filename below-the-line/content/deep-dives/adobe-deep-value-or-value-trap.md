@@ -8,10 +8,10 @@ ticker: "ADBE"
 verdict: "deep-value"
 verdict_label: "Deep Value"
 pct_below_200wma: "38"
-performance_since: "-9.0%"
+performance_since: "-15.6%"
 performance_price_at_publish: "$266.90"
-performance_price_current: "$242.92"
-performance_as_of: "2026-04-02"
+performance_price_current: "$225.35"
+performance_as_of: "2026-04-10"
 ---
 
 ## The Setup
