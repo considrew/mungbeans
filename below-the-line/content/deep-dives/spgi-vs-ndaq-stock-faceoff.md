@@ -9,13 +9,13 @@ ticker_b: "NDAQ"
 verdict: "deep-value"
 verdict_label: "Winner: SPGI"
 pct_below_200wma: "1"
-performance_since: "-1.7%"
-performance_since_b: "-2.8%"
+performance_since: "+4.8%"
+performance_since_b: "+3.6%"
 performance_price_at_publish: "$422.49"
 performance_price_at_publish_b: "$85.53"
-performance_price_current: "$415.42"
-performance_price_current_b: "$83.16"
-performance_as_of: "2026-04-10"
+performance_price_current: "$442.57"
+performance_price_current_b: "$88.61"
+performance_as_of: "2026-04-17"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*
