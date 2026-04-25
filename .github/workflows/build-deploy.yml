@@ -34,7 +34,7 @@ jobs:
           SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           SKIP_EMAIL: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
           ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
-          ZOHO_APP_PASSWORD: ${{ secrets.ZOHO_APP_PASSWORD }}
+          ZEPTOMAIL_API_TOKEN: ${{ secrets.ZEPTOMAIL_API_TOKEN }}
           NETLIFY_API_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 

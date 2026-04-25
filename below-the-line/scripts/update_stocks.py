@@ -18,13 +18,10 @@ from __future__ import annotations
 
 import json
 import os
-import smtplib
 import time
 import urllib.request
 import urllib.parse
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional, List, Tuple
 
@@ -1893,12 +1890,12 @@ def get_subscribers() -> list[str]:
 
 
 def send_weekly_email(crossings: dict, date_str: str):
-    """Send the weekly signal summary email to all subscribers."""
+    """Send the weekly signal summary email to all subscribers via ZeptoMail API."""
     zoho_email = os.environ.get('ZOHO_EMAIL')
-    zoho_password = os.environ.get('ZOHO_APP_PASSWORD')
+    api_token = os.environ.get('ZEPTOMAIL_API_TOKEN')
 
-    if not zoho_email or not zoho_password:
-        print("\n  ⚠️  Missing ZOHO_EMAIL or ZOHO_APP_PASSWORD — skipping email send.")
+    if not zoho_email or not api_token:
+        print("\n  ⚠️  Missing ZOHO_EMAIL or ZEPTOMAIL_API_TOKEN — skipping email send.")
         return
 
     subscribers = get_subscribers()
@@ -1973,11 +1970,8 @@ def send_weekly_email(crossings: dict, date_str: str):
 
     subject = f"Weekly Signal Report — {date_display}"
 
-    # Send individually so each person gets their own unsubscribe link
-    print(f"\n  📧 Sending weekly email to {len(subscribers)} subscribers...")
-
-    server = smtplib.SMTP_SSL('smtp.zoho.com', 465)
-    server.login(zoho_email, zoho_password)
+    # Send individually via ZeptoMail API so each person gets their own unsubscribe link
+    print(f"\n  📧 Sending weekly email to {len(subscribers)} subscribers via ZeptoMail...")
 
     sent = 0
     failed = 0
@@ -2016,16 +2010,31 @@ def send_weekly_email(crossings: dict, date_str: str):
 </body>
 </html>"""
 
-        msg = MIMEMultipart('alternative')
-        msg['From'] = f'"mungbeans.io" <{zoho_email}>'
-        msg['To'] = recipient
-        msg['Subject'] = subject
-        msg['List-Unsubscribe'] = f'<{unsub_url}>'
-        msg['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click'
-        msg.attach(MIMEText(html, 'html'))
+        payload = json.dumps({
+            "from": {"address": zoho_email, "name": "mungbeans.io"},
+            "to": [{"email_address": {"address": recipient}}],
+            "subject": subject,
+            "htmlbody": html,
+            "headers": {
+                "List-Unsubscribe": f"<{unsub_url}>",
+                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
+            }
+        })
+
+        req = urllib.request.Request(
+            "https://api.zeptomail.com/v1.1/email",
+            data=payload.encode("utf-8"),
+            headers={
+                "Authorization": api_token,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            method="POST"
+        )
 
         try:
-            server.sendmail(zoho_email, recipient, msg.as_string())
+            with urllib.request.urlopen(req) as resp:
+                resp.read()
             sent += 1
         except Exception as e:
             print(f"    ❌ Failed to send to {recipient}: {e}")
@@ -2035,10 +2044,6 @@ def send_weekly_email(crossings: dict, date_str: str):
         if sent % 10 == 0:
             time.sleep(1)
 
-    try:
-        server.quit()
-    except Exception:
-        pass  # Connection may already be dead (e.g. Zoho rate-limit disconnect)
     print(f"  📧 Sent: {sent}, Failed: {failed}")
 
 
