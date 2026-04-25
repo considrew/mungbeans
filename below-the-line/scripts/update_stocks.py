@@ -1777,7 +1777,10 @@ def main():
         print("\n  📧 SKIP_EMAIL set — skipping email send.")
     elif crossings:
         date_str = datetime.now().strftime('%Y-%m-%d')
-        send_weekly_email(crossings, date_str)
+        try:
+            send_weekly_email(crossings, date_str)
+        except Exception as e:
+            print(f"\n  ⚠️  Email sending failed (non-fatal): {e}")
     else:
         print("\n  📧 No crossings data — skipping email send.")
     
@@ -2032,7 +2035,10 @@ def send_weekly_email(crossings: dict, date_str: str):
         if sent % 10 == 0:
             time.sleep(1)
 
-    server.quit()
+    try:
+        server.quit()
+    except Exception:
+        pass  # Connection may already be dead (e.g. Zoho rate-limit disconnect)
     print(f"  📧 Sent: {sent}, Failed: {failed}")
 
 
