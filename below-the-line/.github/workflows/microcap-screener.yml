@@ -1,0 +1,44 @@
+name: Micro Cap Innovation Screener
+
+# Uncomment the workflow_run block below once your weekly yfinance
+# workflow exists, and replace "Weekly Data Update" with its exact name.
+# You can find this in .github/workflows/<your-workflow>.yml under "name:"
+#
+# on:
+#   workflow_run:
+#     workflows: ["Weekly Data Update"]
+#     types:
+#       - completed
+
+# For now: manual trigger only
+on:
+  workflow_dispatch:
+
+jobs:
+  screen-microcaps:
+    runs-on: ubuntu-latest
+    # If using workflow_run trigger, uncomment this condition:
+    # if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install yfinance
+
+      - name: Run micro cap screener
+        run: python scripts/microcap/microcap_innovation_screener_v2.py
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/microcap_innovation/screener_results.json
+          git diff --staged --quiet || git commit -m "Update micro cap screener results [$(date +%Y-%m-%d)]"
+          git push
