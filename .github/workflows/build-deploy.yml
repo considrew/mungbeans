@@ -47,6 +47,9 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
+          git add below-the-line/assets/data/bean_score_latest.json
+          git add below-the-line/assets/data/bean_score_alerts.json
+          git add below-the-line/assets/data/bean_score_history.json
           git add below-the-line/content/blog/
           git add below-the-line/content/deep-dives/
           git diff --staged --quiet || git commit -m "Update stock data + weekly blog $(date +'%Y-%m-%d')"
