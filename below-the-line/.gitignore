@@ -5,3 +5,6 @@ node_modules/
 assets/data/bean_score_*.json
 static/data/bean_score_*.json
 static/graphics/bean-score-dashboard.html
+
+# Patent bulk data — too large for GitHub (rebuild locally with patent_data_downloader.py)
+data/patent_bulk/
