@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KMCNBWBVVE');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Params.ticker }} - Micro Cap Innovation Assessment | {{ .Params.name }} | mungbeans.io</title>
+  <meta name="description" content="{{ .Params.name }} ({{ .Params.ticker }}) micro cap innovation score: {{ .Params.total_score }}/12. {{ .Params.patent_count }} patents found. Market cap {{ .Params.market_cap_display }}. Cash runway {{ if ge .Params.runway_months 999.0 }}positive cash flow{{ else }}{{ printf "%.0f" .Params.runway_months }} months{{ end }}.">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="{{ .Params.ticker }} Micro Cap Innovation Score: {{ .Params.total_score }}/12 | {{ .Params.name }}">
+  <meta property="og:description" content="{{ .Params.name }} — {{ .Params.patent_count }} patents, {{ .Params.market_cap_display }} market cap. Innovation assessment and risk review.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:site_name" content="mungbeans.io">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "{{ .Params.ticker }} - Micro Cap Innovation Assessment",
+    "description": "Innovation score and risk assessment for {{ .Params.name }}",
+    "url": "{{ .Permalink }}",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "Micro Caps", "item": "{{ .Site.BaseURL }}microcaps/"},
+        {"@type": "ListItem", "position": 3, "name": "{{ .Params.ticker }}"}
+      ]
+    },
+    "dateModified": "{{ .Params.screened_date }}"
+  }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3" defer></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .assessment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); margin: var(--space-xl) 0; }
+    .assess-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-lg); }
+    .assess-card h3 { margin: 0 0 var(--space-sm) 0; font-size: 1rem; color: var(--color-text); }
+    .assess-card .card-score { font-size: 1.5rem; font-weight: 700; margin-bottom: var(--space-sm); }
+    .assess-card .card-detail { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5; }
+    .score-high { color: #3fb950; }
+    .score-mid { color: #d29922; }
+    .score-low { color: #8b949e; }
+    .total-score-box { text-align: center; padding: var(--space-xl); background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--radius-lg); margin-bottom: var(--space-xl); }
+    .total-score-number { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+    .total-score-label { font-size: 1rem; color: var(--color-text-muted); margin-top: var(--space-sm); }
+    .score-bar-visual { display: flex; gap: 3px; margin-top: var(--space-sm); justify-content: center; }
+    .score-pip { width: 20px; height: 8px; border-radius: 4px; background: var(--color-border); }
+    .score-pip.filled { background: #3fb950; }
+    .score-pip.filled-mid { background: #d29922; }
+    .score-pip.filled-low { background: #f85149; }
+    .patent-list { list-style: none; padding: 0; margin: var(--space-md) 0 0 0; }
+    .patent-list li { padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-border); font-size: 0.85rem; color: var(--color-text-muted); }
+    .patent-list li:last-child { border-bottom: none; }
+    .red-flag-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; background: rgba(248,81,73,0.15); color: #f85149; margin: 4px; }
+    .info-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; margin: 4px; }
+    .tag-sector { background: rgba(88,166,255,0.15); color: #58a6ff; }
+    .tag-industry { background: rgba(139,148,158,0.15); color: #8b949e; }
+    .patent-ok { background: rgba(35,134,54,0.2); color: #3fb950; }
+    .patent-fuzzy { background: rgba(210,153,34,0.2); color: #d29922; }
+    .patent-none { background: rgba(139,148,158,0.2); color: #8b949e; }
+    .methodology-steps { counter-reset: step; list-style: none; padding: 0; margin: var(--space-lg) 0; }
+    .methodology-steps li { counter-increment: step; padding: var(--space-md) var(--space-md) var(--space-md) 50px; position: relative; border-left: 2px solid var(--color-border); margin-left: 16px; }
+    .methodology-steps li::before { content: counter(step); position: absolute; left: -16px; top: var(--space-md); width: 30px; height: 30px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--color-text); }
+    .methodology-steps li.step-pass::before { border-color: #3fb950; color: #3fb950; }
+    .methodology-steps li.step-warn::before { border-color: #d29922; color: #d29922; }
+    .methodology-steps li.step-fail::before { border-color: #f85149; color: #f85149; }
+    .step-title { font-weight: 600; color: var(--color-text); display: block; margin-bottom: 4px; }
+    .step-detail { font-size: 0.85rem; color: var(--color-text-muted); }
+    .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-label { color: var(--color-text-muted); }
+    .metric-value { color: var(--color-text); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">mungbeans.io</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/microcaps/">Micro Caps</a>
+      <a href="/blog/">Weekly Reports</a>
+      <a href="/deep-dives/">Deep Dives</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="stock-page" style="max-width:900px;margin:0 auto;padding:var(--space-lg);">
+    <div class="breadcrumb">
+      <a href="/">Home</a> &rarr; <a href="/microcaps/">Micro Caps</a> &rarr; {{ .Params.ticker }}
+    </div>
+
+    <h1>{{ .Params.ticker }}</h1>
+    <p class="company-info">
+      <span class="company-name">{{ .Params.name }}</span>
+      <span class="info-tag tag-sector">{{ .Params.sector }}</span>
+      <span class="info-tag tag-industry">{{ .Params.industry }}</span>
+    </p>
+
+    <!-- Total Innovation Score -->
+    {{ $scoreClass := "score-low" }}
+    {{ if ge .Params.total_score 8 }}{{ $scoreClass = "score-high" }}{{ else if ge .Params.total_score 5 }}{{ $scoreClass = "score-mid" }}{{ end }}
+    <div class="total-score-box" style="border-color:{{ if ge .Params.total_score 8 }}#3fb950{{ else if ge .Params.total_score 5 }}#d29922{{ else }}#8b949e{{ end }};">
+      <div class="total-score-number {{ $scoreClass }}">{{ .Params.total_score }}<span style="font-size:1.5rem;color:var(--color-text-muted);">/12</span></div>
+      <div class="total-score-label">Innovation Score</div>
+      <div class="score-bar-visual">
+        {{ range seq 12 }}
+          {{ if le . $.Params.total_score }}
+            <div class="score-pip {{ if ge $.Params.total_score 8 }}filled{{ else if ge $.Params.total_score 5 }}filled-mid{{ else }}filled-low{{ end }}"></div>
+          {{ else }}
+            <div class="score-pip"></div>
+          {{ end }}
+        {{ end }}
+      </div>
+    </div>
+
+    <!-- Red Flags -->
+    {{ if gt .Params.red_flag_count 0 }}
+    <div style="background:rgba(248,81,73,0.08);border:1px solid rgba(248,81,73,0.3);border-radius:var(--radius-md);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-xl);">
+      <strong style="color:#f85149;">Red Flags ({{ .Params.red_flag_count }})</strong>
+      <div style="margin-top:var(--space-sm);">
+        {{ range .Params.red_flags }}
+          <span class="red-flag-tag">{{ . }}</span>
+        {{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    <!-- Score Breakdown Cards -->
+    <div class="assessment-grid">
+      <!-- Patent Score -->
+      <div class="assess-card">
+        <h3>Patent Activity</h3>
+        <div class="card-score {{ if ge .Params.patent_score 2 }}score-high{{ else if ge .Params.patent_score 1 }}score-mid{{ else }}score-low{{ end }}">{{ .Params.patent_score }}/3</div>
+        <div class="card-detail">
+          {{ if gt .Params.patent_count 0 }}
+            {{ .Params.patent_count }} patent{{ if gt .Params.patent_count 1 }}s{{ end }} found
+            <span class="info-tag {{ if eq .Params.patent_status "OK" }}patent-ok{{ else }}patent-fuzzy{{ end }}" style="margin-left:8px;">{{ .Params.patent_status }}</span>
+          {{ else }}
+            No patents found in USPTO database (last {{ with .Params.generated }}{{ . }}{{ end }}).
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- Runway Score -->
+      <div class="assess-card">
+        <h3>Cash Runway</h3>
+        <div class="card-score {{ if ge .Params.runway_score 2 }}score-high{{ else if ge .Params.runway_score 1 }}score-mid{{ else }}score-low{{ end }}">{{ .Params.runway_score }}/3</div>
+        <div class="card-detail">
+          {{ if ge .Params.runway_months 999.0 }}
+            Operating cash flow positive &mdash; self-funding.
+          {{ else }}
+            {{ printf "%.0f" .Params.runway_months }} months of cash remaining based on current burn rate.
+          {{ end }}
+          <br>Cash on hand: {{ .Params.cash_display }}
+        </div>
+      </div>
+
+      <!-- Revenue Score -->
+      <div class="assess-card">
+        <h3>Revenue Trajectory</h3>
+        <div class="card-score {{ if ge .Params.revenue_score 2 }}score-high{{ else if ge .Params.revenue_score 1 }}score-mid{{ else }}score-low{{ end }}">{{ .Params.revenue_score }}/3</div>
+        <div class="card-detail">
+          Revenue: {{ .Params.revenue_display }}<br>
+          {{ if .Params.revenue_growth }}
+            YoY Growth: <span style="color:{{ if gt .Params.revenue_growth 0.0 }}#3fb950{{ else }}#f85149{{ end }}">{{ printf "%+.1f" .Params.revenue_growth }}%</span>
+          {{ else }}
+            Revenue growth data unavailable.
+          {{ end }}
+        </div>
+      </div>
+
+      <!-- Management Score -->
+      <div class="assess-card">
+        <h3>Management Quality</h3>
+        <div class="card-score {{ if ge .Params.mgmt_score 2 }}score-high{{ else if ge .Params.mgmt_score 1 }}score-mid{{ else }}score-low{{ end }}">{{ .Params.mgmt_score }}/3</div>
+        <div class="card-detail">
+          Insider ownership: {{ printf "%.1f" .Params.insider_held_pct }}%<br>
+          SBC/Revenue: {{ printf "%.1f" .Params.sbc_to_revenue }}%<br>
+          {{ if .Params.has_reverse_split }}<span style="color:#f85149;">Has reverse split history</span>{{ else }}No reverse splits detected{{ end }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Metrics Table -->
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>Key Metrics</h3>
+      <div class="metric-row">
+        <span class="metric-label">Market Cap</span>
+        <span class="metric-value">{{ .Params.market_cap_display }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Revenue</span>
+        <span class="metric-value">{{ .Params.revenue_display }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Revenue Growth (YoY)</span>
+        <span class="metric-value" style="color:{{ if gt .Params.revenue_growth 0.0 }}#3fb950{{ else }}#f85149{{ end }}">{{ if .Params.revenue_growth }}{{ printf "%+.1f" .Params.revenue_growth }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Cash on Hand</span>
+        <span class="metric-value">{{ .Params.cash_display }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Cash Runway</span>
+        <span class="metric-value">{{ if ge .Params.runway_months 999.0 }}Cash Flow Positive{{ else }}{{ printf "%.0f" .Params.runway_months }} months{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Shares Outstanding</span>
+        <span class="metric-value">{{ printf "%.1fM" (div (float .Params.shares_outstanding) 1000000.0) }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Insider Ownership</span>
+        <span class="metric-value" style="color:{{ if ge .Params.insider_held_pct 10.0 }}#3fb950{{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.insider_held_pct }}%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">SBC / Revenue</span>
+        <span class="metric-value" style="color:{{ if gt .Params.sbc_to_revenue 20.0 }}#f85149{{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.sbc_to_revenue }}%</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Sector / Industry</span>
+        <span class="metric-value">{{ .Params.sector }} / {{ .Params.industry }}</span>
+      </div>
+    </div>
+
+    <!-- Patents Section -->
+    {{ if gt .Params.patent_count 0 }}
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>Patents ({{ .Params.patent_count }})</h3>
+      <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:var(--space-sm);">
+        Match type: <span class="info-tag {{ if eq .Params.patent_status "OK" }}patent-ok{{ else }}patent-fuzzy{{ end }}">{{ .Params.patent_status }}</span>
+        {{ if eq .Params.patent_status "FUZZY" }}<span style="font-size:0.8rem;color:var(--color-text-muted);"> &mdash; company name matched partially; verify assignee</span>{{ end }}
+      </p>
+      <ul class="patent-list">
+        {{ range .Params.patent_titles }}
+          <li>{{ . }}</li>
+        {{ end }}
+      </ul>
+    </div>
+    {{ end }}
+
+    <!-- 7-Step Risk Assessment Walkthrough -->
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>7-Step Risk Assessment</h3>
+      <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:var(--space-md);">
+        How {{ .Params.ticker }} maps to our <a href="/methodology/micro-cap-innovation/" style="color:#58a6ff;">micro cap methodology</a>:
+      </p>
+      <ol class="methodology-steps">
+        <li class="{{ if gt .Params.patent_count 0 }}step-pass{{ else }}step-warn{{ end }}">
+          <span class="step-title">Innovation Signal</span>
+          <span class="step-detail">
+            {{ if gt .Params.patent_count 0 }}
+              {{ .Params.patent_count }} patent{{ if gt .Params.patent_count 1 }}s{{ end }} identified. This suggests the company is investing in defensible IP.
+            {{ else }}
+              No patents found. Innovation may be trade-secret-based or too early for filings.
+            {{ end }}
+          </span>
+        </li>
+        <li class="{{ if ge .Params.runway_months 24.0 }}step-pass{{ else if ge .Params.runway_months 12.0 }}step-warn{{ else }}step-fail{{ end }}">
+          <span class="step-title">Cash Runway Check</span>
+          <span class="step-detail">
+            {{ if ge .Params.runway_months 999.0 }}
+              Cash flow positive. No dilution risk from capital raises.
+            {{ else if ge .Params.runway_months 24.0 }}
+              {{ printf "%.0f" .Params.runway_months }} months of runway. Comfortable buffer for execution.
+            {{ else }}
+              {{ printf "%.0f" .Params.runway_months }} months of runway. Short runway increases dilution risk — watch for capital raises.
+            {{ end }}
+          </span>
+        </li>
+        <li class="{{ if gt .Params.revenue_growth 20.0 }}step-pass{{ else if gt .Params.revenue_growth 0.0 }}step-warn{{ else }}step-fail{{ end }}">
+          <span class="step-title">Revenue Trajectory</span>
+          <span class="step-detail">
+            {{ if .Params.revenue_growth }}
+              {{ printf "%+.1f" .Params.revenue_growth }}% YoY growth on {{ .Params.revenue_display }} revenue.
+              {{ if gt .Params.revenue_growth 20.0 }}Strong growth trajectory.{{ else if gt .Params.revenue_growth 0.0 }}Positive but moderate growth.{{ else }}Revenue declining — investigate whether this is temporary or structural.{{ end }}
+            {{ else }}
+              Revenue data unavailable.
+            {{ end }}
+          </span>
+        </li>
+        <li class="{{ if and (ge .Params.insider_held_pct 10.0) (le .Params.sbc_to_revenue 15.0) }}step-pass{{ else if or (lt .Params.insider_held_pct 5.0) (gt .Params.sbc_to_revenue 25.0) }}step-fail{{ else }}step-warn{{ end }}">
+          <span class="step-title">Management Alignment</span>
+          <span class="step-detail">
+            Insiders hold {{ printf "%.1f" .Params.insider_held_pct }}% of shares. SBC is {{ printf "%.1f" .Params.sbc_to_revenue }}% of revenue.
+            {{ if .Params.has_reverse_split }}<span style="color:#f85149;">Reverse split detected — management may be managing optics rather than building value.</span>{{ end }}
+          </span>
+        </li>
+        <li class="step-warn">
+          <span class="step-title">Competitive Moat</span>
+          <span class="step-detail">Review the company's 10-K for barriers to entry: patents, network effects, switching costs, regulatory approvals. This step requires manual research.</span>
+        </li>
+        <li class="step-warn">
+          <span class="step-title">Catalyst Identification</span>
+          <span class="step-detail">Look for upcoming catalysts: FDA decisions, contract wins, product launches, partnerships. Check recent 8-K filings and earnings transcripts.</span>
+        </li>
+        <li class="step-warn">
+          <span class="step-title">Position Sizing</span>
+          <span class="step-detail">Micro caps carry outsized risk. Consider position sizing relative to conviction level and portfolio concentration. This is a {{ .Params.market_cap_display }} company.</span>
+        </li>
+      </ol>
+    </div>
+
+    <!-- Expanded Financial Metrics -->
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>Financial Detail</h3>
+      <div class="metric-row">
+        <span class="metric-label">Free Cash Flow</span>
+        <span class="metric-value" style="color:{{ if and .Params.fcf (gt .Params.fcf 0.0) }}#3fb950{{ else if and .Params.fcf (lt .Params.fcf 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.fcf }}${{ printf "%.1f" (div (float .Params.fcf) 1000000.0) }}M{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">FCF Yield</span>
+        <span class="metric-value" style="color:{{ if and .Params.fcf_yield (ge .Params.fcf_yield 8.0) }}#3fb950{{ else if and .Params.fcf_yield (ge .Params.fcf_yield 5.0) }}#388bfd{{ else }}var(--color-text){{ end }}">{{ if .Params.fcf_yield }}{{ printf "%.1f" .Params.fcf_yield }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Return on Equity</span>
+        <span class="metric-value" style="color:{{ if and .Params.roe (gt .Params.roe 15.0) }}#3fb950{{ else }}var(--color-text){{ end }}">{{ if .Params.roe }}{{ printf "%.1f" .Params.roe }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Debt / Equity</span>
+        <span class="metric-value" style="color:{{ if and .Params.debt_to_equity (gt .Params.debt_to_equity 100.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.debt_to_equity }}{{ printf "%.1f" .Params.debt_to_equity }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Gross Margin</span>
+        <span class="metric-value" style="color:{{ if and .Params.gross_margin (ge .Params.gross_margin 40.0) }}#3fb950{{ else }}var(--color-text){{ end }}">{{ if .Params.gross_margin }}{{ printf "%.1f" .Params.gross_margin }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Profit Margin</span>
+        <span class="metric-value" style="color:{{ if and .Params.profit_margin (gt .Params.profit_margin 0.0) }}#3fb950{{ else if and .Params.profit_margin (lt .Params.profit_margin 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.profit_margin }}{{ printf "%.1f" .Params.profit_margin }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Operating Margin</span>
+        <span class="metric-value" style="color:{{ if and .Params.operating_margin (gt .Params.operating_margin 0.0) }}#3fb950{{ else if and .Params.operating_margin (lt .Params.operating_margin 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.operating_margin }}{{ printf "%.1f" .Params.operating_margin }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Price / Book</span>
+        <span class="metric-value">{{ if .Params.price_to_book }}{{ printf "%.2f" .Params.price_to_book }}{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Current Ratio</span>
+        <span class="metric-value" style="color:{{ if and .Params.current_ratio (lt .Params.current_ratio 1.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.current_ratio }}{{ printf "%.2f" .Params.current_ratio }}{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Dividend Yield</span>
+        <span class="metric-value">{{ if .Params.dividend_yield }}{{ printf "%.2f" .Params.dividend_yield }}%{{ else }}None{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Share Count Change (YoY)</span>
+        <span class="metric-value" style="color:{{ if and .Params.shares_change_yoy (lt .Params.shares_change_yoy 0.0) }}#3fb950{{ else if and .Params.shares_change_yoy (gt .Params.shares_change_yoy 2.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_yoy }}{{ printf "%+.1f" .Params.shares_change_yoy }}%{{ else }}N/A{{ end }}</span>
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Share Count Change (3yr)</span>
+        <span class="metric-value" style="color:{{ if and .Params.shares_change_3yr (lt .Params.shares_change_3yr 0.0) }}#3fb950{{ else if and .Params.shares_change_3yr (gt .Params.shares_change_3yr 2.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_3yr }}{{ printf "%+.1f" .Params.shares_change_3yr }}%{{ else }}N/A{{ end }}</span>
+      </div>
+    </div>
+
+    <!-- Quality Flags -->
+    {{ $hasAnyFlag := or .Params.has_positive_fcf .Params.low_debt .Params.high_roe .Params.wide_moat .Params.buffett_quality .Params.is_cannibal .Params.is_buying_back .Params.is_diluting }}
+    {{ if $hasAnyFlag }}
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>Quality Flags</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-sm);">
+        {{ if .Params.buffett_quality }}<span class="info-tag" style="background:rgba(5,150,105,0.15);color:#059669;">Buffett Quality</span>{{ end }}
+        {{ if .Params.wide_moat }}<span class="info-tag" style="background:rgba(14,165,233,0.15);color:#0ea5e9;">Wide Moat</span>{{ end }}
+        {{ if .Params.high_roe }}<span class="info-tag" style="background:rgba(35,134,54,0.15);color:#3fb950;">High ROE</span>{{ end }}
+        {{ if .Params.low_debt }}<span class="info-tag" style="background:rgba(56,139,253,0.15);color:#388bfd;">Low Debt</span>{{ end }}
+        {{ if .Params.has_positive_fcf }}<span class="info-tag" style="background:rgba(16,185,129,0.15);color:#10b981;">FCF Positive</span>{{ end }}
+        {{ if .Params.is_cannibal }}<span class="info-tag" style="background:rgba(6,182,212,0.15);color:#06b6d4;">Share Cannibal</span>{{ end }}
+        {{ if .Params.is_buying_back }}<span class="info-tag" style="background:rgba(6,182,212,0.15);color:#06b6d4;">Buying Back</span>{{ end }}
+        {{ if .Params.is_diluting }}<span class="info-tag" style="background:rgba(248,81,73,0.15);color:#f85149;">Diluting</span>{{ end }}
+      </div>
+    </div>
+    {{ end }}
+
+    <!-- FCF Trend -->
+    {{ if .Params.fcf_trend }}
+    <div class="assess-card" style="margin-bottom:var(--space-xl);">
+      <h3>Free Cash Flow Trend</h3>
+      <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-md);">
+        <span style="font-size:1.25rem;font-weight:700;color:{{ if eq .Params.fcf_trend "growing" }}#3fb950{{ else if eq .Params.fcf_trend "declining" }}#f85149{{ else if eq .Params.fcf_trend "volatile" }}#d29922{{ else }}var(--color-text-muted){{ end }};">
+          {{ if eq .Params.fcf_trend "growing" }}Growing{{ else if eq .Params.fcf_trend "declining" }}Declining{{ else if eq .Params.fcf_trend "volatile" }}Volatile{{ else }}Insufficient Data{{ end }}
+        </span>
+        {{ if .Params.fcf_cagr_3yr }}
+        <span style="font-size:0.85rem;color:var(--color-text-muted);">3yr CAGR: <strong style="color:{{ if gt .Params.fcf_cagr_3yr 0.0 }}#3fb950{{ else }}#f85149{{ end }};">{{ printf "%+.1f" .Params.fcf_cagr_3yr }}%</strong></span>
+        {{ end }}
+      </div>
+      <div class="metric-row">
+        <span class="metric-label">Consecutive Years FCF Positive</span>
+        <span class="metric-value" style="color:{{ if ge .Params.fcf_consecutive_positive 3 }}#3fb950{{ else }}var(--color-text){{ end }};">{{ .Params.fcf_consecutive_positive }}</span>
+      </div>
+      {{ if .Params.fcf_history }}
+      <div style="margin-top:var(--space-md);">
+        <span style="font-size:0.8rem;color:var(--color-text-muted);">Annual FCF ($M):</span>
+        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:6px;">
+          {{ range .Params.fcf_history }}
+          <span style="font-size:0.8rem;padding:4px 10px;border-radius:10px;background:{{ if ge .fcf 0.0 }}rgba(35,134,54,0.15){{ else }}rgba(248,81,73,0.15){{ end }};color:{{ if ge .fcf 0.0 }}#3fb950{{ else }}#f85149{{ end }};">{{ .year }}: ${{ printf "%.1f" (div .fcf 1000000.0) }}M</span>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+    </div>
+    {{ end }}
+
+    <!-- Business Health Dashboard -->
+    {{ with .Params.health_chart }}
+    <section class="health-dashboard">
+      <h2>Business Health</h2>
+      <p class="health-desc">Annual financials — how the underlying business has performed over the past several years.</p>
+      <div class="health-grid">
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Cash Flow <span class="health-chart-sub">Free cash flow &amp; net income ($M)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthCashChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Revenue <span class="health-chart-sub">Annual revenue ($M) — business growth proxy</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthRevenueChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Total Debt <span class="health-chart-sub">Balance sheet debt ($M)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthDebtChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">ROIC <span class="health-chart-sub">Return on invested capital (%)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthRoicChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">FCF Yield <span class="health-chart-sub">Free cash flow / market cap (%)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthFcfYieldChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Gross Margin <span class="health-chart-sub">Pricing power &amp; competitive moat (%)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthGrossMarginChart"></canvas>
+          </div>
+        </div>
+        <div class="health-chart-wrap">
+          <h3 class="health-chart-title">Shares Outstanding <span class="health-chart-sub">Buybacks vs dilution (millions)</span></h3>
+          <div class="health-chart-container">
+            <canvas id="healthSharesChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script id="healthChartData" type="application/json">
+      {{ . | jsonify | safeHTML }}
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var raw = document.getElementById('healthChartData');
+      if (!raw) return;
+      var d = JSON.parse(raw.textContent);
+      if (typeof d === 'string') d = JSON.parse(d);
+      if (!d || !d.years || !d.years.length) return;
+
+      var labels = d.years.map(String);
+
+      var gridColor = 'rgba(255,255,255,0.06)';
+      var tickColor = '#8b949e';
+      var baseOpts = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 12, color: tickColor, font: { size: 11 } } }, tooltip: { mode: 'index', intersect: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+          y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } }
+        }
+      };
+
+      function nullToNaN(arr) { return (arr || []).map(function(v) { return v === null ? NaN : v; }); }
+      function barColor(val, positiveColor, negativeColor) {
+        if (!Array.isArray(val)) return positiveColor;
+        return val.map(function(v) { return (v !== null && v < 0) ? negativeColor : positiveColor; });
+      }
+
+      // Cash Flow
+      new Chart(document.getElementById('healthCashChart'), {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            { label: 'Free Cash Flow', data: nullToNaN(d.fcf), backgroundColor: barColor(d.fcf, 'rgba(35,134,54,0.75)', 'rgba(248,81,73,0.75)'), borderColor: barColor(d.fcf, '#2ea043', '#f85149'), borderWidth: 1, borderRadius: 3 },
+            { label: 'Net Income', data: nullToNaN(d.net_income), backgroundColor: barColor(d.net_income, 'rgba(37,99,235,0.55)', 'rgba(248,81,73,0.45)'), borderColor: barColor(d.net_income, '#2563eb', '#f85149'), borderWidth: 1, borderRadius: 3 }
+          ]
+        },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // Revenue
+      new Chart(document.getElementById('healthRevenueChart'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Revenue', data: nullToNaN(d.revenue), backgroundColor: 'rgba(56,139,253,0.65)', borderColor: '#388bfd', borderWidth: 1, borderRadius: 3 }] },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // Total Debt
+      new Chart(document.getElementById('healthDebtChart'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Total Debt', data: nullToNaN(d.total_debt), backgroundColor: 'rgba(210,153,34,0.65)', borderColor: '#d29922', borderWidth: 1, borderRadius: 3 }] },
+        options: JSON.parse(JSON.stringify(baseOpts))
+      });
+
+      // ROIC
+      var roicColors = (d.roic || []).map(function(v) {
+        if (v === null) return 'rgba(139,148,158,0.4)';
+        if (v >= 15) return 'rgba(35,134,54,0.75)';
+        if (v >= 8) return 'rgba(210,153,34,0.75)';
+        return 'rgba(248,81,73,0.75)';
+      });
+      new Chart(document.getElementById('healthRoicChart'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'ROIC %', data: nullToNaN(d.roic), backgroundColor: roicColors, borderColor: roicColors.map(function(c) { return c.replace('0.75','1').replace('0.4','0.6'); }), borderWidth: 1, borderRadius: 3 }] },
+        options: (function() {
+          var o = JSON.parse(JSON.stringify(baseOpts));
+          o.scales.y.ticks.callback = function(v) { return v + '%'; };
+          o.plugins.annotation = { annotations: {
+            line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(210,153,34,0.5)', borderWidth: 1, borderDash: [4,4] },
+            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+          }};
+          return o;
+        })()
+      });
+
+      // FCF Yield
+      if (d.fcf_yield && d.fcf_yield.some(function(v) { return v !== null; })) {
+        var fcfYieldColors = (d.fcf_yield || []).map(function(v) {
+          if (v === null) return 'rgba(139,148,158,0.4)';
+          if (v >= 8) return 'rgba(35,134,54,0.75)';
+          if (v >= 5) return 'rgba(56,139,253,0.65)';
+          if (v >= 0) return 'rgba(210,153,34,0.75)';
+          return 'rgba(248,81,73,0.75)';
+        });
+        new Chart(document.getElementById('healthFcfYieldChart'), {
+          type: 'bar',
+          data: { labels: labels, datasets: [{ label: 'FCF Yield %', data: nullToNaN(d.fcf_yield), backgroundColor: fcfYieldColors, borderColor: fcfYieldColors.map(function(c) { return c.replace('0.75','1').replace('0.65','1').replace('0.4','0.6'); }), borderWidth: 1, borderRadius: 3 }] },
+          options: (function() {
+            var o = JSON.parse(JSON.stringify(baseOpts));
+            o.scales.y.ticks.callback = function(v) { return v + '%'; };
+            o.plugins.annotation = { annotations: {
+              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(56,139,253,0.5)', borderWidth: 1, borderDash: [4,4] },
+              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+            }};
+            return o;
+          })()
+        });
+      }
+
+      // Gross Margin
+      if (d.gross_margin && d.gross_margin.some(function(v) { return v !== null; })) {
+        new Chart(document.getElementById('healthGrossMarginChart'), {
+          type: 'bar',
+          data: { labels: labels, datasets: [{ label: 'Gross Margin %', data: nullToNaN(d.gross_margin), backgroundColor: 'rgba(168,85,247,0.6)', borderColor: '#a855f7', borderWidth: 1, borderRadius: 3 }] },
+          options: (function() {
+            var o = JSON.parse(JSON.stringify(baseOpts));
+            o.scales.y.ticks.callback = function(v) { return v + '%'; };
+            o.plugins.annotation = { annotations: {
+              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+            }};
+            return o;
+          })()
+        });
+      }
+
+      // Shares Outstanding
+      if (d.shares && d.shares.some(function(v) { return v !== null; })) {
+        var sData = nullToNaN(d.shares);
+        var sColors = [];
+        for (var si = 0; si < sData.length; si++) {
+          if (si === 0 || isNaN(sData[si]) || isNaN(sData[si - 1])) {
+            sColors.push('rgba(56,139,253,0.65)');
+          } else if (sData[si] <= sData[si - 1]) {
+            sColors.push('rgba(35,134,54,0.75)');
+          } else {
+            sColors.push('rgba(248,81,73,0.65)');
+          }
+        }
+        new Chart(document.getElementById('healthSharesChart'), {
+          type: 'bar',
+          data: { labels: labels, datasets: [{ label: 'Shares (M)', data: sData, backgroundColor: sColors, borderColor: sColors.map(function(c) { return c.replace('0.75','1').replace('0.65','1'); }), borderWidth: 1, borderRadius: 3 }] },
+          options: JSON.parse(JSON.stringify(baseOpts))
+        });
+      }
+    });
+    </script>
+
+    <style>
+      .health-dashboard { margin-bottom: var(--space-2xl); }
+      .health-dashboard h2 { font-size: 1.25rem; margin-bottom: var(--space-xs); }
+      .health-desc { color: var(--color-text-muted); font-size: 0.875rem; margin-bottom: var(--space-lg); }
+      .health-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-lg); }
+      .health-chart-wrap { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md); }
+      .health-chart-title { font-size: 0.875rem; font-weight: 600; color: var(--color-text); margin: 0 0 var(--space-sm); display: flex; flex-direction: column; gap: 2px; }
+      .health-chart-sub { font-size: 0.75rem; font-weight: 400; color: var(--color-text-muted); }
+      .health-chart-container { position: relative; height: 180px; }
+      @media (max-width: 600px) { .health-grid { grid-template-columns: 1fr; } }
+    </style>
+    {{ end }}
+
+    <!-- Ad Placement -->
+    <div style="margin: var(--space-lg) 0; text-align: center;">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-5600315940410875"
+           data-ad-slot="auto"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+
+    <!-- Disclaimer -->
+    <div style="padding:var(--space-lg);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-xl);">
+      <p style="color:var(--color-text-muted);font-size:0.8rem;margin:0;">
+        <strong>Disclaimer:</strong> This is an automated screening tool, not investment advice. Micro cap stocks are inherently risky with low liquidity and high volatility. The innovation score is based on publicly available data and may not reflect the full picture. Steps 5-7 of the methodology require your own research. See our <a href="/disclaimer/" style="color:#58a6ff;">full disclaimer</a>.
+      </p>
+    </div>
+
+    <!-- Data freshness -->
+    <p style="text-align:center;color:var(--color-text-muted);font-size:0.75rem;margin-top:var(--space-lg);">
+      Last screened: {{ .Params.screened_date }}
+    </p>
+  </main>
+
+  <footer style="text-align:center;padding:var(--space-xl);color:var(--color-text-muted);font-size:0.8rem;border-top:1px solid var(--color-border);margin-top:var(--space-2xl);">
+    <p>&copy; {{ now.Year }} mungbeans.io &mdash; <a href="/about/" style="color:var(--color-text-muted);">About</a> &bull; <a href="/disclaimer/" style="color:var(--color-text-muted);">Disclaimer</a> &bull; <a href="/privacy/" style="color:var(--color-text-muted);">Privacy</a></p>
+  </footer>
+</body>
+</html>

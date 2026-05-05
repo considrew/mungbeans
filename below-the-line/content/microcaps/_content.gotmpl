@@ -1,0 +1,78 @@
+{{/*
+  Content Adapter: Generates individual micro cap pages from microcap_screener.json
+*/}}
+
+{{ $data := dict }}
+{{ with resources.Get "data/microcap_screener.json" }}
+  {{ with . | transform.Unmarshal }}
+    {{ $data = . }}
+  {{ end }}
+{{ end }}
+
+{{ range $data.companies }}
+  {{ $slug := .ticker | lower }}
+  {{ $page := dict
+    "kind" "page"
+    "path" $slug
+    "title" (printf "%s (%s) - Micro Cap Innovation Screener" .name .ticker)
+    "params" (dict
+      "ticker" .ticker
+      "name" .name
+      "market_cap" .market_cap
+      "market_cap_display" .market_cap_display
+      "sector" .sector
+      "industry" .industry
+      "market_tag" .market_tag
+      "cash" .cash
+      "cash_display" .cash_display
+      "operating_cashflow" .operating_cashflow
+      "runway_months" .runway_months
+      "revenue" .revenue
+      "revenue_display" .revenue_display
+      "revenue_growth" .revenue_growth
+      "shares_outstanding" .shares_outstanding
+      "insider_held_pct" .insider_held_pct
+      "sbc_to_revenue" .sbc_to_revenue
+      "has_reverse_split" .has_reverse_split
+      "red_flags" .red_flags
+      "red_flag_count" .red_flag_count
+      "patent_count" .patent_count
+      "patent_titles" .patent_titles
+      "patent_status" .patent_status
+      "patent_score" .patent_score
+      "runway_score" .runway_score
+      "revenue_score" .revenue_score
+      "mgmt_score" .mgmt_score
+      "total_score" .total_score
+      "screened_date" .screened_date
+      "generated" $data.generated
+      "fcf" .fcf
+      "fcf_yield" .fcf_yield
+      "book_value" .book_value
+      "price_to_book" .price_to_book
+      "profit_margin" .profit_margin
+      "operating_margin" .operating_margin
+      "roe" .roe
+      "debt_to_equity" .debt_to_equity
+      "gross_margin" .gross_margin
+      "current_ratio" .current_ratio
+      "dividend_yield" .dividend_yield
+      "shares_change_yoy" .shares_change_yoy
+      "shares_change_3yr" .shares_change_3yr
+      "has_positive_fcf" .has_positive_fcf
+      "low_debt" .low_debt
+      "high_roe" .high_roe
+      "wide_moat" .wide_moat
+      "buffett_quality" .buffett_quality
+      "is_buying_back" .is_buying_back
+      "is_diluting" .is_diluting
+      "is_cannibal" .is_cannibal
+      "fcf_trend" .fcf_trend
+      "fcf_cagr_3yr" .fcf_cagr_3yr
+      "fcf_consecutive_positive" .fcf_consecutive_positive
+      "fcf_history" .fcf_history
+      "health_chart" .health_chart
+    )
+  }}
+  {{ $.AddPage $page }}
+{{ end }}

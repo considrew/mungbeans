@@ -29,6 +29,8 @@ USAGE:
 """
 
 import yfinance as yf
+import pandas as pd
+import numpy as np
 import json
 import time
 import os
@@ -40,7 +42,7 @@ from datetime import datetime, timedelta
 MIN_MARKET_CAP = 50_000_000
 MAX_MARKET_CAP = 500_000_000
 PATENT_LOOKBACK_YEARS = 3
-OUTPUT_DIR = "data/microcap_innovation"
+OUTPUT_DIR = "assets/data"
 
 PATENT_LOOKUP_FILE = "data/microcap_innovation/patent_lookup.json"
 
@@ -202,7 +204,7 @@ def get_stock_data(ticker):
         sector = info.get("sector", "Unknown")
         industry = info.get("industry", "Unknown")
 
-        return {
+        result = {
             "ticker": ticker,
             "name": info.get("shortName", ticker),
             "market_cap": market_cap,
@@ -222,9 +224,401 @@ def get_stock_data(ticker):
             "red_flag_count": len(red_flags),
         }
 
+        # Fetch deep financials (reuses the existing yf.Ticker object)
+        print(f"  -> Fetching deep financials...")
+        deep = fetch_deep_financials(stock, info)
+        result.update(deep)
+
+        return result
+
     except Exception as e:
         print(f"  [!] Error fetching {ticker}: {e}")
         return None
+
+
+# ---------------------------------------------------------------------------
+# DEEP FINANCIAL DATA (mirrors update_stocks.py depth)
+# ---------------------------------------------------------------------------
+
+class NumpyEncoder(json.JSONEncoder):
+    """Handle numpy/pandas types in JSON serialization."""
+    def default(self, obj):
+        if isinstance(obj, (np.bool_,)):
+            return bool(obj)
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            if np.isnan(obj) or np.isinf(obj):
+                return None
+            return float(obj)
+        if isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+        if isinstance(obj, (pd.Timestamp,)):
+            return obj.isoformat()
+        return super().default(obj)
+
+
+def get_share_change(ticker_obj):
+    """
+    Calculate share count change over time to detect buybacks vs dilution.
+    Returns (yoy_change%, 3yr_change%, current_shares).
+    Negative = buybacks. Positive = dilution.
+    """
+    try:
+        bs = ticker_obj.balance_sheet
+        if bs is None or bs.empty or 'Ordinary Shares Number' not in bs.index:
+            return None, None, None
+
+        shares = bs.loc['Ordinary Shares Number'].dropna().sort_index(ascending=False)
+        if len(shares) < 2:
+            return None, None, None
+
+        current = float(shares.iloc[0])
+
+        yoy_change = None
+        if len(shares) >= 2:
+            year_ago = float(shares.iloc[1])
+            if year_ago > 0:
+                yoy_change = round(((current - year_ago) / year_ago) * 100, 1)
+
+        three_yr_change = None
+        if len(shares) >= 4:
+            three_yr_ago = float(shares.iloc[3])
+            if three_yr_ago > 0:
+                three_yr_change = round(((current - three_yr_ago) / three_yr_ago) * 100, 1)
+        elif len(shares) >= 3:
+            oldest = float(shares.iloc[-1])
+            if oldest > 0:
+                three_yr_change = round(((current - oldest) / oldest) * 100, 1)
+
+        return yoy_change, three_yr_change, int(current)
+    except Exception:
+        return None, None, None
+
+
+def get_fcf_trend(ticker_obj):
+    """
+    Calculate free cash flow trend from annual cashflow statements.
+    Returns dict with fcf_trend, fcf_cagr_3yr, fcf_consecutive_positive, fcf_history.
+    """
+    empty = {'fcf_trend': 'insufficient_data', 'fcf_cagr_3yr': None,
+             'fcf_consecutive_positive': 0, 'fcf_history': []}
+    try:
+        cf = ticker_obj.cashflow
+        if cf is None or cf.empty:
+            return empty
+
+        fcf_row = None
+        for label in ['Free Cash Flow', 'FreeCashFlow']:
+            if label in cf.index:
+                fcf_row = cf.loc[label]
+                break
+        if fcf_row is None:
+            return empty
+
+        fcf_row = fcf_row.dropna().sort_index(ascending=True)
+        if len(fcf_row) < 3:
+            return empty
+
+        fcf_values = fcf_row.tail(4)
+        history = []
+        for date, val in fcf_values.items():
+            year = date.year if hasattr(date, 'year') else pd.Timestamp(date).year
+            history.append({'year': year, 'fcf': round(float(val))})
+
+        consecutive_positive = 0
+        for entry in reversed(history):
+            if entry['fcf'] > 0:
+                consecutive_positive += 1
+            else:
+                break
+
+        cagr = None
+        if len(history) >= 3:
+            oldest_fcf = float(fcf_values.iloc[0])
+            newest_fcf = float(fcf_values.iloc[-1])
+            years_span = len(fcf_values) - 1
+            if oldest_fcf > 0 and newest_fcf > 0 and years_span > 0:
+                cagr = round(((newest_fcf / oldest_fcf) ** (1 / years_span) - 1) * 100, 1)
+            elif oldest_fcf > 0 and newest_fcf <= 0:
+                cagr = -100.0
+
+        yoy_changes = []
+        vals = list(fcf_values)
+        for i in range(1, len(vals)):
+            prev, curr = float(vals[i-1]), float(vals[i])
+            yoy_changes.append(curr > prev if prev != 0 else curr > 0)
+
+        ups = sum(yoy_changes)
+        downs = len(yoy_changes) - ups
+
+        if ups >= 2 and (cagr is not None and cagr > 0):
+            trend = 'growing'
+        elif downs >= 2 and (cagr is None or cagr < 0):
+            trend = 'declining'
+        else:
+            trend = 'volatile'
+
+        return {'fcf_trend': trend, 'fcf_cagr_3yr': cagr,
+                'fcf_consecutive_positive': consecutive_positive, 'fcf_history': history}
+    except Exception:
+        return empty
+
+
+def get_health_metrics(ticker_obj):
+    """
+    Build annual time-series data for the Business Health dashboard.
+    Returns dict with years, revenue, net_income, fcf, total_debt, roic,
+    gross_margin, shares, fcf_yield — all as arrays.
+    """
+    empty = {'years': [], 'revenue': [], 'net_income': [], 'fcf': [],
+             'total_debt': [], 'roic': [], 'gross_margin': [], 'shares': [],
+             'fcf_yield': []}
+    try:
+        fin = ticker_obj.financials
+        bs = ticker_obj.balance_sheet
+        cf = ticker_obj.cashflow
+
+        if fin is None or fin.empty:
+            return empty
+
+        cutoff = pd.Timestamp.now() - pd.Timedelta(weeks=200)
+        dates = sorted([d for d in fin.columns if pd.Timestamp(d) >= cutoff])
+
+        years, revenue, net_income, fcf_vals = [], [], [], []
+        total_debt, roic, gross_margin_pcts = [], [], []
+        shares_list, fcf_yield_list = [], []
+
+        for date in dates:
+            year = pd.Timestamp(date).year
+            years.append(year)
+
+            # Revenue
+            rev = None
+            for lbl in ['Total Revenue', 'Revenue']:
+                if lbl in fin.index:
+                    v = fin.loc[lbl, date]
+                    if pd.notna(v):
+                        rev = round(float(v) / 1e6, 1)
+                        break
+            revenue.append(rev)
+
+            # Net Income
+            ni = None
+            for lbl in ['Net Income', 'Net Income Common Stockholders']:
+                if lbl in fin.index:
+                    v = fin.loc[lbl, date]
+                    if pd.notna(v):
+                        ni = round(float(v) / 1e6, 1)
+                        break
+            net_income.append(ni)
+
+            # Operating Income (for NOPAT/ROIC)
+            op_income_raw = None
+            for lbl in ['Operating Income', 'EBIT']:
+                if lbl in fin.index:
+                    v = fin.loc[lbl, date]
+                    if pd.notna(v):
+                        op_income_raw = float(v)
+                        break
+
+            # Tax rate
+            tax_rate = 0.25
+            if 'Tax Provision' in fin.index and 'Pretax Income' in fin.index:
+                tp = fin.loc['Tax Provision', date]
+                pt = fin.loc['Pretax Income', date]
+                if pd.notna(tp) and pd.notna(pt) and float(pt) != 0:
+                    tax_rate = max(0.0, min(0.40, float(tp) / float(pt)))
+
+            # FCF
+            fcf_v = None
+            if cf is not None and not cf.empty and date in cf.columns:
+                if 'Free Cash Flow' in cf.index:
+                    v = cf.loc['Free Cash Flow', date]
+                    if pd.notna(v):
+                        fcf_v = round(float(v) / 1e6, 1)
+            fcf_vals.append(fcf_v)
+
+            # Total Debt + ROIC
+            debt_v, roic_v = None, None
+            if bs is not None and not bs.empty and date in bs.columns:
+                if 'Total Debt' in bs.index:
+                    v = bs.loc['Total Debt', date]
+                    if pd.notna(v):
+                        debt_v = round(float(v) / 1e6, 1)
+                if debt_v is None:
+                    lt = bs.loc['Long Term Debt', date] if 'Long Term Debt' in bs.index else None
+                    st = bs.loc['Current Debt', date] if 'Current Debt' in bs.index else None
+                    lt = float(lt) if lt is not None and pd.notna(lt) else 0.0
+                    st = float(st) if st is not None and pd.notna(st) else 0.0
+                    if lt + st > 0:
+                        debt_v = round((lt + st) / 1e6, 1)
+
+                if op_income_raw is not None:
+                    nopat = op_income_raw * (1 - tax_rate)
+                    equity_raw = None
+                    for lbl in ['Stockholders Equity', 'Total Stockholder Equity', 'Common Stock Equity']:
+                        if lbl in bs.index:
+                            v = bs.loc[lbl, date]
+                            if pd.notna(v):
+                                equity_raw = float(v)
+                                break
+                    debt_raw = float(debt_v * 1e6) if debt_v is not None else 0.0
+                    cash_raw = 0.0
+                    for lbl in ['Cash And Cash Equivalents', 'Cash Cash Equivalents And Short Term Investments']:
+                        if lbl in bs.index:
+                            v = bs.loc[lbl, date]
+                            if pd.notna(v):
+                                cash_raw = float(v)
+                                break
+                    if equity_raw is not None:
+                        invested_cap = equity_raw + debt_raw - cash_raw
+                        if invested_cap > 0:
+                            roic_v = round((nopat / invested_cap) * 100, 1)
+
+            total_debt.append(debt_v)
+            roic.append(roic_v)
+
+            # Gross Margin %
+            gm_v = None
+            if 'Gross Profit' in fin.index:
+                gp = fin.loc['Gross Profit', date]
+                if pd.notna(gp) and rev is not None and rev > 0:
+                    gm_v = round((float(gp) / (rev * 1e6)) * 100, 1)
+            gross_margin_pcts.append(gm_v)
+
+            # Shares Outstanding (millions)
+            shares_v = None
+            if bs is not None and not bs.empty and date in bs.columns:
+                for lbl in ['Ordinary Shares Number', 'Share Issued']:
+                    if lbl in bs.index:
+                        v = bs.loc[lbl, date]
+                        if pd.notna(v):
+                            shares_v = round(float(v) / 1e6, 1)
+                            break
+            shares_list.append(shares_v)
+
+            # FCF Yield %
+            fcf_yield_v = None
+            if fcf_v is not None:
+                try:
+                    fy_date = pd.Timestamp(date)
+                    start = (fy_date - pd.Timedelta(days=14)).strftime('%Y-%m-%d')
+                    end = (fy_date + pd.Timedelta(days=14)).strftime('%Y-%m-%d')
+                    hist = ticker_obj.history(start=start, end=end)
+                    if not hist.empty:
+                        close_price = float(hist['Close'].iloc[-1])
+                        if shares_v is not None and shares_v > 0:
+                            mkt_cap_m = close_price * shares_v
+                            if mkt_cap_m > 0:
+                                fcf_yield_v = round((fcf_v / mkt_cap_m) * 100, 1)
+                except Exception:
+                    pass
+            fcf_yield_list.append(fcf_yield_v)
+
+        return {'years': years, 'revenue': revenue, 'net_income': net_income,
+                'fcf': fcf_vals, 'total_debt': total_debt, 'roic': roic,
+                'gross_margin': gross_margin_pcts, 'shares': shares_list,
+                'fcf_yield': fcf_yield_list}
+    except Exception:
+        return empty
+
+
+def fetch_deep_financials(ticker_obj, info):
+    """
+    Fetch the full suite of fundamental data for a microcap.
+    Returns a dict with all quality metrics, FCF trend, health chart, etc.
+    """
+    try:
+        # Basic metrics from info
+        market_cap = info.get('marketCap')
+        fcf = info.get('freeCashflow')
+        book_value = info.get('bookValue')
+        price_to_book = info.get('priceToBook')
+        profit_margin = info.get('profitMargins')
+        operating_margin = info.get('operatingMargins')
+        roe = info.get('returnOnEquity')
+        debt_to_equity = info.get('debtToEquity')
+        gross_margin = info.get('grossMargins')
+        current_ratio = info.get('currentRatio')
+        dividend_yield = info.get('dividendYield')
+
+        # Derived
+        fcf_yield = None
+        if fcf and market_cap and market_cap > 0:
+            fcf_yield = round((fcf / market_cap) * 100, 2)
+
+        roe_pct = round(roe * 100, 1) if roe is not None else None
+        gross_margin_pct = round(gross_margin * 100, 1) if gross_margin is not None else None
+        profit_margin_pct = round(profit_margin * 100, 1) if profit_margin is not None else None
+        operating_margin_pct = round(operating_margin * 100, 1) if operating_margin is not None else None
+
+        # Share change tracking
+        shares_yoy, shares_3yr, shares_current = get_share_change(ticker_obj)
+
+        # Quality flags
+        has_positive_fcf = bool(fcf is not None and fcf > 0)
+        low_debt = bool(debt_to_equity is not None and debt_to_equity < 50)
+        high_roe = bool(roe_pct is not None and roe_pct > 15)
+        wide_moat = bool(gross_margin_pct is not None and gross_margin_pct > 40 and high_roe)
+        buffett_quality = bool(high_roe and low_debt and has_positive_fcf
+                               and profit_margin is not None and profit_margin > 0)
+        is_buying_back = bool(shares_3yr is not None and shares_3yr < -2)
+        is_diluting = bool(shares_3yr is not None and shares_3yr > 2)
+        is_cannibal = bool(shares_3yr is not None and shares_3yr < -5)
+
+        # FCF trend
+        fcf_trend_data = get_fcf_trend(ticker_obj)
+
+        # Business health time-series
+        health_data = get_health_metrics(ticker_obj)
+
+        return {
+            'fcf': fcf,
+            'fcf_yield': fcf_yield,
+            'book_value': round(book_value, 2) if book_value else None,
+            'price_to_book': round(price_to_book, 2) if price_to_book else None,
+            'profit_margin': profit_margin_pct,
+            'operating_margin': operating_margin_pct,
+            'roe': roe_pct,
+            'debt_to_equity': round(debt_to_equity, 1) if debt_to_equity else None,
+            'gross_margin': gross_margin_pct,
+            'current_ratio': round(current_ratio, 2) if current_ratio else None,
+            'dividend_yield': round(dividend_yield * 100, 2) if dividend_yield else None,
+            'shares_change_yoy': shares_yoy,
+            'shares_change_3yr': shares_3yr,
+            # Quality flags
+            'has_positive_fcf': has_positive_fcf,
+            'low_debt': low_debt,
+            'high_roe': high_roe,
+            'wide_moat': wide_moat,
+            'buffett_quality': buffett_quality,
+            'is_buying_back': is_buying_back,
+            'is_diluting': is_diluting,
+            'is_cannibal': is_cannibal,
+            # FCF trend
+            'fcf_trend': fcf_trend_data['fcf_trend'],
+            'fcf_cagr_3yr': fcf_trend_data['fcf_cagr_3yr'],
+            'fcf_consecutive_positive': fcf_trend_data['fcf_consecutive_positive'],
+            'fcf_history': fcf_trend_data['fcf_history'],
+            # Health dashboard
+            'health_chart': health_data if health_data['years'] else None,
+        }
+    except Exception as e:
+        print(f"    [!] Deep financials error: {e}")
+        return {
+            'fcf': None, 'fcf_yield': None, 'book_value': None,
+            'price_to_book': None, 'profit_margin': None, 'operating_margin': None,
+            'roe': None, 'debt_to_equity': None, 'gross_margin': None,
+            'current_ratio': None, 'dividend_yield': None,
+            'shares_change_yoy': None, 'shares_change_3yr': None,
+            'has_positive_fcf': False, 'low_debt': False, 'high_roe': False,
+            'wide_moat': False, 'buffett_quality': False,
+            'is_buying_back': False, 'is_diluting': False, 'is_cannibal': False,
+            'fcf_trend': 'insufficient_data', 'fcf_cagr_3yr': None,
+            'fcf_consecutive_positive': 0, 'fcf_history': [],
+            'health_chart': None,
+        }
 
 
 # ---------------------------------------------------------------------------
@@ -440,7 +834,7 @@ def main():
 
     # Save output
     os.makedirs(OUTPUT_DIR, exist_ok=True)
-    output_path = os.path.join(OUTPUT_DIR, "screener_results.json")
+    output_path = os.path.join(OUTPUT_DIR, "microcap_screener.json")
 
     with open(output_path, "w") as f:
         json.dump({
@@ -456,7 +850,7 @@ def main():
             "market_tags": tags,
             "companies": results,
             "rejected": rejected,
-        }, f, indent=2)
+        }, f, indent=2, cls=NumpyEncoder)
 
     # Summary
     print(f"\n{'=' * 60}")

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KMCNBWBVVE');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Micro Cap Innovation Screener | mungbeans.io</title>
+  <meta name="description" content="Screen micro cap stocks ($50M-$500M) for patent activity, cash runway, revenue growth, and management quality. Red flags auto-filtered. Updated weekly.">
+  <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .detail-row { display: none; }
+    .detail-row.open { display: table-row; }
+    .score-bar { display: inline-block; height: 8px; border-radius: 4px; margin-right: 4px; }
+    .score-fill { background: #3fb950; height: 100%; border-radius: 4px; }
+    .score-empty { background: #30363d; }
+    .patent-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem; font-weight: 600; }
+    .patent-ok { background: rgba(35,134,54,0.2); color: #3fb950; }
+    .patent-fuzzy { background: rgba(210,153,34,0.2); color: #d29922; }
+    .patent-none { background: rgba(139,148,158,0.2); color: #8b949e; }
+    .red-flag-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; background: rgba(248,81,73,0.15); color: #f85149; margin: 2px; }
+    .market-tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; background: rgba(88,166,255,0.15); color: #58a6ff; }
+    .score-cell { font-weight: 700; font-size: 1rem; }
+    .score-high { color: #3fb950; }
+    .score-mid { color: #d29922; }
+    .score-low { color: #8b949e; }
+    .summary-stats { display: flex; gap: var(--space-lg); flex-wrap: wrap; margin-bottom: var(--space-xl); }
+    .stat-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-md) var(--space-lg); text-align: center; min-width: 120px; }
+    .stat-card .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--color-text); }
+    .stat-card .stat-label { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 4px; }
+    .methodology-link { display: inline-block; margin-bottom: var(--space-lg); padding: 8px 16px; background: rgba(88,166,255,0.1); border: 1px solid rgba(88,166,255,0.3); border-radius: var(--radius-md); color: #58a6ff; text-decoration: none; font-size: 0.85rem; }
+    .methodology-link:hover { background: rgba(88,166,255,0.2); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">mungbeans.io</a>
+      <a href="/stocks/">All Stocks</a>
+      <a href="/microcaps/">Micro Caps</a>
+      <a href="/blog/">Weekly Reports</a>
+      <a href="/deep-dives/">Deep Dives</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  {{ $data := dict }}
+  {{ with resources.Get "data/microcap_screener.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $data = . }}
+    {{ end }}
+  {{ end }}
+
+  <main class="stocks-list-page">
+    <h1>Micro Cap Innovation Screener</h1>
+    <p class="page-desc">Screening {{ $data.total_screened }} micro caps ($50M-$500M) for patent activity, cash runway, revenue growth, and management quality. {{ $data.total_passed }} passed, {{ $data.total_rejected }} auto-rejected. Data as of {{ $data.generated }}.</p>
+
+    <a href="/methodology/micro-cap-innovation/" class="methodology-link">Read the 7-step methodology &rarr;</a>
+
+    <!-- Summary Stats -->
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-number">{{ $data.total_passed }}</div>
+        <div class="stat-label">Passed Screening</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">{{ $data.total_rejected }}</div>
+        <div class="stat-label">Red Flag Rejected</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="highScoreCount">-</div>
+        <div class="stat-label">Score 8+</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="patentCount">-</div>
+        <div class="stat-label">With Patents</div>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="search-container">
+      <input type="text" id="stockSearch" placeholder="Search by ticker or company name..." class="search-input">
+    </div>
+
+    <!-- Filter Groups -->
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Score</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="score" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="score" data-filter="high">High (8-12)</button>
+          <button class="filter-btn" data-filter-group="score" data-filter="mid">Mid (5-7)</button>
+          <button class="filter-btn" data-filter-group="score" data-filter="low">Low (0-4)</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Patents</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="patents" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="patents" data-filter="has-patents">Has Patents</button>
+          <button class="filter-btn" data-filter-group="patents" data-filter="no-patents">No Patents</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Cash Runway</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="runway" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="runway" data-filter="profitable">Cash Flow Positive</button>
+          <button class="filter-btn" data-filter-group="runway" data-filter="long">2+ Years</button>
+          <button class="filter-btn" data-filter-group="runway" data-filter="short">&lt; 2 Years</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Quality</label>
+        <div class="filter-controls">
+          <button class="filter-btn active" data-filter-group="quality" data-filter="all">All</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="fcf-positive">FCF Positive</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="low-debt">Low Debt</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="high-roe">High ROE</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="wide-moat">Wide Moat</button>
+          <button class="filter-btn" data-filter-group="quality" data-filter="buybacks">Buying Back</button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">Market Tag</label>
+        <select id="marketTagFilter" style="background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:6px 12px;font-size:0.85rem;">
+          <option value="all">All Sectors</option>
+          {{ range $tag, $tickers := $data.market_tags }}
+            <option value="{{ $tag }}">{{ $tag }} ({{ len $tickers }})</option>
+          {{ end }}
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="stock-table" id="microcapTable">
+        <thead>
+          <tr>
+            <th data-sort="ticker">Ticker</th>
+            <th data-sort="score" class="sortable">Score</th>
+            <th data-sort="patents" class="sortable">Patents</th>
+            <th data-sort="runway" class="sortable">Runway</th>
+            <th data-sort="revenue-growth" class="sortable">Rev Growth</th>
+            <th data-sort="market-cap" class="sortable">Mkt Cap</th>
+            <th data-sort="fcf-yield" class="sortable hide-mobile">FCF%</th>
+            <th data-sort="gross-margin" class="sortable hide-mobile">GM%</th>
+            <th data-sort="debt-equity" class="sortable hide-mobile">D/E</th>
+            <th data-sort="insider" class="sortable">Insider %</th>
+            <th class="hide-mobile">Tag</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $data.companies }}
+          <tr class="stock-row"
+              data-ticker="{{ .ticker }}"
+              data-name="{{ .name | lower }}"
+              data-score="{{ .total_score }}"
+              data-patents="{{ .patent_count }}"
+              data-patent-status="{{ .patent_status }}"
+              data-runway="{{ .runway_months }}"
+              data-revenue-growth="{{ .revenue_growth }}"
+              data-market-cap="{{ .market_cap }}"
+              data-insider="{{ .insider_held_pct }}"
+              data-sbc="{{ .sbc_to_revenue }}"
+              data-market-tag="{{ .market_tag }}"
+              data-red-flags="{{ .red_flag_count }}"
+              data-fcf-yield="{{ .fcf_yield }}"
+              data-gross-margin="{{ .gross_margin }}"
+              data-debt-equity="{{ .debt_to_equity }}"
+              data-roe="{{ .roe }}"
+              data-has-positive-fcf="{{ .has_positive_fcf }}"
+              data-low-debt="{{ .low_debt }}"
+              data-high-roe="{{ .high_roe }}"
+              data-wide-moat="{{ .wide_moat }}"
+              data-is-buying-back="{{ .is_buying_back }}"
+              data-is-diluting="{{ .is_diluting }}"
+              style="cursor:pointer;">
+            <td>
+              <a href="/microcaps/{{ .ticker | lower }}/" style="color:#58a6ff;text-decoration:none;font-weight:600;">{{ .ticker }}</a>
+              <span style="display:block;font-size:0.75rem;color:var(--color-text-muted);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ .name }}</span>
+            </td>
+            <td class="score-cell {{ if ge .total_score 8 }}score-high{{ else if ge .total_score 5 }}score-mid{{ else }}score-low{{ end }}">
+              {{ .total_score }}/12
+            </td>
+            <td>
+              {{ if gt .patent_count 0 }}
+                <span class="patent-badge {{ if eq .patent_status "OK" }}patent-ok{{ else }}patent-fuzzy{{ end }}">{{ .patent_count }}</span>
+              {{ else }}
+                <span class="patent-badge patent-none">0</span>
+              {{ end }}
+            </td>
+            <td>
+              {{ if ge .runway_months 999 }}
+                <span style="color:#3fb950;">CF+</span>
+              {{ else if ge .runway_months 24 }}
+                <span style="color:#3fb950;">{{ printf "%.0f" .runway_months }}mo</span>
+              {{ else }}
+                <span style="color:#f85149;">{{ printf "%.0f" .runway_months }}mo</span>
+              {{ end }}
+            </td>
+            <td style="{{ if gt .revenue_growth 0.0 }}color:#3fb950{{ else }}color:#f85149{{ end }}">
+              {{ if .revenue_growth }}{{ printf "%+.1f" .revenue_growth }}%{{ else }}-{{ end }}
+            </td>
+            <td style="color:var(--color-text-muted);font-size:0.85rem;">{{ .market_cap_display }}</td>
+            <td class="hide-mobile" style="color:{{ if and .fcf_yield (ge .fcf_yield 8.0) }}#3fb950{{ else if and .fcf_yield (ge .fcf_yield 5.0) }}#388bfd{{ else }}var(--color-text-muted){{ end }};">
+              {{ if .fcf_yield }}{{ printf "%.1f" .fcf_yield }}{{ else }}-{{ end }}
+            </td>
+            <td class="hide-mobile" style="color:{{ if and .gross_margin (ge .gross_margin 40.0) }}#3fb950{{ else }}var(--color-text-muted){{ end }};">
+              {{ if .gross_margin }}{{ printf "%.0f" .gross_margin }}{{ else }}-{{ end }}
+            </td>
+            <td class="hide-mobile" style="color:{{ if and .debt_to_equity (gt .debt_to_equity 100.0) }}#f85149{{ else }}var(--color-text-muted){{ end }};">
+              {{ if .debt_to_equity }}{{ printf "%.0f" .debt_to_equity }}{{ else }}-{{ end }}
+            </td>
+            <td style="{{ if ge .insider_held_pct 10.0 }}color:#3fb950{{ else }}color:var(--color-text-muted){{ end }}">
+              {{ printf "%.1f" .insider_held_pct }}%
+            </td>
+            <td class="hide-mobile"><span class="market-tag">{{ .market_tag }}</span></td>
+          </tr>
+          <tr class="detail-row" data-detail-for="{{ .ticker }}">
+            <td colspan="11">
+              <div style="padding:var(--space-md);display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:var(--space-md);">
+                <div>
+                  <strong style="color:var(--color-text);">Score Breakdown</strong>
+                  <div style="margin-top:8px;font-size:0.85rem;color:var(--color-text-muted);">
+                    Patents: <span style="color:{{ if ge .patent_score 2 }}#3fb950{{ else }}#8b949e{{ end }}">{{ .patent_score }}/3</span> &bull;
+                    Runway: <span style="color:{{ if ge .runway_score 2 }}#3fb950{{ else }}#8b949e{{ end }}">{{ .runway_score }}/3</span> &bull;
+                    Revenue: <span style="color:{{ if ge .revenue_score 2 }}#3fb950{{ else }}#8b949e{{ end }}">{{ .revenue_score }}/3</span> &bull;
+                    Mgmt: <span style="color:{{ if ge .mgmt_score 2 }}#3fb950{{ else }}#8b949e{{ end }}">{{ .mgmt_score }}/3</span>
+                  </div>
+                </div>
+                <div>
+                  <strong style="color:var(--color-text);">Financials</strong>
+                  <div style="margin-top:8px;font-size:0.85rem;color:var(--color-text-muted);">
+                    Revenue: {{ .revenue_display }}<br>
+                    Cash: {{ .cash_display }}<br>
+                    FCF: {{ if .fcf }}${{ printf "%.1f" (div (float .fcf) 1000000.0) }}M{{ else }}N/A{{ end }}<br>
+                    ROE: {{ if .roe }}{{ printf "%.1f" .roe }}%{{ else }}N/A{{ end }} &bull;
+                    D/E: {{ if .debt_to_equity }}{{ printf "%.0f" .debt_to_equity }}%{{ else }}N/A{{ end }}<br>
+                    Profit Margin: {{ if .profit_margin }}{{ printf "%.1f" .profit_margin }}%{{ else }}N/A{{ end }}
+                  </div>
+                </div>
+                <div>
+                  <strong style="color:var(--color-text);">Quality</strong>
+                  <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:4px;">
+                    {{ if .has_positive_fcf }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(16,185,129,0.15);color:#10b981;">FCF+</span>{{ end }}
+                    {{ if .low_debt }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(56,139,253,0.15);color:#388bfd;">Low Debt</span>{{ end }}
+                    {{ if .high_roe }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(35,134,54,0.15);color:#3fb950;">High ROE</span>{{ end }}
+                    {{ if .wide_moat }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(14,165,233,0.15);color:#0ea5e9;">Wide Moat</span>{{ end }}
+                    {{ if .buffett_quality }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(5,150,105,0.15);color:#059669;">Buffett</span>{{ end }}
+                    {{ if .is_buying_back }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(6,182,212,0.15);color:#06b6d4;">Buybacks</span>{{ end }}
+                    {{ if .is_diluting }}<span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:rgba(248,81,73,0.15);color:#f85149;">Diluting</span>{{ end }}
+                    {{ if .fcf_trend }}
+                      <span style="font-size:0.7rem;padding:2px 8px;border-radius:10px;background:{{ if eq .fcf_trend "growing" }}rgba(35,134,54,0.15){{ else if eq .fcf_trend "declining" }}rgba(248,81,73,0.15){{ else }}rgba(210,153,34,0.15){{ end }};color:{{ if eq .fcf_trend "growing" }}#3fb950{{ else if eq .fcf_trend "declining" }}#f85149{{ else }}#d29922{{ end }};">FCF {{ .fcf_trend }}</span>
+                    {{ end }}
+                  </div>
+                </div>
+                {{ if gt .patent_count 0 }}
+                {{ $tk := .ticker }}
+                <div>
+                  <strong style="color:var(--color-text);">Patents ({{ .patent_count }})</strong>
+                  <div style="margin-top:8px;font-size:0.8rem;color:var(--color-text-muted);">
+                    {{ range first 3 .patent_titles }}
+                      <div style="margin-bottom:4px;">&bull; {{ . }}</div>
+                    {{ end }}
+                    {{ if gt (len .patent_titles) 3 }}
+                      <div style="color:#58a6ff;">+{{ sub (len .patent_titles) 3 }} more &mdash; <a href="/microcaps/{{ $tk | lower }}/" style="color:#58a6ff;">view all</a></div>
+                    {{ end }}
+                  </div>
+                </div>
+                {{ end }}
+                {{ if gt .red_flag_count 0 }}
+                <div>
+                  <strong style="color:#f85149;">Red Flags</strong>
+                  <div style="margin-top:8px;">
+                    {{ range .red_flags }}
+                      <span class="red-flag-tag">{{ . }}</span>
+                    {{ end }}
+                  </div>
+                </div>
+                {{ end }}
+                <div>
+                  <a href="/microcaps/{{ .ticker | lower }}/" style="color:#58a6ff;font-size:0.85rem;">Full assessment &rarr;</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Rejected Section -->
+    {{ if gt $data.total_rejected 0 }}
+    <details style="margin-top:var(--space-xl);">
+      <summary style="cursor:pointer;color:var(--color-text-muted);font-size:0.9rem;">
+        {{ $data.total_rejected }} stocks auto-rejected (red flags)
+      </summary>
+      <div style="margin-top:var(--space-md);padding:var(--space-md);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+        {{ range $data.rejected }}
+          <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--color-border);font-size:0.85rem;">
+            <span style="color:var(--color-text);font-weight:600;">{{ .ticker }}</span>
+            <span class="red-flag-tag">{{ .reason }}</span>
+          </div>
+        {{ end }}
+      </div>
+    </details>
+    {{ end }}
+
+    <div style="margin-top:var(--space-xl);padding:var(--space-lg);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);">
+      <p style="color:var(--color-text-muted);font-size:0.85rem;margin:0;">
+        <strong>Disclaimer:</strong> Micro cap stocks are inherently risky. This screener identifies innovation signals — it is not a buy recommendation. Always do your own due diligence. See our <a href="/methodology/micro-cap-innovation/" style="color:#58a6ff;">7-step risk assessment methodology</a> and <a href="/disclaimer/" style="color:#58a6ff;">full disclaimer</a>.
+      </p>
+    </div>
+  </main>
+
+  <footer style="text-align:center;padding:var(--space-xl);color:var(--color-text-muted);font-size:0.8rem;border-top:1px solid var(--color-border);margin-top:var(--space-2xl);">
+    <p>&copy; {{ now.Year }} mungbeans.io &mdash; <a href="/about/" style="color:var(--color-text-muted);">About</a> &bull; <a href="/disclaimer/" style="color:var(--color-text-muted);">Disclaimer</a> &bull; <a href="/privacy/" style="color:var(--color-text-muted);">Privacy</a></p>
+  </footer>
+
+  <script>
+  (function(){
+    const rows = document.querySelectorAll('.stock-row');
+    const search = document.getElementById('stockSearch');
+    const tagFilter = document.getElementById('marketTagFilter');
+
+    // Compute summary stats
+    let highScore = 0, withPatents = 0;
+    rows.forEach(r => {
+      if (parseInt(r.dataset.score) >= 8) highScore++;
+      if (parseInt(r.dataset.patents) > 0) withPatents++;
+    });
+    const hsc = document.getElementById('highScoreCount');
+    const pc = document.getElementById('patentCount');
+    if (hsc) hsc.textContent = highScore;
+    if (pc) pc.textContent = withPatents;
+
+    // Active filters
+    const filters = { score: 'all', patents: 'all', runway: 'all', quality: 'all', tag: 'all' };
+
+    function applyFilters() {
+      const q = search.value.toLowerCase().trim();
+      rows.forEach(row => {
+        let show = true;
+
+        // Search
+        if (q && !row.dataset.ticker.toLowerCase().includes(q) && !row.dataset.name.includes(q)) {
+          show = false;
+        }
+
+        // Score filter
+        const score = parseInt(row.dataset.score);
+        if (filters.score === 'high' && score < 8) show = false;
+        if (filters.score === 'mid' && (score < 5 || score > 7)) show = false;
+        if (filters.score === 'low' && score > 4) show = false;
+
+        // Patent filter
+        const patents = parseInt(row.dataset.patents);
+        if (filters.patents === 'has-patents' && patents === 0) show = false;
+        if (filters.patents === 'no-patents' && patents > 0) show = false;
+
+        // Runway filter
+        const runway = parseFloat(row.dataset.runway);
+        if (filters.runway === 'profitable' && runway < 999) show = false;
+        if (filters.runway === 'long' && (runway < 24 || runway >= 999)) show = false;
+        if (filters.runway === 'short' && runway >= 24) show = false;
+
+        // Quality filter
+        if (filters.quality === 'fcf-positive' && row.dataset.hasPositiveFcf !== 'true') show = false;
+        if (filters.quality === 'low-debt' && row.dataset.lowDebt !== 'true') show = false;
+        if (filters.quality === 'high-roe' && row.dataset.highRoe !== 'true') show = false;
+        if (filters.quality === 'wide-moat' && row.dataset.wideMoat !== 'true') show = false;
+        if (filters.quality === 'buybacks' && row.dataset.isBuyingBack !== 'true') show = false;
+
+        // Tag filter
+        if (filters.tag !== 'all' && row.dataset.marketTag !== filters.tag) show = false;
+
+        row.style.display = show ? '' : 'none';
+        // Close detail row when hidden
+        const detail = document.querySelector(`[data-detail-for="${row.dataset.ticker}"]`);
+        if (detail && !show) detail.classList.remove('open');
+      });
+    }
+
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const group = this.dataset.filterGroup;
+        document.querySelectorAll(`[data-filter-group="${group}"]`).forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        filters[group] = this.dataset.filter;
+        applyFilters();
+      });
+    });
+
+    // Tag dropdown
+    tagFilter.addEventListener('change', function() {
+      filters.tag = this.value;
+      applyFilters();
+    });
+
+    // Search
+    let debounce;
+    search.addEventListener('input', function() {
+      clearTimeout(debounce);
+      debounce = setTimeout(applyFilters, 200);
+    });
+
+    // Expandable rows
+    rows.forEach(row => {
+      row.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A') return;
+        const detail = document.querySelector(`[data-detail-for="${this.dataset.ticker}"]`);
+        if (detail) detail.classList.toggle('open');
+      });
+    });
+
+    // Sorting
+    let sortCol = null, sortAsc = true;
+    document.querySelectorAll('th[data-sort]').forEach(th => {
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', function() {
+        const col = this.dataset.sort;
+        if (sortCol === col) { sortAsc = !sortAsc; } else { sortCol = col; sortAsc = true; }
+        const tbody = document.querySelector('#microcapTable tbody');
+        const pairs = [];
+        rows.forEach(r => {
+          const detail = document.querySelector(`[data-detail-for="${r.dataset.ticker}"]`);
+          pairs.push([r, detail]);
+        });
+        pairs.sort((a, b) => {
+          const ra = a[0], rb = b[0];
+          let va, vb;
+          switch(col) {
+            case 'ticker': va = ra.dataset.ticker; vb = rb.dataset.ticker; return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+            case 'score': va = parseInt(ra.dataset.score); vb = parseInt(rb.dataset.score); break;
+            case 'patents': va = parseInt(ra.dataset.patents); vb = parseInt(rb.dataset.patents); break;
+            case 'runway': va = parseFloat(ra.dataset.runway); vb = parseFloat(rb.dataset.runway); break;
+            case 'revenue-growth': va = parseFloat(ra.dataset.revenueGrowth)||0; vb = parseFloat(rb.dataset.revenueGrowth)||0; break;
+            case 'market-cap': va = parseInt(ra.dataset.marketCap); vb = parseInt(rb.dataset.marketCap); break;
+            case 'fcf-yield': va = parseFloat(ra.dataset.fcfYield)||0; vb = parseFloat(rb.dataset.fcfYield)||0; break;
+            case 'gross-margin': va = parseFloat(ra.dataset.grossMargin)||0; vb = parseFloat(rb.dataset.grossMargin)||0; break;
+            case 'debt-equity': va = parseFloat(ra.dataset.debtEquity)||0; vb = parseFloat(rb.dataset.debtEquity)||0; break;
+            case 'insider': va = parseFloat(ra.dataset.insider); vb = parseFloat(rb.dataset.insider); break;
+            case 'sbc': va = parseFloat(ra.dataset.sbc); vb = parseFloat(rb.dataset.sbc); break;
+            default: return 0;
+          }
+          return sortAsc ? vb - va : va - vb; // Default descending for numeric
+        });
+        pairs.forEach(([r, d]) => { tbody.appendChild(r); if(d) tbody.appendChild(d); });
+        // Update header indicators
+        document.querySelectorAll('th[data-sort]').forEach(h => h.textContent = h.textContent.replace(/ [▲▼]/, ''));
+        this.textContent += sortAsc ? ' ▲' : ' ▼';
+      });
+    });
+
+    // URL param support
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('tag')) {
+      tagFilter.value = params.get('tag');
+      filters.tag = params.get('tag');
+      applyFilters();
+    }
+    if (params.get('score')) {
+      const btn = document.querySelector(`[data-filter-group="score"][data-filter="${params.get('score')}"]`);
+      if (btn) { btn.click(); }
+    }
+    if (params.get('quality')) {
+      const btn = document.querySelector(`[data-filter-group="quality"][data-filter="${params.get('quality')}"]`);
+      if (btn) { btn.click(); }
+    }
+  })();
+  </script>
+</body>
+</html>
