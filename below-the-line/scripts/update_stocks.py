@@ -25,9 +25,31 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Tuple
 
+import random
+
 import numpy as np
 import pandas as pd
 import yfinance as yf
+
+
+def retry_on_rate_limit(func, *args, max_retries=3, base_delay=5, **kwargs):
+    """Retry with exponential backoff on yfinance rate limit errors."""
+    for attempt in range(max_retries):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            err_str = str(e).lower()
+            is_rate_limit = any(s in err_str for s in [
+                '429', 'rate limit', 'too many requests', 'throttled',
+                'please slow down', 'exceeded', 'forbidden'
+            ])
+            if is_rate_limit and attempt < max_retries - 1:
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 2)
+                print(f"  [!] Rate limited, waiting {delay:.0f}s (attempt {attempt + 1}/{max_retries})...")
+                time.sleep(delay)
+            else:
+                raise
+    return None
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -1722,9 +1744,17 @@ def main():
     total = len(STOCK_UNIVERSE)
     for i, symbol in enumerate(STOCK_UNIVERSE):
         print(f"\n[{i+1}/{total}]", end="")
-        
+
+        # Batch pause every 50 tickers to avoid rate limits
+        if i > 0 and i % 50 == 0:
+            pause = 5 + random.uniform(0, 3)
+            print(f"\n  -- Batch pause ({pause:.0f}s) --")
+            time.sleep(pause)
+
         try:
-            result = calculate_stock_signals(symbol, spy_monthly=spy_monthly)
+            result = retry_on_rate_limit(
+                calculate_stock_signals, symbol, spy_monthly=spy_monthly
+            )
             if result:
                 # Merge company metadata (name, sector, ir_url)
                 meta = company_metadata.get(symbol, {})
@@ -1737,9 +1767,6 @@ def main():
         except Exception as e:
             print(f"  ✗ {symbol}: Unexpected error - {e}")
             errors.append(symbol)
-        
-        if (i + 1) % 50 == 0:
-            time.sleep(1)
     
     all_stocks.sort(key=lambda x: x['pct_from_wma'])
     summary = generate_landing_page_data(all_stocks)

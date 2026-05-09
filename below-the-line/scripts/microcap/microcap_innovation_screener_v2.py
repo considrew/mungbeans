@@ -34,7 +34,39 @@ import numpy as np
 import json
 import time
 import os
+import random
 from datetime import datetime, timedelta
+
+# ---------------------------------------------------------------------------
+# RATE LIMITING & RETRY
+# ---------------------------------------------------------------------------
+def retry_on_rate_limit(func, *args, max_retries=3, base_delay=5, **kwargs):
+    """
+    Retry a function call with exponential backoff on rate limit errors.
+    Catches common yfinance/HTTP 429 errors.
+    """
+    for attempt in range(max_retries):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            err_str = str(e).lower()
+            is_rate_limit = any(s in err_str for s in [
+                '429', 'rate limit', 'too many requests', 'throttled',
+                'please slow down', 'exceeded', 'forbidden'
+            ])
+            if is_rate_limit and attempt < max_retries - 1:
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 2)
+                print(f"    [!] Rate limited, waiting {delay:.0f}s (attempt {attempt + 1}/{max_retries})...")
+                time.sleep(delay)
+            else:
+                raise
+    return None
+
+
+BATCH_SIZE = 10          # Pause every N tickers
+BATCH_PAUSE = 8          # Seconds to pause between batches
+PER_TICKER_DELAY = 2     # Seconds between each ticker
+
 
 # ---------------------------------------------------------------------------
 # CONFIG
@@ -265,7 +297,7 @@ def get_share_change(ticker_obj):
     Negative = buybacks. Positive = dilution.
     """
     try:
-        bs = ticker_obj.balance_sheet
+        bs = getattr(ticker_obj, '_cached_bs', None) or ticker_obj.balance_sheet
         if bs is None or bs.empty or 'Ordinary Shares Number' not in bs.index:
             return None, None, None
 
@@ -304,7 +336,7 @@ def get_fcf_trend(ticker_obj):
     empty = {'fcf_trend': 'insufficient_data', 'fcf_cagr_3yr': None,
              'fcf_consecutive_positive': 0, 'fcf_history': []}
     try:
-        cf = ticker_obj.cashflow
+        cf = getattr(ticker_obj, '_cached_cf', None) or ticker_obj.cashflow
         if cf is None or cf.empty:
             return empty
 
@@ -365,19 +397,20 @@ def get_fcf_trend(ticker_obj):
         return empty
 
 
-def get_health_metrics(ticker_obj):
+def get_health_metrics(ticker_obj, market_cap=None):
     """
     Build annual time-series data for the Business Health dashboard.
     Returns dict with years, revenue, net_income, fcf, total_debt, roic,
     gross_margin, shares, fcf_yield — all as arrays.
+    market_cap: current market cap in dollars (avoids extra API call).
     """
     empty = {'years': [], 'revenue': [], 'net_income': [], 'fcf': [],
              'total_debt': [], 'roic': [], 'gross_margin': [], 'shares': [],
              'fcf_yield': []}
     try:
-        fin = ticker_obj.financials
-        bs = ticker_obj.balance_sheet
-        cf = ticker_obj.cashflow
+        fin = getattr(ticker_obj, '_cached_fin', None) or ticker_obj.financials
+        bs = getattr(ticker_obj, '_cached_bs', None) or ticker_obj.balance_sheet
+        cf = getattr(ticker_obj, '_cached_cf', None) or ticker_obj.cashflow
 
         if fin is None or fin.empty:
             return empty
@@ -498,22 +531,11 @@ def get_health_metrics(ticker_obj):
                             break
             shares_list.append(shares_v)
 
-            # FCF Yield %
+            # FCF Yield % — use current market cap passed in to avoid extra API calls
             fcf_yield_v = None
-            if fcf_v is not None:
-                try:
-                    fy_date = pd.Timestamp(date)
-                    start = (fy_date - pd.Timedelta(days=14)).strftime('%Y-%m-%d')
-                    end = (fy_date + pd.Timedelta(days=14)).strftime('%Y-%m-%d')
-                    hist = ticker_obj.history(start=start, end=end)
-                    if not hist.empty:
-                        close_price = float(hist['Close'].iloc[-1])
-                        if shares_v is not None and shares_v > 0:
-                            mkt_cap_m = close_price * shares_v
-                            if mkt_cap_m > 0:
-                                fcf_yield_v = round((fcf_v / mkt_cap_m) * 100, 1)
-                except Exception:
-                    pass
+            if fcf_v is not None and market_cap and market_cap > 0:
+                mcap_m = market_cap / 1e6
+                fcf_yield_v = round((fcf_v / mcap_m) * 100, 1)
             fcf_yield_list.append(fcf_yield_v)
 
         return {'years': years, 'revenue': revenue, 'net_income': net_income,
@@ -527,9 +549,28 @@ def get_health_metrics(ticker_obj):
 def fetch_deep_financials(ticker_obj, info):
     """
     Fetch the full suite of fundamental data for a microcap.
-    Returns a dict with all quality metrics, FCF trend, health chart, etc.
+    Pre-fetches balance_sheet/cashflow/financials ONCE and caches on the
+    ticker object to minimize API calls in downstream functions.
     """
     try:
+        # Pre-fetch statement data ONCE to avoid redundant API calls
+        # in get_share_change(), get_fcf_trend(), get_health_metrics()
+        if not hasattr(ticker_obj, '_cached_bs'):
+            try:
+                ticker_obj._cached_bs = ticker_obj.balance_sheet
+            except Exception:
+                ticker_obj._cached_bs = None
+        if not hasattr(ticker_obj, '_cached_cf'):
+            try:
+                ticker_obj._cached_cf = ticker_obj.cashflow
+            except Exception:
+                ticker_obj._cached_cf = None
+        if not hasattr(ticker_obj, '_cached_fin'):
+            try:
+                ticker_obj._cached_fin = ticker_obj.financials
+            except Exception:
+                ticker_obj._cached_fin = None
+
         # Basic metrics from info
         market_cap = info.get('marketCap')
         fcf = info.get('freeCashflow')
@@ -570,8 +611,8 @@ def fetch_deep_financials(ticker_obj, info):
         # FCF trend
         fcf_trend_data = get_fcf_trend(ticker_obj)
 
-        # Business health time-series
-        health_data = get_health_metrics(ticker_obj)
+        # Business health time-series (pass market_cap to avoid extra API call)
+        health_data = get_health_metrics(ticker_obj, market_cap=market_cap)
 
         return {
             'fcf': fcf,
@@ -771,9 +812,20 @@ def main():
     for i, ticker in enumerate(tickers):
         print(f"[{i+1}/{len(tickers)}] Screening {ticker}...")
 
-        stock_data = get_stock_data(ticker)
+        # Batch pause every BATCH_SIZE tickers to avoid rate limits
+        if i > 0 and i % BATCH_SIZE == 0:
+            print(f"  -- Batch pause ({BATCH_PAUSE}s to avoid rate limiting) --")
+            time.sleep(BATCH_PAUSE)
+
+        try:
+            stock_data = retry_on_rate_limit(get_stock_data, ticker)
+        except Exception as e:
+            print(f"  [!] Failed after retries: {e}")
+            stock_data = None
+
         if not stock_data:
             print(f"  -> Filtered out (market cap outside range or error)")
+            time.sleep(PER_TICKER_DELAY)
             continue
 
         print(f"  -> {stock_data['name']} | ${stock_data['market_cap']/1e6:.0f}M | Tag: {stock_data['market_tag']}")
@@ -787,6 +839,7 @@ def main():
         if stock_data["has_reverse_split"]:
             print(f"  -> REJECTED: reverse split detected")
             rejected.append({"ticker": ticker, "reason": "reverse_split"})
+            time.sleep(PER_TICKER_DELAY)
             continue
 
         # Get patent data from local lookup
@@ -819,7 +872,7 @@ def main():
         }
 
         results.append(result)
-        time.sleep(1)
+        time.sleep(PER_TICKER_DELAY)
 
     # Sort by total score descending
     results.sort(key=lambda x: x["total_score"], reverse=True)
