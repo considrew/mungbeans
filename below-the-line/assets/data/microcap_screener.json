@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-10 12:15",
+  "generated": "2026-05-11 02:16",
   "filters": {
     "min_market_cap": 50000000,
     "max_market_cap": 500000000,
@@ -201,7 +201,7 @@
       "revenue_score": 3,
       "mgmt_score": 2,
       "total_score": 11,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$330.5M",
       "cash_display": "$439.8M",
       "revenue_display": "$117.8M"
@@ -264,7 +264,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 11,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$147.8M",
       "cash_display": "$8.5M",
       "revenue_display": "$435.0M"
@@ -327,7 +327,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 10,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$292.7M",
       "cash_display": "$85.0M",
       "revenue_display": "$79.6M"
@@ -390,7 +390,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 10,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$305.8M",
       "cash_display": "$67.2M",
       "revenue_display": "$24.7M"
@@ -450,7 +450,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$192.9M",
       "cash_display": "$8.8M",
       "revenue_display": "$43.3M"
@@ -511,7 +511,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$382.1M",
       "cash_display": "$80.9M",
       "revenue_display": "$102.0M"
@@ -574,7 +574,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$437.8M",
       "cash_display": "$276.0M",
       "revenue_display": "$160.0M"
@@ -637,7 +637,7 @@
       "revenue_score": 3,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$82.7M",
       "cash_display": "$3.5M",
       "revenue_display": "$4.7M"
@@ -700,7 +700,7 @@
       "revenue_score": 3,
       "mgmt_score": 2,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$156.9M",
       "cash_display": "$72.1M",
       "revenue_display": "$55.1M"
@@ -759,7 +759,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$472.6M",
       "cash_display": "$72.7M",
       "revenue_display": "$248.7M"
@@ -822,7 +822,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$90.4M",
       "cash_display": "$7.1M",
       "revenue_display": "$51.3M"
@@ -883,7 +883,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$136.6M",
       "cash_display": "$30.5M",
       "revenue_display": "$28.1M"
@@ -943,7 +943,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$396.7M",
       "cash_display": "$24.4M",
       "revenue_display": "$349.0M"
@@ -1006,7 +1006,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$54.2M",
       "cash_display": "$32.3M",
       "revenue_display": "$368.3M"
@@ -1069,7 +1069,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$402.5M",
       "cash_display": "$154.1M",
       "revenue_display": "$446.6M"
@@ -1132,7 +1132,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$381.7M",
       "cash_display": "$86.9M",
       "revenue_display": "$727.5M"
@@ -1195,7 +1195,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$97.8M",
       "cash_display": "$5.3M",
       "revenue_display": "$40.3M"
@@ -1220,8 +1220,8 @@
       "red_flag_count": 0,
       "fcf": -10523250,
       "fcf_yield": -2.36,
-      "book_value": 1.97,
-      "price_to_book": 0.93,
+      "book_value": 1.84,
+      "price_to_book": 0.99,
       "profit_margin": -19.4,
       "operating_margin": -11.4,
       "roe": -6.9,
@@ -1258,7 +1258,7 @@
       "revenue_score": 2,
       "mgmt_score": 2,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$445.4M",
       "cash_display": "$78.9M",
       "revenue_display": "$174.4M"
@@ -1321,7 +1321,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 9,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$104.4M",
       "cash_display": "$65.0M",
       "revenue_display": "$0.0M"
@@ -1378,7 +1378,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$102.7M",
       "cash_display": "$29.1M",
       "revenue_display": "$107.9M"
@@ -1435,7 +1435,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$308.9M",
       "cash_display": "$111.7M",
       "revenue_display": "$57.8M"
@@ -1500,7 +1500,7 @@
       "revenue_score": 3,
       "mgmt_score": 1,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$166.5M",
       "cash_display": "$35.1M",
       "revenue_display": "$13.6M"
@@ -1559,7 +1559,7 @@
       "revenue_score": 2,
       "mgmt_score": 2,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$472.8M",
       "cash_display": "$51.3M",
       "revenue_display": "$178.0M"
@@ -1622,7 +1622,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$223.9M",
       "cash_display": "$29.5M",
       "revenue_display": "$214.3M"
@@ -1681,7 +1681,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$90.7M",
       "cash_display": "$16.1M",
       "revenue_display": "$104.1M"
@@ -1738,7 +1738,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$303.4M",
       "cash_display": "$7.2M",
       "revenue_display": "$72.8M"
@@ -1795,7 +1795,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$350.3M",
       "cash_display": "$90.2M",
       "revenue_display": "$981.3M"
@@ -1852,7 +1852,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$300.5M",
       "cash_display": "$72.4M",
       "revenue_display": "$282.6M"
@@ -1912,7 +1912,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$173.4M",
       "cash_display": "$43.0M",
       "revenue_display": "$318.9M"
@@ -1971,7 +1971,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$372.1M",
       "cash_display": "$133.8M",
       "revenue_display": "$422.8M"
@@ -2028,7 +2028,7 @@
       "revenue_score": 3,
       "mgmt_score": 2,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$406.7M",
       "cash_display": "$305.2M",
       "revenue_display": "$460.4M"
@@ -2085,7 +2085,7 @@
       "revenue_score": 3,
       "mgmt_score": 2,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$274.2M",
       "cash_display": "$145.6M",
       "revenue_display": "$72.8M"
@@ -2142,7 +2142,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 8,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$351.5M",
       "cash_display": "$22.8M",
       "revenue_display": "$86.1M"
@@ -2202,7 +2202,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$242.2M",
       "cash_display": "$217.9M",
       "revenue_display": "$127.5M"
@@ -2265,7 +2265,7 @@
       "revenue_score": 2,
       "mgmt_score": 2,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$248.6M",
       "cash_display": "$59.7M",
       "revenue_display": "$16.1M"
@@ -2322,7 +2322,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$272.3M",
       "cash_display": "$16.7M",
       "revenue_display": "$151.8M"
@@ -2379,7 +2379,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$204.3M",
       "cash_display": "$83.1M",
       "revenue_display": "$90.7M"
@@ -2439,7 +2439,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$453.4M",
       "cash_display": "$49.8M",
       "revenue_display": "$245.8M"
@@ -2496,7 +2496,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$479.6M",
       "cash_display": "$250.8M",
       "revenue_display": "$1701.4M"
@@ -2555,7 +2555,7 @@
       "revenue_score": 3,
       "mgmt_score": 1,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$236.9M",
       "cash_display": "$69.9M",
       "revenue_display": "$46.0M"
@@ -2615,7 +2615,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$204.6M",
       "cash_display": "$78.1M",
       "revenue_display": "$434.1M"
@@ -2680,7 +2680,7 @@
       "revenue_score": 3,
       "mgmt_score": 1,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$98.2M",
       "cash_display": "$44.8M",
       "revenue_display": "$1.0M"
@@ -2737,7 +2737,7 @@
       "revenue_score": 2,
       "mgmt_score": 2,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$448.9M",
       "cash_display": "$45.5M",
       "revenue_display": "$149.9M"
@@ -2745,7 +2745,7 @@
     {
       "ticker": "DUOT",
       "name": "Duos Technologies Group, Inc.",
-      "market_cap": 244325376,
+      "market_cap": 243827344,
       "sector": "Technology",
       "industry": "Software - Application",
       "market_tag": "Application Software",
@@ -2761,7 +2761,7 @@
       "red_flags": [],
       "red_flag_count": 0,
       "fcf": -31201796,
-      "fcf_yield": -12.77,
+      "fcf_yield": -12.8,
       "book_value": 2.37,
       "price_to_book": 3.51,
       "profit_margin": -36.4,
@@ -2794,8 +2794,8 @@
       "revenue_score": 3,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
-      "market_cap_display": "$244.3M",
+      "screened_date": "2026-05-11",
+      "market_cap_display": "$243.8M",
       "cash_display": "$15.5M",
       "revenue_display": "$27.0M"
     },
@@ -2853,7 +2853,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$489.7M",
       "cash_display": "$67.6M",
       "revenue_display": "$825.9M"
@@ -2914,7 +2914,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 7,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$344.3M",
       "cash_display": "$145.6M",
       "revenue_display": "$93.8M"
@@ -2977,7 +2977,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$158.5M",
       "cash_display": "$9.6M",
       "revenue_display": "$300.0M"
@@ -3034,7 +3034,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$456.8M",
       "cash_display": "$312.9M",
       "revenue_display": "$439.9M"
@@ -3091,7 +3091,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$147.5M",
       "cash_display": "$0.0M",
       "revenue_display": "$0.0M"
@@ -3148,7 +3148,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$457.4M",
       "cash_display": "$31.2M",
       "revenue_display": "$432.9M"
@@ -3207,7 +3207,7 @@
       "revenue_score": 0,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$445.8M",
       "cash_display": "$108.3M",
       "revenue_display": "$302.1M"
@@ -3266,7 +3266,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$453.3M",
       "cash_display": "$276.3M",
       "revenue_display": "$320.3M"
@@ -3329,7 +3329,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$75.5M",
       "cash_display": "$190.9M",
       "revenue_display": "$0.0M"
@@ -3386,7 +3386,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 6,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$169.7M",
       "cash_display": "$3.2M",
       "revenue_display": "$143.4M"
@@ -3449,7 +3449,7 @@
       "revenue_score": 0,
       "mgmt_score": 2,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$304.5M",
       "cash_display": "$123.6M",
       "revenue_display": "$38.7M"
@@ -3514,7 +3514,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$192.4M",
       "cash_display": "$117.6M",
       "revenue_display": "$11.2M"
@@ -3575,7 +3575,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$413.0M",
       "cash_display": "$117.1M",
       "revenue_display": "$109.2M"
@@ -3640,7 +3640,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$277.9M",
       "cash_display": "$203.7M",
       "revenue_display": "$6.6M"
@@ -3705,7 +3705,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$438.7M",
       "cash_display": "$92.4M",
       "revenue_display": "$3.5M"
@@ -3764,7 +3764,7 @@
       "revenue_score": 3,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$258.6M",
       "cash_display": "$21.2M",
       "revenue_display": "$6.3M"
@@ -3829,7 +3829,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$218.6M",
       "cash_display": "$74.8M",
       "revenue_display": "$1.2M"
@@ -3886,7 +3886,7 @@
       "revenue_score": 0,
       "mgmt_score": 2,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$498.8M",
       "cash_display": "$145.5M",
       "revenue_display": "$282.9M"
@@ -3945,7 +3945,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$441.1M",
       "cash_display": "$215.7M",
       "revenue_display": "$0.0M"
@@ -4002,7 +4002,7 @@
       "revenue_score": 2,
       "mgmt_score": 3,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$185.2M",
       "cash_display": "$13.4M",
       "revenue_display": "$32.4M"
@@ -4059,7 +4059,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$184.9M",
       "cash_display": "$116.9M",
       "revenue_display": "$0.0M"
@@ -4116,7 +4116,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$53.2M",
       "cash_display": "$61.6M",
       "revenue_display": "$88.5M"
@@ -4173,7 +4173,7 @@
       "revenue_score": 0,
       "mgmt_score": 2,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$64.9M",
       "cash_display": "$62.4M",
       "revenue_display": "$174.7M"
@@ -4232,7 +4232,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$441.0M",
       "cash_display": "$47.7M",
       "revenue_display": "$489.0M"
@@ -4289,7 +4289,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$166.5M",
       "cash_display": "$92.4M",
       "revenue_display": "$16.3M"
@@ -4352,7 +4352,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 5,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$227.4M",
       "cash_display": "$276.3M",
       "revenue_display": "$0.0M"
@@ -4409,7 +4409,7 @@
       "revenue_score": 1,
       "mgmt_score": 3,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$102.6M",
       "cash_display": "$16.2M",
       "revenue_display": "$0.0M"
@@ -4468,7 +4468,7 @@
       "revenue_score": 2,
       "mgmt_score": 1,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$120.4M",
       "cash_display": "$59.6M",
       "revenue_display": "$13.0M"
@@ -4527,7 +4527,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$56.3M",
       "cash_display": "$51.0M",
       "revenue_display": "$322.2M"
@@ -4586,7 +4586,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$352.5M",
       "cash_display": "$18.8M",
       "revenue_display": "$13.8M"
@@ -4646,7 +4646,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$119.2M",
       "cash_display": "$16.6M",
       "revenue_display": "$48.5M"
@@ -4703,7 +4703,7 @@
       "revenue_score": 0,
       "mgmt_score": 3,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$73.5M",
       "cash_display": "$15.4M",
       "revenue_display": "$19.6M"
@@ -4760,7 +4760,7 @@
       "revenue_score": 1,
       "mgmt_score": 2,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$77.6M",
       "cash_display": "$20.8M",
       "revenue_display": "$0.0M"
@@ -4825,7 +4825,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 4,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$336.1M",
       "cash_display": "$269.1M",
       "revenue_display": "$0.0M"
@@ -4884,7 +4884,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 3,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$313.9M",
       "cash_display": "$245.9M",
       "revenue_display": "$0.0M"
@@ -4945,7 +4945,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 3,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$121.4M",
       "cash_display": "$39.6M",
       "revenue_display": "$103.5M"
@@ -5006,7 +5006,7 @@
       "revenue_score": 0,
       "mgmt_score": 1,
       "total_score": 2,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$79.7M",
       "cash_display": "$7.1M",
       "revenue_display": "$3.4M"
@@ -5065,7 +5065,7 @@
       "revenue_score": 1,
       "mgmt_score": 1,
       "total_score": 2,
-      "screened_date": "2026-05-10",
+      "screened_date": "2026-05-11",
       "market_cap_display": "$396.4M",
       "cash_display": "$144.4M",
       "revenue_display": "$0.0M"
