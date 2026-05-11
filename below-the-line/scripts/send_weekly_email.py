@@ -284,10 +284,6 @@ def send_emails(crossings: dict, subscribers: list[str]):
             "to": [{"email_address": {"address": recipient}}],
             "subject": subject,
             "htmlbody": html,
-            "headers": {
-                "List-Unsubscribe": f"<{unsub_url}>",
-                "List-Unsubscribe-Post": "List-Unsubscribe=One-Click"
-            }
         })
 
         req = urllib.request.Request(
