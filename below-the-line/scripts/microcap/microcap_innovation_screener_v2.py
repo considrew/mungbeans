@@ -40,10 +40,10 @@ from datetime import datetime, timedelta
 # ---------------------------------------------------------------------------
 # RATE LIMITING & RETRY
 # ---------------------------------------------------------------------------
-def retry_on_rate_limit(func, *args, max_retries=3, base_delay=5, **kwargs):
+def retry_on_rate_limit(func, *args, max_retries=2, base_delay=5, **kwargs):
     """
-    Retry a function call with exponential backoff on rate limit errors.
-    Catches common yfinance/HTTP 429 errors.
+    Retry a function call with backoff on rate limit (429) errors only.
+    Does NOT retry on generic 403 Forbidden (delisted tickers, etc.).
     """
     for attempt in range(max_retries):
         try:
@@ -52,7 +52,6 @@ def retry_on_rate_limit(func, *args, max_retries=3, base_delay=5, **kwargs):
             err_str = str(e).lower()
             is_rate_limit = any(s in err_str for s in [
                 '429', 'rate limit', 'too many requests', 'throttled',
-                'please slow down', 'exceeded', 'forbidden'
             ])
             if is_rate_limit and attempt < max_retries - 1:
                 delay = base_delay * (2 ** attempt) + random.uniform(0, 2)

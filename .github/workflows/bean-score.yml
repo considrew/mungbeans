@@ -1,0 +1,51 @@
+name: Monthly Bean Score Update
+
+on:
+  schedule:
+    # Run on the 1st Saturday of each month at 10am UTC
+    # (after quarterly earnings are mostly in for the prior quarter)
+    - cron: '0 10 1-7 * 6'
+  workflow_dispatch:
+
+jobs:
+  bean-score:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas yfinance
+
+      - name: Run Bean Score computation
+        run: |
+          cd below-the-line/scripts
+          python -c "
+          import json, sys, os
+          sys.path.insert(0, os.getcwd())
+          from bean_score import weekly_bean_score_snapshot
+
+          # Load current stock universe from stocks.json
+          with open('../assets/data/stocks.json') as f:
+              data = json.load(f)
+          tickers = [s['symbol'] for s in data.get('stocks', [])]
+          print(f'Computing Bean Scores for {len(tickers)} tickers...')
+          result = weekly_bean_score_snapshot(tickers, verbose=True)
+          print(f'Scored: {result[\"n_scored\"]}/{result[\"n_attempted\"]}')
+          "
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f below-the-line/assets/data/bean_score_latest.json || true
+          git add -f below-the-line/assets/data/bean_score_alerts.json || true
+          git add -f below-the-line/assets/data/bean_score_history.json || true
+          git diff --staged --quiet || git commit -m "Monthly Bean Score update $(date +'%Y-%m-%d')"
+          git push

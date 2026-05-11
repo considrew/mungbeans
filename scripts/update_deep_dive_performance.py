@@ -2,21 +2,49 @@
 """
 Below The Line - Deep Dive Performance Updater
 
-Reads all deep-dive markdown files, fetches current prices via yfinance,
-and updates the performance frontmatter fields.
+Reads all deep-dive markdown files and updates performance frontmatter
+using prices from the already-generated stocks.json — zero API calls.
 
-Run weekly (alongside update_stocks.py) or on-demand via workflow_dispatch.
+Run weekly as part of the build-deploy workflow (after update_stocks.py).
 """
 from __future__ import annotations
 
+import json
 import re
 import sys
-import time
+from datetime import datetime
 from pathlib import Path
 
-import yfinance as yf
+# Paths relative to this script's location (repo_root/scripts/)
+REPO_ROOT = Path(__file__).parent.parent
+CONTENT_DIR = REPO_ROOT / "below-the-line" / "content" / "deep-dives"
+STOCKS_JSON = REPO_ROOT / "below-the-line" / "assets" / "data" / "stocks.json"
 
-CONTENT_DIR = Path(__file__).parent.parent / "below-the-line" / "content" / "deep-dives"
+
+def load_price_cache() -> dict[str, tuple[float, str]]:
+    """
+    Build a ticker -> (close_price, last_updated) map from stocks.json.
+
+    This uses the data the main pipeline JUST generated — no API calls needed.
+    """
+    if not STOCKS_JSON.exists():
+        print(f"ERROR: stocks.json not found at {STOCKS_JSON}")
+        print("  This script must run AFTER update_stocks.py generates stocks.json.")
+        sys.exit(1)
+
+    with open(STOCKS_JSON) as f:
+        data = json.load(f)
+
+    as_of = data.get("generated_iso", datetime.now().strftime("%Y-%m-%d"))
+    cache = {}
+    for stock in data.get("stocks", []):
+        symbol = stock.get("symbol")
+        close = stock.get("close")
+        if symbol and close is not None:
+            cache[symbol] = (float(close), as_of)
+
+    print(f"  Loaded {len(cache)} prices from stocks.json (as of {as_of})")
+    return cache
 
 
 def extract_frontmatter(text: str) -> tuple[str, str]:
@@ -37,21 +65,6 @@ def set_field(frontmatter: str, field: str, value: str) -> str:
     """Set a YAML field value (quoted)."""
     pattern = rf'^({field}:\s*).*$'
     return re.sub(pattern, rf'\1"{value}"', frontmatter, count=1, flags=re.MULTILINE)
-
-
-def fetch_current_price(symbol: str) -> tuple[float, str] | None:
-    """Fetch the most recent closing price for a ticker via yfinance."""
-    try:
-        hist = yf.Ticker(symbol).history(period="5d")
-        if hist.empty:
-            print(f"  WARNING: No data returned for {symbol}")
-            return None
-        price = float(hist["Close"].iloc[-1])
-        date = hist.index[-1].strftime("%Y-%m-%d")
-        return price, date
-    except Exception as e:
-        print(f"  ERROR fetching {symbol}: {e}")
-        return None
 
 
 def process_file(filepath: Path, price_cache: dict) -> dict | None:
@@ -76,12 +89,10 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
 
     pub_price = float(pub_price_str.replace("$", ""))
 
-    # Fetch price (use cache to avoid duplicate API calls for shared tickers)
-    if ticker not in price_cache:
-        time.sleep(2)  # Rate limit buffer — runs after main pipeline's ~2000 calls
-        price_cache[ticker] = fetch_current_price(ticker)
-    result = price_cache[ticker]
+    # Look up price from stocks.json cache
+    result = price_cache.get(ticker)
     if result is None:
+        print(f"  WARNING: {ticker} not found in stocks.json — skipping {filepath.name}")
         return {"file": filepath.name, "ticker": ticker, "error": True}
 
     current_price, as_of = result
@@ -106,11 +117,7 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
         pub_price_b_str = get_field(frontmatter, "performance_price_at_publish_b")
         if pub_price_b_str:
             pub_price_b = float(pub_price_b_str.replace("$", ""))
-
-            if ticker_b not in price_cache:
-                time.sleep(2)
-                price_cache[ticker_b] = fetch_current_price(ticker_b)
-            result_b = price_cache[ticker_b]
+            result_b = price_cache.get(ticker_b)
 
             if result_b:
                 current_price_b, _ = result_b
@@ -123,6 +130,8 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
                 summary["pub_price_b"] = pub_price_b
                 summary["current_price_b"] = current_price_b
                 summary["return_b"] = f"{ret_b:+.1f}%"
+            else:
+                print(f"  WARNING: {ticker_b} (ticker_b) not found in stocks.json")
 
     # Write updated file
     filepath.write_text(f"---\n{frontmatter}---\n{body}")
@@ -130,9 +139,16 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
 
 
 def main():
+    print("=" * 90)
+    print("Deep Dive Performance Updater (reads from stocks.json — zero API calls)")
+    print("=" * 90)
+
     if not CONTENT_DIR.exists():
         print(f"ERROR: Content directory not found: {CONTENT_DIR}")
         sys.exit(1)
+
+    # Load prices from the just-generated stocks.json
+    price_cache = load_price_cache()
 
     files = sorted(
         f for f in CONTENT_DIR.glob("*.md") if f.name != "_index.md"
@@ -141,7 +157,6 @@ def main():
     print(f"Found {len(files)} articles in {CONTENT_DIR}")
     print("-" * 90)
 
-    price_cache: dict[str, tuple[float, str] | None] = {}
     results = []
     errors = []
 
@@ -164,8 +179,8 @@ def main():
     print("=" * 90)
 
     if errors:
-        print(f"\nWARNING: Skipped {len(errors)} tickers due to errors (likely rate-limited): {', '.join(e['ticker'] for e in errors)}")
-        print("Continuing — performance data is non-critical and will update next run.")
+        print(f"\nWARNING: {len(errors)} tickers not in stocks.json: {', '.join(e['ticker'] for e in errors)}")
+        print("These may be tickers not in STOCK_UNIVERSE — add them or skip.")
 
     print(f"\nUpdated {len(results)} articles. Skipped {len(errors)}.")
 

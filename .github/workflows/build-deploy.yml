@@ -32,31 +32,22 @@ jobs:
           python scripts/update_stocks.py
         env:
           SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
-          SKIP_EMAIL: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
-          ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
-          ZEPTOMAIL_API_TOKEN: ${{ secrets.ZEPTOMAIL_API_TOKEN }}
-          NETLIFY_API_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          SKIP_BEAN_SCORE: 'true'
 
       - name: Update deep-dive performance data
         continue-on-error: true
         run: python scripts/update_deep_dive_performance.py
-
-      - name: Run micro cap screener
-        continue-on-error: true
-        run: |
-          cd below-the-line
-          python scripts/microcap/microcap_innovation_screener_v2.py
 
       - name: Commit and push updated data
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
-          git add -f below-the-line/assets/data/bean_score_latest.json
-          git add -f below-the-line/assets/data/bean_score_alerts.json
-          git add -f below-the-line/assets/data/bean_score_history.json
-          git add below-the-line/assets/data/microcap_screener.json
+          git add below-the-line/assets/data/crossings.json
+          git add -f below-the-line/assets/data/bean_score_latest.json || true
+          git add -f below-the-line/assets/data/bean_score_alerts.json || true
+          git add -f below-the-line/assets/data/bean_score_history.json || true
+          git add below-the-line/assets/data/microcap_screener.json || true
           git add below-the-line/content/blog/
           git add below-the-line/content/deep-dives/
           git diff --staged --quiet || git commit -m "Update stock data + weekly blog $(date +'%Y-%m-%d')"
