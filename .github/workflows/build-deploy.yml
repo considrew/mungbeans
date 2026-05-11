@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '0 6 * * 6'
   workflow_dispatch:
+    inputs:
+      skip_blog:
+        description: 'Skip blog post generation'
+        type: boolean
+        default: true
 
 jobs:
   update-and-deploy:
@@ -31,7 +36,7 @@ jobs:
           cd below-the-line
           python scripts/update_stocks.py
         env:
-          SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && 'true' || 'false' }}
+          SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_blog && 'true' || 'false' }}
           SKIP_BEAN_SCORE: 'true'
 
       - name: Update deep-dive performance data
