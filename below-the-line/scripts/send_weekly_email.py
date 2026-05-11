@@ -22,6 +22,7 @@ import json
 import os
 import sys
 import time
+import urllib.error
 import urllib.request
 import urllib.parse
 from datetime import datetime, timedelta
@@ -262,6 +263,12 @@ def send_emails(crossings: dict, subscribers: list[str]):
         print("ERROR: Missing ZOHO_EMAIL or ZEPTOMAIL_API_TOKEN.")
         sys.exit(1)
 
+    # Validate token format (ZeptoMail expects "Zoho-enczapikey <key>")
+    if not api_token.startswith("Zoho-enczapikey"):
+        print(f"WARNING: ZEPTOMAIL_API_TOKEN does not start with 'Zoho-enczapikey'.")
+        print(f"  Token starts with: '{api_token[:20]}...'")
+        print(f"  ZeptoMail requires format: 'Zoho-enczapikey <your-key>'")
+
     print(f"\nSending weekly email to {len(subscribers)} subscribers via ZeptoMail...")
 
     sent = 0
@@ -298,6 +305,19 @@ def send_emails(crossings: dict, subscribers: list[str]):
             with urllib.request.urlopen(req) as resp:
                 resp.read()
             sent += 1
+        except urllib.error.HTTPError as e:
+            body = ""
+            try:
+                body = e.read().decode('utf-8', errors='replace')
+            except Exception:
+                pass
+            # Print full body for first failure only to keep logs readable
+            if not failed_recipients:
+                print(f"  FAILED: {recipient}: {e} — Response body: {body}")
+            else:
+                print(f"  FAILED: {recipient}: {e}")
+            failed += 1
+            failed_recipients.append(recipient)
         except Exception as e:
             print(f"  FAILED: {recipient}: {e}")
             failed += 1
