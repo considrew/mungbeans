@@ -40,6 +40,12 @@ jobs:
           print(f'Scored: {result[\"n_scored\"]}/{result[\"n_attempted\"]}')
           "
 
+      - name: Sync bean score data to static dir (for dashboard)
+        run: |
+          cp below-the-line/assets/data/bean_score_latest.json below-the-line/static/data/bean_score_latest.json
+          cp below-the-line/assets/data/bean_score_alerts.json below-the-line/static/data/bean_score_alerts.json
+          cp below-the-line/assets/data/bean_score_history.json below-the-line/static/data/bean_score_history.json
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
@@ -47,5 +53,8 @@ jobs:
           git add -f below-the-line/assets/data/bean_score_latest.json || true
           git add -f below-the-line/assets/data/bean_score_alerts.json || true
           git add -f below-the-line/assets/data/bean_score_history.json || true
+          git add -f below-the-line/static/data/bean_score_latest.json || true
+          git add -f below-the-line/static/data/bean_score_alerts.json || true
+          git add -f below-the-line/static/data/bean_score_history.json || true
           git diff --staged --quiet || git commit -m "Monthly Bean Score update $(date +'%Y-%m-%d')"
           git push
