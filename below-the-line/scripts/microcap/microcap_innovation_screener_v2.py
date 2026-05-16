@@ -80,6 +80,36 @@ PATENT_LOOKUP_FILE = "data/microcap_innovation/patent_lookup.json"
 TICKER_SOURCE = "data/microcap_tickers.txt"
 
 # ---------------------------------------------------------------------------
+# PATENT ALIASES — manual overrides for companies whose USPTO assignee name
+# doesn't match their yfinance company name after suffix stripping.
+# Key: ticker symbol. Value: list of known assignee name variants (lowercase).
+# These are tried as exact matches against the patent_lookup keys first,
+# then as substring searches if exact fails.
+# ---------------------------------------------------------------------------
+PATENT_ALIASES = {
+    "CGEN": ["compugen", "compugen ltd"],
+    "IPSC": ["century therapeutics"],
+    "FATE": ["fate therapeutics"],
+    "NNDM": ["nano dimension"],
+    "PACB": ["pacific biosciences"],
+    "RGNX": ["regenxbio"],
+    "SGMO": ["sangamo therapeutics", "sangamo biosciences"],
+    "BCYC": ["bicycle therapeutics"],
+    "RNA": ["arcturus therapeutics"],
+    "AVXL": ["anavex life sciences"],
+    "IMMP": ["immune pharmaceuticals"],
+    "MVIS": ["microvision"],
+    "VUZI": ["vuzix"],
+    "BLNK": ["blink charging"],
+    "STEM": ["stem inc"],
+    "HYLN": ["hyliion"],
+    "ARBE": ["arbe robotics"],
+    "INVZ": ["innoviz technologies"],
+    "LIDR": ["aeye"],
+    "KULR": ["kulr technology"],
+}
+
+# ---------------------------------------------------------------------------
 # MARKET TAGS
 # ---------------------------------------------------------------------------
 # Maps yfinance industry strings to more specific, investor-friendly tags.
@@ -678,10 +708,11 @@ def load_patent_lookup():
     return data.get("lookup", {})
 
 
-def get_patent_count(company_name, patent_lookup):
+def get_patent_count(company_name, patent_lookup, ticker=None):
     """
     Look up a company's patent count from the local bulk data.
-    Tries exact match first, then fuzzy substring match.
+    Tries: (1) alias map, (2) exact match on cleaned name, (3) substring match,
+    (4) PatentsView API fallback if all local lookups miss.
     Returns (count, titles_list, status_string).
     """
     if patent_lookup is None:
@@ -691,16 +722,30 @@ def get_patent_count(company_name, patent_lookup):
     clean_name = company_name
     for suffix in [", Inc.", " Inc.", " Inc", " Corp.", " Corp",
                    " LLC", " Ltd.", " Ltd", " Co.", " Co",
-                   ", L.P.", " L.P.", " Holdings", " Group"]:
+                   ", L.P.", " L.P.", " Holdings", " Group",
+                   " Therapeutics", " Biosciences", " Technologies"]:
         clean_name = clean_name.replace(suffix, "")
     clean_name = clean_name.strip().lower()
 
-    # Try exact match first
+    # --- Step 1: Try alias map (ticker-specific known names) ---
+    if ticker and ticker.upper() in PATENT_ALIASES:
+        aliases = PATENT_ALIASES[ticker.upper()]
+        for alias in aliases:
+            # Exact match
+            if alias in patent_lookup:
+                entry = patent_lookup[alias]
+                return entry["patent_count"], entry["sample_titles"], "ALIAS"
+            # Substring match on alias
+            for key, entry in patent_lookup.items():
+                if alias in key or key in alias:
+                    return entry["patent_count"], entry["sample_titles"], "ALIAS_FUZZY"
+
+    # --- Step 2: Try exact match on cleaned name ---
     if clean_name in patent_lookup:
         entry = patent_lookup[clean_name]
         return entry["patent_count"], entry["sample_titles"], "OK"
 
-    # Try substring match — find keys that contain our company name
+    # --- Step 3: Try substring match ---
     matches = []
     for key, entry in patent_lookup.items():
         if clean_name in key or key in clean_name:
@@ -711,7 +756,83 @@ def get_patent_count(company_name, patent_lookup):
         best = max(matches, key=lambda x: x["patent_count"])
         return best["patent_count"], best["sample_titles"], "FUZZY"
 
+    # --- Step 4: PatentsView API fallback ---
+    api_count, api_titles, api_status = _patentsview_api_fallback(company_name, ticker)
+    if api_count > 0:
+        return api_count, api_titles, api_status
+
     return 0, [], "NOT_FOUND"
+
+
+def _patentsview_api_fallback(company_name, ticker=None):
+    """
+    Query PatentsView API when local bulk data misses a company.
+    Uses assignee name search with the cleaned name + any aliases.
+    Returns (count, titles_list, status_string).
+    """
+    import urllib.request
+    import urllib.parse
+    import urllib.error
+
+    # Build list of names to try
+    names_to_try = []
+    if ticker and ticker.upper() in PATENT_ALIASES:
+        names_to_try.extend(PATENT_ALIASES[ticker.upper()])
+    # Also try the raw company name (cleaned of suffixes)
+    clean = company_name
+    for suffix in [", Inc.", " Inc.", " Inc", " Corp.", " Corp",
+                   " LLC", " Ltd.", " Ltd", " Co.", " Co",
+                   ", L.P.", " L.P.", " Holdings", " Group"]:
+        clean = clean.replace(suffix, "")
+    names_to_try.append(clean.strip().lower())
+
+    # Deduplicate while preserving order
+    seen = set()
+    unique_names = []
+    for n in names_to_try:
+        if n not in seen:
+            seen.add(n)
+            unique_names.append(n)
+
+    # Try each name against PatentsView API
+    three_years_ago = (datetime.now() - timedelta(days=3*365)).strftime("%Y-%m-%d")
+
+    for name in unique_names:
+        try:
+            # PatentsView v1 API — search patents by assignee name, last 3 years
+            params = urllib.parse.urlencode({
+                "q": json.dumps({
+                    "_and": [
+                        {"_contains": {"assignees.assignee_organization": name}},
+                        {"_gte": {"patent_date": three_years_ago}}
+                    ]
+                }),
+                "f": json.dumps(["patent_number", "patent_title", "patent_date"]),
+                "o": json.dumps({"per_page": 25}),
+            })
+            url = f"https://api.patentsview.org/patents/query?{params}"
+            req = urllib.request.Request(url, headers={"Accept": "application/json"})
+
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read())
+
+            patents = data.get("patents", [])
+            total = data.get("total_patent_count", len(patents) if patents else 0)
+
+            if total > 0 and patents:
+                titles = [p.get("patent_title", "") for p in patents[:5]]
+                print(f"    [API] Found {total} patents for '{name}' via PatentsView API")
+                return total, titles, "API_FALLBACK"
+
+        except (urllib.error.HTTPError, urllib.error.URLError, Exception) as e:
+            # API failures are non-fatal — just means we couldn't verify
+            print(f"    [API] PatentsView query failed for '{name}': {e}")
+            continue
+
+        # Small delay between API calls
+        time.sleep(0.5)
+
+    return 0, [], "API_NO_MATCH"
 
 
 # ---------------------------------------------------------------------------
@@ -841,11 +962,11 @@ def main():
             time.sleep(PER_TICKER_DELAY)
             continue
 
-        # Get patent data from local lookup
+        # Get patent data from local lookup (with alias map + API fallback)
         patent_count, patent_titles, patent_status = get_patent_count(
-            stock_data["name"], patent_lookup
+            stock_data["name"], patent_lookup, ticker=ticker
         )
-        if patent_status in ("OK", "FUZZY"):
+        if patent_status in ("OK", "FUZZY", "ALIAS", "ALIAS_FUZZY", "API_FALLBACK"):
             print(f"  -> {patent_count} patents ({patent_status})")
         elif patent_status == "NO_LOOKUP_FILE":
             print(f"  -> Patents: skipped (no lookup file)")
