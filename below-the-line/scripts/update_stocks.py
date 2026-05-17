@@ -1866,6 +1866,40 @@ def main():
         except Exception as e:
             print(f"  🫘 Bean Score error: {e}")
 
+    # ── Bean Score Display Levels: merge into stocks.json ──
+    print("\n  🫘 Generating Bean Score dislocation levels...")
+    try:
+        from bean_score_levels import generate_bean_score_display
+        bean_display = generate_bean_score_display(verbose=True)
+        # Merge into stocks
+        merged_count = 0
+        for stock in all_stocks:
+            symbol = stock['symbol']
+            if symbol in bean_display:
+                stock['bean_score_data'] = bean_display[symbol]
+                merged_count += 1
+        print(f"  🫘 Merged Bean Score levels for {merged_count} stocks")
+        # Re-write stocks.json with bean score data included
+        output = {
+            'summary': summary,
+            'stocks': all_stocks,
+            'generated_readable': datetime.now().strftime('%B %d, %Y'),
+            'generated_iso': datetime.now().strftime('%Y-%m-%d')
+        }
+        with open(output_file, 'w') as f:
+            json.dump(output, f, separators=(',', ':'), cls=NumpyEncoder)
+        print(f"  🫘 Re-wrote stocks.json with Bean Score data")
+    except Exception as e:
+        print(f"  🫘 Bean Score levels error (non-fatal): {e}")
+
+    # ── Bean Score Tracking: run accuracy analysis ──
+    print("\n  🫘 Running Bean Score signal tracking...")
+    try:
+        from bean_score_tracking import main as run_tracking
+        run_tracking()
+    except Exception as e:
+        print(f"  🫘 Bean Score tracking error (non-fatal): {e}")
+
     print("\n" + "=" * 60)
     print("Pipeline Complete!")
     print(f"Processed: {len(all_stocks)} stocks")

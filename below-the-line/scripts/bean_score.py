@@ -193,6 +193,33 @@ def compute_bean_score(ticker: str, verbose: bool = False) -> Optional[dict]:
                     print(f"  {ticker}: cannot determine shares outstanding")
                 return None
 
+        # Next earnings date — marks when Bean Score levels expire
+        next_earnings_date = None
+        earnings_history = []
+        try:
+            cal = tk.calendar
+            if cal and 'Earnings Date' in cal:
+                ed_list = cal['Earnings Date']
+                if ed_list:
+                    ned = ed_list[0]
+                    next_earnings_date = ned.strftime('%Y-%m-%d') if hasattr(ned, 'strftime') else str(ned)
+
+            # Recent earnings history (last 4 quarters with EPS)
+            ed = tk.earnings_dates
+            if ed is not None and len(ed) > 0:
+                for dt, row in ed.head(5).iterrows():
+                    reported = row.get('Reported EPS')
+                    if pd.notna(reported):
+                        ed_date = dt.strftime('%Y-%m-%d') if hasattr(dt, 'strftime') else str(dt)
+                        earnings_history.append({
+                            'date': ed_date,
+                            'eps_estimate': round(float(row.get('EPS Estimate', 0)), 2) if pd.notna(row.get('EPS Estimate')) else None,
+                            'eps_actual': round(float(reported), 2),
+                            'surprise_pct': round(float(row.get('Surprise(%)', 0)), 1) if pd.notna(row.get('Surprise(%)')) else None,
+                        })
+        except Exception:
+            pass  # Non-critical — continue without earnings dates
+
         # Build intra-quarter deviation distribution
         intra_quarter_deviations = []
         quarter_baselines = []
@@ -309,6 +336,32 @@ def compute_bean_score(ticker: str, verbose: bool = False) -> Optional[dict]:
                       f"{dev_std:.2f}pp > {MAX_HIST_STD}pp")
             return None
 
+        # Build quarterly chart data from what we already have in memory.
+        # quarter_baselines has {date, ttm_fcf, baseline_price, baseline_yield}
+        # fcf_quarterly has the individual quarter FCF values.
+        quarterly_chart = []
+        for qb in quarter_baselines:
+            q_date = qb['date']
+            month = q_date.month if hasattr(q_date, 'month') else 1
+            year = q_date.year if hasattr(q_date, 'year') else 0
+            quarter_num = ((month - 1) // 3) + 1
+
+            # Find the individual quarter FCF value for this date
+            q_fcf = None
+            for fd in fcf_dates:
+                if fd == q_date:
+                    idx = fcf_dates.index(fd)
+                    q_fcf = round(float(fcf_quarterly.iloc[idx]) / 1e6, 1)
+                    break
+
+            quarterly_chart.append({
+                'date': q_date.strftime('%Y-%m-%d'),
+                'quarter_label': f"Q{quarter_num} {year}",
+                'fcf_m': q_fcf,
+                'ttm_fcf_m': round(qb['ttm_fcf'] / 1e6, 1),
+                'yield_pct': round(qb['baseline_yield'], 2),
+            })
+
         return {
             'ticker': ticker,
             'bean_score': round(bean_score, 3),
@@ -318,6 +371,8 @@ def compute_bean_score(ticker: str, verbose: bool = False) -> Optional[dict]:
             'hist_dev_mean': round(dev_mean, 4),
             'hist_dev_std': round(dev_std, 4),
             'ttm_fcf': latest['ttm_fcf'],
+            'shares': shares,
+            'current_price': round(current_price, 2),
             'n_quarters': len(quarter_baselines),
             'n_observations': len(intra_quarter_deviations),
             'last_report_date': latest['date'].strftime('%Y-%m-%d'),
@@ -326,6 +381,9 @@ def compute_bean_score(ticker: str, verbose: bool = False) -> Optional[dict]:
             'velocity_13w': round(velocity_13w, 4),
             'sector': info.get('sector', 'Unknown'),
             'computed_at': datetime.utcnow().isoformat(),
+            'quarterly_chart': quarterly_chart[-4:],  # Last 4 quarters
+            'next_earnings_date': next_earnings_date,
+            'earnings_history': earnings_history[:4],  # Last 4 reported
         }
 
     except Exception as e:
@@ -390,6 +448,7 @@ def weekly_bean_score_snapshot(tickers: list[str],
             history = []
 
     # Compact history entry: just ticker → bean_score mapping + date
+    # Includes current_price for tracking actual returns after signals
     compact = {
         'date': snapshot_date,
         'scores': {s['ticker']: {
@@ -399,6 +458,7 @@ def weekly_bean_score_snapshot(tickers: list[str],
             'deviation_pp': s['deviation_pp'],
             'hist_dev_std': s['hist_dev_std'],
             'velocity_13w': s['velocity_13w'],
+            'price': s.get('current_price'),
         } for s in scores}
     }
     history.append(compact)

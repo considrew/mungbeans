@@ -98,6 +98,7 @@
           <button class="filter-btn insider-btn" data-filter-group="special" data-filter="insider" title="Insider conviction buys ($500K+) in last 12 months">🔍 Insider Buying</button>
           <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow trending upward">📈 FCF Growing</button>
           <button class="filter-btn accumulation-btn" data-filter-group="special" data-filter="quiet-accum" title="Low relative volume + accumulation ratio > 1.2">🔇 Quiet Accumulation</button>
+          <button class="filter-btn bean-btn" data-filter-group="special" data-filter="bean-cheap" title="Bean Score > 1σ — FCF yield meaningfully above historical baseline">🫘 Bean Cheap</button>
         </div>
       </div>
       
@@ -255,6 +256,9 @@
           <th class="sortable hide-mobile has-tooltip" data-sort="accum" data-tooltip="Accumulation Ratio — avg volume on up-weeks / avg volume on down-weeks over 14 weeks. Above 1.5 = buyers dominating. Below 0.7 = sellers dominating.">
             Accum. <span class="sort-icon">↕</span>
           </th>
+          <th class="sortable hide-mobile has-tooltip" data-sort="beanscore" data-tooltip="Bean Score — FCF yield dislocation from historical baseline, measured in standard deviations. Positive = cheap (yield higher than usual). Negative = expensive. Experimental.">
+            Bean <span class="sort-icon">↕</span>
+          </th>
           <th class="hide-tablet">Sector</th>
         </tr>
       </thead>
@@ -313,7 +317,9 @@
             data-is-cannibal="{{ if .is_cannibal }}1{{ end }}"
             data-is-yartseva="{{ if .yartseva_candidate }}1{{ end }}"
             data-is-insider="{{ if .has_conviction_buy }}1{{ end }}"
-            data-is-diluter="{{ if .is_diluting }}1{{ end }}">
+            data-is-diluter="{{ if .is_diluting }}1{{ end }}"
+            data-beanscore="{{ with .bean_score_data }}{{ with .current_score }}{{ . }}{{ else }}-999{{ end }}{{ else }}-999{{ end }}"
+            data-bean-cheap="{{ with .bean_score_data }}{{ with .current_score }}{{ if gt . 1.0 }}true{{ else }}false{{ end }}{{ else }}false{{ end }}{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
             {{ if .buffett_quality }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
@@ -375,6 +381,9 @@
           </td>
           <td class="mono hide-mobile {{ if .accumulation_ratio }}{{ if gt .accumulation_ratio 1.5 }}accumulation{{ else if lt .accumulation_ratio 0.7 }}distribution{{ end }}{{ end }}">
             {{ if .accumulation_ratio }}{{ printf "%.2f" .accumulation_ratio }}{{ else }}—{{ end }}
+          </td>
+          <td class="mono hide-mobile {{ with .bean_score_data }}{{ with .current_score }}{{ if gt . 1.0 }}bean-cheap{{ else if lt . -1.0 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}{{ end }}">
+            {{ with .bean_score_data }}{{ with .current_score }}{{ printf "%+.1f" . }}σ{{ else }}—{{ end }}{{ else }}—{{ end }}
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
@@ -511,7 +520,7 @@
       const tr = document.createElement('tr');
       tr.className = 'detail-row';
       tr.dataset.detailFor = sym;
-      tr.innerHTML = '<td colspan="14"><div class="detail-content"><div class="detail-grid">' +
+      tr.innerHTML = '<td colspan="15"><div class="detail-content"><div class="detail-grid">' +
         '<div class="detail-section"><h4>Touch History</h4>' +
         '<div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">' + (d.touches || '0') + '</span></div>' +
         '<div class="detail-metric"><span class="label">Avg return after touch</span><span class="value ' + avgRetClass + '">' + avgRetStr + '</span></div>' +
@@ -684,7 +693,8 @@
             'diluter': () => row.dataset.diluter === 'true',
             'insider': () => row.dataset.insider === 'true',
             'fcf-growing': () => row.dataset.fcfGrowing === 'true',
-            'quiet-accum': () => row.dataset.quietAccum === 'true'
+            'quiet-accum': () => row.dataset.quietAccum === 'true',
+            'bean-cheap': () => row.dataset.beanCheap === 'true'
           };
           for (const f of filters.special) {
             if (specialMap[f] && !specialMap[f]()) { show = false; break; }
@@ -730,7 +740,7 @@
         if (column === 'symbol') {
           return direction === 'asc' ? a.dataset.symbol.localeCompare(b.dataset.symbol) : b.dataset.symbol.localeCompare(a.dataset.symbol);
         }
-        const map = { distance: 'distance', rsi: 'rsi', rvol: 'rvol', accum: 'accum', roe: 'roe', debt: 'debt', shares: 'shares', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn' };
+        const map = { distance: 'distance', rsi: 'rsi', rvol: 'rvol', accum: 'accum', roe: 'roe', debt: 'debt', shares: 'shares', fcfyield: 'fcfyield', touches: 'touches', avgreturn: 'avgreturn', beanscore: 'beanscore' };
         aVal = parseFloat(a.dataset[map[column]]) || 0;
         bVal = parseFloat(b.dataset[map[column]]) || 0;
         return direction === 'asc' ? aVal - bVal : bVal - aVal;
@@ -768,6 +778,8 @@
         'fcf-growing': { group: 'special', filter: 'fcf-growing' },
         'quiet-accum': { group: 'special', filter: 'quiet-accum' },
         'quiet_accum': { group: 'special', filter: 'quiet-accum' },
+        'bean-cheap': { group: 'special', filter: 'bean-cheap' },
+        'bean_cheap': { group: 'special', filter: 'bean-cheap' },
         'sp500': { group: 'quality', filter: 'sp500' },
         'proven': { group: 'quality', filter: 'proven' },
         'lowdebt': { group: 'quality', filter: 'lowdebt' },
@@ -896,6 +908,9 @@
     td.neg-fcf { color: #ef4444; }
     td.buyback { color: #06b6d4; font-weight: 600; }
     td.diluting { color: #ef4444; font-weight: 600; }
+    td.bean-cheap { color: #059669; font-weight: 600; }
+    td.bean-expensive { color: #ef4444; font-weight: 600; }
+    td.bean-neutral { color: var(--color-text-muted); }
     
     .badge-inline { display: inline-block; padding: 1px 4px; border-radius: 3px; font-size: 0.7rem; margin-left: 3px; vertical-align: baseline; }
     

@@ -946,6 +946,463 @@
     </script>
     {{ end }}
 
+    <!-- Bean Score: Cash Yield Dislocation -->
+    {{ with .Params.bean_score_data }}
+    <section class="bean-score-section">
+      <h2>Bean Score <span class="bean-score-badge">Experimental</span></h2>
+      <p class="bean-score-intro">
+        The Bean Score measures how far a stock's free cash flow yield has deviated from its own quarterly baseline,
+        normalized by the stock's historical behavior. Between earnings dates, FCF is constant — so the score is
+        purely a function of stock price. The levels below show at what prices {{ $.Params.symbol }} would reach
+        each dislocation threshold.
+      </p>
+
+      <!-- Current Score -->
+      <div class="bean-score-current">
+        <div class="bean-metric">
+          <span class="bean-metric-label">Current Bean Score</span>
+          <span class="bean-metric-value {{ if gt .current_score 1.0 }}bean-cheap{{ else if lt .current_score -1.0 }}bean-expensive{{ else }}bean-neutral{{ end }}">
+            {{ printf "%+.2f" .current_score }}σ
+          </span>
+        </div>
+        <div class="bean-metric">
+          <span class="bean-metric-label">Current FCF Yield</span>
+          <span class="bean-metric-value">{{ printf "%.2f" .current_fcf_yield }}%</span>
+        </div>
+        <div class="bean-metric">
+          <span class="bean-metric-label">Baseline Yield</span>
+          <span class="bean-metric-value">{{ printf "%.2f" .baseline_fcf_yield }}%</span>
+        </div>
+        <div class="bean-metric">
+          <span class="bean-metric-label">Historical σ</span>
+          <span class="bean-metric-value">{{ printf "%.2f" .hist_dev_std }}pp</span>
+        </div>
+      </div>
+
+      <!-- Dislocation Price Levels -->
+      <h3 class="bean-levels-title">Dislocation Price Levels</h3>
+      <p class="bean-levels-desc">
+        Prices where {{ $.Params.symbol }}'s Bean Score would hit each σ threshold.
+        {{ with .next_earnings_date }}
+          Valid until next earnings report: <strong class="bean-earnings-date">{{ . }}</strong>.
+        {{ else }}
+          Valid until next earnings report{{ with .last_report_date }} (last report: {{ . }}){{ end }}.
+        {{ end }}
+      </p>
+      <table class="bean-levels-table">
+        <thead>
+          <tr>
+            <th>Level</th>
+            <th>σ</th>
+            <th>Price</th>
+            <th>Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .levels }}
+          <tr class="bean-level-row bean-level-{{ if gt .sigma 0.0 }}cheap{{ else if lt .sigma 0.0 }}expensive{{ else }}neutral{{ end }}">
+            <td>{{ .label }}</td>
+            <td>{{ printf "%+.0f" .sigma }}σ</td>
+            <td>{{ if .price }}${{ printf "%.2f" .price }}{{ else }}<em>N/A</em>{{ end }}</td>
+            <td>
+              {{ if eq .sigma 2.0 }}Unusually cheap — potential buy zone
+              {{ else if eq .sigma 1.0 }}Cheap vs. own history
+              {{ else if eq .sigma 0.0 }}Historical mean behavior
+              {{ else if eq .sigma -1.0 }}Expensive vs. own history
+              {{ else }}Unusually expensive — potential trim zone
+              {{ end }}
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+
+      <!-- Quarterly FCF Chart -->
+      {{ with .quarterly_fcf }}
+      {{ if .quarters }}
+      <div class="bean-quarterly-chart">
+        <h3 class="bean-chart-title">Quarterly FCF & Yield <span class="health-chart-sub">Trailing twelve-month free cash flow and yield at each quarter end</span></h3>
+        <div class="bean-chart-grid">
+          <div class="bean-chart-wrap">
+            <div class="health-chart-container">
+              <canvas id="beanQuarterlyFcfChart"></canvas>
+            </div>
+          </div>
+          <div class="bean-chart-wrap">
+            <div class="health-chart-container">
+              <canvas id="beanQuarterlyYieldChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script id="beanQuarterlyData" type="application/json">
+        {{ .quarters | jsonify | safeHTML }}
+      </script>
+
+      <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var raw = document.getElementById('beanQuarterlyData');
+        if (!raw) return;
+        var quarters = JSON.parse(raw.textContent);
+        if (!quarters || !quarters.length) return;
+
+        var labels = quarters.map(function(q) { return q.quarter_label; });
+        var ttmFcf = quarters.map(function(q) { return q.ttm_fcf_m; });
+        var yields = quarters.map(function(q) { return q.yield_pct; });
+        var qFcf = quarters.map(function(q) { return q.fcf_m; });
+
+        var gridColor = 'rgba(255,255,255,0.06)';
+        var tickColor = '#8b949e';
+
+        // TTM FCF Bar Chart
+        new Chart(document.getElementById('beanQuarterlyFcfChart'), {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: 'TTM FCF ($M)',
+                data: ttmFcf,
+                backgroundColor: 'rgba(35,134,54,0.65)',
+                borderColor: '#2ea043',
+                borderWidth: 1,
+                borderRadius: 3
+              },
+              {
+                label: 'Quarter FCF ($M)',
+                data: qFcf,
+                backgroundColor: 'rgba(56,139,253,0.45)',
+                borderColor: '#388bfd',
+                borderWidth: 1,
+                borderRadius: 3
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 12, color: tickColor, font: { size: 11 } } } },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+              y: { grid: { color: gridColor }, ticks: { color: tickColor, font: { size: 11 } } }
+            }
+          }
+        });
+
+        // FCF Yield Line Chart
+        if (yields.some(function(v) { return v !== null; })) {
+          new Chart(document.getElementById('beanQuarterlyYieldChart'), {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'FCF Yield %',
+                data: yields,
+                borderColor: '#d29922',
+                backgroundColor: 'rgba(210,153,34,0.1)',
+                fill: true,
+                borderWidth: 2.5,
+                pointRadius: 5,
+                pointBackgroundColor: '#d29922',
+                tension: 0.3
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { position: 'top', labels: { usePointStyle: true, padding: 12, color: tickColor, font: { size: 11 } } } },
+              scales: {
+                x: { grid: { display: false }, ticks: { color: tickColor, font: { size: 11 } } },
+                y: {
+                  grid: { color: gridColor },
+                  ticks: { color: tickColor, font: { size: 11 }, callback: function(v) { return v + '%'; } }
+                }
+              }
+            }
+          });
+        }
+      });
+      </script>
+      {{ end }}
+      {{ end }}
+
+      <!-- Earnings History -->
+      {{ with .earnings_history }}
+      {{ if gt (len .) 0 }}
+      <div class="bean-earnings-history">
+        <h3 class="bean-chart-title">Recent Earnings</h3>
+        <table class="bean-earnings-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>EPS Est.</th>
+              <th>EPS Actual</th>
+              <th>Surprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range . }}
+            <tr>
+              <td>{{ .date }}</td>
+              <td>{{ if .eps_estimate }}${{ printf "%.2f" .eps_estimate }}{{ else }}—{{ end }}</td>
+              <td>${{ printf "%.2f" .eps_actual }}</td>
+              <td>
+                {{ if .surprise_pct }}
+                <span class="{{ if gt .surprise_pct 0.0 }}bean-beat{{ else }}bean-miss{{ end }}">
+                  {{ if gt .surprise_pct 0.0 }}+{{ end }}{{ printf "%.1f" .surprise_pct }}%
+                </span>
+                {{ else }}—{{ end }}
+              </td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+      {{ end }}
+      {{ end }}
+
+      <!-- Data Quality Indicator -->
+      <div class="bean-data-quality">
+        <span class="bean-quality-label">Data depth:</span>
+        {{ .n_quarters }} quarterly baselines, {{ .n_observations }} price observations
+        {{ if lt .n_quarters 4 }}<span class="bean-quality-warning">— Limited history (4+ quarters preferred for reliability)</span>{{ end }}
+      </div>
+
+      <!-- Signal Accuracy Tracking -->
+      <div class="bean-tracking">
+        <h3>Signal Accuracy <span class="bean-experimental-badge">Collecting Data</span></h3>
+        <p class="bean-tracking-status">
+          The Bean Score system is accumulating weekly data to validate signal accuracy.
+          After 13+ weeks of history, this section will display win rates and average returns
+          for each σ threshold crossing — answering the question: "When this score says cheap or expensive,
+          does the price subsequently move in the expected direction?"
+        </p>
+        {{ $tw := .tracking_weeks | default 0 }}
+        {{ $pct := 0 }}
+        {{ if ge $tw 13 }}{{ $pct = 100 }}{{ else }}{{ $pct = div (mul $tw 100) 13 }}{{ end }}
+        <div class="bean-tracking-progress">
+          <div class="bean-tracking-bar">
+            <div class="bean-tracking-fill" style="width: {{ $pct }}%;"></div>
+          </div>
+          <span class="bean-tracking-label">{{ $tw }} / 13 weeks minimum</span>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="bean-disclaimer">
+        <p>
+          <strong>Theoretical framework — not backtested or forward-tested.</strong>
+          The Bean Score uses trailing twelve-month free cash flow yield as a dislocation identifier.
+          It measures whether the market has pushed a stock's yield unusually far from its own baseline behavior.
+          These levels are reference points for identifying potential swing trade opportunities, not buy/sell signals.
+          FCF values update quarterly with earnings; between reports, all movement is price-driven.
+        </p>
+      </div>
+    </section>
+
+    <style>
+      .bean-score-section { margin-bottom: var(--space-2xl); }
+      .bean-score-section h2 {
+        font-size: 1.25rem;
+        margin-bottom: var(--space-xs);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+      .bean-score-badge {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(210, 153, 34, 0.15);
+        color: #d29922;
+        border: 1px solid rgba(210, 153, 34, 0.3);
+      }
+      .bean-score-intro {
+        color: var(--color-text-muted);
+        font-size: 0.875rem;
+        margin-bottom: var(--space-lg);
+        line-height: 1.6;
+      }
+      .bean-score-current {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+        padding: var(--space-md);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+      }
+      .bean-metric {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .bean-metric-label {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .bean-metric-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      .bean-cheap { color: #2ea043; }
+      .bean-expensive { color: #f85149; }
+      .bean-neutral { color: var(--color-text); }
+      .bean-levels-title {
+        font-size: 1rem;
+        margin-bottom: var(--space-xs);
+      }
+      .bean-levels-desc {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+      }
+      .bean-levels-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        margin-bottom: var(--space-md);
+      }
+      .bean-levels-table th {
+        text-align: left;
+        padding: var(--space-sm) var(--space-md);
+        border-bottom: 2px solid var(--color-border);
+        color: var(--color-text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .bean-levels-table td {
+        padding: var(--space-sm) var(--space-md);
+        border-bottom: 1px solid var(--color-border);
+      }
+      .bean-level-cheap td:first-child { border-left: 3px solid #2ea043; }
+      .bean-level-expensive td:first-child { border-left: 3px solid #f85149; }
+      .bean-level-neutral td:first-child { border-left: 3px solid #8b949e; }
+      .bean-level-row td:nth-child(3) {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      .bean-level-row td:nth-child(4) {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+      }
+      .bean-data-quality {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-md);
+      }
+      .bean-quality-warning {
+        color: #d29922;
+        font-style: italic;
+      }
+      .bean-disclaimer {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+      }
+      .bean-disclaimer p { margin: 0; }
+      .bean-tracking { margin: var(--space-lg) 0; }
+      .bean-tracking h3 {
+        font-size: 1rem;
+        margin-bottom: var(--space-sm);
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+      .bean-tracking-status {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        line-height: 1.5;
+        margin-bottom: var(--space-sm);
+      }
+      .bean-tracking-progress {
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+      .bean-tracking-bar {
+        flex: 1;
+        max-width: 200px;
+        height: 6px;
+        background: var(--color-surface);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .bean-tracking-fill {
+        height: 100%;
+        background: #d29922;
+        border-radius: 3px;
+        transition: width 0.3s;
+      }
+      .bean-tracking-label {
+        font-size: 0.75rem;
+        color: var(--color-text-muted);
+      }
+      .bean-earnings-date { color: #d29922; }
+      .bean-earnings-history { margin: var(--space-lg) 0; }
+      .bean-earnings-table {
+        width: 100%;
+        max-width: 500px;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+        margin-top: var(--space-sm);
+      }
+      .bean-earnings-table th {
+        text-align: left;
+        padding: var(--space-xs) var(--space-md);
+        border-bottom: 2px solid var(--color-border);
+        color: var(--color-text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .bean-earnings-table td {
+        padding: var(--space-xs) var(--space-md);
+        border-bottom: 1px solid var(--color-border);
+        font-variant-numeric: tabular-nums;
+      }
+      .bean-beat { color: #2ea043; font-weight: 600; }
+      .bean-miss { color: #f85149; font-weight: 600; }
+      .bean-quarterly-chart { margin: var(--space-lg) 0; }
+      .bean-chart-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: var(--space-md);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .bean-chart-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-lg);
+      }
+      .bean-chart-wrap {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+      }
+      @media (max-width: 600px) {
+        .bean-score-current { grid-template-columns: repeat(2, 1fr); }
+        .bean-chart-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+    {{ end }}
+
     <!-- Ad Placement: Rectangle -->
     <div class="ad-container ad-container--leaderboard" id="ad-stock-top">
       <div class="ad-label">Advertisement</div>
