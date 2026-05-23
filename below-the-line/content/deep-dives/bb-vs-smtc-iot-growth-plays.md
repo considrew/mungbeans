@@ -5,7 +5,7 @@ draft: false
 tags: ["deep-dive", "value-trap-analysis", "technology", "BB", "SMTC", "IoT", "growth", "small-cap"]
 description: "BlackBerry is finally profitable with QNX embedded in 275M vehicles and $100M cash flow guidance. Semtech's LoRa connects 178M devices while AI data center revenue grew 58%. Both are above the line and expensive on the Bean Score. I run the growth framework on two IoT infrastructure plays."
 ticker: "BB"
-ticker2: "SMTC"
+ticker_b: "SMTC"
 verdict: "mixed"
 verdict_label: "BB: Emerging Buy Case / SMTC: Wait"
 pct_below_200wma: "0"

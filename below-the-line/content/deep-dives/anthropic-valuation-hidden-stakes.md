@@ -5,7 +5,7 @@ draft: false
 tags: ["deep-dive", "value-trap-analysis", "technology", "GOOGL", "ZM", "SKM", "CRM", "AMZN", "AI", "anthropic", "sum-of-parts"]
 description: "Anthropic hit $1 trillion on secondary markets after a 233% revenue surge. I look at which public companies hold Anthropic stakes and whether the market has priced in what those positions are now worth. SK Telecom, Zoom, Salesforce, Alphabet, and Amazon all have exposure. The math is most interesting where you'd least expect it."
 ticker: "ZM"
-ticker2: "SKM"
+ticker_b: "SKM"
 verdict: "mixed"
 verdict_label: "SKM: Interesting / ZM: Emerging"
 pct_below_200wma: "0"

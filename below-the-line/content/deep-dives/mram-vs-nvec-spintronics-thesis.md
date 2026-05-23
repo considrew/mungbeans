@@ -5,7 +5,7 @@ draft: false
 tags: ["deep-dive", "value-trap-analysis", "technology", "MRAM", "NVEC", "semiconductors", "growth", "small-cap"]
 description: "MRAM sits at the intersection of AI data center demand, NOR Flash displacement, and edge AI inference. I dig into the physics, the three MRAM generations (Toggle → STT → SOT), five market vectors, and why this niche memory technology could become infrastructure. Everspin is the pure-play manufacturer with a $40M defense contract, IBM hyperscaler pipeline, and 128/256Mb density ramp. NVE is Buffett Quality with 79% gross margins but 3% growth. Both are overbought. When does the growth narrative become a value stock?"
 ticker: "NVEC"
-ticker2: "MRAM"
+ticker_b: "MRAM"
 verdict: "mixed"
 verdict_label: "NVEC: Wait / MRAM: Speculative"
 pct_below_200wma: "0"
