@@ -164,10 +164,39 @@ def generate_bean_score_display(verbose: bool = False) -> dict:
     for ticker, score_data in scores.items():
         ttm_fcf = score_data.get('ttm_fcf', 0)
 
-        # Only generate levels for positive-FCF companies
-        # Negative FCF makes the dislocation concept less actionable
+        # Negative FCF: include score metadata but skip price levels
+        # (price levels invert with negative FCF, making them misleading)
         if ttm_fcf <= 0:
             skipped_negative_fcf += 1
+            _baseline = score_data.get('baseline_fcf_yield', 0)
+            _std = score_data.get('hist_dev_std', 0)
+            _mean = score_data.get('hist_dev_mean', 0)
+            entry = {
+                'levels': [],
+                'current_score': score_data.get('bean_score'),
+                'current_fcf_yield': score_data.get('current_fcf_yield'),
+                'baseline_fcf_yield': _baseline,
+                'ttm_fcf': ttm_fcf,
+                'last_report_date': score_data.get('last_report_date'),
+                'hist_dev_std': _std if _std > 0 else None,
+                'hist_dev_mean': _mean,
+                'n_quarters': score_data.get('n_quarters'),
+                'n_observations': score_data.get('n_observations'),
+                'tracking_weeks': history_weeks,
+                'sector': score_data.get('sector'),
+                'computed_at': score_data.get('computed_at'),
+                'negative_fcf': True,
+            }
+            qc = score_data.get('quarterly_chart')
+            if qc:
+                entry['quarterly_fcf'] = {'quarters': qc}
+            ned = score_data.get('next_earnings_date')
+            if ned:
+                entry['next_earnings_date'] = ned
+            eh = score_data.get('earnings_history')
+            if eh:
+                entry['earnings_history'] = eh
+            display_data[ticker] = entry
             continue
 
         # Get shares outstanding — prefer value from bean_score computation,

@@ -952,9 +952,15 @@
       <h2>Bean Score <span class="bean-score-badge">Experimental</span></h2>
       <p class="bean-score-intro">
         The Bean Score measures how far a stock's free cash flow yield has deviated from its own quarterly baseline,
-        normalized by the stock's historical behavior. Between earnings dates, FCF is constant — so the score is
+        normalized by the stock's historical behavior.
+        {{ if .negative_fcf }}
+        {{ $.Params.symbol }} currently has negative free cash flow, so price-based dislocation levels are not available.
+        The score still tracks yield deviation from baseline.
+        {{ else }}
+        Between earnings dates, FCF is constant — so the score is
         purely a function of stock price. The levels below show at what prices {{ $.Params.symbol }} would reach
         each dislocation threshold.
+        {{ end }}
       </p>
 
       <!-- Current Score -->
@@ -975,11 +981,13 @@
         </div>
         <div class="bean-metric">
           <span class="bean-metric-label">Historical σ</span>
-          <span class="bean-metric-value">{{ printf "%.2f" .hist_dev_std }}pp</span>
+          <span class="bean-metric-value">{{ with .hist_dev_std }}{{ printf "%.2f" . }}pp{{ else }}N/A{{ end }}</span>
         </div>
       </div>
 
-      <!-- Dislocation Price Levels -->
+      <!-- Dislocation Price Levels (only for positive-FCF stocks) -->
+      {{ if not .negative_fcf }}
+      {{ if .levels }}
       <h3 class="bean-levels-title">Dislocation Price Levels</h3>
       <p class="bean-levels-desc">
         Prices where {{ $.Params.symbol }}'s Bean Score would hit each σ threshold.
@@ -1016,6 +1024,8 @@
           {{ end }}
         </tbody>
       </table>
+      {{ end }}
+      {{ end }}
 
       <!-- Quarterly FCF Chart -->
       {{ with .quarterly_fcf }}
