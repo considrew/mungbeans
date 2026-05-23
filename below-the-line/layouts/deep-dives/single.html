@@ -97,31 +97,45 @@
           {{ if .Params.pct_below_200wma }}
           <span class="stat-badge below">{{ .Params.pct_below_200wma }}% below 200WMA</span>
           {{ end }}
-          {{ if .Params.ticker_b }}
-          <span class="stat-badge">{{ .Params.ticker_b }}</span>
+          {{ range $suffix := slice "b" "c" "d" "e" }}
+            {{ $tickerKey := printf "ticker_%s" $suffix }}
+            {{ with index $.Params $tickerKey }}
+            <span class="stat-badge">{{ . }}</span>
+            {{ end }}
           {{ end }}
         </div>
         {{/* Performance tracking badges */}}
         {{ if .Params.performance_since }}
         <div class="post-summary-stats" style="margin-top: 8px;">
+          {{/* Primary ticker performance */}}
           {{ $perf := .Params.performance_since }}
           {{ $isPositive := hasPrefix $perf "+" }}
           {{ $isZero := eq $perf "+0.0%" }}
           <span class="stat-badge performance-badge {{ if $isZero }}perf-neutral{{ else if $isPositive }}perf-positive{{ else }}perf-negative{{ end }}">
             <span class="perf-label">Since publish</span> {{ .Params.ticker }} {{ $perf }}
           </span>
-          {{ if .Params.performance_since_b }}
-          {{ $perfB := .Params.performance_since_b }}
-          {{ $isPositiveB := hasPrefix $perfB "+" }}
-          {{ $isZeroB := eq $perfB "+0.0%" }}
-          <span class="stat-badge performance-badge {{ if $isZeroB }}perf-neutral{{ else if $isPositiveB }}perf-positive{{ else }}perf-negative{{ end }}">
-            <span class="perf-label">Since publish</span> {{ .Params.ticker_b }} {{ $perfB }}
-          </span>
+          {{/* Additional ticker performance badges (b through e) */}}
+          {{ range $suffix := slice "b" "c" "d" "e" }}
+            {{ $perfKey := printf "performance_since_%s" $suffix }}
+            {{ $tickerKey := printf "ticker_%s" $suffix }}
+            {{ with index $.Params $perfKey }}
+              {{ $p := . }}
+              {{ $isPos := hasPrefix $p "+" }}
+              {{ $isZ := eq $p "+0.0%" }}
+              <span class="stat-badge performance-badge {{ if $isZ }}perf-neutral{{ else if $isPos }}perf-positive{{ else }}perf-negative{{ end }}">
+                <span class="perf-label">Since publish</span> {{ index $.Params $tickerKey }} {{ $p }}
+              </span>
+            {{ end }}
           {{ end }}
           <span class="performance-detail">
-            <span>{{ .Params.performance_price_at_publish }} → {{ .Params.performance_price_current }}</span>
-            {{ if .Params.performance_price_at_publish_b }}
-            <span>{{ .Params.performance_price_at_publish_b }} → {{ .Params.performance_price_current_b }}</span>
+            <span>{{ .Params.ticker }}: {{ .Params.performance_price_at_publish }} → {{ .Params.performance_price_current }}</span>
+            {{ range $suffix := slice "b" "c" "d" "e" }}
+              {{ $pubKey := printf "performance_price_at_publish_%s" $suffix }}
+              {{ $curKey := printf "performance_price_current_%s" $suffix }}
+              {{ $tickerKey := printf "ticker_%s" $suffix }}
+              {{ with index $.Params $pubKey }}
+                <span>{{ index $.Params $tickerKey }}: {{ . }} → {{ index $.Params $curKey }}</span>
+              {{ end }}
             {{ end }}
             <span>as of {{ .Params.performance_as_of }}</span>
           </span>
