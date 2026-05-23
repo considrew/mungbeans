@@ -173,7 +173,7 @@ The D/E of 177% is elevated but manageable for a company with predictable govern
 
 Comcast is the most aggressive cannibal in this group — 14.6% of shares retired over three years. The company is essentially shrinking itself while growing FCF at a 15% CAGR. That math works in shareholders' favor as long as the revenue base holds.
 
-The bear case is well-known: cord-cutting, broadband competition from fixed wireless (T-Mobile, Verizon), and a theme parks business that's sensitive to consumer spending. The stock is 22% below its 200WMA, the shallowest discount here, but the Bean Score at +2.23σ says it's cheap relative to its own history.
+The bear case is well-known: cord-cutting, broadband competition from fixed wireless (T-Mobile, Verizon), and the Universal theme parks business that's sensitive to consumer spending. The stock is 22% below its 200WMA, the shallowest discount here, but the Bean Score at +2.23σ says it's cheap relative to its own history.
 
 | Metric | Value |
 |--------|-------|
