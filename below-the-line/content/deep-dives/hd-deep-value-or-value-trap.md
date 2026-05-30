@@ -8,10 +8,10 @@ ticker: "HD"
 verdict: "deep-value"
 verdict_label: "Deep Value"
 pct_below_200wma: "2.2"
-performance_since: "-3.3%"
+performance_since: "-2.1%"
 performance_price_at_publish: "$323.88"
-performance_price_current: "$313.07"
-performance_as_of: "2026-05-23"
+performance_price_current: "$317.14"
+performance_as_of: "2026-05-30"
 ---
 
 ## The Setup
