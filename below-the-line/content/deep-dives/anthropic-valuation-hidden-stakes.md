@@ -11,8 +11,8 @@ verdict_label: "SKM: Interesting / ZM: Emerging"
 pct_below_200wma: "0"
 performance_since: "+4.6%"
 performance_price_at_publish: "$97.15"
-performance_price_current: "$101.59"
-performance_as_of: "2026-05-30"
+performance_price_current: "$101.62"
+performance_as_of: "2026-06-06"
 ---
 
 ## The Setup

@@ -8,10 +8,10 @@ ticker: "TTD"
 verdict: "turnaround"
 verdict_label: "GARP (w/ Execution Risk)"
 pct_below_200wma: "62"
-performance_since: "-14.6%"
+performance_since: "-21.0%"
 performance_price_at_publish: "$25.26"
-performance_price_current: "$21.56"
-performance_as_of: "2026-05-30"
+performance_price_current: "$19.95"
+performance_as_of: "2026-06-06"
 ---
 
 ## The Setup

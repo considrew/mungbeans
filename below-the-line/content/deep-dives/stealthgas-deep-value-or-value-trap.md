@@ -8,10 +8,10 @@ ticker: "GASS"
 verdict: "deep-value"
 verdict_label: "Deep Value (w/ Governance Discount)"
 pct_below_200wma: "0"
-performance_since: "+11.4%"
+performance_since: "+16.7%"
 performance_price_at_publish: "$8.24"
-performance_price_current: "$9.18"
-performance_as_of: "2026-05-30"
+performance_price_current: "$9.62"
+performance_as_of: "2026-06-06"
 ---
 
 *A mungbeans.io forensic deep-dive — February 22, 2026*
