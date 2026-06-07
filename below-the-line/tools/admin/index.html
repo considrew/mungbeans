@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Book — authoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:#15120e; --bg-card:#1d1914; --bg-card-2:#241f18;
+    --ink:#ece6da; --ink-dim:#a89e8c; --ink-faint:#6f6757; --line:#332c22;
+    --gain:#8fbf6f; --bench:#c9a24a; --trim:#d4a24a; --closed-gain:#5fa8b5; --loss:#c2604f;
+    --serif:"Newsreader",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--serif); font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:var(--bench); }
+  header {
+    border-bottom:1px solid var(--line); padding:18px 24px;
+    display:flex; align-items:baseline; gap:14px;
+  }
+  header h1 { font-size:22px; font-weight:600; margin:0; letter-spacing:.2px; }
+  header .sub { font-family:var(--mono); font-size:12px; color:var(--ink-faint); }
+  .wrap { display:grid; grid-template-columns:300px 1fr; gap:0; min-height:calc(100vh - 61px); }
+  .side { border-right:1px solid var(--line); padding:18px; overflow:auto; }
+  .main { padding:24px 28px; max-width:760px; }
+  h2 { font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+       color:var(--ink-dim); font-family:var(--mono); margin:0 0 12px; }
+  .side h2 { margin-top:22px; }
+  .side h2:first-child { margin-top:0; }
+
+  /* position list */
+  .plist { list-style:none; margin:0 0 8px; padding:0; }
+  .plist li { margin:0 0 6px; }
+  .plist button {
+    width:100%; text-align:left; background:var(--bg-card); border:1px solid var(--line);
+    color:var(--ink); border-radius:6px; padding:8px 10px; cursor:pointer; font-family:var(--mono);
+    font-size:12px; display:flex; justify-content:space-between; gap:8px; align-items:center;
+  }
+  .plist button:hover { background:var(--bg-card-2); }
+  .plist .tk { font-weight:600; }
+  .badge { font-family:var(--mono); font-size:10px; padding:2px 6px; border-radius:4px;
+           text-transform:uppercase; letter-spacing:.06em; border:1px solid var(--line); }
+  .badge.open { color:var(--gain); border-color:#3c4a30; }
+  .badge.draft { color:var(--ink-faint); }
+  .badge.closed { color:var(--closed-gain); border-color:#274247; }
+  .newbtn { width:100%; background:transparent; border:1px dashed var(--line); color:var(--ink-dim);
+            border-radius:6px; padding:9px; cursor:pointer; font-family:var(--mono); font-size:12px; }
+  .newbtn:hover { color:var(--ink); border-color:var(--ink-faint); }
+  .cashline { font-family:var(--mono); font-size:12px; color:var(--ink-dim); }
+  .cashline b { color:var(--ink); }
+
+  /* form */
+  .field { margin:0 0 16px; }
+  label { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.08em;
+          text-transform:uppercase; color:var(--ink-dim); margin:0 0 6px; }
+  label .opt { color:var(--ink-faint); text-transform:none; letter-spacing:0; }
+  input, select, textarea {
+    width:100%; background:var(--bg-card); border:1px solid var(--line); color:var(--ink);
+    border-radius:6px; padding:9px 11px; font-family:var(--mono); font-size:13px;
+  }
+  textarea { font-family:var(--serif); font-size:15px; line-height:1.55; min-height:90px; resize:vertical; }
+  input:focus, select:focus, textarea:focus { outline:none; border-color:var(--bench); }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+  fieldset { border:1px solid var(--line); border-radius:8px; padding:16px 16px 4px; margin:0 0 18px; background:var(--bg-card); }
+  legend { font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em;
+           color:var(--ink-dim); padding:0 8px; }
+  .hint { font-family:var(--mono); font-size:11px; color:var(--ink-faint); margin:6px 0 0; }
+  .computed { font-family:var(--mono); font-size:12px; color:var(--bench); margin:6px 0 0; }
+  .draftwarn { font-family:var(--mono); font-size:12px; color:var(--trim); margin:6px 0 0; display:none; }
+  .draftwarn.show { display:block; }
+
+  .actions { display:flex; gap:12px; align-items:center; margin-top:8px; }
+  button.primary { background:var(--gain); color:#10140c; border:none; border-radius:6px;
+    padding:11px 20px; font-family:var(--mono); font-size:13px; font-weight:600; cursor:pointer; letter-spacing:.04em; }
+  button.primary:hover { filter:brightness(1.07); }
+  button.ghost { background:transparent; color:var(--ink-dim); border:1px solid var(--line);
+    border-radius:6px; padding:11px 16px; font-family:var(--mono); font-size:13px; cursor:pointer; }
+  button.ghost:hover { color:var(--ink); border-color:var(--ink-faint); }
+
+  .msg { font-family:var(--mono); font-size:12px; border-radius:6px; padding:10px 12px; margin:14px 0 0; white-space:pre-wrap; display:none; }
+  .msg.show { display:block; }
+  .msg.ok { background:rgba(143,191,111,.10); border:1px solid #3c4a30; color:var(--gain); }
+  .msg.err { background:rgba(194,96,79,.10); border:1px solid #4a2c26; color:var(--loss); }
+
+  .events { font-family:var(--mono); font-size:12px; color:var(--ink-dim); margin:0; padding:0; list-style:none; }
+  .events li { padding:6px 0; border-bottom:1px solid var(--line); }
+  .events .act { color:var(--bench); text-transform:uppercase; font-size:10px; letter-spacing:.06em; }
+
+  .commitbar { border-top:1px solid var(--line); margin-top:28px; padding-top:18px; }
+  hr.sep { border:none; border-top:1px solid var(--line); margin:22px 0; }
+  .hide { display:none !important; }
+  @media (max-width:760px){ .wrap{ grid-template-columns:1fr; } .side{ border-right:none; border-bottom:1px solid var(--line); } .row,.row3{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>The Book</h1>
+  <span class="sub">position authoring · local · writes <span id="dataDir">data/</span></span>
+</header>
+
+<div class="wrap">
+  <aside class="side">
+    <h2>Positions</h2>
+    <ul class="plist" id="plist"></ul>
+    <button class="newbtn" id="newBtn">+ New position</button>
+
+    <h2>Cash</h2>
+    <div class="cashline" id="cashSummary">—</div>
+    <button class="newbtn" id="cashBtn" style="margin-top:10px;">+ Add cash balance</button>
+  </aside>
+
+  <main class="main">
+    <!-- ============ POSITION FORM ============ -->
+    <section id="posForm">
+      <h2 id="posFormTitle">New position</h2>
+
+      <div class="field">
+        <label for="assetType">Asset type</label>
+        <select id="assetType">
+          <option value="stock">Stock</option>
+          <option value="call">Call</option>
+          <option value="put">Put</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="ticker" id="tickerLabel">Ticker</label>
+          <input id="ticker" placeholder="ASTS" autocomplete="off" />
+        </div>
+        <div class="field" id="verdictField">
+          <label for="verdict">Verdict <span class="opt">(optional badge)</span></label>
+          <input id="verdict" placeholder="Deep Value" autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- option-only -->
+      <div class="row3 hide" id="optionFields">
+        <div class="field">
+          <label for="strike">Strike</label>
+          <input id="strike" type="number" step="any" placeholder="480" />
+        </div>
+        <div class="field">
+          <label for="expiry">Expiry</label>
+          <input id="expiry" type="date" />
+        </div>
+        <div class="field">
+          <label for="currentMark">Current mark <span class="opt">(per-share)</span></label>
+          <input id="currentMark" type="number" step="any" placeholder="4.20" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="thesis">Thesis <span class="opt">(required to publish — empty = draft)</span></label>
+        <textarea id="thesis" placeholder="The why-I-entered. Without this, the position saves as a draft and stays out of the build."></textarea>
+        <p class="draftwarn" id="draftWarn">⚠ No thesis yet — this position will be saved as a <b>draft</b> and excluded from the build until you write one.</p>
+      </div>
+
+      <div class="field">
+        <label for="article">Article link <span class="opt">(optional)</span></label>
+        <input id="article" placeholder="/deep-dives/asts-the-orbital-bet/" autocomplete="off" />
+      </div>
+
+      <fieldset>
+        <legend>Event</legend>
+        <div class="row3">
+          <div class="field">
+            <label for="action">Action</label>
+            <select id="action"></select>
+          </div>
+          <div class="field">
+            <label for="evDate">Date</label>
+            <input id="evDate" type="date" />
+          </div>
+          <div class="field" id="qtyField">
+            <label for="qty" id="qtyLabel">Shares</label>
+            <input id="qty" type="number" step="any" placeholder="800" />
+          </div>
+        </div>
+        <div class="field" id="priceField">
+          <label for="price" id="priceLabel">Price <span class="opt">(per share)</span></label>
+          <input id="price" type="number" step="any" placeholder="20.10" />
+          <p class="computed" id="committed"></p>
+        </div>
+        <div class="field">
+          <label for="evNote">Note <span class="opt">(reasoning for this event)</span></label>
+          <textarea id="evNote" placeholder="Opened the core. I sell reasons, not gains."></textarea>
+        </div>
+      </fieldset>
+
+      <h2 id="existingEventsTitle" class="hide">Existing events</h2>
+      <ul class="events hide" id="existingEvents"></ul>
+
+      <div class="actions">
+        <button class="primary" id="saveBtn">Save position</button>
+        <button class="ghost" id="resetBtn">Clear form</button>
+      </div>
+      <div class="msg" id="posMsg"></div>
+    </section>
+
+    <!-- ============ CASH FORM ============ -->
+    <section id="cashForm" class="hide">
+      <h2>Add cash balance</h2>
+      <p class="hint">Latest-dated balance is treated as current cash. It feeds the portfolio total and the growth-of-$100 normalization.</p>
+      <div class="row">
+        <div class="field">
+          <label for="cashAmount">Amount ($)</label>
+          <input id="cashAmount" type="number" step="any" placeholder="4210.00" />
+        </div>
+        <div class="field">
+          <label for="cashDate">Date</label>
+          <input id="cashDate" type="date" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="cashNote">Note <span class="opt">(optional)</span></label>
+        <input id="cashNote" placeholder="starting cash" autocomplete="off" />
+      </div>
+      <div class="actions">
+        <button class="primary" id="cashSaveBtn">Save cash balance</button>
+        <button class="ghost" id="cashCancelBtn">Cancel</button>
+      </div>
+      <div class="msg" id="cashMsg"></div>
+    </section>
+
+    <!-- ============ COMMIT BAR ============ -->
+    <div class="commitbar">
+      <h2>Commit &amp; deploy</h2>
+      <p class="hint">Stages <code>data/</code>, commits, and pushes — Netlify rebuilds. Uses your machine's existing git identity; no tokens here.</p>
+      <div class="row">
+        <div class="field" style="margin:0;">
+          <label for="commitMsg">Commit message <span class="opt">(optional)</span></label>
+          <input id="commitMsg" placeholder="Update The Book data" autocomplete="off" />
+        </div>
+        <div class="field" style="margin:0; align-self:end;">
+          <div class="actions" style="margin-top:0;">
+            <button class="ghost" id="commitBtn">Commit &amp; push</button>
+          </div>
+        </div>
+      </div>
+      <div class="msg" id="commitMsg2"></div>
+    </div>
+  </main>
+</div>
+
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const todayISO = () => { const d = new Date(); const o = d.getTimezoneOffset(); return new Date(d - o*60000).toISOString().slice(0,10); };
+
+let STATE = { positions: [], cash: { balances: [] }, asset_types: ['stock','call','put'], event_actions: ['open','add','trim','close','note'] };
+let editingId = null; // null = new position
+
+function isOption(){ return $('assetType').value === 'call' || $('assetType').value === 'put'; }
+
+function refreshActionOptions(){
+  const sel = $('action');
+  const prev = sel.value;
+  sel.innerHTML = '';
+  if (editingId){
+    const none = document.createElement('option');
+    none.value = ''; none.textContent = '— none (update thesis / mark only) —';
+    sel.appendChild(none);
+  }
+  STATE.event_actions.forEach(a => {
+    const o = document.createElement('option'); o.value = a;
+    o.textContent = a.charAt(0).toUpperCase()+a.slice(1);
+    sel.appendChild(o);
+  });
+  sel.value = STATE.event_actions.includes(prev) ? prev : (editingId ? '' : 'open');
+  toggleEventFields();
+}
+
+function toggleAssetFields(){
+  $('optionFields').classList.toggle('hide', !isOption());
+  $('tickerLabel').textContent = isOption() ? 'Underlying ticker' : 'Ticker';
+  $('qtyLabel').textContent = isOption() ? 'Contracts' : 'Shares';
+  $('priceLabel').innerHTML = isOption()
+    ? 'Premium <span class="opt">(per share)</span>'
+    : 'Price <span class="opt">(per share)</span>';
+  $('qty').placeholder = isOption() ? '10' : '800';
+  $('price').placeholder = isOption() ? '5.00' : '20.10';
+  updateComputed();
+}
+
+function toggleEventFields(){
+  const isNote = $('action').value === 'note';
+  const isNone = $('action').value === '';
+  $('qtyField').style.display = (isNote || isNone) ? 'none' : '';
+  $('priceField').style.display = (isNote || isNone) ? 'none' : '';
+  updateComputed();
+}
+
+function updateComputed(){
+  const qty = parseFloat($('qty').value), price = parseFloat($('price').value);
+  const el = $('committed');
+  if (!isFinite(qty) || !isFinite(price)){ el.textContent = ''; return; }
+  if (isOption()){
+    el.textContent = `Premium at risk: ${qty} × 100 × $${price} = $${(qty*100*price).toLocaleString()}`;
+  } else {
+    el.textContent = `Committed: ${qty} × $${price} = $${(qty*price).toLocaleString()}`;
+  }
+}
+
+function updateDraftWarn(){
+  $('draftWarn').classList.toggle('show', $('thesis').value.trim() === '');
+}
+
+function renderSide(){
+  const ul = $('plist'); ul.innerHTML = '';
+  if (!STATE.positions.length){
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="cashline" style="color:var(--ink-faint)">No positions yet.</span>';
+    ul.appendChild(li);
+  }
+  STATE.positions.forEach(p => {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    const st = p.status || 'open';
+    b.innerHTML = `<span><span class="tk">${p.ticker||'?'}</span> <span style="color:var(--ink-faint)">${p.id}</span></span><span class="badge ${st}">${st}</span>`;
+    b.onclick = () => loadPosition(p.id);
+    li.appendChild(b); ul.appendChild(li);
+  });
+
+  const bals = (STATE.cash && STATE.cash.balances) || [];
+  if (bals.length){
+    const latest = bals[bals.length-1];
+    $('cashSummary').innerHTML = `Current: <b>$${Number(latest.amount).toLocaleString()}</b> <span style="color:var(--ink-faint)">as of ${latest.date}</span>`;
+  } else {
+    $('cashSummary').textContent = 'No cash balance recorded.';
+  }
+}
+
+function showPositionForm(){ $('posForm').classList.remove('hide'); $('cashForm').classList.add('hide'); }
+function showCashForm(){ $('cashForm').classList.remove('hide'); $('posForm').classList.add('hide'); }
+
+function clearForm(){
+  editingId = null;
+  $('posFormTitle').textContent = 'New position';
+  $('assetType').disabled = false; $('ticker').disabled = false;
+  ['ticker','verdict','strike','expiry','currentMark','thesis','article','qty','price','evNote'].forEach(id => $(id).value = '');
+  $('evDate').value = todayISO();
+  $('existingEvents').classList.add('hide'); $('existingEventsTitle').classList.add('hide');
+  $('existingEvents').innerHTML = '';
+  $('posMsg').classList.remove('show');
+  refreshActionOptions();
+  toggleAssetFields();
+  updateDraftWarn();
+  showPositionForm();
+}
+
+function loadPosition(id){
+  const p = STATE.positions.find(x => x.id === id);
+  if (!p) return;
+  editingId = id;
+  showPositionForm();
+  $('posFormTitle').textContent = `Edit · ${p.ticker} (${id})`;
+  $('assetType').value = p.asset_type || 'stock';
+  $('assetType').disabled = true; // don't let asset type change on an existing position
+  $('ticker').value = p.ticker || ''; $('ticker').disabled = true;
+  $('verdict').value = p.verdict || '';
+  $('strike').value = (p.strike ?? '');
+  $('expiry').value = p.expiry || '';
+  $('currentMark').value = (p.current_mark ?? '');
+  $('thesis').value = p.thesis || '';
+  $('article').value = p.article || '';
+  $('qty').value=''; $('price').value=''; $('evNote').value=''; $('evDate').value = todayISO();
+  toggleAssetFields();
+  refreshActionOptions();
+  updateDraftWarn();
+  // render existing events
+  const evs = p.events || [];
+  const ul = $('existingEvents'); ul.innerHTML = '';
+  evs.forEach(e => {
+    const li = document.createElement('li');
+    const qty = e.shares ?? e.contracts;
+    const bits = [`<span class="act">${e.action}</span>`, e.date];
+    if (qty != null) bits.push(`${qty}${e.contracts!=null?' ctr':' sh'}`);
+    if (e.price != null) bits.push(`@ $${e.price}`);
+    li.innerHTML = bits.join(' · ');
+    if (e.note) li.innerHTML += `<div style="color:var(--ink-faint);margin-top:3px;">${e.note.replace(/</g,'&lt;')}</div>`;
+    ul.appendChild(li);
+  });
+  ul.classList.toggle('hide', !evs.length);
+  $('existingEventsTitle').classList.toggle('hide', !evs.length);
+  $('posMsg').classList.remove('show');
+}
+
+function flash(el, ok, text){
+  el.textContent = text; el.className = 'msg show ' + (ok?'ok':'err');
+}
+
+async function savePosition(){
+  const at = $('assetType').value;
+  const action = $('action').value;
+  const body = {
+    asset_type: at,
+    ticker: $('ticker').value.trim(),
+    thesis: $('thesis').value,
+    article: $('article').value.trim() || null,
+    verdict: $('verdict').value.trim() || null,
+    _editing: !!editingId,
+  };
+  if (editingId) body.id = editingId;
+  if (at === 'call' || at === 'put'){
+    body.strike = $('strike').value === '' ? null : Number($('strike').value);
+    body.expiry = $('expiry').value || null;
+    body.current_mark = $('currentMark').value === '' ? null : Number($('currentMark').value);
+  }
+  if (action !== ''){ // '' only available when editing = metadata-only save
+    body.event = {
+      date: $('evDate').value, action,
+      note: $('evNote').value,
+    };
+    if (action !== 'note'){
+      body.event.price = $('price').value === '' ? null : Number($('price').value);
+      if (at === 'stock') body.event.shares = $('qty').value === '' ? null : Number($('qty').value);
+      else body.event.contracts = $('qty').value === '' ? null : Number($('qty').value);
+    }
+  }
+  const r = await fetch('/api/position', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  const j = await r.json();
+  if (!j.ok){ flash($('posMsg'), false, 'Could not save:\n• ' + (j.errors||['unknown error']).join('\n• ')); return; }
+  flash($('posMsg'), true, `Saved ${j.file} — status: ${j.status}${j.draft?'  (DRAFT — excluded from build)':''}`);
+  await reload();
+  loadPosition(j.id);
+}
+
+async function saveCash(){
+  const body = { amount: $('cashAmount').value === '' ? null : Number($('cashAmount').value), date: $('cashDate').value, note: $('cashNote').value.trim() };
+  const r = await fetch('/api/cash', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
+  const j = await r.json();
+  if (!j.ok){ flash($('cashMsg'), false, 'Could not save:\n• ' + (j.errors||['unknown error']).join('\n• ')); return; }
+  flash($('cashMsg'), true, `Saved ${j.file} — ${j.balances.length} balance(s) on record.`);
+  await reload();
+}
+
+async function commit(){
+  flash($('commitMsg2'), true, 'Running git…');
+  const r = await fetch('/api/commit', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ message: $('commitMsg').value.trim() }) });
+  const j = await r.json();
+  if (!j.ok){ flash($('commitMsg2'), false, 'git failed:\n• ' + (j.errors||['unknown']).join('\n• ')); return; }
+  const lines = (j.log||[]).map(s => `$ ${s.cmd}\n${[s.stdout,s.stderr].filter(Boolean).join('\n')}`).join('\n\n');
+  flash($('commitMsg2'), true, `${j.message}${j.pushed?' (pushed)':''}\n\n${lines}`);
+}
+
+async function reload(){
+  const r = await fetch('/api/state'); STATE = await r.json();
+  $('dataDir').textContent = (STATE.data_dir || 'data') + '/';
+  renderSide();
+}
+
+// wire events
+$('assetType').addEventListener('change', () => { toggleAssetFields(); });
+$('action').addEventListener('change', toggleEventFields);
+$('qty').addEventListener('input', updateComputed);
+$('price').addEventListener('input', updateComputed);
+$('thesis').addEventListener('input', updateDraftWarn);
+$('saveBtn').addEventListener('click', savePosition);
+$('resetBtn').addEventListener('click', clearForm);
+$('newBtn').addEventListener('click', clearForm);
+$('cashBtn').addEventListener('click', () => { $('cashDate').value = todayISO(); $('cashMsg').classList.remove('show'); showCashForm(); });
+$('cashSaveBtn').addEventListener('click', saveCash);
+$('cashCancelBtn').addEventListener('click', showPositionForm);
+$('commitBtn').addEventListener('click', commit);
+
+(async function init(){
+  await reload();
+  clearForm();
+})();
+</script>
+</body>
+</html>

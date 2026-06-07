@@ -1,6 +1,9 @@
 {
   "name": "mungbeans-functions",
   "private": true,
+  "scripts": {
+    "admin": "cd tools/admin && npm install --silent && node server.js"
+  },
   "dependencies": {
     "@netlify/blobs": "^8.0.0",
     "@netlify/functions": "^3.0.0",

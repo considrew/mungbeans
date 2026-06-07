@@ -1,0 +1,13 @@
+{
+  "name": "mungbeans-admin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local position-authoring tool for The Book. Writes data/positions/*.yml and data/cash.yml, then commits + deploys via git. No credentials, no browser storage.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

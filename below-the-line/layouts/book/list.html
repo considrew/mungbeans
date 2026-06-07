@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KMCNBWBVVE');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Book — live real-money portfolio · mungbeans.io</title>
+  <meta name="description" content="{{ .Description }}">
+
+  <meta property="og:title" content="The Book — mungbeans.io">
+  <meta property="og:description" content="A live, real-money portfolio benchmarked against the S&P 500. Every loss and drawdown shown.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ .Site.BaseURL }}book/">
+  <meta property="og:image" content="{{ .Site.BaseURL }}images/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@mungbeans_io">
+  <link rel="canonical" href="{{ .Site.BaseURL }}book/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    .book-page {
+      --bg:#15120e; --bg-card:#1d1914; --bg-card-2:#241f18;
+      --ink:#ece6da; --ink-dim:#a89e8c; --ink-faint:#6f6757; --line:#332c22;
+      --gain:#8fbf6f; --bench:#c9a24a; --trim:#d4a24a; --closed-gain:#5fa8b5; --loss:#c2604f;
+      --serif:"Newsreader",Georgia,serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+      background:var(--bg); color:var(--ink); font-family:var(--serif);
+      min-height:100vh; padding:0 0 64px;
+    }
+    .book-page * { box-sizing:border-box; }
+    .book-wrap { max-width:1000px; margin:0 auto; padding:0 22px; }
+    .book-page .mono { font-family:var(--mono); }
+    .book-page .tnum { font-variant-numeric:tabular-nums; }
+
+    /* hero */
+    .book-hero { padding:40px 0 8px; border-bottom:1px solid var(--line); }
+    .book-hero h1 { font-size:40px; font-weight:600; margin:0 0 6px; letter-spacing:.3px; }
+    .book-hero .asof { font-family:var(--mono); font-size:12px; color:var(--bench); letter-spacing:.04em; }
+    .book-hero .lede { font-size:18px; color:var(--ink-dim); max-width:640px; line-height:1.55; margin:14px 0 22px; }
+
+    /* headline stats */
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line);
+             border:1px solid var(--line); border-radius:10px; overflow:hidden; margin:26px 0; }
+    .stat { background:var(--bg-card); padding:16px 18px; }
+    .stat .k { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--ink-faint); }
+    .stat .v { font-family:var(--mono); font-size:26px; font-weight:600; margin-top:6px; font-variant-numeric:tabular-nums; }
+    .stat .sub { font-family:var(--mono); font-size:11px; color:var(--ink-dim); margin-top:4px; }
+    .pos { color:var(--gain); } .neg { color:var(--loss); } .benchv { color:var(--bench); }
+
+    /* chart */
+    .chart-card { background:var(--bg-card); border:1px solid var(--line); border-radius:12px; padding:18px 16px 10px; margin:8px 0 22px; }
+    .chart-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:10px; margin:0 4px 8px; }
+    .chart-head h2 { font-size:14px; font-family:var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--ink-dim); margin:0; font-weight:600; }
+    .legend { font-family:var(--mono); font-size:11px; color:var(--ink-dim); display:flex; gap:16px; flex-wrap:wrap; align-items:center; }
+    .legend i { display:inline-block; width:18px; height:0; vertical-align:middle; margin-right:6px; }
+    .legend .lp i { border-top:2px solid var(--gain); }
+    .legend .lb i { border-top:2px dashed var(--bench); }
+    .legend .dot { width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:5px; }
+    #chart { width:100%; }
+    #chart svg { display:block; width:100%; height:auto; }
+    .axis-label { font-family:var(--mono); font-size:10px; fill:var(--ink-faint); }
+    .grid-line { stroke:var(--line); stroke-width:1; }
+    .base-line { stroke:var(--ink-faint); stroke-width:1; stroke-dasharray:2 4; opacity:.6; }
+    .marker { cursor:pointer; transition:opacity .15s; }
+    .marker:hover { opacity:1 !important; }
+
+    /* commentary */
+    .commentary { background:var(--bg-card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:0 0 22px; min-height:90px; }
+    .commentary .empty { color:var(--ink-faint); font-family:var(--mono); font-size:13px; }
+    .ev-head { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+    .badge { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; padding:3px 8px; border-radius:5px; border:1px solid var(--line); }
+    .badge.open,.badge.add { color:var(--gain); border-color:#3c4a30; }
+    .badge.trim { color:var(--trim); border-color:#4a3c1f; }
+    .badge.close { color:var(--closed-gain); border-color:#274247; }
+    .badge.note { color:var(--ink-dim); }
+    .ev-meta { font-family:var(--mono); font-size:12px; color:var(--ink-dim); }
+    .ev-note { font-size:16px; line-height:1.6; margin:8px 0 0; white-space:pre-wrap; }
+    .thesis { font-size:16px; line-height:1.65; color:var(--ink); border-left:2px solid var(--bench); padding-left:14px; margin:0 0 14px; white-space:pre-wrap; }
+    .thread-ev { padding:12px 0; border-top:1px solid var(--line); }
+
+    /* holdings */
+    .holdings-bar { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin:0 0 14px; }
+    .holdings-bar label { font-family:var(--mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-faint); }
+    .holdings-bar select { background:var(--bg-card-2); color:var(--ink); border:1px solid var(--line); border-radius:7px;
+                           padding:9px 12px; font-family:var(--mono); font-size:13px; min-width:260px; }
+    .holdings-table { width:100%; border-collapse:collapse; font-family:var(--mono); font-size:13px; margin-top:4px; }
+    .holdings-table th { text-align:right; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); font-weight:500; padding:8px 10px; border-bottom:1px solid var(--line); }
+    .holdings-table th:first-child, .holdings-table td:first-child { text-align:left; }
+    .holdings-table td { padding:10px; border-bottom:1px solid var(--line); font-variant-numeric:tabular-nums; }
+    .holdings-table tr { cursor:pointer; }
+    .holdings-table tr:hover td { background:var(--bg-card-2); }
+    .needs-update { color:var(--trim); font-size:11px; }
+
+    h2.section { font-size:14px; font-family:var(--mono); text-transform:uppercase; letter-spacing:.12em; color:var(--ink-dim); margin:30px 0 12px; font-weight:600; }
+    .integrity { background:rgba(212,162,74,.08); border:1px solid #4a3c1f; border-radius:8px; padding:10px 14px;
+                 font-family:var(--mono); font-size:12px; color:var(--trim); margin:0 0 18px; }
+    .approx { font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); line-height:1.6; margin:18px 0 0; max-width:720px; }
+    .disclaimer-note { font-size:13px; color:var(--ink-dim); border-top:1px solid var(--line); margin-top:30px; padding-top:16px; line-height:1.6; }
+    .disclaimer-note a { color:var(--bench); }
+    .empty-state { background:var(--bg-card); border:1px dashed var(--line); border-radius:12px; padding:40px; text-align:center; color:var(--ink-dim); font-family:var(--mono); font-size:14px; line-height:1.7; }
+
+    @media (max-width:680px){
+      .book-hero h1 { font-size:30px; }
+      .stats { grid-template-columns:repeat(2,1fr); }
+      .holdings-bar select { min-width:0; width:100%; }
+      .holdings-table .hide-sm { display:none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav>
+      <a href="/" class="logo">mungbeans.io</a>
+      <a href="/book/" aria-current="page">The Book</a>
+      <a href="/deep-dives/">Deep Dives</a>
+      <a href="/stocks/">Screener</a>
+      <a href="/about/">About</a>
+    </nav>
+  </header>
+
+  <main class="book-page">
+  <div class="book-wrap">
+
+    {{ $book := .Site.Data.book }}
+
+    {{/* Build a drafts-excluded position map for commentary threads + thesis */}}
+    {{ $pos := dict }}
+    {{ with .Site.Data.positions }}
+      {{ range $k, $v := . }}
+        {{ $thesis := trim (printf "%v" (default "" $v.thesis)) " \n\t\r" }}
+        {{ $status := lower (printf "%v" (default "" $v.status)) }}
+        {{ if and (ne $status "draft") (ne $thesis "") }}
+          {{ $pos = merge $pos (dict $k $v) }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    <section class="book-hero">
+      <h1>The Book</h1>
+      {{ if $book }}<div class="asof">as of {{ $book.as_of }}{{ if eq (printf "%v" $book.refresh_mode) "B" }} · updated on deploy{{ end }}</div>{{ end }}
+      <p class="lede">{{ .Description }}</p>
+    </section>
+
+    {{ if not $book }}
+      <div class="empty-state" style="margin-top:28px;">
+        The Book hasn't been generated yet.<br>
+        Run <strong>fetch_prices.py</strong> then <strong>build_portfolio.py</strong> (or the portfolio GitHub Action)<br>
+        to produce <code>data/book.json</code>, then redeploy.
+      </div>
+    {{ else }}
+
+      {{ $h := $book.headline }}
+      <section class="stats">
+        <div class="stat">
+          <div class="k">Since inception</div>
+          <div class="v {{ if ge $h.return_pct 0.0 }}pos{{ else }}neg{{ end }}">{{ if ge $h.return_pct 0.0 }}+{{ end }}{{ $h.return_pct }}%</div>
+          <div class="sub">since {{ $book.inception }}</div>
+        </div>
+        <div class="stat">
+          <div class="k">S&amp;P 500 · same window</div>
+          <div class="v benchv">{{ if ge $h.spy_return_pct 0.0 }}+{{ end }}{{ $h.spy_return_pct }}%</div>
+          <div class="sub">the honest yardstick</div>
+        </div>
+        <div class="stat">
+          <div class="k">Max drawdown</div>
+          <div class="v neg">{{ $h.max_drawdown_pct }}%</div>
+          <div class="sub">peak to trough, never hidden</div>
+        </div>
+        <div class="stat">
+          <div class="k">Open positions</div>
+          <div class="v">{{ $h.open_positions }}</div>
+          <div class="sub">{{ if $book.cash }}cash ${{ lang.FormatNumber 0 $book.cash }}{{ else }}—{{ end }}</div>
+        </div>
+      </section>
+
+      {{ with $book.integrity }}{{ if .warnings }}
+        <div class="integrity">⚠ Reconciliation needed: {{ delimit .warnings " · " }}</div>
+      {{ end }}{{ end }}
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <h2>Growth of $100 · portfolio vs S&amp;P 500</h2>
+          <div class="legend">
+            <span class="lp"><i></i>Portfolio</span>
+            <span class="lb"><i></i>S&amp;P 500</span>
+            <span><span class="dot" style="background:var(--gain)"></span>buy</span>
+            <span><span class="dot" style="background:var(--trim)"></span>trim</span>
+            <span><span class="dot" style="background:var(--closed-gain)"></span>close</span>
+          </div>
+        </div>
+        <div id="chart"></div>
+      </div>
+
+      <h2 class="section">Commentary</h2>
+      <div class="commentary" id="commentary">
+        <div class="empty">Click any marker on the curve — or pick a holding below — to read the reasoning behind it.</div>
+      </div>
+
+      <h2 class="section">Current holdings</h2>
+      <div class="holdings-bar">
+        <label for="holdingSel">Focus a position</label>
+        <select id="holdingSel">
+          <option value="">— all events on the curve —</option>
+        </select>
+      </div>
+      <table class="holdings-table" id="holdingsTable">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Type</th>
+            <th class="hide-sm">Entry</th>
+            <th>Market value</th>
+            <th>Unrealized</th>
+            <th class="hide-sm">vs S&amp;P</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <p class="approx">{{ $book.approximation_note }}</p>
+
+      <p class="disclaimer-note">
+        The Book is a concentrated, higher-risk <strong>satellite</strong> run with real money, shown in daylight — not the whole picture, and <strong>not advice or a recommendation</strong>. It's a diary of what I did and why. Every return sits beside the S&amp;P over the identical window; trades are logged after execution; the record is a public, timestamped git history. Past performance is not future results. See the <a href="/methodology/">methodology</a> and <a href="/disclaimer/">disclaimer</a>.
+      </p>
+
+      <script>
+      (function(){
+        "use strict";
+        const BOOK = {{ $book | jsonify | safeJS }};
+        const POS  = {{ $pos | jsonify | safeJS }};
+        const css = (n) => getComputedStyle(document.querySelector('.book-page')).getPropertyValue(n).trim();
+        const C = { gain:css('--gain'), bench:css('--bench'), trim:css('--trim'),
+                    cg:css('--closed-gain'), loss:css('--loss'), line:css('--line'),
+                    faint:css('--ink-faint'), dim:css('--ink-dim'), card2:css('--bg-card-2') };
+
+        const fmtUsd = (n) => n==null ? '—' : '$' + Math.round(n).toLocaleString();
+        const fmtPct = (n) => n==null ? '—' : (n>=0?'+':'') + n + '%';
+        const esc = (s) => String(s==null?'':s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+        // marker color by action; close colored gain/loss from the position's own outcome
+        function closeSign(pid){
+          const p = POS[pid]; if(!p || !p.events) return 1;
+          const buys = p.events.filter(e => e.action==='open'||e.action==='add');
+          const entry = buys.length ? buys[0].price : null;
+          const closes = p.events.filter(e => e.action==='close');
+          const exit = closes.length ? closes[closes.length-1].price : null;
+          if(entry==null || exit==null) return 1;
+          return exit >= entry ? 1 : -1;
+        }
+        function markerColor(m){
+          if(m.action==='open'||m.action==='add') return C.gain;
+          if(m.action==='trim') return C.trim;
+          if(m.action==='close') return closeSign(m.position_id) >= 0 ? C.cg : C.loss;
+          return C.dim;
+        }
+
+        const series = BOOK.series || {dates:[],portfolio:[],spy:[]};
+        const markers = (BOOK.markers||[]).filter(m => series.dates.length);
+
+        // committed-$ -> marker radius (sqrt scale)
+        const committedVals = markers.map(m => m.committed_usd||0).filter(v=>v>0);
+        const maxComm = committedVals.length ? Math.max.apply(null, committedVals) : 1;
+        const rFor = (v) => { const r = 4 + 9 * Math.sqrt((v||0)/maxComm); return Math.max(4, Math.min(13, r)); };
+
+        function dateIdx(d){
+          // nearest series index at or before date d
+          let idx = 0;
+          for(let i=0;i<series.dates.length;i++){ if(series.dates[i] <= d) idx = i; else break; }
+          return idx;
+        }
+
+        let focusPid = "";
+
+        function render(){
+          const host = document.getElementById('chart');
+          const W = Math.max(320, host.clientWidth || 680);
+          const H = W < 520 ? 300 : 420;
+          const m = { t:16, r:14, b:26, l:42 };
+          const iw = W - m.l - m.r, ih = H - m.t - m.b;
+          const n = series.dates.length;
+          if(!n){ host.innerHTML = '<p class="empty">No curve data yet.</p>'; return; }
+
+          const allY = series.portfolio.concat(series.spy.filter(v=>v!=null)).concat([100]);
+          let ymin = Math.min.apply(null, allY), ymax = Math.max.apply(null, allY);
+          const pad = (ymax-ymin)*0.08 || 5; ymin -= pad; ymax += pad;
+          const X = (i) => m.l + (n<=1?0:(i/(n-1))*iw);
+          const Y = (v) => m.t + ih - ((v - ymin)/(ymax - ymin))*ih;
+
+          const path = (arr) => arr.map((v,i)=> v==null ? null : (i===0||arr[i-1]==null?'M':'L') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).filter(Boolean).join(' ');
+
+          // y gridlines
+          let grid = '', ticks = 4;
+          for(let k=0;k<=ticks;k++){
+            const val = ymin + (ymax-ymin)*k/ticks, y = Y(val);
+            grid += `<line class="grid-line" x1="${m.l}" y1="${y.toFixed(1)}" x2="${W-m.r}" y2="${y.toFixed(1)}"/>`;
+            grid += `<text class="axis-label" x="${m.l-8}" y="${(y+3).toFixed(1)}" text-anchor="end">${Math.round(val)}</text>`;
+          }
+          // x labels (start, mid, end)
+          let xl = '';
+          [0, Math.floor((n-1)/2), n-1].forEach(i=>{
+            xl += `<text class="axis-label" x="${X(i).toFixed(1)}" y="${H-8}" text-anchor="middle">${series.dates[i]}</text>`;
+          });
+
+          const baseY = Y(100);
+          let dots = '';
+          markers.forEach((mk,i)=>{
+            const idx = dateIdx(mk.date);
+            const cx = X(idx), cy = Y(series.portfolio[idx]);
+            const dim = focusPid && mk.position_id !== focusPid;
+            dots += `<circle class="marker" data-i="${i}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rFor(mk.committed_usd).toFixed(1)}"
+                      fill="${markerColor(mk)}" stroke="#15120e" stroke-width="1.5" opacity="${dim?0.22:0.92}">
+                      <title>${esc(mk.ticker)} · ${esc(mk.action)} · ${esc(mk.date)}</title></circle>`;
+          });
+
+          host.innerHTML =
+            `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Portfolio vs S&P 500 growth of $100">
+              ${grid}
+              <line class="base-line" x1="${m.l}" y1="${baseY.toFixed(1)}" x2="${W-m.r}" y2="${baseY.toFixed(1)}"/>
+              <path d="${path(series.spy)}" fill="none" stroke="${C.bench}" stroke-width="2" stroke-dasharray="5 4" opacity="0.95"/>
+              <path d="${path(series.portfolio)}" fill="none" stroke="${C.gain}" stroke-width="2.4"/>
+              ${dots}
+            </svg>`;
+
+          host.querySelectorAll('.marker').forEach(el=>{
+            el.addEventListener('click', ()=> showEvent(markers[+el.dataset.i]));
+          });
+        }
+
+        function showEvent(mk){
+          const p = POS[mk.position_id] || {};
+          const html =
+            `<div class="ev-head">
+               <span class="badge ${esc(mk.action)}">${esc(mk.action)}</span>
+               <strong style="font-family:var(--mono)">${esc(mk.ticker)}</strong>
+               <span class="ev-meta">${esc(mk.date)} · ${mk.price!=null?('$'+esc(mk.price)):''} · committed ${fmtUsd(mk.committed_usd)}</span>
+             </div>
+             ${mk.note ? `<p class="ev-note">${esc(mk.note)}</p>` : '<p class="ev-note" style="color:var(--ink-faint)">No note recorded for this event.</p>'}
+             ${p.article ? `<p style="margin-top:10px"><a href="${esc(p.article)}" style="color:var(--bench);font-family:var(--mono);font-size:13px">Read the full thesis →</a></p>` : ''}`;
+          document.getElementById('commentary').innerHTML = html;
+        }
+
+        function showThread(pid){
+          const p = POS[pid];
+          if(!p){ document.getElementById('commentary').innerHTML = '<div class="empty">Pick a holding to read its thread.</div>'; return; }
+          let html = '';
+          if(p.thesis) html += `<div class="thesis">${esc(p.thesis)}</div>`;
+          const evs = (p.events||[]).slice().sort((a,b)=> String(a.date).localeCompare(String(b.date)));
+          evs.forEach(e=>{
+            html += `<div class="thread-ev">
+              <div class="ev-head">
+                <span class="badge ${esc(e.action)}">${esc(e.action)}</span>
+                <span class="ev-meta">${esc(e.date)} · ${(e.shares??e.contracts)!=null?esc(e.shares??e.contracts)+(e.contracts!=null?' contracts':' shares'):''} ${e.price!=null?('@ $'+esc(e.price)):''}</span>
+              </div>
+              ${e.note?`<p class="ev-note">${esc(e.note)}</p>`:''}
+            </div>`;
+          });
+          if(p.article) html += `<p style="margin-top:12px"><a href="${esc(p.article)}" style="color:var(--bench);font-family:var(--mono);font-size:13px">Read the full thesis →</a></p>`;
+          document.getElementById('commentary').innerHTML = html || '<div class="empty">No commentary recorded.</div>';
+        }
+
+        // holdings dropdown + table
+        const sel = document.getElementById('holdingSel');
+        const ops = BOOK.open_positions || [];
+        ops.forEach(op=>{
+          const o = document.createElement('option');
+          o.value = op.position_id;
+          o.textContent = op.ticker + (op.verdict?(' — '+op.verdict):'') + (op.asset_type!=='stock'?(' ('+op.asset_type+')'):'');
+          sel.appendChild(o);
+        });
+        sel.addEventListener('change', ()=>{
+          focusPid = sel.value;
+          render();
+          if(focusPid) showThread(focusPid);
+          else document.getElementById('commentary').innerHTML = '<div class="empty">Click any marker on the curve — or pick a holding below — to read the reasoning behind it.</div>';
+        });
+
+        const tb = document.querySelector('#holdingsTable tbody');
+        if(!ops.length){
+          tb.innerHTML = '<tr><td colspan="6" style="color:var(--ink-faint)">No open positions.</td></tr>';
+        }
+        ops.forEach(op=>{
+          const tr = document.createElement('tr');
+          const qty = op.shares!=null?op.shares:op.contracts;
+          const flag = (!op.price_ok || (op.asset_type!=='stock' && !op.marked)) ? ' <span class="needs-update">· needs update</span>' : '';
+          const up = op.unrealized_pct;
+          tr.innerHTML =
+            `<td><strong>${esc(op.ticker)}</strong>${flag}</td>
+             <td style="color:var(--ink-dim)">${esc(op.asset_type)}${qty!=null?(' · '+esc(qty)):''}</td>
+             <td class="hide-sm" style="color:var(--ink-dim)">${esc(op.entry_date)}</td>
+             <td>${fmtUsd(op.market_value)}</td>
+             <td class="${up>=0?'pos':'neg'}">${fmtPct(up)}</td>
+             <td class="hide-sm ${op.vs_spy_since_entry_pct>=0?'pos':'neg'}">${fmtPct(op.vs_spy_since_entry_pct)}</td>`;
+          tr.addEventListener('click', ()=>{ sel.value = op.position_id; sel.dispatchEvent(new Event('change')); window.scrollTo({top:document.getElementById('commentary').offsetTop-80,behavior:'smooth'}); });
+          tb.appendChild(tr);
+        });
+
+        render();
+        let rt; window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(render,150); });
+      })();
+      </script>
+
+    {{ end }}
+
+  </div>
+  </main>
+
+  <footer class="site-footer">
+    {{ if .Site.Data.book }}<p>The Book — real money, benchmarked. As of {{ .Site.Data.book.as_of }}.</p>{{ end }}
+    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a> · <a href="/methodology/">Methodology</a></p>
+  </footer>
+
+  <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="drewc" data-description="Support me on Buy me a coffee!" data-message="Thanks for visiting! Feel free to buy me a coffee if you find this useful." data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+</body>
+</html>
