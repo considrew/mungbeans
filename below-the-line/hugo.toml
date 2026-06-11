@@ -27,3 +27,14 @@ title = 'mungbeans.io - 200-Week Moving Average Stock Signals'
 
 [build]
   writeStats = true
+
+# The data/ dir doubles as script input storage. Hugo's data loader only
+# accepts json/yaml/toml/xml and hard-fails on anything else (e.g. the plain
+# ticker list and transcript text the microcap scripts read). Mount data/ but
+# exclude those non-data inputs so the build doesn't choke on them. Real site
+# data (book.json, positions/*.yml, prices/*.json, cash.yml, microcap_innovation/*.json)
+# still loads normally via .Site.Data.
+[[module.mounts]]
+  source = "data"
+  target = "data"
+  excludeFiles = ["microcap_tickers.txt", "microcap_transcripts/**", "patent_bulk/**"]

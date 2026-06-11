@@ -62,7 +62,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
         with:
-          hugo-version: 'latest'
+          hugo-version: '0.139.0'  # keep in sync with netlify.toml HUGO_VERSION
           extended: true
 
       - name: Install Node dependencies

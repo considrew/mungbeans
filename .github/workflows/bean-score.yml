@@ -2,9 +2,10 @@ name: Monthly Bean Score Update
 
 on:
   schedule:
-    # Run on the 1st Saturday of each month at 10am UTC
-    # (after quarterly earnings are mostly in for the prior quarter)
-    - cron: '0 10 1-7 * 6'
+    # Every Saturday at 10am UTC; the first step exits early unless it's the
+    # first Saturday of the month. (POSIX cron ORs day-of-month with
+    # day-of-week, so '0 10 1-7 * 6' fired on days 1-7 AND every Saturday.)
+    - cron: '0 10 * * 6'
   workflow_dispatch:
 
 jobs:
@@ -12,18 +13,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Check if first Saturday of month
+        id: gate
+        run: |
+          DAY=$(date -u +%d)
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$DAY" -gt 7 ]; then
+            echo "Not the first Saturday (day $DAY), skipping."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout repository
+        if: steps.gate.outputs.run == 'true'
         uses: actions/checkout@v4
 
       - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install Python dependencies
+        if: steps.gate.outputs.run == 'true'
         run: pip install pandas yfinance
 
       - name: Run Bean Score computation
+        if: steps.gate.outputs.run == 'true'
         run: |
           cd below-the-line/scripts
           python -c "
@@ -41,12 +57,14 @@ jobs:
           "
 
       - name: Sync bean score data to static dir (for dashboard)
+        if: steps.gate.outputs.run == 'true'
         run: |
           cp below-the-line/assets/data/bean_score_latest.json below-the-line/static/data/bean_score_latest.json
           cp below-the-line/assets/data/bean_score_alerts.json below-the-line/static/data/bean_score_alerts.json
           cp below-the-line/assets/data/bean_score_history.json below-the-line/static/data/bean_score_history.json
 
       - name: Commit and push
+        if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

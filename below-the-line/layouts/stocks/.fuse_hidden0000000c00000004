@@ -112,7 +112,6 @@
       <a href="/microcaps/">Micro Caps</a>
       <a href="/blog/">Weekly Reports</a>
       <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
       <a href="/about/">About</a>
     </nav>
   </header>
@@ -170,7 +169,6 @@
           {{ $position = add (div (add .Params.pct_from_wma 15) 0.3) 0 }}
         {{ end }}
         <div class="bar-marker" style="left: {{ $position }}%"></div>
-        <div class="bar-marker bar-marker-live" id="liveMarker" style="display:none" title="Live price"></div>
         <div class="bar-zones">
           <span class="zone zone-extreme">-15%</span>
           <span class="zone zone-deep">-10%</span>
@@ -182,82 +180,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Mid-week live check: the 200W line barely moves between Fridays,
-         so live price vs the stored line is accurate all week. -->
-    <div class="midweek-check" id="midweekCheck" style="display:none">
-      <span class="midweek-dot"></span>
-      <span id="midweekText"></span>
-    </div>
-    <style>
-      .bar-marker-live {
-        background: #58a6ff;
-        border: 2px solid #fff;
-        z-index: 2;
-      }
-      .midweek-check {
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-        margin: var(--space-sm) 0 var(--space-lg);
-        padding: var(--space-sm) var(--space-md);
-        background: var(--color-surface);
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-md);
-        font-size: 0.875rem;
-        color: var(--color-text-muted);
-      }
-      .midweek-dot {
-        width: 8px; height: 8px; border-radius: 50%;
-        background: #58a6ff; flex-shrink: 0;
-        animation: midweek-pulse 2s infinite;
-      }
-      @keyframes midweek-pulse { 50% { opacity: 0.4; } }
-      .midweek-check strong { color: var(--color-text); }
-      .midweek-crossed { color: #d29922; font-weight: 600; }
-    </style>
-    <script>
-    (function() {
-      var threshold = {{ .Params.buy_threshold }};
-      var fridayPct = {{ .Params.pct_from_wma }};
-      var lastUpdated = "{{ .Params.last_updated }}";
-      var symbol = "{{ .Params.symbol }}";
-      if (!threshold || threshold <= 0) return;
-
-      // Skip the fetch when the Friday data is from today/yesterday (weekend
-      // visitors get nothing new from a live quote).
-      var ageDays = (Date.now() - new Date(lastUpdated + "T21:00:00Z").getTime()) / 864e5;
-      if (ageDays < 1) return;
-
-      fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol))
-        .then(function(r) { return r.ok ? r.json() : null; })
-        .then(function(q) {
-          if (!q || !q.price) return;
-          var livePct = ((q.price - threshold) / threshold) * 100;
-          var box = document.getElementById("midweekCheck");
-          var txt = document.getElementById("midweekText");
-          var marker = document.getElementById("liveMarker");
-
-          var pos = livePct > 15 ? 100 : livePct < -15 ? 0 : (livePct + 15) / 0.3;
-          marker.style.left = pos + "%";
-          marker.style.display = "";
-
-          var dir = livePct < 0 ? "below" : "above";
-          var html = "Right now: <strong>$" + q.price.toFixed(2) + "</strong> — <strong>" +
-                     Math.abs(livePct).toFixed(1) + "% " + dir + "</strong> the line " +
-                     "(Friday: " + Math.abs(fridayPct).toFixed(1) + "% " +
-                     (fridayPct < 0 ? "below" : "above") + ").";
-          if (fridayPct >= 0 && livePct < 0) {
-            html += " <span class='midweek-crossed'>Crossed below since Friday.</span>";
-          } else if (fridayPct < 0 && livePct >= 0) {
-            html += " <span class='midweek-crossed'>Recovered above since Friday.</span>";
-          }
-          txt.innerHTML = html;
-          box.style.display = "flex";
-        })
-        .catch(function() {});
-    })();
-    </script>
 
     <!-- Key Metrics -->
     <div class="metrics-row">
@@ -1487,122 +1409,6 @@
       @media (max-width: 600px) {
         .bean-score-current { grid-template-columns: repeat(2, 1fr); }
         .bean-chart-grid { grid-template-columns: 1fr; }
-      }
-    </style>
-    {{ end }}
-
-    <!-- Dislocation Scores: deviation from this stock's own baselines -->
-    {{ with .Params.dislocation }}
-    <section class="dislocation-section">
-      <h2>Dislocation Scores <span class="bean-score-badge">Experimental</span></h2>
-      <p class="bean-score-intro">
-        Each score measures deviation from {{ $.Params.symbol }}'s <em>own</em> historical baseline —
-        the same idea as the Bean Score, applied to different fundamentals. Positive means cheaper or
-        more dislocated than this stock's norm. Scores marked σ are normalized by the stock's own
-        variability; pp values are simple deltas from its recent baseline.
-      </p>
-
-      {{ if ge .dislocation_stack 2 }}
-      <div class="dislocation-stack-banner">
-        <strong>{{ .dislocation_stack }} stacked signals:</strong>
-        {{ delimit .stack_signals ", " }}
-        {{ if .quality_warning }} · <span class="dislocation-warning">earnings quality deteriorating</span>{{ end }}
-      </div>
-      {{ else if .quality_warning }}
-      <div class="dislocation-stack-banner dislocation-stack-warn">
-        <span class="dislocation-warning">⚠ Earnings quality deteriorating</span> — net income is
-        outrunning free cash flow vs this company's own norm. Cheapness signals here deserve extra scrutiny.
-      </div>
-      {{ end }}
-
-      <div class="bean-score-current dislocation-grid">
-        <div class="bean-metric">
-          <span class="bean-metric-label">Yield Dislocation</span>
-          <span class="bean-metric-value {{ with .yield_dislocation_z }}{{ if ge . 1.5 }}bean-cheap{{ else if le . -1.5 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .yield_dislocation_z }}{{ printf "%+.2f" . }}σ{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">Dividend yield vs own 10-yr norm</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">Drawdown Score</span>
-          <span class="bean-metric-value {{ with .drawdown_z }}{{ if ge . 1.5 }}bean-cheap{{ else if le . -1.5 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .drawdown_z }}{{ printf "%+.2f" . }}σ{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">Distance from line vs own history</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">Sector-Relative</span>
-          <span class="bean-metric-value {{ with .sector_relative_z }}{{ if ge . 1.5 }}bean-cheap{{ else if le . -1.5 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .sector_relative_z }}{{ printf "%+.2f" . }}σ{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">Vs sector median this week</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">Buyback Acceleration</span>
-          <span class="bean-metric-value {{ with .buyback_accel_pp }}{{ if le . -2.0 }}bean-cheap{{ else if ge . 2.0 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .buyback_accel_pp }}{{ printf "%+.1f" . }}pp{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">YoY share change vs own 3-yr pace (− = accelerating)</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">Insider Intensity</span>
-          <span class="bean-metric-value {{ with .insider_intensity_pct }}{{ if ge . 90.0 }}bean-cheap{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .insider_intensity_pct }}{{ printf "%.0f" . }}th{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">TTM buys / market cap, percentile of buyers</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">FCF Yield vs History</span>
-          <span class="bean-metric-value {{ with .fcf_yield_vs_hist_pp }}{{ if ge . 2.0 }}bean-cheap{{ else if le . -2.0 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}">
-            {{ with .fcf_yield_vs_hist_pp }}{{ printf "%+.1f" . }}pp{{ else }}N/A{{ end }}
-          </span>
-          <span class="dislocation-note">Vs own recent annual mean</span>
-        </div>
-        <div class="bean-metric">
-          <span class="bean-metric-label">Earnings Quality</span>
-          <span class="bean-metric-value {{ if eq .earnings_quality "deteriorating" }}bean-expensive{{ else if eq .earnings_quality "improving" }}bean-cheap{{ else }}bean-neutral{{ end }}">
-            {{ humanize .earnings_quality }}
-          </span>
-          <span class="dislocation-note">Accrual gap trend{{ with .accrual_gap_trend_pp }} ({{ printf "%+.1f" . }}pp of revenue){{ end }}</span>
-        </div>
-      </div>
-
-      <div class="bean-disclaimer">
-        <p>
-          <strong>Theoretical framework — not backtested.</strong>
-          These scores describe how unusual today's readings are for this specific company. They are
-          starting points for research, not buy or sell signals. Annual-statement scores (buyback,
-          accruals, FCF vs history) rest on only ~4 yearly data points and are deltas, not sigmas.
-        </p>
-      </div>
-    </section>
-
-    <style>
-      .dislocation-section { margin-bottom: var(--space-2xl); }
-      .dislocation-section h2 {
-        font-size: 1.25rem;
-        margin-bottom: var(--space-xs);
-        display: flex;
-        align-items: center;
-        gap: var(--space-sm);
-      }
-      .dislocation-grid { grid-template-columns: repeat(4, 1fr); }
-      .dislocation-note { font-size: 0.7rem; color: var(--color-text-muted); line-height: 1.4; }
-      .dislocation-stack-banner {
-        padding: var(--space-sm) var(--space-md);
-        margin-bottom: var(--space-md);
-        background: rgba(35, 134, 54, 0.1);
-        border: 1px solid rgba(46, 160, 67, 0.4);
-        border-radius: var(--radius-md);
-        font-size: 0.875rem;
-      }
-      .dislocation-stack-warn {
-        background: rgba(248, 81, 73, 0.08);
-        border-color: rgba(248, 81, 73, 0.35);
-      }
-      .dislocation-warning { color: #f85149; }
-      @media (max-width: 600px) {
-        .dislocation-grid { grid-template-columns: repeat(2, 1fr); }
       }
     </style>
     {{ end }}

@@ -37,3 +37,31 @@ jobs:
           git diff --staged --quiet || git commit -m "Update micro cap screener results [$(date +%Y-%m-%d)]"
           git pull --rebase origin main
           git push
+
+      # The weekly deploy finishes before this workflow commits fresh screener
+      # data, so without a rebuild here the live /microcaps/ page is always at
+      # least one week stale. Rebuild and deploy after committing.
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'
+          extended: true
+
+      - name: Install Node dependencies
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site
+        run: |
+          cd below-the-line
+          hugo --minify
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './below-the-line/public'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
