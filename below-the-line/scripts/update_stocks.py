@@ -17,6 +17,7 @@ Run weekly on Saturday to capture Friday close data.
 from __future__ import annotations
 
 import json
+import math
 import os
 import time
 import urllib.request
@@ -69,12 +70,30 @@ class NumpyEncoder(json.JSONEncoder):
         if isinstance(obj, np.integer):
             return int(obj)
         if isinstance(obj, np.floating):
-            return float(obj)
+            v = float(obj)
+            # NaN/inf are invalid JSON; Hugo rejects them with "invalid character 'N'"
+            return None if (math.isnan(v) or math.isinf(v)) else v
         if isinstance(obj, np.ndarray):
             return obj.tolist()
         if isinstance(obj, pd.Timestamp):
             return obj.isoformat()
         return super().default(obj)
+
+
+def sanitize_for_json(obj):
+    """Recursively replace float NaN/inf with None so json.dump produces valid JSON.
+
+    Python's json module serialises float('nan') as 'NaN' by default (allow_nan=True),
+    which is not valid JSON per spec and causes Hugo's strict parser to reject the file.
+    This pre-pass walks the entire output structure and converts those values to null.
+    """
+    if isinstance(obj, dict):
+        return {k: sanitize_for_json(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [sanitize_for_json(v) for v in obj]
+    if isinstance(obj, float) and (math.isnan(obj) or math.isinf(obj)):
+        return None
+    return obj
 
 # Configuration
 OUTPUT_DIR = Path(__file__).parent.parent / 'assets' / 'data'
@@ -1812,7 +1831,7 @@ def main():
     
     output_file = OUTPUT_DIR / 'stocks.json'
     with open(output_file, 'w') as f:
-        json.dump(output, f, separators=(',', ':'), cls=NumpyEncoder)
+        json.dump(sanitize_for_json(output), f, separators=(',', ':'), cls=NumpyEncoder)
     
     # ── Detect crossings (always, regardless of blog/email skip flags) ──
     crossings = None
@@ -1909,7 +1928,7 @@ def main():
             'generated_iso': datetime.now().strftime('%Y-%m-%d')
         }
         with open(output_file, 'w') as f:
-            json.dump(output, f, separators=(',', ':'), cls=NumpyEncoder)
+            json.dump(sanitize_for_json(output), f, separators=(',', ':'), cls=NumpyEncoder)
         print(f"  🫘 Re-wrote stocks.json with Bean Score data")
     except Exception as e:
         print(f"  🫘 Bean Score levels error (non-fatal): {e}")
