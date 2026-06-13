@@ -62,16 +62,34 @@ def get_field(frontmatter: str, field: str) -> str | None:
 
 
 def set_field(frontmatter: str, field: str, value: str) -> str:
-    """Set a YAML field value (quoted)."""
+    """Set a YAML field value (quoted) — only updates existing fields."""
     pattern = rf'^({field}:\s*).*$'
     return re.sub(pattern, rf'\1"{value}"', frontmatter, count=1, flags=re.MULTILINE)
+
+
+def upsert_field(frontmatter: str, field: str, value: str) -> str:
+    """Set a YAML field (quoted), inserting it at the end if it doesn't exist.
+
+    set_field silently does nothing when the field is absent; upsert_field
+    guarantees the field lands in the frontmatter on first write.
+    """
+    pattern = rf'^({field}:\s*).*$'
+    if re.search(pattern, frontmatter, re.MULTILINE):
+        return re.sub(pattern, rf'\1"{value}"', frontmatter, count=1, flags=re.MULTILINE)
+    return frontmatter.rstrip('\n') + f'\n{field}: "{value}"\n'
+
+
+# Suffixes for multi-ticker articles (primary has no suffix)
+TICKER_SUFFIXES = ["b", "c", "d", "e"]
 
 
 def process_file(filepath: Path, price_cache: dict) -> dict | None:
     """
     Process a single deep-dive markdown file.
 
-    Returns a summary dict for the report, or None if skipped.
+    Handles single-ticker, faceoff (ticker + ticker_b), and multi-ticker
+    (ticker + ticker_b through ticker_e) articles. Returns a summary dict
+    for the report, or None if the file should be skipped entirely.
     """
     text = filepath.read_text()
     try:
@@ -81,15 +99,14 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
 
     ticker = get_field(frontmatter, "ticker")
     if not ticker:
-        return None  # Not a stock article (e.g. how-to, backtest)
+        return None  # No-stock articles (framework posts, how-tos, backtests)
 
     pub_price_str = get_field(frontmatter, "performance_price_at_publish")
     if not pub_price_str:
-        return None
+        return None  # Publish price not yet seeded — skip
 
     pub_price = float(pub_price_str.replace("$", ""))
 
-    # Look up price from stocks.json cache
     result = price_cache.get(ticker)
     if result is None:
         print(f"  WARNING: {ticker} not found in stocks.json — skipping {filepath.name}")
@@ -99,9 +116,10 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
     ret = ((current_price - pub_price) / pub_price) * 100
     ret_str = f"{ret:+.1f}%"
 
-    frontmatter = set_field(frontmatter, "performance_since", ret_str)
-    frontmatter = set_field(frontmatter, "performance_price_current", f"${current_price:.2f}")
-    frontmatter = set_field(frontmatter, "performance_as_of", as_of)
+    # upsert so first-time fields get written even if not already in frontmatter
+    frontmatter = upsert_field(frontmatter, "performance_since", ret_str)
+    frontmatter = upsert_field(frontmatter, "performance_price_current", f"${current_price:.2f}")
+    frontmatter = upsert_field(frontmatter, "performance_as_of", as_of)
 
     summary = {
         "file": filepath.name,
@@ -111,27 +129,31 @@ def process_file(filepath: Path, price_cache: dict) -> dict | None:
         "return": ret_str,
     }
 
-    # Handle faceoff (dual-ticker) articles
-    ticker_b = get_field(frontmatter, "ticker_b")
-    if ticker_b:
-        pub_price_b_str = get_field(frontmatter, "performance_price_at_publish_b")
-        if pub_price_b_str:
-            pub_price_b = float(pub_price_b_str.replace("$", ""))
-            result_b = price_cache.get(ticker_b)
+    # Handle additional tickers (ticker_b through ticker_e)
+    for suffix in TICKER_SUFFIXES:
+        ticker_x = get_field(frontmatter, f"ticker_{suffix}")
+        if not ticker_x:
+            break  # No more tickers for this article
 
-            if result_b:
-                current_price_b, _ = result_b
-                ret_b = ((current_price_b - pub_price_b) / pub_price_b) * 100
+        pub_price_x_str = get_field(frontmatter, f"performance_price_at_publish_{suffix}")
+        if not pub_price_x_str:
+            print(f"  NOTE: {ticker_x} (ticker_{suffix}) has no performance_price_at_publish_{suffix} — skipping")
+            continue
 
-                frontmatter = set_field(frontmatter, "performance_since_b", f"{ret_b:+.1f}%")
-                frontmatter = set_field(frontmatter, "performance_price_current_b", f"${current_price_b:.2f}")
+        pub_price_x = float(pub_price_x_str.replace("$", ""))
+        result_x = price_cache.get(ticker_x)
 
-                summary["ticker_b"] = ticker_b
-                summary["pub_price_b"] = pub_price_b
-                summary["current_price_b"] = current_price_b
-                summary["return_b"] = f"{ret_b:+.1f}%"
-            else:
-                print(f"  WARNING: {ticker_b} (ticker_b) not found in stocks.json")
+        if result_x:
+            current_price_x, _ = result_x
+            ret_x = ((current_price_x - pub_price_x) / pub_price_x) * 100
+            frontmatter = upsert_field(frontmatter, f"performance_since_{suffix}", f"{ret_x:+.1f}%")
+            frontmatter = upsert_field(frontmatter, f"performance_price_current_{suffix}", f"${current_price_x:.2f}")
+            summary[f"ticker_{suffix}"] = ticker_x
+            summary[f"pub_price_{suffix}"] = pub_price_x
+            summary[f"current_price_{suffix}"] = current_price_x
+            summary[f"return_{suffix}"] = f"{ret_x:+.1f}%"
+        else:
+            print(f"  WARNING: {ticker_x} (ticker_{suffix}) not found in stocks.json")
 
     # Write updated file
     filepath.write_text(f"---\n{frontmatter}---\n{body}")

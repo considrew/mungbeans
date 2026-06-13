@@ -129,6 +129,169 @@
       {{ if .Params.ir_url }}<a href="{{ .Params.ir_url }}" target="_blank" rel="noopener" class="ir-link">Investor Relations →</a>{{ end }}
     </p>
     
+    <!-- WOW Signal Badge -->
+    {{ with .Params.wow_signal }}{{ if .wow }}
+    <div class="wow-banner" aria-label="WOW signal detected">
+      <div class="wow-header">
+        <span class="wow-glyph">6EQUJ5</span>
+        <div class="wow-title-block">
+          <span class="wow-label">WOW</span>
+          <span class="wow-subtitle">Every measurable dimension points the same way</span>
+        </div>
+        <div class="wow-score-ring" title="WOW intensity score">
+          <span class="wow-score-val">{{ printf "%.1f" .wow_score }}</span>
+          <span class="wow-score-den">/10</span>
+        </div>
+      </div>
+
+      <ul class="wow-reasons">
+        {{ range .wow_reasons }}
+        <li>{{ . }}</li>
+        {{ end }}
+      </ul>
+
+      <div class="wow-tiers">
+        <span class="wow-tier wow-tier-pass">T1 Price</span>
+        <span class="wow-tier {{ if ge .wow_tier2_score 4 }}wow-tier-pass{{ else }}wow-tier-partial{{ end }}">T2 Business {{ .wow_tier2_score }}/5</span>
+        <span class="wow-tier {{ if ge .wow_tier3_score 1 }}wow-tier-pass{{ else }}wow-tier-fail{{ end }}">T3 Smart $</span>
+        <span class="wow-tier {{ if .wow_tier4 }}wow-tier-pass{{ else }}wow-tier-fail{{ end }}">T4 History</span>
+      </div>
+
+      <p class="wow-disclaimer">
+        Named after the 1977 Big Ear radio telescope signal: unmistakable not because any
+        one metric is unusual, but because they all converge simultaneously. Not a buy signal.
+      </p>
+    </div>
+
+    <style>
+      .wow-banner {
+        background: linear-gradient(135deg, rgba(255,107,53,0.12) 0%, rgba(226,183,20,0.08) 100%);
+        border: 1px solid rgba(255,107,53,0.5);
+        border-left: 4px solid #ff6b35;
+        border-radius: var(--radius-md);
+        padding: var(--space-lg) var(--space-xl);
+        margin-bottom: var(--space-lg);
+        position: relative;
+        overflow: hidden;
+      }
+      .wow-banner::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 40px,
+          rgba(255,107,53,0.03) 40px,
+          rgba(255,107,53,0.03) 41px
+        );
+        pointer-events: none;
+      }
+      .wow-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-md);
+      }
+      .wow-glyph {
+        font-family: monospace;
+        font-size: 0.75rem;
+        color: rgba(255,107,53,0.5);
+        letter-spacing: 0.1em;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        transform: rotate(180deg);
+        flex-shrink: 0;
+      }
+      .wow-title-block {
+        flex: 1;
+      }
+      .wow-label {
+        display: block;
+        font-size: 2rem;
+        font-weight: 800;
+        color: #ff6b35;
+        letter-spacing: -0.02em;
+        line-height: 1;
+      }
+      .wow-subtitle {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        margin-top: 4px;
+      }
+      .wow-score-ring {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(255,107,53,0.1);
+        border: 1px solid rgba(255,107,53,0.3);
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        justify-content: center;
+        line-height: 1;
+      }
+      .wow-score-val {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ff6b35;
+      }
+      .wow-score-den {
+        font-size: 0.65rem;
+        color: var(--color-text-muted);
+      }
+      .wow-reasons {
+        list-style: none;
+        margin: 0 0 var(--space-md);
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-xs) var(--space-md);
+      }
+      .wow-reasons li {
+        font-size: 0.8rem;
+        color: var(--color-text);
+        padding-left: 1em;
+        position: relative;
+      }
+      .wow-reasons li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #ff6b35;
+      }
+      .wow-tiers {
+        display: flex;
+        gap: var(--space-xs);
+        flex-wrap: wrap;
+        margin-bottom: var(--space-md);
+      }
+      .wow-tier {
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 3px;
+        letter-spacing: 0.04em;
+      }
+      .wow-tier-pass    { background: rgba(35,134,54,0.2); color: #3fb950; border: 1px solid rgba(35,134,54,0.3); }
+      .wow-tier-partial { background: rgba(226,183,20,0.15); color: #e2b714; border: 1px solid rgba(226,183,20,0.3); }
+      .wow-tier-fail    { background: rgba(248,81,73,0.1); color: #f85149; border: 1px solid rgba(248,81,73,0.2); }
+      .wow-disclaimer {
+        font-size: 0.7rem;
+        color: var(--color-text-muted);
+        margin: 0;
+        border-top: 1px solid rgba(255,107,53,0.15);
+        padding-top: var(--space-sm);
+      }
+      @media (max-width: 600px) {
+        .wow-glyph { display: none; }
+        .wow-label { font-size: 1.5rem; }
+      }
+    </style>
+    {{ end }}{{ end }}
+
     <!-- Main Signal Box -->
     <div class="signal-box zone-{{ .Params.zone }}">
       <div class="signal-answer">
@@ -150,10 +313,10 @@
       <div class="signal-direction">
         {{ if .Params.approaching }}
           <span class="approaching">↓ Approaching</span>
-          <span class="direction-detail">Was {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (add (default 0.0 .Params.pct_from_wma) (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
         {{ else }}
           <span class="retreating">↑ Moving away</span>
-          <span class="direction-detail">Was {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (sub (default 0.0 .Params.pct_from_wma) (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
         {{ end }}
       </div>
     </div>
@@ -167,7 +330,7 @@
         {{ else if lt .Params.pct_from_wma -15 }}
           {{ $position = 0 }}
         {{ else }}
-          {{ $position = add (div (add .Params.pct_from_wma 15) 0.3) 0 }}
+          {{ $position = add (div (add (default 0.0 .Params.pct_from_wma) 15) 0.3) 0 }}
         {{ end }}
         <div class="bar-marker" style="left: {{ $position }}%"></div>
         <div class="bar-marker bar-marker-live" id="liveMarker" style="display:none" title="Live price"></div>
@@ -306,9 +469,9 @@
           trading {{ printf "%.1f%%" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}.
         {{- end }}
         {{ if .Params.approaching -}}
-          The stock is currently moving closer to the line, down from {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week.
+          The stock is currently moving closer to the line, down from {{ printf "%.1f%%" (add (default 0.0 .Params.pct_from_wma) (math.Abs (default 0.0 .Params.wow_change))) }} last week.
         {{- else -}}
-          The stock moved further from the line this week, up from {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week.
+          The stock moved further from the line this week, up from {{ printf "%.1f%%" (sub (default 0.0 .Params.pct_from_wma) (math.Abs (default 0.0 .Params.wow_change))) }} last week.
         {{- end }}
         {{ if lt .Params.rsi_14 30.0 -}}
           With a 14-week RSI of {{ printf "%.0f" .Params.rsi_14 }}, {{ .Params.symbol }} is in oversold territory.

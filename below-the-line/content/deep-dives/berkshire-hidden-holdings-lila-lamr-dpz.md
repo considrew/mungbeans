@@ -4,9 +4,17 @@ date: 2026-05-02
 draft: false
 tags: ["deep-dive", "stock-faceoff", "berkshire-hathaway", "LILA", "LAMR", "DPZ"]
 description: "Three Berkshire holdings most people couldn't name. A Caribbean telecom drowning in debt, a billboard company printing cash, and Buffett's favorite pizza chain at a 34% discount. We run all three through the framework and pick a winner."
-tickers: ["LILA", "LAMR", "DPZ"]
+ticker: "DPZ"
+ticker_b: "LAMR"
+ticker_c: "LILA"
 verdict: "DPZ"
 verdict_label: "DPZ wins"
+performance_price_at_publish: "$337.77"
+performance_price_at_publish_b: "$140.35"
+performance_price_at_publish_c: "$8.25"
+performance_since: "-4.1%"
+performance_price_current: "$323.88"
+performance_as_of: "2026-06-13"
 ---
 
 ## The Premise

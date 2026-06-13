@@ -5713,6 +5713,11 @@
     "name": "Lennox International Inc.",
     "sector": "Industrials - Building Products & Equipment"
   },
+  "LILA": {
+    "ir_url": "https://www.lla.com/investors",
+    "name": "Liberty Latin America Ltd.",
+    "sector": "Communication Services - Telecom Services"
+  },
   "LIN": {
     "ir_url": "https://www.linde.com/investors",
     "name": "Linde plc",
@@ -6437,6 +6442,11 @@
     "ir_url": "https://www.mrcy.com/investors",
     "name": "Mercury Systems, Inc.",
     "sector": "Industrials - Aerospace & Defense"
+  },
+  "MRAM": {
+    "ir_url": "https://ir.everspin.com",
+    "name": "Everspin Technologies Inc.",
+    "sector": "Technology - Semiconductors"
   },
   "MRK": {
     "ir_url": "https://www.merck.com/investor-relations/",

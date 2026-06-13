@@ -5,6 +5,7 @@ draft: false
 tags: ["microcap", "screener", "biotech", "CGEN"]
 description: "The 200-week moving average works for large caps. Micro caps are a different animal entirely. We built a new screener from scratch, and Compugen is the first stock that made us stop and look twice."
 ticker: "CGEN"
+performance_price_at_publish: "$2.75"
 ---
 
 ## Why Micro Caps Need Their Own Framework

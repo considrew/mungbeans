@@ -259,3 +259,136 @@ def apply_cross_sectional_dislocation(all_stocks: list) -> None:
 
         d['stack_signals'] = signals
         d['dislocation_stack'] = len(signals)
+
+        # WOW signal — computed last so all cross-sectional fields are ready
+        s['wow_signal'] = _compute_wow_signal(s)
+
+
+# ── WOW Signal ────────────────────────────────────────────────────────────────
+
+# Tier 1 — price absurdity gates
+WOW_PCT_FROM_WMA     = -20.0   # must be at or below
+WOW_DRAWDOWN_Z       =  2.0    # own-history σ (sign-flipped: + = far below own norm)
+WOW_RSI_MAX          = 32.0
+WOW_SECTOR_Z         =  1.5    # idiosyncratic vs sector (not just a sector selloff)
+
+# Tier 2 — business health
+WOW_FCF_VS_HIST_MIN  =  0.0    # FCF yield at or above own historical median
+WOW_BEAN_SCORE_MIN   =  1.5    # σ above own baseline
+
+# Tier 3 — smart money
+WOW_BUYBACK_ACCEL    = -2.0    # pp/yr faster than own cadence
+WOW_INSIDER_PCTL     = 75.0    # top quartile among buyers in the universe
+
+# Tier 4 — historical pattern
+WOW_TOUCH_MIN        =  3      # enough episodes to be meaningful
+WOW_PCT_POSITIVE_MIN = 60.0    # majority resolved upward
+WOW_AVG_RETURN_MIN   = 15.0    # avg gain after touch (%)
+
+
+def _compute_wow_signal(stock: dict) -> dict:
+    """Four-tier WOW convergence score.  Called inside apply_cross_sectional_dislocation
+    after all per-stock and cross-sectional dislocation fields are populated.
+
+    Named after the Big Ear 1977 signal: unmistakable not because any one
+    dimension was unusual but because every measurable dimension pointed the
+    same way simultaneously.
+    """
+    d       = stock.get('dislocation') or {}
+    pct     = stock.get('pct_from_wma')
+    rsi     = stock.get('rsi_14')
+    dz      = d.get('drawdown_z')
+    sec_z   = d.get('sector_relative_z')
+
+    # ── Tier 1: ALL four must pass ─────────────────────────────────────────
+    t1 = {
+        'extreme_zone':        pct is not None and pct <= WOW_PCT_FROM_WMA,
+        'drawdown_historic':   dz  is not None and dz  >= WOW_DRAWDOWN_Z,
+        'oversold_rsi':        rsi is not None and rsi <= WOW_RSI_MAX,
+        'sector_idiosyncratic': sec_z is not None and sec_z >= WOW_SECTOR_Z,
+    }
+    tier1_pass = all(t1.values())
+
+    if not tier1_pass:
+        return {'wow': False, 'wow_score': 0, 'wow_tier1': False,
+                'wow_reasons': [], 'wow_tier1_checks': t1}
+
+    # ── Tier 2: 4 of 5 required ────────────────────────────────────────────
+    bean     = (stock.get('bean_score_data') or {}).get('score')
+    fcf_h    = d.get('fcf_yield_vs_hist_pp')
+    quality  = d.get('earnings_quality')
+
+    t2 = {
+        'positive_fcf':         bool(stock.get('has_positive_fcf')),
+        'fcf_yield_above_hist': fcf_h is not None and fcf_h >= WOW_FCF_VS_HIST_MIN,
+        'bean_score_elevated':  bean  is not None and bean  >= WOW_BEAN_SCORE_MIN,
+        'earnings_quality_ok':  quality in ('improving', 'stable'),
+        'buffett_quality':      bool(stock.get('buffett_quality')),
+    }
+    t2_score    = sum(t2.values())
+    tier2_pass  = t2_score >= 4
+
+    # ── Tier 3: 1 of 3 required ────────────────────────────────────────────
+    ba      = d.get('buyback_accel_pp')
+    ins_pct = d.get('insider_intensity_pct')
+
+    t3 = {
+        'cluster_buy':           bool(stock.get('has_cluster_buy')),
+        'buyback_accelerating':  ba      is not None and ba      <= WOW_BUYBACK_ACCEL,
+        'insider_top_quartile':  ins_pct is not None and ins_pct >= WOW_INSIDER_PCTL,
+    }
+    t3_score   = sum(t3.values())
+    tier3_pass = t3_score >= 1
+
+    # ── Tier 4: ALL required ───────────────────────────────────────────────
+    touch_count = stock.get('touch_count') or 0
+    touch_chart = stock.get('touch_chart') or {}
+    pct_pos     = touch_chart.get('pct_positive_12m')
+    avg_ret     = stock.get('avg_return_after_touch') or 0
+
+    t4 = {
+        'enough_history':  touch_count >= WOW_TOUCH_MIN,
+        'mostly_positive': pct_pos is not None and pct_pos >= WOW_PCT_POSITIVE_MIN,
+        'meaningful_return': avg_ret >= WOW_AVG_RETURN_MIN,
+    }
+    tier4_pass = all(t4.values())
+
+    wow = tier1_pass and tier2_pass and tier3_pass and tier4_pass
+
+    # ── Composite intensity score (0-10, for ranking WOW stocks against each other)
+    intensity = 0.0
+    if pct   is not None: intensity += min(2.0, abs(pct)   / 15.0)   # deeper = more
+    if dz    is not None: intensity += min(2.0, dz         / 2.0)    # more σ = more
+    if sec_z is not None: intensity += min(1.0, sec_z      / 2.0)
+    if bean  is not None: intensity += min(1.0, bean        / 2.0)
+    intensity += min(2.0, t2_score - 3)          # 0-2 for quality breadth
+    intensity += min(1.0, t3_score)               # 0-1 for smart-money breadth
+    if tier4_pass and pct_pos is not None:
+        intensity += min(1.0, (pct_pos - 60.0) / 40.0)
+
+    # ── Human-readable reasons ────────────────────────────────────────────
+    reasons = []
+    if pct   is not None: reasons.append(f"{abs(pct):.1f}% below 200WMA")
+    if dz    is not None: reasons.append(f"drawdown {dz:.1f}σ below own history")
+    if sec_z is not None: reasons.append(f"{sec_z:.1f}σ cheaper than sector peers")
+    if bean  is not None and t2['bean_score_elevated']:
+        reasons.append(f"Bean Score +{bean:.1f}σ above own baseline")
+    if t3['cluster_buy']:           reasons.append("cluster insider buying")
+    if t3['buyback_accelerating']:  reasons.append("buybacks accelerating vs own pace")
+    if t3['insider_top_quartile']:  reasons.append("top-quartile insider intensity")
+    if tier4_pass:
+        reasons.append(f"{touch_count} prior touches — {pct_pos:.0f}% resolved higher")
+
+    return {
+        'wow':              wow,
+        'wow_score':        round(min(10.0, intensity), 2),
+        'wow_tier1':        tier1_pass,
+        'wow_tier2_score':  t2_score,
+        'wow_tier3_score':  t3_score,
+        'wow_tier4':        tier4_pass,
+        'wow_reasons':      reasons,
+        'wow_tier1_checks': t1,
+        'wow_tier2_checks': t2,
+        'wow_tier3_checks': t3,
+        'wow_tier4_checks': t4,
+    }

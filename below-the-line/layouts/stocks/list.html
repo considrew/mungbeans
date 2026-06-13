@@ -216,6 +216,177 @@
       <p class="info-note">A stock below the line with growing cash flow is a business getting healthier while the market looks the other way.</p>
     </div>
 
+    <!-- WOW Signals Panel -->
+    {{ $wowCount := 0 }}
+    {{ range $data.stocks }}
+      {{ with .wow_signal }}{{ if .wow }}
+        {{ $wowCount = add $wowCount 1 }}
+      {{ end }}{{ end }}
+    {{ end }}
+    {{ if gt $wowCount 0 }}
+    <section class="wow-screener-panel">
+      <div class="wow-screener-header">
+        <span class="wow-screener-glyph">6EQUJ5</span>
+        <div>
+          <h2 class="wow-screener-title">WOW <span class="wow-screener-count">{{ $wowCount }}</span></h2>
+          <p class="wow-screener-desc">All four convergence tiers firing simultaneously. Named after the 1977 Big Ear radio signal — unmistakable when it appears.</p>
+        </div>
+      </div>
+      <div class="wow-screener-cards">
+        {{ range $data.stocks }}
+        {{ $stock := . }}
+        {{ with .wow_signal }}{{ if .wow }}
+        <a href="/stocks/{{ $stock.symbol | lower }}/" class="wow-card">
+          <div class="wow-card-top">
+            <span class="wow-card-symbol">{{ $stock.symbol }}</span>
+            <span class="wow-card-score">{{ printf "%.1f" .wow_score }}<span class="wow-card-den">/10</span></span>
+          </div>
+          <div class="wow-card-name">{{ $stock.name }}</div>
+          <div class="wow-card-pct">{{ printf "%.1f%%" (math.Abs (default 0.0 $stock.pct_from_wma)) }} below line</div>
+          <ul class="wow-card-reasons">
+            {{ range first 3 .wow_reasons }}<li>{{ . }}</li>{{ end }}
+          </ul>
+          <div class="wow-card-tiers">
+            <span class="wow-tier-pip wow-tier-pass" title="Price absurdity">T1</span>
+            <span class="wow-tier-pip {{ if ge .wow_tier2_score 4 }}wow-tier-pass{{ else }}wow-tier-partial{{ end }}" title="Business health {{ .wow_tier2_score }}/5">T2</span>
+            <span class="wow-tier-pip {{ if ge .wow_tier3_score 1 }}wow-tier-pass{{ else }}wow-tier-fail{{ end }}" title="Smart money">T3</span>
+            <span class="wow-tier-pip {{ if .wow_tier4 }}wow-tier-pass{{ else }}wow-tier-fail{{ end }}" title="Historical pattern">T4</span>
+          </div>
+        </a>
+        {{ end }}{{ end }}
+        {{ end }}
+      </div>
+    </section>
+    <style>
+      .wow-screener-panel {
+        margin-bottom: var(--space-2xl);
+        background: linear-gradient(135deg, rgba(255,107,53,0.06) 0%, rgba(226,183,20,0.04) 100%);
+        border: 1px solid rgba(255,107,53,0.35);
+        border-left: 4px solid #ff6b35;
+        border-radius: var(--radius-md);
+        padding: var(--space-lg) var(--space-xl);
+      }
+      .wow-screener-header {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-lg);
+        margin-bottom: var(--space-lg);
+      }
+      .wow-screener-glyph {
+        font-family: monospace;
+        font-size: 0.7rem;
+        color: rgba(255,107,53,0.4);
+        letter-spacing: 0.1em;
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        flex-shrink: 0;
+        padding-top: 4px;
+      }
+      .wow-screener-title {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #ff6b35;
+        margin: 0 0 4px;
+        letter-spacing: -0.02em;
+        display: flex;
+        align-items: center;
+        gap: var(--space-sm);
+      }
+      .wow-screener-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(255,107,53,0.15);
+        border: 1px solid rgba(255,107,53,0.4);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ff6b35;
+      }
+      .wow-screener-desc {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        margin: 0;
+      }
+      .wow-screener-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: var(--space-md);
+      }
+      .wow-card {
+        background: var(--color-surface);
+        border: 1px solid rgba(255,107,53,0.25);
+        border-radius: var(--radius-md);
+        padding: var(--space-md);
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-xs);
+        transition: border-color 0.15s, transform 0.1s;
+      }
+      .wow-card:hover {
+        border-color: rgba(255,107,53,0.6);
+        transform: translateY(-1px);
+      }
+      .wow-card-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .wow-card-symbol {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #ff6b35;
+      }
+      .wow-card-score {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--color-text);
+      }
+      .wow-card-den { font-size: 0.65rem; color: var(--color-text-muted); }
+      .wow-card-name { font-size: 0.75rem; color: var(--color-text-muted); }
+      .wow-card-pct { font-size: 0.8rem; color: #f85149; font-weight: 600; }
+      .wow-card-reasons {
+        list-style: none;
+        margin: var(--space-xs) 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        flex: 1;
+      }
+      .wow-card-reasons li {
+        font-size: 0.7rem;
+        color: var(--color-text-muted);
+        padding-left: 0.9em;
+        position: relative;
+        line-height: 1.4;
+      }
+      .wow-card-reasons li::before { content: '→'; position: absolute; left: 0; color: #ff6b35; }
+      .wow-card-tiers {
+        display: flex;
+        gap: 4px;
+        margin-top: var(--space-xs);
+      }
+      .wow-tier-pip {
+        font-size: 0.6rem;
+        font-weight: 700;
+        padding: 2px 5px;
+        border-radius: 2px;
+      }
+      .wow-tier-pass    { background: rgba(35,134,54,0.2); color: #3fb950; }
+      .wow-tier-partial { background: rgba(226,183,20,0.15); color: #e2b714; }
+      .wow-tier-fail    { background: rgba(248,81,73,0.1); color: #f85149; }
+      @media (max-width: 600px) {
+        .wow-screener-glyph { display: none; }
+        .wow-screener-cards { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+    {{ end }}
+
     <!-- Stocks Table -->
     <table class="stocks-table" id="stocksTable">
       <thead>
