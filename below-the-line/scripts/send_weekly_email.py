@@ -160,6 +160,7 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
     date_display = crossings.get('date_display', crossings['date'])
     slug = crossings.get('blog_slug', f"{crossings['date']}-weekly-signal-report")
     post_url = f"https://mungbeans.io/blog/{slug}/"
+    blog_generated = crossings.get('blog_generated', True)  # default True for old crossings.json files
 
     newly_below = crossings.get('newly_below', [])
     newly_recovered = crossings.get('newly_recovered', [])
@@ -236,7 +237,7 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
           {below_section}
           {recovered_section}
           <p style="margin:28px 0 0 0;">
-            <a href="{post_url}" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">View Full Report</a>
+            {'<a href="' + post_url + '" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">View Full Report</a>' if blog_generated else '<a href="https://mungbeans.io/stocks/" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">Browse All Stocks</a>'}
           </p>
         </td></tr>
         <tr><td style="padding:40px 0 0 0; border-top:1px solid #2a2a3e; margin-top:40px;">

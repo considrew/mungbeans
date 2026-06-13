@@ -1866,6 +1866,7 @@ def main():
             'date': date_str,
             'date_display': datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %d, %Y'),
             'blog_slug': f"{date_str}-weekly-signal-report",
+            'blog_generated': not skip_blog,  # False on manual runs with SKIP_BLOG=true
             'newly_below': [
                 {
                     'symbol': s['symbol'],

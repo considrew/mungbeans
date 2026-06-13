@@ -150,10 +150,10 @@
       <div class="signal-direction">
         {{ if .Params.approaching }}
           <span class="approaching">↓ Approaching</span>
-          <span class="direction-detail">Was {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
         {{ else }}
           <span class="retreating">↑ Moving away</span>
-          <span class="direction-detail">Was {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week</span>
+          <span class="direction-detail">Was {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week</span>
         {{ end }}
       </div>
     </div>
@@ -306,9 +306,9 @@
           trading {{ printf "%.1f%%" .Params.pct_from_wma }} above its 200-week moving average of ${{ printf "%.2f" .Params.wma_200 }}.
         {{- end }}
         {{ if .Params.approaching -}}
-          The stock is currently moving closer to the line, down from {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week.
+          The stock is currently moving closer to the line, down from {{ printf "%.1f%%" (add .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week.
         {{- else -}}
-          The stock moved further from the line this week, up from {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs .Params.wow_change)) }} last week.
+          The stock moved further from the line this week, up from {{ printf "%.1f%%" (sub .Params.pct_from_wma (math.Abs (default 0.0 .Params.wow_change))) }} last week.
         {{- end }}
         {{ if lt .Params.rsi_14 30.0 -}}
           With a 14-week RSI of {{ printf "%.0f" .Params.rsi_14 }}, {{ .Params.symbol }} is in oversold territory.
@@ -399,11 +399,11 @@
           {{ if .Params.dividend_yield }}The current yield is {{ printf "%.2f%%" .Params.dividend_yield }}.{{ end }}
         {{- end }}
         {{ if .Params.is_cannibal -}}
-          The company has been aggressively buying back shares, reducing its share count by {{ printf "%.1f%%" (math.Abs .Params.shares_change_3yr) }} over the past three years.
+          The company has been aggressively buying back shares, reducing its share count by {{ printf "%.1f%%" (math.Abs (default 0.0 .Params.shares_change_3yr)) }} over the past three years.
         {{- else if .Params.is_buying_back -}}
-          Management has been repurchasing shares, with a {{ printf "%.1f%%" (math.Abs .Params.shares_change_3yr) }} reduction over three years.
+          Management has been repurchasing shares, with a {{ printf "%.1f%%" (math.Abs (default 0.0 .Params.shares_change_3yr)) }} reduction over three years.
         {{- else if .Params.is_diluting -}}
-          Share count has increased {{ printf "%.1f%%" .Params.shares_change_3yr }} over three years, indicating dilution.
+          Share count has increased {{ printf "%.1f%%" (default 0.0 .Params.shares_change_3yr) }} over three years, indicating dilution.
         {{- end }}
         {{ if .Params.buffett_quality -}}
           {{ .Params.symbol }} passes our Buffett quality screen: high return on equity, low debt, and positive free cash flow.
