@@ -9,10 +9,10 @@ ticker_b: "SKM"
 verdict: "mixed"
 verdict_label: "SKM: Interesting / ZM: Emerging"
 pct_below_200wma: "0"
-performance_since: "+4.6%"
+performance_since: "-3.6%"
 performance_price_at_publish: "$97.15"
-performance_price_current: "$101.62"
-performance_as_of: "2026-06-06"
+performance_price_current: "$93.68"
+performance_as_of: "2026-06-13"
 ---
 
 ## The Setup
