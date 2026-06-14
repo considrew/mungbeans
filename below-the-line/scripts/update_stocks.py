@@ -1611,8 +1611,15 @@ def generate_landing_page_data(stocks: List[dict]) -> dict:
 
 
 def load_previous_stocks(output_dir: Path) -> dict:
-    """Load previous week's stocks.json for crossing detection."""
-    output_file = output_dir / 'stocks.json'
+    """Load previous week's stocks for crossing detection.
+
+    Reads from stocks_baseline.json (written only on full weekly runs) so that
+    mid-week manual runs don't reset the crossing baseline.  Falls back to
+    stocks.json for backward-compatibility on the very first run.
+    """
+    # Prefer the dedicated baseline snapshot
+    baseline_file = output_dir / 'stocks_baseline.json'
+    output_file = baseline_file if baseline_file.exists() else output_dir / 'stocks.json'
     if output_file.exists():
         try:
             with open(output_file) as f:
@@ -1832,7 +1839,10 @@ def main():
     output_file = OUTPUT_DIR / 'stocks.json'
     with open(output_file, 'w') as f:
         json.dump(sanitize_for_json(output), f, separators=(',', ':'), cls=NumpyEncoder)
-    
+
+    # Read flags early so we can gate the baseline snapshot below
+    skip_blog = os.environ.get('SKIP_BLOG', 'false').lower() == 'true'
+
     # ── Detect crossings (always, regardless of blog/email skip flags) ──
     crossings = None
     date_str = datetime.now().strftime('%Y-%m-%d')
@@ -1845,7 +1855,6 @@ def main():
         print("\n  No previous data — cannot detect crossings (first run).")
 
     # ── Generate blog post ──
-    skip_blog = os.environ.get('SKIP_BLOG', 'false').lower() == 'true'
     if skip_blog:
         print("  📝 SKIP_BLOG set — skipping blog generation (manual run).")
     elif crossings:
@@ -1856,6 +1865,17 @@ def main():
             print(f"  📝 Blog generation failed (non-fatal): {e}")
     else:
         print("  📝 No crossings data — skipping blog generation.")
+
+    # ── Update crossing baseline (weekly runs only) ──
+    # stocks_baseline.json is the source of truth for crossing detection.
+    # We only update it after a real weekly run so that mid-week manual runs
+    # (SKIP_BLOG=true) don't reset the baseline and cause the next weekly
+    # report to miss stocks that crossed earlier in the week.
+    if not skip_blog:
+        baseline_file = OUTPUT_DIR / 'stocks_baseline.json'
+        with open(baseline_file, 'w') as f:
+            json.dump(sanitize_for_json(output), f, separators=(',', ':'), cls=NumpyEncoder)
+        print(f"  📊 Updated stocks_baseline.json ({len(all_stocks)} stocks)")
 
     # ── Write crossings.json for the email workflow ──
     crossings_file = OUTPUT_DIR / 'crossings.json'

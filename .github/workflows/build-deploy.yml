@@ -48,6 +48,7 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
+          git add -f below-the-line/assets/data/stocks_baseline.json || true
           git add below-the-line/assets/data/crossings.json
           git add -f below-the-line/assets/data/bean_score_latest.json || true
           git add -f below-the-line/assets/data/bean_score_alerts.json || true
