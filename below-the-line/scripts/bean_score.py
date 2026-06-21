@@ -202,7 +202,9 @@ def compute_bean_score(ticker: str, verbose: bool = False) -> Optional[dict]:
                 ed_list = cal['Earnings Date']
                 if ed_list:
                     ned = ed_list[0]
-                    next_earnings_date = ned.strftime('%Y-%m-%d') if hasattr(ned, 'strftime') else str(ned)
+                    ned_date = ned.date() if hasattr(ned, 'date') else ned
+                    if ned_date > datetime.utcnow().date():
+                        next_earnings_date = ned.strftime('%Y-%m-%d') if hasattr(ned, 'strftime') else str(ned)
 
             # Recent earnings history (last 4 quarters with EPS)
             ed = tk.earnings_dates

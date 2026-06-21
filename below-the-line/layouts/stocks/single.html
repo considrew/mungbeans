@@ -1232,10 +1232,11 @@
       <h3 class="bean-levels-title">Dislocation Price Levels</h3>
       <p class="bean-levels-desc">
         Prices where {{ $.Params.symbol }}'s Bean Score would hit each σ threshold.
-        {{ with .next_earnings_date }}
-          Valid until next earnings report: <strong class="bean-earnings-date">{{ . }}</strong>.
+        {{ $ned := .next_earnings_date }}
+        {{ if and $ned (gt (time $ned) now) }}
+          Valid until next earnings report: <strong class="bean-earnings-date">{{ $ned }}</strong>.
         {{ else }}
-          Valid until next earnings report{{ with .last_report_date }} (last report: {{ . }}){{ end }}.
+          Valid until next earnings report (date TBD{{ with .last_report_date }} — last report: {{ . }}{{ end }}).
         {{ end }}
       </p>
       <table class="bean-levels-table">
@@ -1275,12 +1276,12 @@
         <h3 class="bean-chart-title">Quarterly FCF & Yield <span class="health-chart-sub">Trailing twelve-month free cash flow and yield at each quarter end</span></h3>
         <div class="bean-chart-grid">
           <div class="bean-chart-wrap">
-            <div class="health-chart-container">
+            <div style="position:relative;height:180px;">
               <canvas id="beanQuarterlyFcfChart"></canvas>
             </div>
           </div>
           <div class="bean-chart-wrap">
-            <div class="health-chart-container">
+            <div style="position:relative;height:180px;">
               <canvas id="beanQuarterlyYieldChart"></canvas>
             </div>
           </div>
@@ -1295,7 +1296,14 @@
       document.addEventListener('DOMContentLoaded', function() {
         var raw = document.getElementById('beanQuarterlyData');
         if (!raw) return;
-        var quarters = JSON.parse(raw.textContent);
+        var quarters;
+        try {
+          quarters = JSON.parse(raw.textContent);
+          if (typeof quarters === 'string') quarters = JSON.parse(quarters);
+        } catch(e) {
+          console.error('beanQuarterlyData parse error:', e, raw.textContent.trim().slice(0, 120));
+          return;
+        }
         if (!quarters || !quarters.length) return;
 
         var labels = quarters.map(function(q) { return q.quarter_label; });
