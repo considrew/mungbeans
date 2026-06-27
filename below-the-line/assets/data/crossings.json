@@ -1,421 +1,517 @@
 {
-  "date": "2026-06-20",
-  "date_display": "June 20, 2026",
-  "blog_slug": "2026-06-20-weekly-signal-report",
+  "date": "2026-06-27",
+  "date_display": "June 27, 2026",
+  "blog_slug": "2026-06-27-weekly-signal-report",
   "blog_generated": true,
   "newly_below": [
     {
-      "symbol": "HQI",
-      "name": "HireQuest, Inc.",
-      "pct_from_wma": -8.47,
-      "rsi_14": 62.1
+      "symbol": "NNE",
+      "name": "NANO Nuclear Energy Inc.",
+      "pct_from_wma": -24.95,
+      "rsi_14": 48.4
     },
     {
-      "symbol": "XPEV",
-      "name": "XPeng Inc.",
-      "pct_from_wma": -6.99,
-      "rsi_14": 20.3
+      "symbol": "AVAV",
+      "name": "AeroVironment, Inc.",
+      "pct_from_wma": -17.08,
+      "rsi_14": 34.4
     },
     {
-      "symbol": "KFRC",
-      "name": "Kforce Inc.",
-      "pct_from_wma": -6.53,
-      "rsi_14": 74.3
+      "symbol": "LPL",
+      "name": "LG Display",
+      "pct_from_wma": -14.14,
+      "rsi_14": 48.3
     },
     {
-      "symbol": "SAIC",
-      "name": "Science Applications International Corp.",
-      "pct_from_wma": -6.5,
-      "rsi_14": 59.4
-    },
-    {
-      "symbol": "AMT",
-      "name": "American Tower Corporation",
-      "pct_from_wma": -4.96,
-      "rsi_14": 47.1
-    },
-    {
-      "symbol": "MTDR",
-      "name": "Matador Resources Company",
-      "pct_from_wma": -4.54,
-      "rsi_14": 42.7
-    },
-    {
-      "symbol": "VICI",
-      "name": "VICI Properties Inc.",
-      "pct_from_wma": -4.03,
-      "rsi_14": 43.7
-    },
-    {
-      "symbol": "CI",
-      "name": "The Cigna Group",
-      "pct_from_wma": -3.87,
-      "rsi_14": 57.5
-    },
-    {
-      "symbol": "MDLZ",
-      "name": "Mondelez International Inc.",
-      "pct_from_wma": -3.71,
-      "rsi_14": 64.4
-    },
-    {
-      "symbol": "DECK",
-      "name": "Deckers Outdoor Corporation",
-      "pct_from_wma": -3.37,
-      "rsi_14": 55.2
-    },
-    {
-      "symbol": "OXY",
-      "name": "Occidental Petroleum Corporation",
-      "pct_from_wma": -3.26,
-      "rsi_14": 43.8
-    },
-    {
-      "symbol": "ROL",
-      "name": "Rollins, Inc.",
-      "pct_from_wma": -2.97,
-      "rsi_14": 23.5
-    },
-    {
-      "symbol": "AON",
-      "name": "Aon plc",
-      "pct_from_wma": -2.92,
-      "rsi_14": 49.0
-    },
-    {
-      "symbol": "BIRK",
-      "name": "Birkenstock Holding plc",
-      "pct_from_wma": -2.76,
-      "rsi_14": 59.5
-    },
-    {
-      "symbol": "OBDC",
-      "name": "Blue Owl Capital Corporation",
-      "pct_from_wma": -2.63,
-      "rsi_14": 53.1
-    },
-    {
-      "symbol": "HAE",
-      "name": "Haemonetics Corporation",
-      "pct_from_wma": -2.52,
-      "rsi_14": 65.1
-    },
-    {
-      "symbol": "IRT",
-      "name": "Independence Realty Trust, Inc.",
-      "pct_from_wma": -2.4,
-      "rsi_14": 51.3
-    },
-    {
-      "symbol": "PKX",
-      "name": "POSCO Holdings",
-      "pct_from_wma": -2.29,
-      "rsi_14": 52.6
-    },
-    {
-      "symbol": "CNC",
-      "name": "Centene Corporation",
-      "pct_from_wma": -1.98,
-      "rsi_14": 83.4
-    },
-    {
-      "symbol": "ATNI",
-      "name": "ATN International, Inc.",
-      "pct_from_wma": -1.82,
-      "rsi_14": 54.2
-    },
-    {
-      "symbol": "LOPE",
-      "name": "Grand Canyon Education, Inc.",
-      "pct_from_wma": -1.76,
-      "rsi_14": 33.5
-    },
-    {
-      "symbol": "A",
-      "name": "Agilent Technologies, Inc.",
-      "pct_from_wma": -1.6,
-      "rsi_14": 63.6
-    },
-    {
-      "symbol": "SJM",
-      "name": "The J.M. Smucker Company",
-      "pct_from_wma": -1.6,
-      "rsi_14": 56.2
-    },
-    {
-      "symbol": "ULTA",
-      "name": "Ulta Beauty Inc.",
-      "pct_from_wma": -1.6,
-      "rsi_14": 34.3
-    },
-    {
-      "symbol": "ICE",
-      "name": "Intercontinental Exchange Inc.",
-      "pct_from_wma": -1.58,
-      "rsi_14": 24.9
-    },
-    {
-      "symbol": "KSS",
-      "name": "Kohl's Corporation",
-      "pct_from_wma": -1.46,
-      "rsi_14": 66.7
-    },
-    {
-      "symbol": "STNE",
-      "name": "StoneCo",
-      "pct_from_wma": -1.29,
-      "rsi_14": 46.3
-    },
-    {
-      "symbol": "SSNC",
-      "name": "SS&C Technologies Holdings, Inc.",
-      "pct_from_wma": -1.25,
-      "rsi_14": 41.6
-    },
-    {
-      "symbol": "EXE",
-      "name": "Expand Energy Corporation",
-      "pct_from_wma": -1.23,
-      "rsi_14": 28.9
-    },
-    {
-      "symbol": "CVGW",
-      "name": "Calavo Growers, Inc.",
-      "pct_from_wma": -1.12,
-      "rsi_14": 49.2
-    },
-    {
-      "symbol": "IOT",
-      "name": "Samsara Inc.",
-      "pct_from_wma": -1.11,
-      "rsi_14": 49.9
-    },
-    {
-      "symbol": "GPI",
-      "name": "Group 1 Automotive, Inc.",
-      "pct_from_wma": -1.06,
-      "rsi_14": 54.0
-    },
-    {
-      "symbol": "SFM",
-      "name": "Sprouts Farmers Market, Inc.",
-      "pct_from_wma": -1.02,
-      "rsi_14": 47.9
-    },
-    {
-      "symbol": "CRGY",
-      "name": "Crescent Energy Company",
-      "pct_from_wma": -1.01,
-      "rsi_14": 43.3
-    },
-    {
-      "symbol": "MAA",
-      "name": "Mid-America Apartment Communities, Inc.",
-      "pct_from_wma": -0.98,
-      "rsi_14": 58.6
-    },
-    {
-      "symbol": "MGEE",
-      "name": "MGE Energy, Inc.",
-      "pct_from_wma": -0.92,
-      "rsi_14": 52.9
-    },
-    {
-      "symbol": "SUI",
-      "name": "Sun Communities, Inc.",
-      "pct_from_wma": -0.88,
-      "rsi_14": 34.6
-    },
-    {
-      "symbol": "HSTM",
-      "name": "HealthStream, Inc.",
-      "pct_from_wma": -0.72,
-      "rsi_14": 70.2
-    },
-    {
-      "symbol": "MNR",
-      "name": "Mach Natural Resources LP",
-      "pct_from_wma": -0.67,
-      "rsi_14": 44.8
-    },
-    {
-      "symbol": "AVB",
-      "name": "AvalonBay Communities Inc.",
-      "pct_from_wma": -0.57,
-      "rsi_14": 57.6
-    },
-    {
-      "symbol": "PCG",
-      "name": "PG&E Corporation",
-      "pct_from_wma": -0.54,
-      "rsi_14": 38.2
-    },
-    {
-      "symbol": "SLRC",
-      "name": "SLR Investment Corp.",
-      "pct_from_wma": -0.52,
-      "rsi_14": 44.9
-    },
-    {
-      "symbol": "WTRG",
-      "name": "Essential Utilities, Inc.",
-      "pct_from_wma": -0.51,
-      "rsi_14": 28.6
-    },
-    {
-      "symbol": "MSFT",
-      "name": "Microsoft Corporation",
-      "pct_from_wma": -0.48,
-      "rsi_14": 46.8
-    },
-    {
-      "symbol": "ICUI",
-      "name": "ICU Medical, Inc.",
-      "pct_from_wma": -0.34,
-      "rsi_14": 61.9
-    },
-    {
-      "symbol": "BALY",
-      "name": "Bally's Corporation",
-      "pct_from_wma": -0.28,
-      "rsi_14": 54.2
-    },
-    {
-      "symbol": "ISRG",
-      "name": "Intuitive Surgical Inc.",
-      "pct_from_wma": -0.27,
-      "rsi_14": 31.2
-    },
-    {
-      "symbol": "DVN",
-      "name": "Devon Energy Corporation",
-      "pct_from_wma": -0.19,
-      "rsi_14": 45.3
-    },
-    {
-      "symbol": "BIDU",
-      "name": "Baidu Inc.",
-      "pct_from_wma": -0.15,
-      "rsi_14": 44.1
-    },
-    {
-      "symbol": "VNDA",
-      "name": "Vanda Pharmaceuticals Inc.",
-      "pct_from_wma": -0.07,
-      "rsi_14": 16.3
-    },
-    {
-      "symbol": "RIVN",
-      "name": "Rivian Automotive Inc.",
-      "pct_from_wma": -0.06,
-      "rsi_14": 58.9
-    }
-  ],
-  "newly_recovered": [
-    {
-      "symbol": "RACE",
-      "name": "Ferrari N.V.",
-      "pct_from_wma": 0.25
-    },
-    {
-      "symbol": "MARA",
-      "name": "Marathon Digital Holdings Inc.",
-      "pct_from_wma": 0.31
-    },
-    {
-      "symbol": "MTCH",
-      "name": "Match Group Inc.",
-      "pct_from_wma": 0.35
-    },
-    {
-      "symbol": "LOW",
-      "name": "Lowe's Companies Inc.",
-      "pct_from_wma": 0.44
-    },
-    {
-      "symbol": "MTLS",
-      "name": "Materialise NV",
-      "pct_from_wma": 0.53
-    },
-    {
-      "symbol": "LPX",
-      "name": "Louisiana-Pacific Corporation",
-      "pct_from_wma": 0.64
-    },
-    {
-      "symbol": "HD",
-      "name": "The Home Depot Inc.",
-      "pct_from_wma": 1.3
-    },
-    {
-      "symbol": "CRSP",
-      "name": "CRISPR Therapeutics AG",
-      "pct_from_wma": 1.43
-    },
-    {
-      "symbol": "ORIC",
-      "name": "ORIC Pharmaceuticals, Inc.",
-      "pct_from_wma": 1.67
-    },
-    {
-      "symbol": "IR",
-      "name": "Ingersoll Rand Inc.",
-      "pct_from_wma": 1.75
-    },
-    {
-      "symbol": "TREE",
-      "name": "LendingTree, Inc.",
-      "pct_from_wma": 1.83
-    },
-    {
-      "symbol": "SE",
-      "name": "Sea Limited",
-      "pct_from_wma": 1.99
-    },
-    {
-      "symbol": "LYFT",
-      "name": "Lyft, Inc.",
-      "pct_from_wma": 2.33
-    },
-    {
-      "symbol": "ETSY",
-      "name": "Etsy Inc.",
-      "pct_from_wma": 2.58
+      "symbol": "ARES",
+      "name": "Ares Management Corporation",
+      "pct_from_wma": -10.13,
+      "rsi_14": 53.5
     },
     {
       "symbol": "TV",
       "name": "Grupo Televisa",
-      "pct_from_wma": 3.13
+      "pct_from_wma": -6.44,
+      "rsi_14": 46.5
     },
     {
-      "symbol": "NVST",
-      "name": "Envista Holdings Corporation",
-      "pct_from_wma": 3.43
+      "symbol": "ALB",
+      "name": "Albemarle Corporation",
+      "pct_from_wma": -5.79,
+      "rsi_14": 43.9
     },
     {
-      "symbol": "CRNX",
-      "name": "Crinetics Pharmaceuticals, Inc.",
-      "pct_from_wma": 3.44
+      "symbol": "KKR",
+      "name": "KKR & Co. Inc.",
+      "pct_from_wma": -5.75,
+      "rsi_14": 50.3
     },
     {
-      "symbol": "DIS",
-      "name": "The Walt Disney Company",
-      "pct_from_wma": 3.76
+      "symbol": "BABA",
+      "name": "Alibaba Group Holding Limited",
+      "pct_from_wma": -5.65,
+      "rsi_14": 33.8
     },
     {
-      "symbol": "NNE",
-      "name": "NANO Nuclear Energy Inc.",
-      "pct_from_wma": 6.31
+      "symbol": "STEP",
+      "name": "StepStone Group Inc.",
+      "pct_from_wma": -5.2,
+      "rsi_14": 41.4
     },
     {
-      "symbol": "DNLI",
-      "name": "Denali Therapeutics Inc.",
-      "pct_from_wma": 7.17
+      "symbol": "CVGI",
+      "name": "Commercial Vehicle Group, Inc.",
+      "pct_from_wma": -4.86,
+      "rsi_14": 61.1
+    },
+    {
+      "symbol": "TPG",
+      "name": "TPG Inc.",
+      "pct_from_wma": -4.71,
+      "rsi_14": 50.4
+    },
+    {
+      "symbol": "AMBA",
+      "name": "Ambarella, Inc.",
+      "pct_from_wma": -4.54,
+      "rsi_14": 55.1
+    },
+    {
+      "symbol": "SOUN",
+      "name": "SoundHound AI Inc.",
+      "pct_from_wma": -4.2,
+      "rsi_14": 49.3
+    },
+    {
+      "symbol": "BX",
+      "name": "Blackstone Inc.",
+      "pct_from_wma": -3.54,
+      "rsi_14": 54.7
+    },
+    {
+      "symbol": "CC",
+      "name": "The Chemours Company",
+      "pct_from_wma": -3.33,
+      "rsi_14": 57.1
+    },
+    {
+      "symbol": "LPLA",
+      "name": "LPL Financial Holdings Inc.",
+      "pct_from_wma": -3.23,
+      "rsi_14": 40.7
+    },
+    {
+      "symbol": "CHRD",
+      "name": "Chord Energy Corporation",
+      "pct_from_wma": -2.99,
+      "rsi_14": 43.8
+    },
+    {
+      "symbol": "SLDP",
+      "name": "Solid Power Inc.",
+      "pct_from_wma": -2.83,
+      "rsi_14": 42.4
     },
     {
       "symbol": "QS",
       "name": "QuantumScape Corporation",
-      "pct_from_wma": 9.02
+      "pct_from_wma": -2.66,
+      "rsi_14": 54.2
+    },
+    {
+      "symbol": "LVS",
+      "name": "Las Vegas Sands Corp.",
+      "pct_from_wma": -2.44,
+      "rsi_14": 38.6
+    },
+    {
+      "symbol": "GBTC",
+      "name": "Grayscale Bitcoin Trust",
+      "pct_from_wma": -2.25,
+      "rsi_14": 38.2
+    },
+    {
+      "symbol": "MCD",
+      "name": "McDonald's Corporation",
+      "pct_from_wma": -2.01,
+      "rsi_14": 26.5
+    },
+    {
+      "symbol": "SONY",
+      "name": "Sony Group Corporation",
+      "pct_from_wma": -1.87,
+      "rsi_14": 47.4
+    },
+    {
+      "symbol": "NBR",
+      "name": "Nabors Industries Ltd.",
+      "pct_from_wma": -1.52,
+      "rsi_14": 51.4
+    },
+    {
+      "symbol": "DIS",
+      "name": "The Walt Disney Company",
+      "pct_from_wma": -1.27,
+      "rsi_14": 49.3
+    },
+    {
+      "symbol": "INSG",
+      "name": "Inseego Corp.",
+      "pct_from_wma": -1.0,
+      "rsi_14": 47.2
+    },
+    {
+      "symbol": "ONON",
+      "name": "On Holding AG",
+      "pct_from_wma": -0.78,
+      "rsi_14": 48.9
+    }
+  ],
+  "newly_recovered": [
+    {
+      "symbol": "HRMY",
+      "name": "Harmony Biosciences Holdings, Inc.",
+      "pct_from_wma": 0.04
+    },
+    {
+      "symbol": "MATW",
+      "name": "Matthews International Corporation",
+      "pct_from_wma": 0.07
+    },
+    {
+      "symbol": "PCVX",
+      "name": "Vaxcyte Inc.",
+      "pct_from_wma": 0.22
+    },
+    {
+      "symbol": "DVN",
+      "name": "Devon Energy Corporation",
+      "pct_from_wma": 0.25
+    },
+    {
+      "symbol": "JBLU",
+      "name": "JetBlue Airways Corporation",
+      "pct_from_wma": 0.29
+    },
+    {
+      "symbol": "AON",
+      "name": "Aon plc",
+      "pct_from_wma": 0.35
+    },
+    {
+      "symbol": "EXE",
+      "name": "Expand Energy Corporation",
+      "pct_from_wma": 0.47
+    },
+    {
+      "symbol": "LOPE",
+      "name": "Grand Canyon Education, Inc.",
+      "pct_from_wma": 0.57
+    },
+    {
+      "symbol": "SAIC",
+      "name": "Science Applications International Corp.",
+      "pct_from_wma": 0.61
+    },
+    {
+      "symbol": "SFM",
+      "name": "Sprouts Farmers Market, Inc.",
+      "pct_from_wma": 0.68
+    },
+    {
+      "symbol": "AQN",
+      "name": "Algonquin Power & Utilities Corp.",
+      "pct_from_wma": 0.71
+    },
+    {
+      "symbol": "MDT",
+      "name": "Medtronic plc",
+      "pct_from_wma": 0.73
+    },
+    {
+      "symbol": "BLCO",
+      "name": "Bausch + Lomb Corporation",
+      "pct_from_wma": 0.79
+    },
+    {
+      "symbol": "CWST",
+      "name": "Casella Waste Systems, Inc.",
+      "pct_from_wma": 1.0
+    },
+    {
+      "symbol": "IMMR",
+      "name": "Immersion Corporation",
+      "pct_from_wma": 1.12
+    },
+    {
+      "symbol": "SARO",
+      "name": "StandardAero, Inc.",
+      "pct_from_wma": 1.19
+    },
+    {
+      "symbol": "SUI",
+      "name": "Sun Communities, Inc.",
+      "pct_from_wma": 1.52
+    },
+    {
+      "symbol": "MNR",
+      "name": "Mach Natural Resources LP",
+      "pct_from_wma": 1.55
+    },
+    {
+      "symbol": "HAE",
+      "name": "Haemonetics Corporation",
+      "pct_from_wma": 1.57
+    },
+    {
+      "symbol": "AWK",
+      "name": "American Water Works Company, Inc.",
+      "pct_from_wma": 1.77
+    },
+    {
+      "symbol": "ACCO",
+      "name": "ACCO Brands Corporation",
+      "pct_from_wma": 1.82
+    },
+    {
+      "symbol": "PGNY",
+      "name": "Progyny, Inc.",
+      "pct_from_wma": 1.94
+    },
+    {
+      "symbol": "KFRC",
+      "name": "Kforce Inc.",
+      "pct_from_wma": 1.96
+    },
+    {
+      "symbol": "IP",
+      "name": "International Paper Company",
+      "pct_from_wma": 2.12
+    },
+    {
+      "symbol": "STNE",
+      "name": "StoneCo",
+      "pct_from_wma": 2.29
+    },
+    {
+      "symbol": "KWR",
+      "name": "Quaker Chemical Corporation",
+      "pct_from_wma": 2.32
+    },
+    {
+      "symbol": "IRTC",
+      "name": "iRhythm Technologies, Inc.",
+      "pct_from_wma": 2.46
+    },
+    {
+      "symbol": "HLF",
+      "name": "Herbalife Ltd.",
+      "pct_from_wma": 2.48
+    },
+    {
+      "symbol": "INVH",
+      "name": "Invitation Homes Inc.",
+      "pct_from_wma": 2.62
+    },
+    {
+      "symbol": "CSTL",
+      "name": "Castle Biosciences, Inc.",
+      "pct_from_wma": 2.67
+    },
+    {
+      "symbol": "SJM",
+      "name": "The J.M. Smucker Company",
+      "pct_from_wma": 2.68
+    },
+    {
+      "symbol": "AVO",
+      "name": "Mission Produce, Inc.",
+      "pct_from_wma": 2.74
+    },
+    {
+      "symbol": "BIIB",
+      "name": "Biogen Inc.",
+      "pct_from_wma": 3.15
+    },
+    {
+      "symbol": "ATNI",
+      "name": "ATN International, Inc.",
+      "pct_from_wma": 3.33
+    },
+    {
+      "symbol": "RVTY",
+      "name": "Revvity, Inc.",
+      "pct_from_wma": 3.33
+    },
+    {
+      "symbol": "HSTM",
+      "name": "HealthStream, Inc.",
+      "pct_from_wma": 3.41
+    },
+    {
+      "symbol": "OC",
+      "name": "Owens Corning",
+      "pct_from_wma": 3.44
+    },
+    {
+      "symbol": "GLBE",
+      "name": "Global-E Online Ltd.",
+      "pct_from_wma": 3.58
+    },
+    {
+      "symbol": "SYK",
+      "name": "Stryker Corporation",
+      "pct_from_wma": 3.88
+    },
+    {
+      "symbol": "VNDA",
+      "name": "Vanda Pharmaceuticals Inc.",
+      "pct_from_wma": 3.93
+    },
+    {
+      "symbol": "MGEE",
+      "name": "MGE Energy, Inc.",
+      "pct_from_wma": 4.07
+    },
+    {
+      "symbol": "EG",
+      "name": "Everest Group, Ltd.",
+      "pct_from_wma": 4.17
+    },
+    {
+      "symbol": "APOG",
+      "name": "Apogee Enterprises, Inc.",
+      "pct_from_wma": 4.46
+    },
+    {
+      "symbol": "HNI",
+      "name": "HNI Corporation",
+      "pct_from_wma": 4.58
+    },
+    {
+      "symbol": "PCG",
+      "name": "PG&E Corporation",
+      "pct_from_wma": 4.74
+    },
+    {
+      "symbol": "WTRG",
+      "name": "Essential Utilities, Inc.",
+      "pct_from_wma": 4.86
+    },
+    {
+      "symbol": "TECH",
+      "name": "Bio-Techne Corporation",
+      "pct_from_wma": 4.89
+    },
+    {
+      "symbol": "BRKR",
+      "name": "Bruker Corporation",
+      "pct_from_wma": 4.98
+    },
+    {
+      "symbol": "VRNS",
+      "name": "Varonis Systems Inc.",
+      "pct_from_wma": 5.01
+    },
+    {
+      "symbol": "MAA",
+      "name": "Mid-America Apartment Communities, Inc.",
+      "pct_from_wma": 5.2
+    },
+    {
+      "symbol": "ULTA",
+      "name": "Ulta Beauty Inc.",
+      "pct_from_wma": 5.29
+    },
+    {
+      "symbol": "A",
+      "name": "Agilent Technologies, Inc.",
+      "pct_from_wma": 5.3
+    },
+    {
+      "symbol": "ICUI",
+      "name": "ICU Medical, Inc.",
+      "pct_from_wma": 5.32
+    },
+    {
+      "symbol": "IRT",
+      "name": "Independence Realty Trust, Inc.",
+      "pct_from_wma": 5.47
+    },
+    {
+      "symbol": "CNC",
+      "name": "Centene Corporation",
+      "pct_from_wma": 5.79
+    },
+    {
+      "symbol": "MHK",
+      "name": "Mohawk Industries, Inc.",
+      "pct_from_wma": 6.48
+    },
+    {
+      "symbol": "AVB",
+      "name": "AvalonBay Communities Inc.",
+      "pct_from_wma": 6.58
+    },
+    {
+      "symbol": "OPK",
+      "name": "OPKO Health, Inc.",
+      "pct_from_wma": 6.76
+    },
+    {
+      "symbol": "CCS",
+      "name": "Century Communities, Inc.",
+      "pct_from_wma": 6.9
+    },
+    {
+      "symbol": "BALY",
+      "name": "Bally's Corporation",
+      "pct_from_wma": 7.67
+    },
+    {
+      "symbol": "RVLV",
+      "name": "Revolve Group Inc.",
+      "pct_from_wma": 7.79
+    },
+    {
+      "symbol": "JBSS",
+      "name": "John B. Sanfilippo & Son, Inc.",
+      "pct_from_wma": 8.23
+    },
+    {
+      "symbol": "DLTR",
+      "name": "Dollar Tree Inc.",
+      "pct_from_wma": 8.24
+    },
+    {
+      "symbol": "MEI",
+      "name": "Methode Electronics, Inc.",
+      "pct_from_wma": 8.82
+    },
+    {
+      "symbol": "PAY",
+      "name": "Paymentus Holdings, Inc.",
+      "pct_from_wma": 9.35
+    },
+    {
+      "symbol": "KSS",
+      "name": "Kohl's Corporation",
+      "pct_from_wma": 10.13
+    },
+    {
+      "symbol": "CRL",
+      "name": "Charles River Laboratories International Inc.",
+      "pct_from_wma": 10.89
+    },
+    {
+      "symbol": "KBH",
+      "name": "KB Home",
+      "pct_from_wma": 13.71
+    },
+    {
+      "symbol": "VKTX",
+      "name": "Viking Therapeutics, Inc.",
+      "pct_from_wma": 21.83
     }
   ]
 }
