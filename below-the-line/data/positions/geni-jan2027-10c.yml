@@ -5,7 +5,8 @@ status: open
 thesis: >-
   The base-case strike. Analyst consensus and my driver-adjusted anchor both
   sit in the $10.50-11.70 range; these pay if GENI simply gets to where the
-  street already says it should be within eighteen months.
+  street already says it should be. A safer theta hold than the October calls
+  for the same August re-rate assumption.
 article: /deep-dives/geni/
 verdict: speculative-buy
 strike: 10

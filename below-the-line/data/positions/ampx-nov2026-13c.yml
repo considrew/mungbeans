@@ -1,0 +1,17 @@
+id: ampx-nov2026-13c
+asset_type: call
+ticker: AMPX
+status: open
+thesis: >-
+  Speculation on the rotation out of AI megacaps into high-beta hardware.
+  AMPX is the picks-and-shovels bet on the drone market, and the street
+  recently re-rated it to a $33 target. High beta, sized accordingly.
+verdict: speculative-buy
+strike: 13
+expiry: "2026-11-20"
+current_mark: 2.85
+events:
+  - date: "2026-06-30"
+    action: open
+    contracts: 12
+    price: 3.89

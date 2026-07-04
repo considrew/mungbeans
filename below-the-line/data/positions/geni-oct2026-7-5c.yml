@@ -3,9 +3,8 @@ asset_type: call
 ticker: GENI
 status: open
 thesis: >-
-  Short-dated bet that the Q2 print in early August starts the re-rate. If the
-  Legend margin holds, $7.50 is one resistance level away from the demand
-  shelf. This is the leg that pays first or not at all.
+  Expires 16 October 2026. Strictly positioned for an immediate re-rate on Q2
+  earnings, based on management's commentary in the Q1 call.
 article: /deep-dives/geni/
 verdict: speculative-buy
 strike: 7.5

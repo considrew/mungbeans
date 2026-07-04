@@ -1,0 +1,17 @@
+id: spcx-oct2026-110p
+asset_type: put
+ticker: SPCX
+status: open
+thesis: >-
+  Bought purely on overvaluation. The plan is to hold through the insider
+  sales. The main risk is the NASDAQ addition this week; index flows don't
+  care what a thing is worth.
+verdict: speculative-short
+strike: 110
+expiry: "2026-10-16"
+current_mark: 6.85
+events:
+  - date: "2026-06-17"
+    action: open
+    contracts: 4
+    price: 4.61

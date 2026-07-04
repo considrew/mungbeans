@@ -1,0 +1,23 @@
+id: celh-jan2027-40c
+asset_type: call
+ticker: CELH
+status: open
+thesis: >-
+  The deep-dive case: CELH below the line with the growth story intact.
+  Seventeen contracts accumulated into the dislocation; January 2027 gives
+  the recovery two more earnings cycles to show up.
+article: /deep-dives/celh-deep-value-or-value-trap/
+verdict: speculative-buy
+strike: 40
+expiry: "2027-01-15"
+current_mark: 4.43
+events:
+  - date: "2026-05-28"
+    action: open
+    contracts: 9
+    price: 4.04
+    note: Accumulated 17 contracts between 28 May and 4 June at a $4.04 average.
+  - date: "2026-06-04"
+    action: add
+    contracts: 8
+    price: 4.04

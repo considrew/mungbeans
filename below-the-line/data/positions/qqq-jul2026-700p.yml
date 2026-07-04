@@ -1,0 +1,16 @@
+id: qqq-jul2026-700p
+asset_type: put
+ticker: QQQ
+status: open
+thesis: >-
+  Short-dated index downside into the first week of July. Tactical, small,
+  and priced to expire worthless if the tape stays quiet.
+verdict: hedge
+strike: 700
+expiry: "2026-07-07"
+current_mark: 2.34
+events:
+  - date: "2026-07-02"
+    action: open
+    contracts: 3
+    price: 2.74

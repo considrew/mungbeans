@@ -1,5 +1,10 @@
 # Authored cash balances for The Book. Dates ascending; amount in USD.
-# The equity curve reads cash stepwise between these points.
+# The equity curve reads cash stepwise between anchors; buys/sells flow
+# against the running balance after each anchor.
 balances:
-  - date: 2026-05-29
+  - date: "2026-05-27"
     amount: 30000
+  # Re-anchor after funding all eleven positions from the starting cash:
+  # $30,000 - $29,802 committed = $198 estimated cash.
+  - date: "2026-07-02"
+    amount: 198
