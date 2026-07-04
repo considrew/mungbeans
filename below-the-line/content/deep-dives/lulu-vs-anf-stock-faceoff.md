@@ -9,13 +9,13 @@ ticker_b: "ANF"
 verdict: "deep-value"
 verdict_label: "Winner: LULU"
 pct_below_200wma: "50"
-performance_since: "-25.5%"
-performance_since_b: "+11.8%"
+performance_since: "-24.9%"
+performance_since_b: "+12.9%"
 performance_price_at_publish: "$157.78"
 performance_price_at_publish_b: "$81.86"
-performance_price_current: "$117.57"
-performance_price_current_b: "$91.51"
-performance_as_of: "2026-06-27"
+performance_price_current: "$118.43"
+performance_price_current_b: "$92.42"
+performance_as_of: "2026-07-04"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*

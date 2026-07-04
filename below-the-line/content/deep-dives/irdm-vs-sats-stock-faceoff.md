@@ -9,13 +9,13 @@ ticker_b: "SATS"
 verdict: "deep-value"
 verdict_label: "Winner: IRDM"
 pct_below_200wma: "29"
-performance_since: "+75.1%"
-performance_since_b: "-10.1%"
+performance_since: "+116.2%"
+performance_since_b: "-6.3%"
 performance_price_at_publish: "$24.86"
 performance_price_at_publish_b: "$108.34"
-performance_price_current: "$43.52"
-performance_price_current_b: "$97.39"
-performance_as_of: "2026-06-27"
+performance_price_current: "$53.75"
+performance_price_current_b: "$101.49"
+performance_as_of: "2026-07-04"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*
