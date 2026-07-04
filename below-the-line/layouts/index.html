@@ -102,20 +102,13 @@
   </script>
   
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   {{ $data := dict }}
   {{ with resources.Get "data/stocks.json" }}
@@ -461,7 +454,7 @@
 
   <style>
     .deep-value-section .stock-card {
-      border-color: var(--color-warning, #f59e0b);
+      border-color: var(--bench);
     }
     
     .distressed-section {
@@ -484,8 +477,8 @@
     }
     
     .card-badge.history {
-      background: var(--color-success-bg, #dcfce7);
-      color: var(--color-success, #16a34a);
+      background: var(--gain-soft);
+      color: var(--gain);
     }
   </style>
 

@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KMCNBWBVVE');
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
-     crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ .Title }} | mungbeans.io</title>
-  <meta name="description" content="{{ .Description }}">
-  <link rel="canonical" href="{{ .Permalink }}">
+  {{ partial "head.html" . }}
 
   <!-- Open Graph -->
   <meta property="og:title" content="{{ .Title }}">
@@ -64,20 +50,9 @@
   }
   </script>
 
-  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   <main class="blog-post">
     <div class="breadcrumb">
@@ -165,8 +140,6 @@
     </article>
   </main>
 
-  <footer class="site-footer">
-    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
-  </footer>
+  {{ partial "footer.html" . }}
 </body>
 </html>

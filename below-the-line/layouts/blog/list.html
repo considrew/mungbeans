@@ -1,42 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KMCNBWBVVE');
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
-     crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weekly Signal Reports - mungbeans.io</title>
-  <meta name="description" content="Weekly updates on stocks crossing their 200-week moving average. New deep value signals and recovery alerts for value investors.">
-  <link rel="canonical" href="{{ .Permalink }}">
-  <link rel="stylesheet" href="/css/style.css">
+  {{ partial "head.html" . }}
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   <main class="blog-list">
+    <div class="eyebrow" style="margin-bottom:10px">mungbeans // weekly signal reports</div>
     <h1>Weekly Signal Reports</h1>
     <p class="blog-intro">Every week, we check which stocks have newly crossed below their 200-week moving average — and which have climbed back above. Each report breaks down the crossings with historical context, quality flags, and reservations.</p>
 
     <div class="blog-posts">
-      {{ range .Pages.ByDate.Reverse }}
+      {{ range .Paginator.Pages }}
       <a href="{{ .Permalink }}" class="blog-card">
         <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
         <h2>{{ .Title }}</h2>
@@ -53,13 +29,13 @@
       {{ end }}
     </div>
 
+    {{ template "_internal/pagination.html" . }}
+
     {{ if not .Pages }}
     <p class="no-posts">No reports yet. The first report will be generated after the next weekly data update.</p>
     {{ end }}
   </main>
 
-  <footer class="site-footer">
-    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
-  </footer>
+  {{ partial "footer.html" . }}
 </body>
 </html>
