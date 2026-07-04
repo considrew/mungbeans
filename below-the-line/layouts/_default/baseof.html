@@ -1,35 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KMCNBWBVVE');
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
-     crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ .Title }} | mungbeans.io</title>
-  <meta name="description" content="{{ .Description | default .Site.Params.description }}">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/css/style.css">
+  {{ partial "head.html" . }}
+  {{ block "head_extra" . }}{{ end }}
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   <main class="content-page">
     {{ block "main" . }}
@@ -37,64 +13,70 @@
     {{ end }}
   </main>
 
-  <footer class="site-footer">
-    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
-  </footer>
+  {{ partial "footer.html" . }}
 
   <style>
     .content-page {
       max-width: 700px;
+      font-size: 17px;
+      line-height: 1.55;
     }
-    
+
     .content-page h1 {
       margin-bottom: var(--space-lg);
     }
-    
+
     .content-page h2 {
       margin-top: var(--space-xl);
       margin-bottom: var(--space-md);
     }
-    
+
     .content-page p,
     .content-page ul,
     .content-page ol {
       margin-bottom: var(--space-md);
+      color: #d8d1c4;
     }
-    
+
     .content-page blockquote {
-      border-left: 3px solid var(--color-approaching);
+      border-left: 2px solid var(--bench);
       padding-left: var(--space-md);
       margin: var(--space-lg) 0;
-      color: var(--color-text-muted);
+      color: var(--dim);
       font-style: italic;
     }
-    
+
     .content-page table {
       width: 100%;
       border-collapse: collapse;
       margin: var(--space-lg) 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
     }
-    
+
     .content-page th,
     .content-page td {
       padding: var(--space-sm) var(--space-md);
       text-align: left;
-      border-bottom: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--line);
     }
-    
+
     .content-page th {
-      color: var(--color-text-muted);
-      font-weight: 600;
+      color: var(--dim);
+      font-size: 10px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 500;
     }
-    
+
     .content-page hr {
       border: none;
-      border-top: 1px solid var(--color-border);
+      border-top: 1px solid var(--line);
       margin: var(--space-xl) 0;
     }
-    
+
     .content-page em {
-      color: var(--color-text-muted);
+      color: var(--bench);
     }
   </style>
 </body>
