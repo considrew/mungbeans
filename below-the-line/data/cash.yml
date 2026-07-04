@@ -1,0 +1,5 @@
+# Authored cash balances for The Book. Dates ascending; amount in USD.
+# The equity curve reads cash stepwise between these points.
+balances:
+  - date: 2026-05-29
+    amount: 30000

@@ -1,0 +1,19 @@
+id: geni-jan2028-5c
+asset_type: call
+ticker: GENI
+status: open
+thesis: >-
+  Deep in the money with a two-year runway: stock replacement with defined
+  risk through the 2027 GAAP-profitability checkpoint. If the thesis needs
+  more time than the 2027 calls allow, this is the leg that waits.
+article: /deep-dives/geni/
+verdict: speculative-buy
+strike: 5
+expiry: "2028-01-21"
+current_mark: 2.95
+events:
+  - date: 2026-06-25
+    action: open
+    contracts: 10
+    price: 2.31
+    note: Opened the day the deep dive published at $5.83.

@@ -1,0 +1,20 @@
+id: geni
+asset_type: stock
+ticker: GENI
+status: open
+thesis: >-
+  The market prices Genius as a betting-data vendor. What they actually run is
+  AI inference at scale on proprietary in-venue data: five product lines on one
+  camera stream, an identity graph of 250 million profiles, and the largest
+  gaming affiliate platform ever assembled after Legend. Growing 31% at 1.6x
+  forward revenue while Sportradar gets 3x for 11% growth. The debt is real and
+  the integration is early. I published the full case on 25 June at $5.83; my
+  DCF says ~$17. Q2 is the first clean look at the combined business.
+article: /deep-dives/geni/
+verdict: speculative-buy
+events:
+  - date: 2026-06-18
+    action: open
+    shares: 1000
+    price: 6.14
+    note: Common stock core of the GENI position; options carry the convexity.

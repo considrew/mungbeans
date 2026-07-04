@@ -1,0 +1,23 @@
+id: geni-jan2027-12-5c
+asset_type: call
+ticker: GENI
+status: open
+thesis: >-
+  Cheap convexity on the full re-rate toward my ~$17 DCF. These only pay if
+  recognition actually comes, which is the point: the position sizes the
+  probability, not the conviction.
+article: /deep-dives/geni/
+verdict: speculative-buy
+strike: 12.5
+expiry: "2027-01-15"
+current_mark: 0.28
+events:
+  - date: 2026-06-04
+    action: open
+    contracts: 20
+    price: 0.38
+    note: Accumulated 40 contracts between 4 and 26 June at a $0.38 average.
+  - date: 2026-06-26
+    action: add
+    contracts: 20
+    price: 0.38

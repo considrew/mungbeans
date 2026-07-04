@@ -1,0 +1,19 @@
+id: geni-jan2027-10c
+asset_type: call
+ticker: GENI
+status: open
+thesis: >-
+  The base-case strike. Analyst consensus and my driver-adjusted anchor both
+  sit in the $10.50-11.70 range; these pay if GENI simply gets to where the
+  street already says it should be within eighteen months.
+article: /deep-dives/geni/
+verdict: speculative-buy
+strike: 10
+expiry: "2027-01-15"
+current_mark: 0.60
+events:
+  - date: 2026-05-29
+    action: open
+    contracts: 25
+    price: 0.55
+    note: First leg of the position, opened before the deep dive published.

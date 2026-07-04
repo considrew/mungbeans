@@ -1,0 +1,182 @@
+{
+  "inception": "2026-05-29",
+  "as_of": "2026-07-04",
+  "refresh_mode": "A",
+  "cash": 30000.0,
+  "headline": {
+    "return_pct": 1.0,
+    "spy_return_pct": -1.3,
+    "max_drawdown_pct": -0.9,
+    "open_positions": 5
+  },
+  "series": {
+    "dates": [
+      "2026-05-29",
+      "2026-06-05",
+      "2026-06-12",
+      "2026-06-19",
+      "2026-06-26",
+      "2026-07-03",
+      "2026-07-04"
+    ],
+    "portfolio": [
+      100.0,
+      100.0,
+      99.27,
+      99.14,
+      100.27,
+      101.03,
+      101.03
+    ],
+    "spy": [
+      100.0,
+      97.5,
+      98.05,
+      98.97,
+      96.61,
+      98.71,
+      98.71
+    ]
+  },
+  "markers": [
+    {
+      "position_id": "geni-jan2027-10c",
+      "date": "2026-05-29",
+      "action": "open",
+      "ticker": "GENI",
+      "committed_usd": 1375.0,
+      "price": 0.55,
+      "note": "First leg of the position, opened before the deep dive published."
+    },
+    {
+      "position_id": "geni-jan2027-12-5c",
+      "date": "2026-06-04",
+      "action": "open",
+      "ticker": "GENI",
+      "committed_usd": 760.0,
+      "price": 0.38,
+      "note": "Accumulated 40 contracts between 4 and 26 June at a $0.38 average."
+    },
+    {
+      "position_id": "geni-oct2026-7-5c",
+      "date": "2026-06-08",
+      "action": "open",
+      "ticker": "GENI",
+      "committed_usd": 1680.0,
+      "price": 0.84,
+      "note": null
+    },
+    {
+      "position_id": "geni",
+      "date": "2026-06-18",
+      "action": "open",
+      "ticker": "GENI",
+      "committed_usd": 6140.0,
+      "price": 6.14,
+      "note": "Common stock core of the GENI position; options carry the convexity."
+    },
+    {
+      "position_id": "geni-jan2028-5c",
+      "date": "2026-06-25",
+      "action": "open",
+      "ticker": "GENI",
+      "committed_usd": 2310.0,
+      "price": 2.31,
+      "note": "Opened the day the deep dive published at $5.83."
+    },
+    {
+      "position_id": "geni-jan2027-12-5c",
+      "date": "2026-06-26",
+      "action": "add",
+      "ticker": "GENI",
+      "committed_usd": 760.0,
+      "price": 0.38,
+      "note": null
+    }
+  ],
+  "open_positions": [
+    {
+      "position_id": "geni-jan2027-10c",
+      "ticker": "GENI",
+      "asset_type": "call",
+      "market_value": 1500.0,
+      "unrealized_pct": 9.1,
+      "vs_spy_since_entry_pct": 10.4,
+      "entry_date": "2026-05-29",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 25.0,
+      "strike": 10,
+      "expiry": "2027-01-15",
+      "current_mark": 0.6
+    },
+    {
+      "position_id": "geni-jan2027-12-5c",
+      "ticker": "GENI",
+      "asset_type": "call",
+      "market_value": 1120.0,
+      "unrealized_pct": -26.3,
+      "vs_spy_since_entry_pct": -24.9,
+      "entry_date": "2026-06-04",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 40.0,
+      "strike": 12.5,
+      "expiry": "2027-01-15",
+      "current_mark": 0.28
+    },
+    {
+      "position_id": "geni-jan2028-5c",
+      "ticker": "GENI",
+      "asset_type": "call",
+      "market_value": 2950.0,
+      "unrealized_pct": 27.7,
+      "vs_spy_since_entry_pct": 26.3,
+      "entry_date": "2026-06-25",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 10.0,
+      "strike": 5,
+      "expiry": "2028-01-21",
+      "current_mark": 2.95
+    },
+    {
+      "position_id": "geni-oct2026-7-5c",
+      "ticker": "GENI",
+      "asset_type": "call",
+      "market_value": 1460.0,
+      "unrealized_pct": -13.1,
+      "vs_spy_since_entry_pct": -14.1,
+      "entry_date": "2026-06-08",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 20.0,
+      "strike": 7.5,
+      "expiry": "2026-10-16",
+      "current_mark": 0.73
+    },
+    {
+      "position_id": "geni",
+      "ticker": "GENI",
+      "asset_type": "stock",
+      "market_value": 6430.0,
+      "unrealized_pct": 4.7,
+      "vs_spy_since_entry_pct": 5.0,
+      "entry_date": "2026-06-18",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "shares": 1000.0
+    }
+  ],
+  "approximation_note": "Endpoints are real (current prices and authored cash); the in-between path is reconstructed from authored events priced against public market data. Options are valued from manually entered marks, stepwise.",
+  "integrity": {
+    "ok": true,
+    "warnings": [],
+    "errors": []
+  }
+}
