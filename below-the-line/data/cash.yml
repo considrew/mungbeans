@@ -2,9 +2,10 @@
 # The equity curve reads cash stepwise between anchors; buys/sells flow
 # against the running balance after each anchor.
 balances:
+  # Starting cash backed out from the account: $29,802 committed across the
+  # eleven positions plus ~$9,500 still in cash puts the book around $40k.
   - date: "2026-05-27"
-    amount: 30000
-  # Re-anchor after funding all eleven positions from the starting cash:
-  # $30,000 - $29,802 committed = $198 estimated cash.
+    amount: 39302
+  # Running balance after all buys - matches the flows, so no re-anchor jump.
   - date: "2026-07-02"
-    amount: 198
+    amount: 9500
