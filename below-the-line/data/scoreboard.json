@@ -2,9 +2,9 @@
   "as_of": "2026-07-04",
   "aggregate": {
     "calls": 11,
-    "return_pct": -3.3,
+    "return_pct": -2.5,
     "spy_return_pct": -1.3,
-    "max_drawdown_pct": -9.0,
+    "max_drawdown_pct": -7.0,
     "hit_rate_pct": null,
     "hit_rate_n": 0,
     "hit_rate_caveat": "Hit rate over a small sample in a particular market regime; bull-market beta is not skill. Read it alongside alpha and drawdown."
