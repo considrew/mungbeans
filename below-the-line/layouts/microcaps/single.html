@@ -47,40 +47,43 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3" defer></script>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
   <style>
     .assessment-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); margin: var(--space-xl) 0; }
     .assess-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-lg); }
     .assess-card h3 { margin: 0 0 var(--space-sm) 0; font-size: 1rem; color: var(--color-text); }
     .assess-card .card-score { font-size: 1.5rem; font-weight: 700; margin-bottom: var(--space-sm); }
     .assess-card .card-detail { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5; }
-    .score-high { color: #3fb950; }
-    .score-mid { color: #d29922; }
-    .score-low { color: #8b949e; }
+    .score-high { color: var(--gain); }
+    .score-mid { color: var(--bench); }
+    .score-low { color: var(--dim); }
     .total-score-box { text-align: center; padding: var(--space-xl); background: var(--color-surface); border: 2px solid var(--color-border); border-radius: var(--radius-lg); margin-bottom: var(--space-xl); }
     .total-score-number { font-size: 3.5rem; font-weight: 800; line-height: 1; }
     .total-score-label { font-size: 1rem; color: var(--color-text-muted); margin-top: var(--space-sm); }
     .score-bar-visual { display: flex; gap: 3px; margin-top: var(--space-sm); justify-content: center; }
     .score-pip { width: 20px; height: 8px; border-radius: 4px; background: var(--color-border); }
-    .score-pip.filled { background: #3fb950; }
-    .score-pip.filled-mid { background: #d29922; }
-    .score-pip.filled-low { background: #f85149; }
+    .score-pip.filled { background: var(--gain); }
+    .score-pip.filled-mid { background: var(--bench); }
+    .score-pip.filled-low { background: var(--loss); }
     .patent-list { list-style: none; padding: 0; margin: var(--space-md) 0 0 0; }
     .patent-list li { padding: var(--space-sm) 0; border-bottom: 1px solid var(--color-border); font-size: 0.85rem; color: var(--color-text-muted); }
     .patent-list li:last-child { border-bottom: none; }
-    .red-flag-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; background: rgba(248,81,73,0.15); color: #f85149; margin: 4px; }
+    .red-flag-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; background: rgba(194,96,79,0.15); color: var(--loss); margin: 4px; }
     .info-tag { display: inline-block; padding: 4px 12px; border-radius: 10px; font-size: 0.8rem; margin: 4px; }
-    .tag-sector { background: rgba(88,166,255,0.15); color: #58a6ff; }
-    .tag-industry { background: rgba(139,148,158,0.15); color: #8b949e; }
-    .patent-ok { background: rgba(35,134,54,0.2); color: #3fb950; }
-    .patent-fuzzy { background: rgba(210,153,34,0.2); color: #d29922; }
-    .patent-none { background: rgba(139,148,158,0.2); color: #8b949e; }
+    .tag-sector { background: rgba(95,168,181,0.15); color: var(--closed); }
+    .tag-industry { background: rgba(111,103,87,0.15); color: var(--dim); }
+    .patent-ok { background: rgba(143,191,111,0.2); color: var(--gain); }
+    .patent-fuzzy { background: rgba(201,162,74,0.2); color: var(--bench); }
+    .patent-none { background: rgba(111,103,87,0.2); color: var(--dim); }
     .methodology-steps { counter-reset: step; list-style: none; padding: 0; margin: var(--space-lg) 0; }
     .methodology-steps li { counter-increment: step; padding: var(--space-md) var(--space-md) var(--space-md) 50px; position: relative; border-left: 2px solid var(--color-border); margin-left: 16px; }
     .methodology-steps li::before { content: counter(step); position: absolute; left: -16px; top: var(--space-md); width: 30px; height: 30px; border-radius: 50%; background: var(--color-surface); border: 2px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: var(--color-text); }
-    .methodology-steps li.step-pass::before { border-color: #3fb950; color: #3fb950; }
-    .methodology-steps li.step-warn::before { border-color: #d29922; color: #d29922; }
-    .methodology-steps li.step-fail::before { border-color: #f85149; color: #f85149; }
+    .methodology-steps li.step-pass::before { border-color: var(--gain); color: var(--gain); }
+    .methodology-steps li.step-warn::before { border-color: var(--bench); color: var(--bench); }
+    .methodology-steps li.step-fail::before { border-color: var(--loss); color: var(--loss); }
     .step-title { font-weight: 600; color: var(--color-text); display: block; margin-bottom: 4px; }
     .step-detail { font-size: 0.85rem; color: var(--color-text-muted); }
     .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--color-border); font-size: 0.9rem; }
@@ -90,17 +93,7 @@
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   <main class="stock-page" style="max-width:900px;margin:0 auto;padding:var(--space-lg);">
     <div class="breadcrumb">
@@ -117,7 +110,7 @@
     <!-- Total Innovation Score -->
     {{ $scoreClass := "score-low" }}
     {{ if ge .Params.total_score 8 }}{{ $scoreClass = "score-high" }}{{ else if ge .Params.total_score 5 }}{{ $scoreClass = "score-mid" }}{{ end }}
-    <div class="total-score-box" style="border-color:{{ if ge .Params.total_score 8 }}#3fb950{{ else if ge .Params.total_score 5 }}#d29922{{ else }}#8b949e{{ end }};">
+    <div class="total-score-box" style="border-color:{{ if ge .Params.total_score 8 }}var(--gain){{ else if ge .Params.total_score 5 }}var(--bench){{ else }}var(--dim){{ end }};">
       <div class="total-score-number {{ $scoreClass }}">{{ .Params.total_score }}<span style="font-size:1.5rem;color:var(--color-text-muted);">/12</span></div>
       <div class="total-score-label">Innovation Score</div>
       <div class="score-bar-visual">
@@ -133,8 +126,8 @@
 
     <!-- Red Flags -->
     {{ if gt .Params.red_flag_count 0 }}
-    <div style="background:rgba(248,81,73,0.08);border:1px solid rgba(248,81,73,0.3);border-radius:var(--radius-md);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-xl);">
-      <strong style="color:#f85149;">Red Flags ({{ .Params.red_flag_count }})</strong>
+    <div style="background:rgba(194,96,79,0.08);border:1px solid rgba(194,96,79,0.3);border-radius:var(--radius-md);padding:var(--space-md) var(--space-lg);margin-bottom:var(--space-xl);">
+      <strong style="color:var(--loss);">Red Flags ({{ .Params.red_flag_count }})</strong>
       <div style="margin-top:var(--space-sm);">
         {{ range .Params.red_flags }}
           <span class="red-flag-tag">{{ . }}</span>
@@ -180,7 +173,7 @@
         <div class="card-detail">
           Revenue: {{ .Params.revenue_display }}<br>
           {{ if .Params.revenue_growth }}
-            YoY Growth: <span style="color:{{ if gt .Params.revenue_growth 0.0 }}#3fb950{{ else }}#f85149{{ end }}">{{ printf "%+.1f" .Params.revenue_growth }}%</span>
+            YoY Growth: <span style="color:{{ if gt .Params.revenue_growth 0.0 }}var(--gain){{ else }}var(--loss){{ end }}">{{ printf "%+.1f" .Params.revenue_growth }}%</span>
           {{ else }}
             Revenue growth data unavailable.
           {{ end }}
@@ -194,7 +187,7 @@
         <div class="card-detail">
           Insider ownership: {{ printf "%.1f" .Params.insider_held_pct }}%<br>
           SBC/Revenue: {{ printf "%.1f" .Params.sbc_to_revenue }}%<br>
-          {{ if .Params.has_reverse_split }}<span style="color:#f85149;">Has reverse split history</span>{{ else }}No reverse splits detected{{ end }}
+          {{ if .Params.has_reverse_split }}<span style="color:var(--loss);">Has reverse split history</span>{{ else }}No reverse splits detected{{ end }}
         </div>
       </div>
     </div>
@@ -212,7 +205,7 @@
       </div>
       <div class="metric-row">
         <span class="metric-label">Revenue Growth (YoY)</span>
-        <span class="metric-value" style="color:{{ if gt .Params.revenue_growth 0.0 }}#3fb950{{ else }}#f85149{{ end }}">{{ if .Params.revenue_growth }}{{ printf "%+.1f" .Params.revenue_growth }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if gt .Params.revenue_growth 0.0 }}var(--gain){{ else }}var(--loss){{ end }}">{{ if .Params.revenue_growth }}{{ printf "%+.1f" .Params.revenue_growth }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Cash on Hand</span>
@@ -228,11 +221,11 @@
       </div>
       <div class="metric-row">
         <span class="metric-label">Insider Ownership</span>
-        <span class="metric-value" style="color:{{ if ge .Params.insider_held_pct 10.0 }}#3fb950{{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.insider_held_pct }}%</span>
+        <span class="metric-value" style="color:{{ if ge .Params.insider_held_pct 10.0 }}var(--gain){{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.insider_held_pct }}%</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">SBC / Revenue</span>
-        <span class="metric-value" style="color:{{ if gt .Params.sbc_to_revenue 20.0 }}#f85149{{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.sbc_to_revenue }}%</span>
+        <span class="metric-value" style="color:{{ if gt .Params.sbc_to_revenue 20.0 }}var(--loss){{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.sbc_to_revenue }}%</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Sector / Industry</span>
@@ -260,7 +253,7 @@
     <div class="assess-card" style="margin-bottom:var(--space-xl);">
       <h3>7-Step Risk Assessment</h3>
       <p style="font-size:0.85rem;color:var(--color-text-muted);margin-bottom:var(--space-md);">
-        How {{ .Params.ticker }} maps to our <a href="/methodology/micro-cap-innovation/" style="color:#58a6ff;">micro cap methodology</a>:
+        How {{ .Params.ticker }} maps to our <a href="/methodology/micro-cap-innovation/" style="color:var(--closed);">micro cap methodology</a>:
       </p>
       <ol class="methodology-steps">
         <li class="{{ if gt .Params.patent_count 0 }}step-pass{{ else }}step-warn{{ end }}">
@@ -300,7 +293,7 @@
           <span class="step-title">Management Alignment</span>
           <span class="step-detail">
             Insiders hold {{ printf "%.1f" .Params.insider_held_pct }}% of shares. SBC is {{ printf "%.1f" .Params.sbc_to_revenue }}% of revenue.
-            {{ if .Params.has_reverse_split }}<span style="color:#f85149;">Reverse split detected — management may be managing optics rather than building value.</span>{{ end }}
+            {{ if .Params.has_reverse_split }}<span style="color:var(--loss);">Reverse split detected — management may be managing optics rather than building value.</span>{{ end }}
           </span>
         </li>
         <li class="step-warn">
@@ -323,31 +316,31 @@
       <h3>Financial Detail</h3>
       <div class="metric-row">
         <span class="metric-label">Free Cash Flow</span>
-        <span class="metric-value" style="color:{{ if and .Params.fcf (gt .Params.fcf 0.0) }}#3fb950{{ else if and .Params.fcf (lt .Params.fcf 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.fcf }}${{ printf "%.1f" (div (float .Params.fcf) 1000000.0) }}M{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.fcf (gt .Params.fcf 0.0) }}var(--gain){{ else if and .Params.fcf (lt .Params.fcf 0.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.fcf }}${{ printf "%.1f" (div (float .Params.fcf) 1000000.0) }}M{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">FCF Yield</span>
-        <span class="metric-value" style="color:{{ if and .Params.fcf_yield (ge .Params.fcf_yield 8.0) }}#3fb950{{ else if and .Params.fcf_yield (ge .Params.fcf_yield 5.0) }}#388bfd{{ else }}var(--color-text){{ end }}">{{ if .Params.fcf_yield }}{{ printf "%.1f" .Params.fcf_yield }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.fcf_yield (ge .Params.fcf_yield 8.0) }}var(--gain){{ else if and .Params.fcf_yield (ge .Params.fcf_yield 5.0) }}var(--closed){{ else }}var(--color-text){{ end }}">{{ if .Params.fcf_yield }}{{ printf "%.1f" .Params.fcf_yield }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Return on Equity</span>
-        <span class="metric-value" style="color:{{ if and .Params.roe (gt .Params.roe 15.0) }}#3fb950{{ else }}var(--color-text){{ end }}">{{ if .Params.roe }}{{ printf "%.1f" .Params.roe }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.roe (gt .Params.roe 15.0) }}var(--gain){{ else }}var(--color-text){{ end }}">{{ if .Params.roe }}{{ printf "%.1f" .Params.roe }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Debt / Equity</span>
-        <span class="metric-value" style="color:{{ if and .Params.debt_to_equity (gt .Params.debt_to_equity 100.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.debt_to_equity }}{{ printf "%.1f" .Params.debt_to_equity }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.debt_to_equity (gt .Params.debt_to_equity 100.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.debt_to_equity }}{{ printf "%.1f" .Params.debt_to_equity }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Gross Margin</span>
-        <span class="metric-value" style="color:{{ if and .Params.gross_margin (ge .Params.gross_margin 40.0) }}#3fb950{{ else }}var(--color-text){{ end }}">{{ if .Params.gross_margin }}{{ printf "%.1f" .Params.gross_margin }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.gross_margin (ge .Params.gross_margin 40.0) }}var(--gain){{ else }}var(--color-text){{ end }}">{{ if .Params.gross_margin }}{{ printf "%.1f" .Params.gross_margin }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Profit Margin</span>
-        <span class="metric-value" style="color:{{ if and .Params.profit_margin (gt .Params.profit_margin 0.0) }}#3fb950{{ else if and .Params.profit_margin (lt .Params.profit_margin 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.profit_margin }}{{ printf "%.1f" .Params.profit_margin }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.profit_margin (gt .Params.profit_margin 0.0) }}var(--gain){{ else if and .Params.profit_margin (lt .Params.profit_margin 0.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.profit_margin }}{{ printf "%.1f" .Params.profit_margin }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Operating Margin</span>
-        <span class="metric-value" style="color:{{ if and .Params.operating_margin (gt .Params.operating_margin 0.0) }}#3fb950{{ else if and .Params.operating_margin (lt .Params.operating_margin 0.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.operating_margin }}{{ printf "%.1f" .Params.operating_margin }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.operating_margin (gt .Params.operating_margin 0.0) }}var(--gain){{ else if and .Params.operating_margin (lt .Params.operating_margin 0.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.operating_margin }}{{ printf "%.1f" .Params.operating_margin }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Price / Book</span>
@@ -355,7 +348,7 @@
       </div>
       <div class="metric-row">
         <span class="metric-label">Current Ratio</span>
-        <span class="metric-value" style="color:{{ if and .Params.current_ratio (lt .Params.current_ratio 1.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.current_ratio }}{{ printf "%.2f" .Params.current_ratio }}{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.current_ratio (lt .Params.current_ratio 1.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.current_ratio }}{{ printf "%.2f" .Params.current_ratio }}{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Dividend Yield</span>
@@ -363,11 +356,11 @@
       </div>
       <div class="metric-row">
         <span class="metric-label">Share Count Change (YoY)</span>
-        <span class="metric-value" style="color:{{ if and .Params.shares_change_yoy (lt .Params.shares_change_yoy 0.0) }}#3fb950{{ else if and .Params.shares_change_yoy (gt .Params.shares_change_yoy 2.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_yoy }}{{ printf "%+.1f" .Params.shares_change_yoy }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.shares_change_yoy (lt .Params.shares_change_yoy 0.0) }}var(--gain){{ else if and .Params.shares_change_yoy (gt .Params.shares_change_yoy 2.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_yoy }}{{ printf "%+.1f" .Params.shares_change_yoy }}%{{ else }}N/A{{ end }}</span>
       </div>
       <div class="metric-row">
         <span class="metric-label">Share Count Change (3yr)</span>
-        <span class="metric-value" style="color:{{ if and .Params.shares_change_3yr (lt .Params.shares_change_3yr 0.0) }}#3fb950{{ else if and .Params.shares_change_3yr (gt .Params.shares_change_3yr 2.0) }}#f85149{{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_3yr }}{{ printf "%+.1f" .Params.shares_change_3yr }}%{{ else }}N/A{{ end }}</span>
+        <span class="metric-value" style="color:{{ if and .Params.shares_change_3yr (lt .Params.shares_change_3yr 0.0) }}var(--gain){{ else if and .Params.shares_change_3yr (gt .Params.shares_change_3yr 2.0) }}var(--loss){{ else }}var(--color-text){{ end }}">{{ if .Params.shares_change_3yr }}{{ printf "%+.1f" .Params.shares_change_3yr }}%{{ else }}N/A{{ end }}</span>
       </div>
     </div>
 
@@ -377,14 +370,14 @@
     <div class="assess-card" style="margin-bottom:var(--space-xl);">
       <h3>Quality Flags</h3>
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:var(--space-sm);">
-        {{ if .Params.buffett_quality }}<span class="info-tag" style="background:rgba(5,150,105,0.15);color:#059669;">Buffett Quality</span>{{ end }}
-        {{ if .Params.wide_moat }}<span class="info-tag" style="background:rgba(14,165,233,0.15);color:#0ea5e9;">Wide Moat</span>{{ end }}
-        {{ if .Params.high_roe }}<span class="info-tag" style="background:rgba(35,134,54,0.15);color:#3fb950;">High ROE</span>{{ end }}
-        {{ if .Params.low_debt }}<span class="info-tag" style="background:rgba(56,139,253,0.15);color:#388bfd;">Low Debt</span>{{ end }}
-        {{ if .Params.has_positive_fcf }}<span class="info-tag" style="background:rgba(16,185,129,0.15);color:#10b981;">FCF Positive</span>{{ end }}
-        {{ if .Params.is_cannibal }}<span class="info-tag" style="background:rgba(6,182,212,0.15);color:#06b6d4;">Share Cannibal</span>{{ end }}
-        {{ if .Params.is_buying_back }}<span class="info-tag" style="background:rgba(6,182,212,0.15);color:#06b6d4;">Buying Back</span>{{ end }}
-        {{ if .Params.is_diluting }}<span class="info-tag" style="background:rgba(248,81,73,0.15);color:#f85149;">Diluting</span>{{ end }}
+        {{ if .Params.buffett_quality }}<span class="info-tag" style="background:rgba(143,191,111,0.15);color:var(--gain);">Buffett Quality</span>{{ end }}
+        {{ if .Params.wide_moat }}<span class="info-tag" style="background:rgba(14,165,233,0.15);color:var(--closed);">Wide Moat</span>{{ end }}
+        {{ if .Params.high_roe }}<span class="info-tag" style="background:rgba(143,191,111,0.15);color:var(--gain);">High ROE</span>{{ end }}
+        {{ if .Params.low_debt }}<span class="info-tag" style="background:rgba(95,168,181,0.15);color:var(--closed);">Low Debt</span>{{ end }}
+        {{ if .Params.has_positive_fcf }}<span class="info-tag" style="background:rgba(143,191,111,0.15);color:var(--gain);">FCF Positive</span>{{ end }}
+        {{ if .Params.is_cannibal }}<span class="info-tag" style="background:rgba(201,138,94,0.15);color:#c98a5e;">Share Cannibal</span>{{ end }}
+        {{ if .Params.is_buying_back }}<span class="info-tag" style="background:rgba(201,138,94,0.15);color:#c98a5e;">Buying Back</span>{{ end }}
+        {{ if .Params.is_diluting }}<span class="info-tag" style="background:rgba(194,96,79,0.15);color:var(--loss);">Diluting</span>{{ end }}
       </div>
     </div>
     {{ end }}
@@ -394,23 +387,23 @@
     <div class="assess-card" style="margin-bottom:var(--space-xl);">
       <h3>Free Cash Flow Trend</h3>
       <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-md);">
-        <span style="font-size:1.25rem;font-weight:700;color:{{ if eq .Params.fcf_trend "growing" }}#3fb950{{ else if eq .Params.fcf_trend "declining" }}#f85149{{ else if eq .Params.fcf_trend "volatile" }}#d29922{{ else }}var(--color-text-muted){{ end }};">
+        <span style="font-size:1.25rem;font-weight:700;color:{{ if eq .Params.fcf_trend "growing" }}var(--gain){{ else if eq .Params.fcf_trend "declining" }}var(--loss){{ else if eq .Params.fcf_trend "volatile" }}var(--bench){{ else }}var(--color-text-muted){{ end }};">
           {{ if eq .Params.fcf_trend "growing" }}Growing{{ else if eq .Params.fcf_trend "declining" }}Declining{{ else if eq .Params.fcf_trend "volatile" }}Volatile{{ else }}Insufficient Data{{ end }}
         </span>
         {{ if .Params.fcf_cagr_3yr }}
-        <span style="font-size:0.85rem;color:var(--color-text-muted);">3yr CAGR: <strong style="color:{{ if gt .Params.fcf_cagr_3yr 0.0 }}#3fb950{{ else }}#f85149{{ end }};">{{ printf "%+.1f" .Params.fcf_cagr_3yr }}%</strong></span>
+        <span style="font-size:0.85rem;color:var(--color-text-muted);">3yr CAGR: <strong style="color:{{ if gt .Params.fcf_cagr_3yr 0.0 }}var(--gain){{ else }}var(--loss){{ end }};">{{ printf "%+.1f" .Params.fcf_cagr_3yr }}%</strong></span>
         {{ end }}
       </div>
       <div class="metric-row">
         <span class="metric-label">Consecutive Years FCF Positive</span>
-        <span class="metric-value" style="color:{{ if ge .Params.fcf_consecutive_positive 3 }}#3fb950{{ else }}var(--color-text){{ end }};">{{ .Params.fcf_consecutive_positive }}</span>
+        <span class="metric-value" style="color:{{ if ge .Params.fcf_consecutive_positive 3 }}var(--gain){{ else }}var(--color-text){{ end }};">{{ .Params.fcf_consecutive_positive }}</span>
       </div>
       {{ if .Params.fcf_history }}
       <div style="margin-top:var(--space-md);">
         <span style="font-size:0.8rem;color:var(--color-text-muted);">Annual FCF ($M):</span>
         <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-top:6px;">
           {{ range .Params.fcf_history }}
-          <span style="font-size:0.8rem;padding:4px 10px;border-radius:10px;background:{{ if ge .fcf 0.0 }}rgba(35,134,54,0.15){{ else }}rgba(248,81,73,0.15){{ end }};color:{{ if ge .fcf 0.0 }}#3fb950{{ else }}#f85149{{ end }};">{{ .year }}: ${{ printf "%.1f" (div .fcf 1000000.0) }}M</span>
+          <span style="font-size:0.8rem;padding:4px 10px;border-radius:10px;background:{{ if ge .fcf 0.0 }}rgba(143,191,111,0.15){{ else }}rgba(194,96,79,0.15){{ end }};color:{{ if ge .fcf 0.0 }}var(--gain){{ else }}var(--loss){{ end }};">{{ .year }}: ${{ printf "%.1f" (div .fcf 1000000.0) }}M</span>
           {{ end }}
         </div>
       </div>
@@ -483,8 +476,8 @@
 
       var labels = d.years.map(String);
 
-      var gridColor = 'rgba(255,255,255,0.06)';
-      var tickColor = '#8b949e';
+      var gridColor = 'rgba(236,230,218,0.06)';
+      var tickColor = 'var(--dim)';
       var baseOpts = {
         responsive: true,
         maintainAspectRatio: false,
@@ -507,8 +500,8 @@
         data: {
           labels: labels,
           datasets: [
-            { label: 'Free Cash Flow', data: nullToNaN(d.fcf), backgroundColor: barColor(d.fcf, 'rgba(35,134,54,0.75)', 'rgba(248,81,73,0.75)'), borderColor: barColor(d.fcf, '#2ea043', '#f85149'), borderWidth: 1, borderRadius: 3 },
-            { label: 'Net Income', data: nullToNaN(d.net_income), backgroundColor: barColor(d.net_income, 'rgba(37,99,235,0.55)', 'rgba(248,81,73,0.45)'), borderColor: barColor(d.net_income, '#2563eb', '#f85149'), borderWidth: 1, borderRadius: 3 }
+            { label: 'Free Cash Flow', data: nullToNaN(d.fcf), backgroundColor: barColor(d.fcf, 'rgba(143,191,111,0.75)', 'rgba(194,96,79,0.75)'), borderColor: barColor(d.fcf, 'var(--gain)', 'var(--loss)'), borderWidth: 1, borderRadius: 3 },
+            { label: 'Net Income', data: nullToNaN(d.net_income), backgroundColor: barColor(d.net_income, 'rgba(95,168,181,0.55)', 'rgba(194,96,79,0.45)'), borderColor: barColor(d.net_income, 'var(--closed)', 'var(--loss)'), borderWidth: 1, borderRadius: 3 }
           ]
         },
         options: JSON.parse(JSON.stringify(baseOpts))
@@ -517,23 +510,23 @@
       // Revenue
       new Chart(document.getElementById('healthRevenueChart'), {
         type: 'bar',
-        data: { labels: labels, datasets: [{ label: 'Revenue', data: nullToNaN(d.revenue), backgroundColor: 'rgba(56,139,253,0.65)', borderColor: '#388bfd', borderWidth: 1, borderRadius: 3 }] },
+        data: { labels: labels, datasets: [{ label: 'Revenue', data: nullToNaN(d.revenue), backgroundColor: 'rgba(95,168,181,0.65)', borderColor: 'var(--closed)', borderWidth: 1, borderRadius: 3 }] },
         options: JSON.parse(JSON.stringify(baseOpts))
       });
 
       // Total Debt
       new Chart(document.getElementById('healthDebtChart'), {
         type: 'bar',
-        data: { labels: labels, datasets: [{ label: 'Total Debt', data: nullToNaN(d.total_debt), backgroundColor: 'rgba(210,153,34,0.65)', borderColor: '#d29922', borderWidth: 1, borderRadius: 3 }] },
+        data: { labels: labels, datasets: [{ label: 'Total Debt', data: nullToNaN(d.total_debt), backgroundColor: 'rgba(201,162,74,0.65)', borderColor: 'var(--bench)', borderWidth: 1, borderRadius: 3 }] },
         options: JSON.parse(JSON.stringify(baseOpts))
       });
 
       // ROIC
       var roicColors = (d.roic || []).map(function(v) {
-        if (v === null) return 'rgba(139,148,158,0.4)';
-        if (v >= 15) return 'rgba(35,134,54,0.75)';
-        if (v >= 8) return 'rgba(210,153,34,0.75)';
-        return 'rgba(248,81,73,0.75)';
+        if (v === null) return 'rgba(111,103,87,0.4)';
+        if (v >= 15) return 'rgba(143,191,111,0.75)';
+        if (v >= 8) return 'rgba(201,162,74,0.75)';
+        return 'rgba(194,96,79,0.75)';
       });
       new Chart(document.getElementById('healthRoicChart'), {
         type: 'bar',
@@ -542,8 +535,8 @@
           var o = JSON.parse(JSON.stringify(baseOpts));
           o.scales.y.ticks.callback = function(v) { return v + '%'; };
           o.plugins.annotation = { annotations: {
-            line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(210,153,34,0.5)', borderWidth: 1, borderDash: [4,4] },
-            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+            line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(201,162,74,0.5)', borderWidth: 1, borderDash: [4,4] },
+            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(143,191,111,0.5)', borderWidth: 1, borderDash: [4,4] }
           }};
           return o;
         })()
@@ -552,11 +545,11 @@
       // FCF Yield
       if (d.fcf_yield && d.fcf_yield.some(function(v) { return v !== null; })) {
         var fcfYieldColors = (d.fcf_yield || []).map(function(v) {
-          if (v === null) return 'rgba(139,148,158,0.4)';
-          if (v >= 8) return 'rgba(35,134,54,0.75)';
-          if (v >= 5) return 'rgba(56,139,253,0.65)';
-          if (v >= 0) return 'rgba(210,153,34,0.75)';
-          return 'rgba(248,81,73,0.75)';
+          if (v === null) return 'rgba(111,103,87,0.4)';
+          if (v >= 8) return 'rgba(143,191,111,0.75)';
+          if (v >= 5) return 'rgba(95,168,181,0.65)';
+          if (v >= 0) return 'rgba(201,162,74,0.75)';
+          return 'rgba(194,96,79,0.75)';
         });
         new Chart(document.getElementById('healthFcfYieldChart'), {
           type: 'bar',
@@ -565,8 +558,8 @@
             var o = JSON.parse(JSON.stringify(baseOpts));
             o.scales.y.ticks.callback = function(v) { return v + '%'; };
             o.plugins.annotation = { annotations: {
-              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(56,139,253,0.5)', borderWidth: 1, borderDash: [4,4] },
-              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(95,168,181,0.5)', borderWidth: 1, borderDash: [4,4] },
+              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(143,191,111,0.5)', borderWidth: 1, borderDash: [4,4] }
             }};
             return o;
           })()
@@ -577,12 +570,12 @@
       if (d.gross_margin && d.gross_margin.some(function(v) { return v !== null; })) {
         new Chart(document.getElementById('healthGrossMarginChart'), {
           type: 'bar',
-          data: { labels: labels, datasets: [{ label: 'Gross Margin %', data: nullToNaN(d.gross_margin), backgroundColor: 'rgba(168,85,247,0.6)', borderColor: '#a855f7', borderWidth: 1, borderRadius: 3 }] },
+          data: { labels: labels, datasets: [{ label: 'Gross Margin %', data: nullToNaN(d.gross_margin), backgroundColor: 'rgba(169,139,196,0.6)', borderColor: '#a98bc4', borderWidth: 1, borderRadius: 3 }] },
           options: (function() {
             var o = JSON.parse(JSON.stringify(baseOpts));
             o.scales.y.ticks.callback = function(v) { return v + '%'; };
             o.plugins.annotation = { annotations: {
-              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4] }
+              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(143,191,111,0.5)', borderWidth: 1, borderDash: [4,4] }
             }};
             return o;
           })()
@@ -595,11 +588,11 @@
         var sColors = [];
         for (var si = 0; si < sData.length; si++) {
           if (si === 0 || isNaN(sData[si]) || isNaN(sData[si - 1])) {
-            sColors.push('rgba(56,139,253,0.65)');
+            sColors.push('rgba(95,168,181,0.65)');
           } else if (sData[si] <= sData[si - 1]) {
-            sColors.push('rgba(35,134,54,0.75)');
+            sColors.push('rgba(143,191,111,0.75)');
           } else {
-            sColors.push('rgba(248,81,73,0.65)');
+            sColors.push('rgba(194,96,79,0.65)');
           }
         }
         new Chart(document.getElementById('healthSharesChart'), {
@@ -638,7 +631,7 @@
     <!-- Disclaimer -->
     <div style="padding:var(--space-lg);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);margin-top:var(--space-xl);">
       <p style="color:var(--color-text-muted);font-size:0.8rem;margin:0;">
-        <strong>Disclaimer:</strong> This is an automated screening tool, not investment advice. Micro cap stocks are inherently risky with low liquidity and high volatility. The innovation score is based on publicly available data and may not reflect the full picture. Steps 5-7 of the methodology require your own research. See our <a href="/disclaimer/" style="color:#58a6ff;">full disclaimer</a>.
+        <strong>Disclaimer:</strong> This is an automated screening tool, not investment advice. Micro cap stocks are inherently risky with low liquidity and high volatility. The innovation score is based on publicly available data and may not reflect the full picture. Steps 5-7 of the methodology require your own research. See our <a href="/disclaimer/" style="color:var(--closed);">full disclaimer</a>.
       </p>
     </div>
 
@@ -648,8 +641,6 @@
     </p>
   </main>
 
-  <footer style="text-align:center;padding:var(--space-xl);color:var(--color-text-muted);font-size:0.8rem;border-top:1px solid var(--color-border);margin-top:var(--space-2xl);">
-    <p>&copy; {{ now.Year }} mungbeans.io &mdash; <a href="/about/" style="color:var(--color-text-muted);">About</a> &bull; <a href="/disclaimer/" style="color:var(--color-text-muted);">Disclaimer</a> &bull; <a href="/privacy/" style="color:var(--color-text-muted);">Privacy</a></p>
-  </footer>
+  {{ partial "footer.html" . }}
 </body>
 </html>

@@ -100,22 +100,15 @@
   }
   </script>
   
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3" defer></script>
 </head>
 <body>
-  <header class="site-header">
-    <nav>
-      <a href="/" class="logo">mungbeans.io</a>
-      <a href="/stocks/">All Stocks</a>
-      <a href="/microcaps/">Micro Caps</a>
-      <a href="/blog/">Weekly Reports</a>
-      <a href="/deep-dives/">Deep Dives</a>
-      <a href="/book/">The Book</a>
-      <a href="/about/">About</a>
-    </nav>
-  </header>
+  {{ partial "nav.html" . }}
 
   <main class="stock-page">
     <div class="breadcrumb">
@@ -165,9 +158,9 @@
 
     <style>
       .wow-banner {
-        background: linear-gradient(135deg, rgba(255,107,53,0.12) 0%, rgba(226,183,20,0.08) 100%);
-        border: 1px solid rgba(255,107,53,0.5);
-        border-left: 4px solid #ff6b35;
+        background: linear-gradient(135deg, rgba(201,162,74,0.12) 0%, rgba(226,183,20,0.08) 100%);
+        border: 1px solid rgba(201,162,74,0.5);
+        border-left: 4px solid var(--bench);
         border-radius: var(--radius-md);
         padding: var(--space-lg) var(--space-xl);
         margin-bottom: var(--space-lg);
@@ -182,8 +175,8 @@
           90deg,
           transparent,
           transparent 40px,
-          rgba(255,107,53,0.03) 40px,
-          rgba(255,107,53,0.03) 41px
+          rgba(201,162,74,0.03) 40px,
+          rgba(201,162,74,0.03) 41px
         );
         pointer-events: none;
       }
@@ -196,7 +189,7 @@
       .wow-glyph {
         font-family: monospace;
         font-size: 0.75rem;
-        color: rgba(255,107,53,0.5);
+        color: rgba(201,162,74,0.5);
         letter-spacing: 0.1em;
         writing-mode: vertical-rl;
         text-orientation: mixed;
@@ -210,7 +203,7 @@
         display: block;
         font-size: 2rem;
         font-weight: 800;
-        color: #ff6b35;
+        color: var(--bench);
         letter-spacing: -0.02em;
         line-height: 1;
       }
@@ -225,8 +218,8 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background: rgba(255,107,53,0.1);
-        border: 1px solid rgba(255,107,53,0.3);
+        background: rgba(201,162,74,0.1);
+        border: 1px solid rgba(201,162,74,0.3);
         border-radius: 50%;
         width: 60px;
         height: 60px;
@@ -236,7 +229,7 @@
       .wow-score-val {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #ff6b35;
+        color: var(--bench);
       }
       .wow-score-den {
         font-size: 0.65rem;
@@ -260,7 +253,7 @@
         content: '→';
         position: absolute;
         left: 0;
-        color: #ff6b35;
+        color: var(--bench);
       }
       .wow-tiers {
         display: flex;
@@ -275,14 +268,14 @@
         border-radius: 3px;
         letter-spacing: 0.04em;
       }
-      .wow-tier-pass    { background: rgba(35,134,54,0.2); color: #3fb950; border: 1px solid rgba(35,134,54,0.3); }
-      .wow-tier-partial { background: rgba(226,183,20,0.15); color: #e2b714; border: 1px solid rgba(226,183,20,0.3); }
-      .wow-tier-fail    { background: rgba(248,81,73,0.1); color: #f85149; border: 1px solid rgba(248,81,73,0.2); }
+      .wow-tier-pass    { background: rgba(143,191,111,0.2); color: var(--gain); border: 1px solid rgba(143,191,111,0.3); }
+      .wow-tier-partial { background: rgba(226,183,20,0.15); color: var(--bench); border: 1px solid rgba(226,183,20,0.3); }
+      .wow-tier-fail    { background: rgba(194,96,79,0.1); color: var(--loss); border: 1px solid rgba(194,96,79,0.2); }
       .wow-disclaimer {
         font-size: 0.7rem;
         color: var(--color-text-muted);
         margin: 0;
-        border-top: 1px solid rgba(255,107,53,0.15);
+        border-top: 1px solid rgba(201,162,74,0.15);
         padding-top: var(--space-sm);
       }
       @media (max-width: 600px) {
@@ -354,8 +347,8 @@
     </div>
     <style>
       .bar-marker-live {
-        background: #58a6ff;
-        border: 2px solid #fff;
+        background: var(--closed);
+        border: 2px solid var(--ink);
         z-index: 2;
       }
       .midweek-check {
@@ -372,12 +365,12 @@
       }
       .midweek-dot {
         width: 8px; height: 8px; border-radius: 50%;
-        background: #58a6ff; flex-shrink: 0;
+        background: var(--closed); flex-shrink: 0;
         animation: midweek-pulse 2s infinite;
       }
       @keyframes midweek-pulse { 50% { opacity: 0.4; } }
       .midweek-check strong { color: var(--color-text); }
-      .midweek-crossed { color: #d29922; font-weight: 600; }
+      .midweek-crossed { color: var(--bench); font-weight: 600; }
     </style>
     <script>
     (function() {
@@ -697,8 +690,8 @@
       var labels = d.years.map(String);
 
       // Shared chart defaults
-      var gridColor = 'rgba(255,255,255,0.06)';
-      var tickColor = '#8b949e';
+      var gridColor = 'rgba(236,230,218,0.06)';
+      var tickColor = 'var(--dim)';
       var baseOpts = {
         responsive: true,
         maintainAspectRatio: false,
@@ -725,16 +718,16 @@
             {
               label: 'Free Cash Flow',
               data: nullToNaN(d.fcf),
-              backgroundColor: barColor(d.fcf, 'rgba(35,134,54,0.75)', 'rgba(248,81,73,0.75)'),
-              borderColor:     barColor(d.fcf, '#2ea043', '#f85149'),
+              backgroundColor: barColor(d.fcf, 'rgba(143,191,111,0.75)', 'rgba(194,96,79,0.75)'),
+              borderColor:     barColor(d.fcf, 'var(--gain)', 'var(--loss)'),
               borderWidth: 1,
               borderRadius: 3
             },
             {
               label: 'Net Income',
               data: nullToNaN(d.net_income),
-              backgroundColor: barColor(d.net_income, 'rgba(37,99,235,0.55)', 'rgba(248,81,73,0.45)'),
-              borderColor:     barColor(d.net_income, '#2563eb', '#f85149'),
+              backgroundColor: barColor(d.net_income, 'rgba(95,168,181,0.55)', 'rgba(194,96,79,0.45)'),
+              borderColor:     barColor(d.net_income, 'var(--closed)', 'var(--loss)'),
               borderWidth: 1,
               borderRadius: 3
             }
@@ -751,8 +744,8 @@
           datasets: [{
             label: 'Revenue',
             data: nullToNaN(d.revenue),
-            backgroundColor: 'rgba(56,139,253,0.65)',
-            borderColor: '#388bfd',
+            backgroundColor: 'rgba(95,168,181,0.65)',
+            borderColor: 'var(--closed)',
             borderWidth: 1,
             borderRadius: 3
           }]
@@ -768,8 +761,8 @@
           datasets: [{
             label: 'Total Debt',
             data: nullToNaN(d.total_debt),
-            backgroundColor: 'rgba(210,153,34,0.65)',
-            borderColor: '#d29922',
+            backgroundColor: 'rgba(201,162,74,0.65)',
+            borderColor: 'var(--bench)',
             borderWidth: 1,
             borderRadius: 3
           }]
@@ -779,10 +772,10 @@
 
       // --- Chart 4: ROIC ---
       var roicColors = (d.roic || []).map(function(v) {
-        if (v === null) return 'rgba(139,148,158,0.4)';
-        if (v >= 15)   return 'rgba(35,134,54,0.75)';
-        if (v >= 8)    return 'rgba(210,153,34,0.75)';
-        return 'rgba(248,81,73,0.75)';
+        if (v === null) return 'rgba(111,103,87,0.4)';
+        if (v >= 15)   return 'rgba(143,191,111,0.75)';
+        if (v >= 8)    return 'rgba(201,162,74,0.75)';
+        return 'rgba(194,96,79,0.75)';
       });
       new Chart(document.getElementById('healthRoicChart'), {
         type: 'bar',
@@ -802,8 +795,8 @@
           o.scales.y.ticks.callback = function(v) { return v + '%'; };
           // Reference lines at 8% and 15%
           o.plugins.annotation = { annotations: {
-            line8:  { type: 'line', yMin: 8,  yMax: 8,  borderColor: 'rgba(210,153,34,0.5)', borderWidth: 1, borderDash: [4,4] },
-            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(35,134,54,0.5)',  borderWidth: 1, borderDash: [4,4] }
+            line8:  { type: 'line', yMin: 8,  yMax: 8,  borderColor: 'rgba(201,162,74,0.5)', borderWidth: 1, borderDash: [4,4] },
+            line15: { type: 'line', yMin: 15, yMax: 15, borderColor: 'rgba(143,191,111,0.5)',  borderWidth: 1, borderDash: [4,4] }
           }};
           return o;
         })()
@@ -812,11 +805,11 @@
       // --- Chart 5: FCF Yield ---
       if (d.fcf_yield && d.fcf_yield.some(function(v) { return v !== null; })) {
         var fcfYieldColors = (d.fcf_yield || []).map(function(v) {
-          if (v === null) return 'rgba(139,148,158,0.4)';
-          if (v >= 8)  return 'rgba(35,134,54,0.75)';
-          if (v >= 5)  return 'rgba(56,139,253,0.65)';
-          if (v >= 0)  return 'rgba(210,153,34,0.75)';
-          return 'rgba(248,81,73,0.75)';
+          if (v === null) return 'rgba(111,103,87,0.4)';
+          if (v >= 8)  return 'rgba(143,191,111,0.75)';
+          if (v >= 5)  return 'rgba(95,168,181,0.65)';
+          if (v >= 0)  return 'rgba(201,162,74,0.75)';
+          return 'rgba(194,96,79,0.75)';
         });
         new Chart(document.getElementById('healthFcfYieldChart'), {
           type: 'bar',
@@ -834,8 +827,8 @@
             var o = JSON.parse(JSON.stringify(baseOpts));
             o.scales.y.ticks.callback = function(v) { return v + '%'; };
             o.plugins.annotation = { annotations: {
-              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(56,139,253,0.5)', borderWidth: 1, borderDash: [4,4] },
-              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(35,134,54,0.5)',  borderWidth: 1, borderDash: [4,4] }
+              line5: { type: 'line', yMin: 5, yMax: 5, borderColor: 'rgba(95,168,181,0.5)', borderWidth: 1, borderDash: [4,4] },
+              line8: { type: 'line', yMin: 8, yMax: 8, borderColor: 'rgba(143,191,111,0.5)',  borderWidth: 1, borderDash: [4,4] }
             }};
             return o;
           })()
@@ -851,8 +844,8 @@
             datasets: [{
               label: 'Gross Margin %',
               data: nullToNaN(d.gross_margin),
-              backgroundColor: 'rgba(168,85,247,0.6)',
-              borderColor: '#a855f7',
+              backgroundColor: 'rgba(169,139,196,0.6)',
+              borderColor: '#a98bc4',
               borderWidth: 1, borderRadius: 3
             }]
           },
@@ -860,7 +853,7 @@
             var o = JSON.parse(JSON.stringify(baseOpts));
             o.scales.y.ticks.callback = function(v) { return v + '%'; };
             o.plugins.annotation = { annotations: {
-              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(35,134,54,0.5)', borderWidth: 1, borderDash: [4,4], label: { display: false } }
+              line40: { type: 'line', yMin: 40, yMax: 40, borderColor: 'rgba(143,191,111,0.5)', borderWidth: 1, borderDash: [4,4], label: { display: false } }
             }};
             return o;
           })()
@@ -874,11 +867,11 @@
         var sColors = [];
         for (var si = 0; si < sData.length; si++) {
           if (si === 0 || isNaN(sData[si]) || isNaN(sData[si - 1])) {
-            sColors.push('rgba(56,139,253,0.65)');
+            sColors.push('rgba(95,168,181,0.65)');
           } else if (sData[si] <= sData[si - 1]) {
-            sColors.push('rgba(35,134,54,0.75)');
+            sColors.push('rgba(143,191,111,0.75)');
           } else {
-            sColors.push('rgba(248,81,73,0.65)');
+            sColors.push('rgba(194,96,79,0.65)');
           }
         }
         new Chart(document.getElementById('healthSharesChart'), {
@@ -987,8 +980,8 @@
             {
               label: '{{ $.Params.symbol }}',
               data: data.s,
-              borderColor: '#2563eb',
-              backgroundColor: 'rgba(37, 99, 235, 0.08)',
+              borderColor: 'var(--closed)',
+              backgroundColor: 'rgba(95,168,181,0.08)',
               fill: true,
               borderWidth: 2,
               pointRadius: 0,
@@ -997,7 +990,7 @@
             {
               label: 'S&P 500',
               data: data.b,
-              borderColor: '#9ca3af',
+              borderColor: 'var(--dim)',
               backgroundColor: 'transparent',
               fill: false,
               borderWidth: 1.5,
@@ -1093,10 +1086,10 @@
 
       // Individual episode lines (thin, semi-transparent)
       var colors = [
-        'rgba(59,130,246,0.25)', 'rgba(16,185,129,0.25)', 'rgba(245,158,11,0.25)',
+        'rgba(95,168,181,0.25)', 'rgba(143,191,111,0.25)', 'rgba(245,158,11,0.25)',
         'rgba(139,92,246,0.25)', 'rgba(236,72,153,0.25)', 'rgba(20,184,166,0.25)',
-        'rgba(99,102,241,0.25)', 'rgba(244,63,94,0.25)', 'rgba(34,197,94,0.25)',
-        'rgba(168,85,247,0.25)'
+        'rgba(95,168,181,0.25)', 'rgba(244,63,94,0.25)', 'rgba(143,191,111,0.25)',
+        'rgba(169,139,196,0.25)'
       ];
       data.episodes.forEach(function(ep, idx) {
         datasets.push({
@@ -1114,7 +1107,7 @@
       datasets.push({
         label: '{{ $.Params.symbol }} Avg',
         data: data.stock_avg,
-        borderColor: '#2563eb',
+        borderColor: 'var(--closed)',
         borderWidth: 3,
         pointRadius: 0,
         tension: 0.3,
@@ -1125,7 +1118,7 @@
       datasets.push({
         label: 'S&P 500 Avg',
         data: data.spy_avg,
-        borderColor: '#6b7280',
+        borderColor: 'var(--faint)',
         borderWidth: 2.5,
         borderDash: [6, 3],
         pointRadius: 0,
@@ -1311,8 +1304,8 @@
         var yields = quarters.map(function(q) { return q.yield_pct; });
         var qFcf = quarters.map(function(q) { return q.fcf_m; });
 
-        var gridColor = 'rgba(255,255,255,0.06)';
-        var tickColor = '#8b949e';
+        var gridColor = 'rgba(236,230,218,0.06)';
+        var tickColor = 'var(--dim)';
 
         // TTM FCF Bar Chart
         new Chart(document.getElementById('beanQuarterlyFcfChart'), {
@@ -1323,16 +1316,16 @@
               {
                 label: 'TTM FCF ($M)',
                 data: ttmFcf,
-                backgroundColor: 'rgba(35,134,54,0.65)',
-                borderColor: '#2ea043',
+                backgroundColor: 'rgba(143,191,111,0.65)',
+                borderColor: 'var(--gain)',
                 borderWidth: 1,
                 borderRadius: 3
               },
               {
                 label: 'Quarter FCF ($M)',
                 data: qFcf,
-                backgroundColor: 'rgba(56,139,253,0.45)',
-                borderColor: '#388bfd',
+                backgroundColor: 'rgba(95,168,181,0.45)',
+                borderColor: 'var(--closed)',
                 borderWidth: 1,
                 borderRadius: 3
               }
@@ -1358,12 +1351,12 @@
               datasets: [{
                 label: 'FCF Yield %',
                 data: yields,
-                borderColor: '#d29922',
-                backgroundColor: 'rgba(210,153,34,0.1)',
+                borderColor: 'var(--bench)',
+                backgroundColor: 'rgba(201,162,74,0.1)',
                 fill: true,
                 borderWidth: 2.5,
                 pointRadius: 5,
-                pointBackgroundColor: '#d29922',
+                pointBackgroundColor: 'var(--bench)',
                 tension: 0.3
               }]
             },
@@ -1476,9 +1469,9 @@
         letter-spacing: 0.05em;
         padding: 2px 8px;
         border-radius: 4px;
-        background: rgba(210, 153, 34, 0.15);
-        color: #d29922;
-        border: 1px solid rgba(210, 153, 34, 0.3);
+        background: rgba(201,162,74,0.15);
+        color: var(--bench);
+        border: 1px solid rgba(201,162,74,0.3);
       }
       .bean-score-intro {
         color: var(--color-text-muted);
@@ -1512,8 +1505,8 @@
         font-weight: 600;
         font-variant-numeric: tabular-nums;
       }
-      .bean-cheap { color: #2ea043; }
-      .bean-expensive { color: #f85149; }
+      .bean-cheap { color: var(--gain); }
+      .bean-expensive { color: var(--loss); }
       .bean-neutral { color: var(--color-text); }
       .bean-levels-title {
         font-size: 1rem;
@@ -1543,9 +1536,9 @@
         padding: var(--space-sm) var(--space-md);
         border-bottom: 1px solid var(--color-border);
       }
-      .bean-level-cheap td:first-child { border-left: 3px solid #2ea043; }
-      .bean-level-expensive td:first-child { border-left: 3px solid #f85149; }
-      .bean-level-neutral td:first-child { border-left: 3px solid #8b949e; }
+      .bean-level-cheap td:first-child { border-left: 3px solid var(--gain); }
+      .bean-level-expensive td:first-child { border-left: 3px solid var(--loss); }
+      .bean-level-neutral td:first-child { border-left: 3px solid var(--dim); }
       .bean-level-row td:nth-child(3) {
         font-weight: 600;
         font-variant-numeric: tabular-nums;
@@ -1560,7 +1553,7 @@
         margin-bottom: var(--space-md);
       }
       .bean-quality-warning {
-        color: #d29922;
+        color: var(--bench);
         font-style: italic;
       }
       .bean-disclaimer {
@@ -1602,7 +1595,7 @@
       }
       .bean-tracking-fill {
         height: 100%;
-        background: #d29922;
+        background: var(--bench);
         border-radius: 3px;
         transition: width 0.3s;
       }
@@ -1610,7 +1603,7 @@
         font-size: 0.75rem;
         color: var(--color-text-muted);
       }
-      .bean-earnings-date { color: #d29922; }
+      .bean-earnings-date { color: var(--bench); }
       .bean-earnings-history { margin: var(--space-lg) 0; }
       .bean-earnings-table {
         width: 100%;
@@ -1633,8 +1626,8 @@
         border-bottom: 1px solid var(--color-border);
         font-variant-numeric: tabular-nums;
       }
-      .bean-beat { color: #2ea043; font-weight: 600; }
-      .bean-miss { color: #f85149; font-weight: 600; }
+      .bean-beat { color: var(--gain); font-weight: 600; }
+      .bean-miss { color: var(--loss); font-weight: 600; }
       .bean-quarterly-chart { margin: var(--space-lg) 0; }
       .bean-chart-title {
         font-size: 1rem;
@@ -1762,16 +1755,16 @@
       .dislocation-stack-banner {
         padding: var(--space-sm) var(--space-md);
         margin-bottom: var(--space-md);
-        background: rgba(35, 134, 54, 0.1);
-        border: 1px solid rgba(46, 160, 67, 0.4);
+        background: rgba(143,191,111,0.1);
+        border: 1px solid rgba(143,191,111,0.4);
         border-radius: var(--radius-md);
         font-size: 0.875rem;
       }
       .dislocation-stack-warn {
-        background: rgba(248, 81, 73, 0.08);
-        border-color: rgba(248, 81, 73, 0.35);
+        background: rgba(194,96,79,0.08);
+        border-color: rgba(194,96,79,0.35);
       }
-      .dislocation-warning { color: #f85149; }
+      .dislocation-warning { color: var(--loss); }
       @media (max-width: 600px) {
         .dislocation-grid { grid-template-columns: repeat(2, 1fr); }
       }
@@ -1982,8 +1975,6 @@
     </div>
   </main>
 
-  <footer class="site-footer">
-    <p>© {{ now.Year }} mungbeans.io. <a href="/disclaimer/">Disclaimer</a> · <a href="/privacy/">Privacy</a></p>
-  </footer>
+  {{ partial "footer.html" . }}
 </body>
 </html>
