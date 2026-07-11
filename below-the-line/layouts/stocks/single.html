@@ -690,8 +690,8 @@
       var labels = d.years.map(String);
 
       // Shared chart defaults
-      var gridColor = 'rgba(236,230,218,0.06)';
-      var tickColor = 'var(--dim)';
+      var gridColor = 'rgba(236,230,218,0.10)';
+      var tickColor = '#a89e8c';
       var baseOpts = {
         responsive: true,
         maintainAspectRatio: false,
@@ -718,16 +718,16 @@
             {
               label: 'Free Cash Flow',
               data: nullToNaN(d.fcf),
-              backgroundColor: barColor(d.fcf, 'rgba(143,191,111,0.75)', 'rgba(194,96,79,0.75)'),
-              borderColor:     barColor(d.fcf, 'var(--gain)', 'var(--loss)'),
+              backgroundColor: barColor(d.fcf, 'rgba(143,191,111,0.9)', 'rgba(194,96,79,0.9)'),
+              borderColor:     barColor(d.fcf, '#8fbf6f', '#c2604f'),
               borderWidth: 1,
               borderRadius: 3
             },
             {
               label: 'Net Income',
               data: nullToNaN(d.net_income),
-              backgroundColor: barColor(d.net_income, 'rgba(95,168,181,0.55)', 'rgba(194,96,79,0.45)'),
-              borderColor:     barColor(d.net_income, 'var(--closed)', 'var(--loss)'),
+              backgroundColor: barColor(d.net_income, 'rgba(95,168,181,0.8)', 'rgba(194,96,79,0.7)'),
+              borderColor:     barColor(d.net_income, '#5fa8b5', '#c2604f'),
               borderWidth: 1,
               borderRadius: 3
             }
@@ -744,8 +744,8 @@
           datasets: [{
             label: 'Revenue',
             data: nullToNaN(d.revenue),
-            backgroundColor: 'rgba(95,168,181,0.65)',
-            borderColor: 'var(--closed)',
+            backgroundColor: 'rgba(95,168,181,0.85)',
+            borderColor: '#5fa8b5',
             borderWidth: 1,
             borderRadius: 3
           }]
@@ -761,8 +761,8 @@
           datasets: [{
             label: 'Total Debt',
             data: nullToNaN(d.total_debt),
-            backgroundColor: 'rgba(201,162,74,0.65)',
-            borderColor: 'var(--bench)',
+            backgroundColor: 'rgba(201,162,74,0.85)',
+            borderColor: '#c9a24a',
             borderWidth: 1,
             borderRadius: 3
           }]
@@ -772,10 +772,10 @@
 
       // --- Chart 4: ROIC ---
       var roicColors = (d.roic || []).map(function(v) {
-        if (v === null) return 'rgba(111,103,87,0.4)';
-        if (v >= 15)   return 'rgba(143,191,111,0.75)';
-        if (v >= 8)    return 'rgba(201,162,74,0.75)';
-        return 'rgba(194,96,79,0.75)';
+        if (v === null) return 'rgba(111,103,87,0.55)';
+        if (v >= 15)   return 'rgba(143,191,111,0.9)';
+        if (v >= 8)    return 'rgba(201,162,74,0.9)';
+        return 'rgba(194,96,79,0.9)';
       });
       new Chart(document.getElementById('healthRoicChart'), {
         type: 'bar',
@@ -805,11 +805,11 @@
       // --- Chart 5: FCF Yield ---
       if (d.fcf_yield && d.fcf_yield.some(function(v) { return v !== null; })) {
         var fcfYieldColors = (d.fcf_yield || []).map(function(v) {
-          if (v === null) return 'rgba(111,103,87,0.4)';
-          if (v >= 8)  return 'rgba(143,191,111,0.75)';
-          if (v >= 5)  return 'rgba(95,168,181,0.65)';
-          if (v >= 0)  return 'rgba(201,162,74,0.75)';
-          return 'rgba(194,96,79,0.75)';
+          if (v === null) return 'rgba(111,103,87,0.55)';
+          if (v >= 8)  return 'rgba(143,191,111,0.9)';
+          if (v >= 5)  return 'rgba(95,168,181,0.85)';
+          if (v >= 0)  return 'rgba(201,162,74,0.9)';
+          return 'rgba(194,96,79,0.9)';
         });
         new Chart(document.getElementById('healthFcfYieldChart'), {
           type: 'bar',
@@ -844,7 +844,7 @@
             datasets: [{
               label: 'Gross Margin %',
               data: nullToNaN(d.gross_margin),
-              backgroundColor: 'rgba(169,139,196,0.6)',
+              backgroundColor: 'rgba(169,139,196,0.85)',
               borderColor: '#a98bc4',
               borderWidth: 1, borderRadius: 3
             }]
@@ -867,11 +867,11 @@
         var sColors = [];
         for (var si = 0; si < sData.length; si++) {
           if (si === 0 || isNaN(sData[si]) || isNaN(sData[si - 1])) {
-            sColors.push('rgba(95,168,181,0.65)');
+            sColors.push('rgba(95,168,181,0.85)');
           } else if (sData[si] <= sData[si - 1]) {
-            sColors.push('rgba(143,191,111,0.75)');
+            sColors.push('rgba(143,191,111,0.9)');
           } else {
-            sColors.push('rgba(194,96,79,0.65)');
+            sColors.push('rgba(194,96,79,0.85)');
           }
         }
         new Chart(document.getElementById('healthSharesChart'), {
@@ -965,7 +965,7 @@
           type: 'line',
           xMin: idx,
           xMax: idx,
-          borderColor: 'rgba(239, 68, 68, 0.35)',
+          borderColor: 'rgba(194,96,79,0.5)',
           borderWidth: 1.5,
           borderDash: [4, 4],
           label: { display: false }
@@ -980,7 +980,7 @@
             {
               label: '{{ $.Params.symbol }}',
               data: data.s,
-              borderColor: 'var(--closed)',
+              borderColor: '#5fa8b5',
               backgroundColor: 'rgba(95,168,181,0.08)',
               fill: true,
               borderWidth: 2,
@@ -990,7 +990,7 @@
             {
               label: 'S&P 500',
               data: data.b,
-              borderColor: 'var(--dim)',
+              borderColor: '#a89e8c',
               backgroundColor: 'transparent',
               fill: false,
               borderWidth: 1.5,
@@ -1086,10 +1086,10 @@
 
       // Individual episode lines (thin, semi-transparent)
       var colors = [
-        'rgba(95,168,181,0.25)', 'rgba(143,191,111,0.25)', 'rgba(245,158,11,0.25)',
-        'rgba(139,92,246,0.25)', 'rgba(236,72,153,0.25)', 'rgba(20,184,166,0.25)',
-        'rgba(95,168,181,0.25)', 'rgba(244,63,94,0.25)', 'rgba(143,191,111,0.25)',
-        'rgba(169,139,196,0.25)'
+        'rgba(95,168,181,0.35)', 'rgba(143,191,111,0.35)', 'rgba(201,162,74,0.35)',
+        'rgba(169,139,196,0.35)', 'rgba(201,138,94,0.35)', 'rgba(163,209,130,0.35)',
+        'rgba(95,168,181,0.35)', 'rgba(194,96,79,0.35)', 'rgba(143,191,111,0.35)',
+        'rgba(169,139,196,0.35)'
       ];
       data.episodes.forEach(function(ep, idx) {
         datasets.push({
@@ -1107,7 +1107,7 @@
       datasets.push({
         label: '{{ $.Params.symbol }} Avg',
         data: data.stock_avg,
-        borderColor: 'var(--closed)',
+        borderColor: '#5fa8b5',
         borderWidth: 3,
         pointRadius: 0,
         tension: 0.3,
@@ -1118,7 +1118,7 @@
       datasets.push({
         label: 'S&P 500 Avg',
         data: data.spy_avg,
-        borderColor: 'var(--faint)',
+        borderColor: '#6f6757',
         borderWidth: 2.5,
         borderDash: [6, 3],
         pointRadius: 0,
@@ -1304,8 +1304,8 @@
         var yields = quarters.map(function(q) { return q.yield_pct; });
         var qFcf = quarters.map(function(q) { return q.fcf_m; });
 
-        var gridColor = 'rgba(236,230,218,0.06)';
-        var tickColor = 'var(--dim)';
+        var gridColor = 'rgba(236,230,218,0.10)';
+        var tickColor = '#a89e8c';
 
         // TTM FCF Bar Chart
         new Chart(document.getElementById('beanQuarterlyFcfChart'), {
@@ -1317,7 +1317,7 @@
                 label: 'TTM FCF ($M)',
                 data: ttmFcf,
                 backgroundColor: 'rgba(143,191,111,0.65)',
-                borderColor: 'var(--gain)',
+                borderColor: '#8fbf6f',
                 borderWidth: 1,
                 borderRadius: 3
               },
@@ -1325,7 +1325,7 @@
                 label: 'Quarter FCF ($M)',
                 data: qFcf,
                 backgroundColor: 'rgba(95,168,181,0.45)',
-                borderColor: 'var(--closed)',
+                borderColor: '#5fa8b5',
                 borderWidth: 1,
                 borderRadius: 3
               }
@@ -1351,12 +1351,12 @@
               datasets: [{
                 label: 'FCF Yield %',
                 data: yields,
-                borderColor: 'var(--bench)',
+                borderColor: '#c9a24a',
                 backgroundColor: 'rgba(201,162,74,0.1)',
                 fill: true,
                 borderWidth: 2.5,
                 pointRadius: 5,
-                pointBackgroundColor: 'var(--bench)',
+                pointBackgroundColor: '#c9a24a',
                 tension: 0.3
               }]
             },
