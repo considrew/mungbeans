@@ -12,11 +12,11 @@ verdict_label: "DPZ wins"
 performance_price_at_publish: "$337.77"
 performance_price_at_publish_b: "$140.35"
 performance_price_at_publish_c: "$8.25"
-performance_since: "-11.3%"
-performance_price_current: "$299.46"
-performance_as_of: "2026-07-11"
-performance_since_b: "+10.6%"
-performance_price_current_b: "$155.18"
+performance_since: "-4.6%"
+performance_price_current: "$322.18"
+performance_as_of: "2026-07-18"
+performance_since_b: "+15.7%"
+performance_price_current_b: "$162.32"
 ---
 
 ## The Premise

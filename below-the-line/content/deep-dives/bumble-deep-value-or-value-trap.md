@@ -8,10 +8,10 @@ ticker: "BMBL"
 verdict: "value-trap"
 verdict_label: "Value Trap w/ Turnaround Optionality"
 pct_below_200wma: "76.5"
-performance_since: "-5.0%"
+performance_since: "-8.5%"
 performance_price_at_publish: "$3.19"
-performance_price_current: "$3.03"
-performance_as_of: "2026-07-11"
+performance_price_current: "$2.92"
+performance_as_of: "2026-07-18"
 ---
 
 *A mungbeans.io forensic deep-dive — February 8, 2026*
