@@ -8,10 +8,10 @@ ticker: "NKE"
 verdict: "turnaround"
 verdict_label: "Turnaround Play"
 pct_below_200wma: "28"
-performance_since: "-32.0%"
+performance_since: "-35.2%"
 performance_price_at_publish: "$64.39"
-performance_price_current: "$43.76"
-performance_as_of: "2026-07-18"
+performance_price_current: "$41.70"
+performance_as_of: "2026-07-25"
 ---
 
 ## The Setup
