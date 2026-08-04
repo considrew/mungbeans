@@ -191,6 +191,25 @@
       </section>
       {{ end }}
 
+      <!-- Latest Deep Dives -->
+      {{ $dives := first 3 (where site.RegularPages "Section" "deep-dives").ByDate.Reverse }}
+      {{ if $dives }}
+      <section class="latest-dives">
+        <div class="eyebrow" style="margin-bottom:6px">the flagship work</div>
+        <h2>Latest Deep Dives</h2>
+        {{ range $dives }}
+        <a href="{{ .Permalink }}" class="dive-line">
+          <span class="dive-ticker">{{ .Params.ticker }}</span>
+          <span class="dive-title">{{ .Title }}</span>
+          {{ with .Params.performance_since }}
+          <span class="stat-badge performance-badge {{ if hasPrefix . "+" }}perf-positive{{ else }}perf-negative{{ end }}">{{ . }} since publish</span>
+          {{ end }}
+        </a>
+        {{ end }}
+        <a href="/deep-dives/" class="section-view-all">All deep dives →</a>
+      </section>
+      {{ end }}
+
       <!-- Disclaimer -->
       <div class="disclaimer">
         <p><strong>Not financial advice.</strong> This is an educational tool. Past performance does not guarantee future results. Do your own research before making investment decisions.</p>

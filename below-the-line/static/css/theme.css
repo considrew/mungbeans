@@ -603,40 +603,12 @@ main {
 }
 
 /* Ad Placements */
-.ad-container {
-  background: var(--color-surface);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  margin: var(--space-xl) 0;
-  text-align: center;
-  min-height: 90px;
-}
 
-.ad-container--leaderboard {
-  min-height: 90px;
-}
 
-.ad-container--rectangle {
-  min-height: 250px;
-}
 
-.ad-container--sidebar {
-  min-height: 600px;
-}
 
-.ad-label {
-  font-size: 0.625rem;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: var(--space-xs);
-}
 
 /* Hide ad label in production (when ads are live) */
-.ad-container.has-ad .ad-label {
-  display: none;
-}
 /* Email Signup */
 .email-signup {
   background: var(--color-surface);
@@ -1234,3 +1206,14 @@ a:hover { color: var(--ink); }
 .pagination .page-item.active a { color: var(--ink); border-color: var(--bench); }
 .pagination .page-item.disabled a { opacity: .35; pointer-events: none; }
 .pagination .page-item a:hover { color: var(--ink); background: var(--card); }
+
+/* Deep-dive signup + latest-dives components */
+.deepdive-signup { border-left: 2px solid var(--bench); }
+.latest-dives { margin: var(--space-xl) 0; padding: var(--space-lg); background: var(--card); border: 1px solid var(--line); border-radius: 8px; }
+.latest-dives h2 { margin-bottom: var(--space-md); font-size: 1.2rem; }
+.dive-line { display: flex; align-items: baseline; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); text-decoration: none; flex-wrap: wrap; }
+.dive-line:last-of-type { border-bottom: none; }
+.dive-ticker { font-family: var(--font-mono); font-weight: 600; font-size: 12px; letter-spacing: .08em; color: var(--gain); }
+.dive-title { color: var(--ink); flex: 1; min-width: 200px; }
+.dive-line:hover .dive-title { color: var(--bench); }
+.deepdive-section .blog-card h2 { font-size: 1.1rem; }

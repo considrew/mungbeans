@@ -1,0 +1,14 @@
+<section class="email-signup deepdive-signup">
+  <div class="eyebrow" style="margin-bottom:6px">deep dives</div>
+  <h2>New deep dives, when they publish</h2>
+  <p>One email per deep dive. Nothing else.</p>
+  <form name="deepdive-notify" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="signup-form">
+    <input type="hidden" name="form-name" value="deepdive-notify">
+    <p class="hidden" style="display:none;">
+      <label>Don't fill this out: <input name="bot-field"></label>
+    </p>
+    <input type="email" name="email" placeholder="you@example.com" required>
+    <button type="submit">Notify me</button>
+  </form>
+  <p class="signup-note">No spam. Unsubscribe anytime.</p>
+</section>

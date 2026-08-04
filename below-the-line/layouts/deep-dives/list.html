@@ -11,6 +11,8 @@
     <h1>Deep Dives</h1>
     <p class="blog-intro">Forensic analysis of stocks flagged by our 200-week moving average screener. Each deep dive runs the five-layer value trap screening framework to determine whether a stock is genuinely undervalued or cheap for a reason.</p>
 
+    {{ partial "deepdive-signup.html" . }}
+
     <div class="blog-posts">
       {{ range .Pages.ByDate.Reverse }}
       <a href="{{ .Permalink }}" class="blog-card">

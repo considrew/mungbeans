@@ -9,8 +9,6 @@
     gtag('js', new Date());
     gtag('config', 'G-KMCNBWBVVE');
   </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5600315940410875"
-     crossorigin="anonymous"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>mungbeans.io - 200-Week Moving Average Stock Signals</title>
@@ -159,6 +157,32 @@
       </div>
     </section>
 
+    <!-- Deep Dives: the flagship work -->
+    {{ $dives := first 3 (where site.RegularPages "Section" "deep-dives").ByDate.Reverse }}
+    {{ if $dives }}
+    <section class="stock-section deepdive-section">
+      <div class="eyebrow" style="margin-bottom:6px">the flagship work</div>
+      <h2>Deep Dives</h2>
+      <p class="section-desc">Full forensic theses on single names — the business, the valuation, the overhangs, the bear case, and a live performance tag from publish day.</p>
+      <div class="blog-posts">
+        {{ range $dives }}
+        <a href="{{ .Permalink }}" class="blog-card">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+          <h2>{{ .Title }}</h2>
+          <p>{{ .Description }}</p>
+          <div class="blog-card-stats">
+            {{ with .Params.ticker }}<span class="stat-badge">{{ . }}</span>{{ end }}
+            {{ with .Params.performance_since }}
+            <span class="stat-badge performance-badge {{ if hasPrefix . "+" }}perf-positive{{ else }}perf-negative{{ end }}">{{ . }} since publish</span>
+            {{ end }}
+          </div>
+        </a>
+        {{ end }}
+      </div>
+      <a href="/deep-dives/" class="section-view-all">All deep dives →</a>
+    </section>
+    {{ end }}
+
     <!-- Email Signup -->
     <section class="email-signup">
       <h2>📬 Get Notified</h2>
@@ -173,11 +197,6 @@
       </form>
       <p class="signup-note">No spam. Unsubscribe anytime.</p>
     </section>
-
-    <!-- Ad Placement: After Hero -->
-    <div class="ad-container ad-container--leaderboard" id="ad-home-top">
-      <div class="ad-label">Advertisement</div>
-    </div>
 
     <!-- Quality Picks: Actionable Below-Line Stocks -->
     {{ if $qualityPicks }}
