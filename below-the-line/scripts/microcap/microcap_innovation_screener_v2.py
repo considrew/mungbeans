@@ -32,6 +32,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import json
+import re
 import time
 import os
 import random
@@ -71,13 +72,48 @@ PER_TICKER_DELAY = 2     # Seconds between each ticker
 # CONFIG
 # ---------------------------------------------------------------------------
 MIN_MARKET_CAP = 50_000_000
-MAX_MARKET_CAP = 500_000_000
+MAX_MARKET_CAP = 2_000_000_000
 PATENT_LOOKBACK_YEARS = 3
 OUTPUT_DIR = "assets/data"
 
 PATENT_LOOKUP_FILE = "data/microcap_innovation/patent_lookup.json"
 
 TICKER_SOURCE = "data/microcap_tickers.txt"
+MAIN_STOCKS_JSON = "assets/data/stocks.json"
+
+# Tickers pulled in from the main 200WMA universe because they lack 200 weeks
+# of price history. Populated by load_universe(); used to tag records and to
+# enforce the age gate (a discovery name that reaches 200 weeks ages out of
+# this screener and into the main one automatically).
+DISCOVERY_SET = set()
+
+
+def load_universe():
+    """Microcap list + main-universe tickers too young for a 200-week average.
+
+    A main-universe ticker that is absent from stocks.json (and not carried
+    forward stale) is one the weekly screener could not compute a 200WMA for:
+    the discovery cohort. It is screened here until it earns its average.
+    """
+    tickers = load_tickers(TICKER_SOURCE)
+    base = set(tickers)
+    try:
+        import sys as _sys
+        _sys.path.insert(0, "scripts")
+        from update_stocks import STOCK_UNIVERSE as MAIN_UNIVERSE
+        with open(MAIN_STOCKS_JSON) as f:
+            main = json.load(f).get("stocks", [])
+        covered = {x["symbol"] for x in main if not x.get("stale")}
+        stale = {x["symbol"] for x in main if x.get("stale")}
+        young = sorted(t for t in MAIN_UNIVERSE
+                       if t not in covered and t not in stale and t not in base)
+        DISCOVERY_SET.update(young)
+        if young:
+            print(f"  Discovery cohort from main universe (<200wk history): {len(young)}: {', '.join(young)}")
+        return tickers + young
+    except Exception as e:
+        print(f"  [!] Could not build discovery cohort (non-fatal): {e}")
+        return tickers
 
 # ---------------------------------------------------------------------------
 # PATENT ALIASES — manual overrides for companies whose USPTO assignee name
@@ -261,6 +297,27 @@ def get_stock_data(ticker):
         else:
             insider_held_pct = 0
 
+        # --- History age, momentum, and ownership metrics ---
+        weeks_of_history = None
+        momentum_26w_pct = None
+        try:
+            hist = stock.history(period="5y", interval="1wk")
+            closes = hist["Close"].dropna()
+            weeks_of_history = int(len(closes))
+            if weeks_of_history >= 27 and closes.iloc[-27] > 0:
+                momentum_26w_pct = round((closes.iloc[-1] / closes.iloc[-27] - 1) * 100, 1)
+        except Exception:
+            pass
+
+        # Age gate for discovery names: once a main-universe ticker has 200
+        # weeks of history it belongs to the 200WMA screener, and leaves here.
+        if ticker in DISCOVERY_SET and weeks_of_history is not None and weeks_of_history >= 200:
+            print(f"  -> {ticker}: {weeks_of_history} weeks of history; aged out to the main screener.")
+            return None
+
+        short_pct_of_float = info.get("shortPercentOfFloat")
+        institutional_pct = info.get("heldPercentInstitutions")
+
         # --- Build result ---
         sector = info.get("sector", "Unknown")
         industry = info.get("industry", "Unknown")
@@ -283,6 +340,12 @@ def get_stock_data(ticker):
             "has_reverse_split": has_reverse_split,
             "red_flags": red_flags,
             "red_flag_count": len(red_flags),
+            "float_shares": float_shares,
+            "short_pct_of_float": round(short_pct_of_float * 100, 1) if short_pct_of_float is not None else None,
+            "institutional_pct": min(100.0, round(institutional_pct * 100, 1)) if institutional_pct is not None else None,
+            "momentum_26w_pct": momentum_26w_pct,
+            "weeks_of_history": weeks_of_history,
+            "universe_source": "discovery" if ticker in DISCOVERY_SET else "microcap-list",
         }
 
         # Fetch deep financials (reuses the existing yf.Ticker object)
@@ -708,6 +771,43 @@ def load_patent_lookup():
     return data.get("lookup", {})
 
 
+def _normalize_org_name(name):
+    """Strip legal suffixes from the END of the name, repeatedly, then
+    lowercase. endswith-only, so "Journey Medical Corporation" cannot become
+    "journey medicaloration" (a replace() bug that once matched the patent
+    portfolio of Calor, a French appliance brand, to two medical companies)."""
+    clean = str(name or "").strip()
+    _suffixes = ["corporation", "incorporated", "inc.", "inc", "corp.", "corp",
+                 "llc", "l.l.c.", "ltd.", "ltd", "co.", "plc", "l.p.", "lp",
+                 "s.a.", "n.v.", "holdings", "group", "company"]
+    changed = True
+    while changed:
+        changed = False
+        low = clean.lower().rstrip(" ,.")
+        for suf in _suffixes:
+            if low.endswith(" " + suf) or low == suf:
+                clean = clean[: len(low) - len(suf)].rstrip(" ,.")
+                changed = True
+                break
+    return clean.strip().lower()
+
+
+_NORMALIZED_INDEX = {}
+
+def _normalized_lookup(patent_lookup):
+    """Index the lookup by normalized assignee name (built once). On
+    collisions, keep the entry with the most patents."""
+    key = id(patent_lookup)
+    if key not in _NORMALIZED_INDEX:
+        idx = {}
+        for k, entry in patent_lookup.items():
+            nk = _normalize_org_name(k)
+            if nk and (nk not in idx or entry["patent_count"] > idx[nk]["patent_count"]):
+                idx[nk] = entry
+        _NORMALIZED_INDEX[key] = idx
+    return _NORMALIZED_INDEX[key]
+
+
 def get_patent_count(company_name, patent_lookup, ticker=None):
     """
     Look up a company's patent count from the local bulk data.
@@ -718,14 +818,7 @@ def get_patent_count(company_name, patent_lookup, ticker=None):
     if patent_lookup is None:
         return 0, [], "NO_LOOKUP_FILE"
 
-    # Clean company name
-    clean_name = company_name
-    for suffix in [", Inc.", " Inc.", " Inc", " Corp.", " Corp",
-                   " LLC", " Ltd.", " Ltd", " Co.", " Co",
-                   ", L.P.", " L.P.", " Holdings", " Group",
-                   " Therapeutics", " Biosciences", " Technologies"]:
-        clean_name = clean_name.replace(suffix, "")
-    clean_name = clean_name.strip().lower()
+    clean_name = _normalize_org_name(company_name)
 
     # --- Step 1: Try alias map (ticker-specific known names) ---
     if ticker and ticker.upper() in PATENT_ALIASES:
@@ -745,11 +838,30 @@ def get_patent_count(company_name, patent_lookup, ticker=None):
         entry = patent_lookup[clean_name]
         return entry["patent_count"], entry["sample_titles"], "OK"
 
-    # --- Step 3: Try substring match ---
+    # --- Step 2b: Exact match against suffix-normalized assignee names ---
+    _idx = _normalized_lookup(patent_lookup)
+    if clean_name in _idx:
+        entry = _idx[clean_name]
+        return entry["patent_count"], entry["sample_titles"], "OK_NORMALIZED"
+
+    # --- Step 3: Try substring match, word-boundary only ---
+    # A match must be a whole-word subsequence in either direction, at least
+    # six characters, and never a generic corporate word on its own.
+    _GENERIC = {"medical", "pharma", "pharmaceuticals", "therapeutics", "bio",
+                "biosciences", "sciences", "technologies", "technology",
+                "systems", "solutions", "international", "industries",
+                "laboratories", "labs", "energy", "digital", "global"}
     matches = []
-    for key, entry in patent_lookup.items():
-        if clean_name in key or key in clean_name:
-            matches.append(entry)
+    if len(clean_name) >= 5 and clean_name not in _GENERIC:
+        _pat = re.compile(r"\b" + re.escape(clean_name) + r"\b")
+        for key, entry in patent_lookup.items():
+            # cheap substring prefilter, regex only confirms word boundaries
+            if clean_name in key:
+                if _pat.search(key):
+                    matches.append(entry)
+            elif len(key) >= 8 and key in clean_name and key not in _GENERIC:
+                if re.search(r"\b" + re.escape(key) + r"\b", clean_name):
+                    matches.append(entry)
 
     if matches:
         # Take the best match (highest patent count)
@@ -927,7 +1039,7 @@ def main():
         print("  Run patent_data_downloader.py first to build it.")
         print("  Patent scoring will be skipped.\n")
 
-    tickers = load_tickers(TICKER_SOURCE)
+    tickers = load_universe()
     print(f"Loaded {len(tickers)} tickers to screen.\n")
 
     results = []

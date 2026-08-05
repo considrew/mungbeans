@@ -12,7 +12,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Micro Cap Innovation Screener | mungbeans.io</title>
-  <meta name="description" content="Screen micro cap stocks ($50M-$500M) for patent activity, cash runway, revenue growth, and management quality. Red flags auto-filtered. Updated weekly.">
+  <meta name="description" content="Screen micro and small caps ($50M-$2B) for patent activity, cash runway, revenue growth, and management quality. Red flags auto-filtered. Updated weekly.">
   <link rel="canonical" href="{{ .Permalink }}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,7 @@
 
   <main class="stocks-list-page">
     <h1>Micro Cap Innovation Screener</h1>
-    <p class="page-desc">Screening {{ $data.total_screened }} micro caps ($50M-$500M) for patent activity, cash runway, revenue growth, and management quality. {{ $data.total_passed }} passed, {{ $data.total_rejected }} auto-rejected. Data as of {{ $data.generated }}.</p>
+    <p class="page-desc">Screening {{ $data.total_screened }} names from $50M to $2B for patent activity, cash runway, revenue growth, and management quality. Includes the discovery cohort: main-universe stocks too young for a 200-week average, screened here until they earn one. {{ $data.total_passed }} passed, {{ $data.total_rejected }} auto-rejected. Data as of {{ $data.generated }}.</p>
 
     <a href="/methodology/micro-cap-innovation/" class="methodology-link">Read the 7-step methodology &rarr;</a>
 

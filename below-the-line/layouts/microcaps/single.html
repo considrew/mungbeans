@@ -225,6 +225,30 @@
         <span class="metric-label">SBC / Revenue</span>
         <span class="metric-value" style="color:{{ if gt .Params.sbc_to_revenue 20.0 }}var(--loss){{ else }}var(--color-text){{ end }}">{{ printf "%.1f" .Params.sbc_to_revenue }}%</span>
       </div>
+      {{ with .Params.momentum_26w_pct }}
+      <div class="metric-row">
+        <span class="metric-label">26-Week Momentum</span>
+        <span class="metric-value" style="color:{{ if ge . 0.0 }}var(--gain){{ else }}var(--loss){{ end }}">{{ printf "%+.1f" . }}%</span>
+      </div>
+      {{ end }}
+      {{ with .Params.short_pct_of_float }}
+      <div class="metric-row">
+        <span class="metric-label">Short % of Float</span>
+        <span class="metric-value">{{ printf "%.1f" . }}%</span>
+      </div>
+      {{ end }}
+      {{ with .Params.institutional_pct }}
+      <div class="metric-row">
+        <span class="metric-label">Institutional Ownership</span>
+        <span class="metric-value">{{ printf "%.1f" . }}%</span>
+      </div>
+      {{ end }}
+      {{ with .Params.weeks_of_history }}
+      <div class="metric-row">
+        <span class="metric-label">Trading History</span>
+        <span class="metric-value">{{ . }} weeks{{ if eq (printf "%v" $.Params.universe_source) "discovery" }} · discovery cohort, graduates to the 200WMA screener at 200{{ end }}</span>
+      </div>
+      {{ end }}
       <div class="metric-row">
         <span class="metric-label">Sector / Industry</span>
         <span class="metric-value">{{ .Params.sector }} / {{ .Params.industry }}</span>
