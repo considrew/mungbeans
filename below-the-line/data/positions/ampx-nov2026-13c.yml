@@ -23,4 +23,3 @@ events:
     action: trim
     contracts: 10
     price: 1.65
-    note: Cut the size after the first rally faded; six contracts stay for the re-rate.

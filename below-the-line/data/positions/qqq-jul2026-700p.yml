@@ -18,4 +18,3 @@ events:
     action: close
     contracts: 3
     price: 0.04
-    note: Hedge expired against a quiet tape. Cost of insurance, paid in full.

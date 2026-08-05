@@ -4,8 +4,8 @@ ticker: AMPX
 status: open
 thesis: >-
   Part of the August high-beta basket: trillions of dollars re-entered the
-  market in two days, and these are the highest-beta names I track. Bought
-  for IV expansion, not conviction; not holding through expiry.
+  market in two days, and these are the highest-beta names I track. Bought to catch
+  the IV expansion, and out before expiry.
 strike: 18
 expiry: "2026-08-21"
 current_mark: 0.13

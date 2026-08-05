@@ -4,8 +4,8 @@ ticker: SIMO
 status: closed
 thesis: >-
   Logged without a story: a September call bought into July strength and cut
-  ten days later for half. Not every trade gets a thesis; every one gets
-  recorded.
+  ten days later for half. Every trade gets recorded, whether or not it earned a
+  thesis.
 verdict: swing
 strike: 400
 expiry: "2026-09-18"

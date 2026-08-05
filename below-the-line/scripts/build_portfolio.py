@@ -404,15 +404,31 @@ def main() -> int:
     # markers (one per event)
     markers = []
     for p in published:
+        _qty, _cost = 0.0, 0.0
         for ev in p.get("events", []) or []:
             if not ev.get("date"):
                 continue
+            _q, _px, _act = event_qty(ev), ev.get("price"), ev.get("action")
+            _realized = None
+            if _q is not None and _px is not None:
+                if _act in BUY_ACTIONS:
+                    _cost += _q * float(_px); _qty += _q
+                elif _act in SELL_ACTIONS and _qty > 0:
+                    _avg = _cost / _qty
+                    if _avg:
+                        _realized = round((float(_px) - _avg) / _avg * 100, 1)
+                    _cost -= _q * _avg; _qty -= _q
             markers.append({
                 "position_id": p["id"],
                 "date": str(ev["date"]),
                 "action": ev.get("action"),
                 "ticker": str(p.get("ticker", "")).upper(),
+                "asset_type": p.get("asset_type"),
+                "strike": p.get("strike"),
+                "expiry": p.get("expiry"),
+                "qty": event_qty(ev),
                 "committed_usd": committed_usd(p, ev),
+                "realized_pct": _realized,
                 "price": ev.get("price"),
                 "note": (str(ev.get("note")).strip() or None) if ev.get("note") else None,
             })

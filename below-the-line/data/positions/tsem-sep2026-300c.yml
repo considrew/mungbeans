@@ -4,7 +4,7 @@ ticker: TSEM
 status: open
 thesis: >-
   A pure earnings gamble on two days of momentum, played as a swing through
-  the day. Not a screener trade and not pretending to be one.
+  the day. Well outside the screener; logged as the gamble it was.
 strike: 300
 expiry: "2026-09-18"
 current_mark: 12.6

@@ -3,8 +3,8 @@ asset_type: put
 ticker: INTC
 status: closed
 thesis: >-
-  The short-dated leg of the same INTC downside, closed two days before
-  expiry for a small gain.
+  The short-dated leg of the same compression call, closed two days before
+  expiry.
 verdict: speculative-short
 strike: 85
 expiry: "2026-08-05"

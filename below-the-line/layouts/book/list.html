@@ -78,6 +78,16 @@
     .commentary { background:var(--bg-card); border:1px solid var(--line); border-radius:12px; padding:18px 20px; margin:0 0 22px; min-height:90px; }
     .commentary .empty { color:var(--ink-faint); font-family:var(--mono); font-size:13px; }
     .ev-head { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+    .cluster-n { font-family:var(--mono); font-size:9px; fill:#15120e; font-weight:600; }
+    .ledger-sub { color:var(--ink-faint); font-size:13px; margin:-6px 0 12px; }
+    .ledger-wrap { overflow-x:auto; }
+    .ledger { width:100%; border-collapse:collapse; font-size:13px; }
+    .ledger th { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim); text-align:left; padding:7px 9px; border-bottom:1px solid var(--line); }
+    .ledger td { padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top; }
+    .ledger .lr { text-align:right; }
+    .lmono { font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12.5px; }
+    .ledger .note-col { color:var(--ink-dim); font-size:12.5px; max-width:340px; }
+    .ledger tr.flash td { background:rgba(201,162,74,.14); transition:background .3s; }
     .badge { font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.08em; padding:3px 8px; border-radius:5px; border:1px solid var(--line); }
     .badge.open,.badge.add { color:var(--gain); border-color:#3c4a30; }
     .badge.trim { color:var(--trim); border-color:#4a3c1f; }
@@ -171,7 +181,7 @@
         <div class="stat">
           <div class="k">S&amp;P 500 · same window</div>
           <div class="v benchv">{{ if ge $h.spy_return_pct 0.0 }}+{{ end }}{{ $h.spy_return_pct }}%</div>
-          <div class="sub">the honest yardstick</div>
+          <div class="sub">same window, same yardstick</div>
         </div>
         <div class="stat">
           <div class="k">Max drawdown</div>
@@ -229,6 +239,29 @@
         <tbody></tbody>
       </table>
 
+      <h2 class="section">Ledger</h2>
+      <p class="ledger-sub">Every transaction on the book, newest first. The chart clusters markers by week; this is the full record.</p>
+      <div class="ledger-wrap">
+        <table class="ledger" id="ledger">
+          <thead>
+            <tr><th>Date</th><th>Position</th><th>Action</th><th class="lr">Qty</th><th class="lr">Price</th><th class="lr">Committed</th><th class="note-col hide-sm">Note</th></tr>
+          </thead>
+          <tbody>
+            {{ range sort $book.markers "date" "desc" }}
+            <tr data-date="{{ .date }}">
+              <td class="lmono">{{ .date }}</td>
+              <td class="lmono">{{ .ticker }}{{ if ne (printf "%v" .asset_type) "stock" }} {{ .strike }}{{ if eq (printf "%v" .asset_type) "call" }}C{{ else }}P{{ end }} {{ .expiry }}{{ end }}</td>
+              <td><span class="badge {{ .action }}">{{ .action }}</span></td>
+              <td class="lr lmono">{{ .qty }}</td>
+              <td class="lr lmono">${{ .price }}</td>
+              <td class="lr lmono">{{ if .committed_usd }}${{ lang.FormatNumber 0 .committed_usd }}{{ else }}—{{ end }}</td>
+              <td class="note-col hide-sm">{{ if .note }}{{ .note }}{{ else }}{{ with .realized_pct }}<span class="{{ if ge . 0.0 }}pos{{ else }}neg{{ end }}">{{ printf "%+.1f%%" . }} realized</span>{{ end }}{{ end }}</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+
       <p class="approx">{{ $book.approximation_note }}</p>
 
       <p class="disclaimer-note">
@@ -282,6 +315,7 @@
         }
 
         let focusPid = "";
+        let clusters = {};
 
         function render(){
           const host = document.getElementById('chart');
@@ -314,14 +348,27 @@
           });
 
           const baseY = Y(100);
+          // Cluster markers by week so simultaneous trades don't stack into mud.
+          clusters = {};
+          markers.forEach((mk,i)=>{ const idx = dateIdx(mk.date); (clusters[idx]=clusters[idx]||[]).push(i); });
           let dots = '';
-          markers.forEach((mk,i)=>{
-            const idx = dateIdx(mk.date);
+          Object.keys(clusters).forEach(k=>{
+            const idx = +k, grp = clusters[k].map(i=>markers[i]);
             const cx = X(idx), cy = Y(series.portfolio[idx]);
-            const dim = focusPid && mk.position_id !== focusPid;
-            dots += `<circle class="marker" data-i="${i}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rFor(mk.committed_usd).toFixed(1)}"
-                      fill="${markerColor(mk)}" stroke="#15120e" stroke-width="1.5" opacity="${dim?0.22:0.92}">
-                      <title>${esc(mk.ticker)} · ${esc(mk.action)} · ${esc(mk.date)}</title></circle>`;
+            const tot = grp.reduce((a,m)=>a+(m.committed_usd||0),0);
+            const buys = grp.filter(m=>m.action==='open'||m.action==='add').length;
+            const sells = grp.filter(m=>m.action==='trim'||m.action==='close').length;
+            const dim = focusPid && !grp.some(m=>m.position_id===focusPid);
+            const fill = grp.length===1 ? markerColor(grp[0]) : (buys&&sells ? C.dim : (buys?C.gain:C.trim));
+            const title = grp.length===1
+              ? `${esc(grp[0].ticker)} · ${esc(grp[0].action)} · ${esc(grp[0].date)}`
+              : `${grp.length} transactions · week of ${esc(series.dates[idx])} — click for the ledger`;
+            dots += `<circle class="marker" data-idx="${idx}" cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rFor(tot).toFixed(1)}"
+                      fill="${fill}" stroke="#15120e" stroke-width="1.5" opacity="${dim?0.22:0.92}">
+                      <title>${title}</title></circle>`;
+            if(grp.length>1){
+              dots += `<text class="cluster-n" x="${cx.toFixed(1)}" y="${(cy+3).toFixed(1)}" text-anchor="middle" pointer-events="none">${grp.length}</text>`;
+            }
           });
 
           host.innerHTML =
@@ -334,7 +381,15 @@
             </svg>`;
 
           host.querySelectorAll('.marker').forEach(el=>{
-            el.addEventListener('click', ()=> showEvent(markers[+el.dataset.i]));
+            el.addEventListener('click', ()=>{
+              const grp = (clusters[+el.dataset.idx]||[]).map(i=>markers[i]);
+              if(grp.length===1){ showEvent(grp[0]); return; }
+              const dates = new Set(grp.map(m=>m.date));
+              const rows = Array.from(document.querySelectorAll('#ledger tr[data-date]')).filter(r=>dates.has(r.dataset.date));
+              rows.forEach(r=>r.classList.add('flash'));
+              if(rows.length) rows[0].scrollIntoView({behavior:'smooth', block:'center'});
+              setTimeout(()=>rows.forEach(r=>r.classList.remove('flash')), 2600);
+            });
           });
         }
 

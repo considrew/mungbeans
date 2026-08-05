@@ -1,9 +1,9 @@
 ---
-title: "The Bean Score, Audited: What Six Honest Weeks of Signal Data Show"
+title: "The Bean Score, Audited: Six Weeks of Real Signal Data"
 date: 2026-08-08
 draft: true
 tags: ["deep-dive", "bean-score", "methodology"]
-description: "The Bean Score's accuracy tracker was supposed to accumulate weekly. A cron bug wrote seven junk daily snapshots in June, then a fix overcorrected it to monthly. Both are repaired. Here's what the honest data shows so far, what the tracker will report at thirteen weeks, and how the negative-FCF expansion changed coverage."
+description: "The Bean Score's accuracy tracker was supposed to accumulate weekly. A cron bug wrote seven junk daily snapshots in June, then a fix overcorrected it to monthly. Both are repaired. Here's what the clean data shows so far, what the tracker will report at thirteen weeks, and how the negative-FCF expansion changed coverage."
 verdict: "methodology"
 ---
 
@@ -14,7 +14,7 @@ Outline agreed with the author:
    (daily snapshots for a week), the overcorrection (monthly), the prune to
    Saturday-only snapshots, and the restored weekly cadence. The record of
    reasoning includes the plumbing failures.
-2. What exists now: 6 honest weekly snapshots, 1,888 stocks covered
+2. What exists now: six clean weekly snapshots, 1,888 stocks covered
    (including the negative-FCF expansion from June), dislocation score
    family (yield, drawdown, sector-relative, buyback, insider, earnings
    quality).

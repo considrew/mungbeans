@@ -4,8 +4,8 @@ ticker: GENI
 status: open
 thesis: >-
   Cheap convexity on the full re-rate toward my ~$15 DCF. These only pay if
-  recognition actually comes, which is the point: the position sizes the
-  probability, not the conviction. Same August re-rate assumption as the
+  recognition actually comes, which is the point: the position is sized to the
+  probability rather than the conviction. Same August re-rate assumption as the
   October calls, with a safer theta profile.
 article: /deep-dives/geni/
 verdict: speculative-buy
@@ -26,4 +26,3 @@ events:
     action: trim
     contracts: 20
     price: 0.50
-    note: Took half off at +31%; the rest rides into the print.

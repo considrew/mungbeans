@@ -4,11 +4,11 @@ This is the standard for every deep dive on mungbeans.io, set by the GENI piece
 (`below-the-line/static/deep-dives/geni/index.html`). It covers voice, format,
 and the publishing mechanics. It is written for any model or person drafting or
 revising an article. Read the GENI page before writing; it is the reference
-implementation, not just an example.
+implementation.
 
 ## What a deep dive is
 
-A record of reasoning, not a signal to copy. The site's whole trust model is
+A record of reasoning. The site's whole trust model is
 that every claim is dated, every call carries its price at publish, performance
 is tracked in the open, and mistakes get dated correction notes instead of
 silent edits. Write like someone who expects to be graded later, because the
@@ -21,19 +21,19 @@ never "the user," never passive institutional distance. The site reads as one
 person doing the work.
 
 Say the thing. Don't announce that you're about to say it. No "it's worth
-noting," "to be honest," "frankly," "let's unpack," "the question is whether"
+noting," "frankly," "let's unpack," "the question is whether"
 as a transition crutch. No hedging that adds words without adding meaning.
 
 Banned tics, learned the hard way:
 
-- The perfect-contrast pair: "This is not X. It is Y." Allowed once per
-  article, in the closing paragraph, where it has earned its weight. Everywhere
-  else, make the assertion directly. Eight of these in one draft reads like a
-  model that found a hammer.
-- "genuinely," "worth noting," "stated honestly," and their cousins. Delete
-  them; the sentence survives.
-- Em dashes are salt, not the main course. Budget roughly one per two
-  paragraphs of prose. Prefer colons for definitions, commas for asides,
+- The contrast pair, in every form: "This is not X. It is Y.", "not X, but
+  Y", "X, not Y" as a rhetorical flourish. Banned outright, no closing-line
+  exception. Make the assertion directly; if the negation carries real
+  information (a factual "not double-blinded"), state it as fact.
+- "genuinely," "worth noting," "honest" and "honestly" in all their uses, "to
+  be honest," and their cousins. Delete them; the sentence survives. If a
+  section needs a name for what cannot be known, call it "The gaps."
+- Em dashes are salt. Budget roughly one per two paragraphs of prose. Prefer colons for definitions, commas for asides,
   parentheses for specifications, periods for emphasis. Tables and labels are
   exempt.
 
@@ -43,10 +43,10 @@ reader, a wit that comes from precision rather than flourish ("index flows
 don't care what a thing is worth"). Restraint is the style. When a sentence
 sounds like an AI summarizing rather than a person thinking, cut it.
 
-Honesty structures are mandatory, not decorative: a "The honest gaps" note in
-the Numbers tab for what can't be known yet, a full-strength bear case ("The
-steelman, given equal room"), and pre-committed invalidations — falsifiable
-conditions, written before they're tested.
+Accountability structures are mandatory. A "The gaps" note in the Numbers tab
+for what can't be known yet, a full-strength bear case ("The steelman, given
+equal room"), and pre-committed invalidations — falsifiable conditions,
+written before they're tested.
 
 ## Format: the five-tab page
 
@@ -73,7 +73,7 @@ CSS and skeleton.
   (▼) both, plus one dormant card (○) that "fires on anomaly." Each card:
   mechanism, priced-in level, attention level, trigger.
 - **04 Numbers**: metric grids (latest quarter, then guidance), scenario table
-  (bear/base/bull with multiple, implied price, and the path), and "The honest
+  (bear/base/bull with multiple, implied price, and the path), and "The
   gaps."
 - **05 Bear case**: the steelman, given equal room. Short thesis, why the
   re-rate may never fire, pre-committed invalidations as a table.

@@ -4,8 +4,8 @@ ticker: PL
 status: open
 thesis: >-
   Part of the August high-beta basket: trillions of dollars re-entered the
-  market in two days, and these are the highest-beta names I track. Bought
-  for IV expansion, not conviction; not holding through expiry. The four July contracts
+  market in two days, and these are the highest-beta names I track. Bought to catch
+  the IV expansion, and out before expiry. The four July contracts
   were already on the books; the forty are the basket.
 strike: 40
 expiry: "2026-08-21"

@@ -3,8 +3,8 @@ asset_type: call
 ticker: CELH
 status: open
 thesis: >-
-  Same CELH case with more time and more strike. The June 2027 $50s pay on
-  full recovery, not stabilization.
+  Same CELH case with more time and more strike. The June 2027 $50s pay
+  only on full recovery.
 article: /deep-dives/celh-deep-value-or-value-trap/
 verdict: speculative-buy
 strike: 50

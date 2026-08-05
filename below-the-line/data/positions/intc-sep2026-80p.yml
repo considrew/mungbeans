@@ -3,8 +3,8 @@ asset_type: put
 ticker: INTC
 status: closed
 thesis: >-
-  INTC downside, added on strength and closed into the report window for a
-  gain.
+  Expecting compression as the momentum came off. Didn't time it well; the
+  position ran through a few 100% cycles before closing green.
 verdict: speculative-short
 strike: 80
 expiry: "2026-09-18"
