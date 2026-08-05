@@ -1,12 +1,16 @@
 id: pl-aug2026-40c
 asset_type: call
 ticker: PL
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  Part of the August high-beta basket: trillions of dollars re-entered the
+  market in two days, and these are the highest-beta names I track. Bought
+  for IV expansion, not conviction; not holding through expiry. The four July contracts
+  were already on the books; the forty are the basket.
 strike: 40
 expiry: "2026-08-21"
 current_mark: 0.03
+verdict: lotto
 events:
   - date: "2026-07-06"
     action: open

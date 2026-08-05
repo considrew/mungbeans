@@ -1,0 +1,26 @@
+id: goog-aug2026-400c
+asset_type: call
+ticker: GOOG
+status: closed
+thesis: >-
+  Bought on the back of the GOOGL deep dive with earnings momentum behind
+  it, but the tape into the print was emotionally strung with the rest of
+  the market. Took the gain and stepped aside.
+article: /deep-dives/googl-berkshires-bet-on-the-ai-era/
+verdict: swing
+strike: 400
+expiry: "2026-08-21"
+current_mark: 7.16
+events:
+  - date: "2026-07-06"
+    action: open
+    contracts: 2
+    price: 6.18
+  - date: "2026-07-09"
+    action: add
+    contracts: 4
+    price: 4.22
+  - date: "2026-07-16"
+    action: close
+    contracts: 6
+    price: 7.16

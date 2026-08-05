@@ -1,12 +1,16 @@
 id: mram-aug2026-30c
 asset_type: call
 ticker: MRAM
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  Part of the August high-beta basket: trillions of dollars re-entered the
+  market in two days, and these are the highest-beta names I track. Bought
+  for IV expansion, not conviction; not holding through expiry.
 strike: 30
 expiry: "2026-08-21"
 current_mark: 0.15
+article: /deep-dives/mram-vs-nvec-spintronics-thesis/
+verdict: lotto
 events:
   - date: "2026-08-04"
     action: open

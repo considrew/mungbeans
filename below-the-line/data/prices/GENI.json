@@ -1,7 +1,7 @@
 {
   "ticker": "GENI",
   "source": "yfinance",
-  "fetched_at": "2026-08-04",
+  "fetched_at": "2026-08-05",
   "start": "2026-05-28",
   "dates": [
     "2026-05-28",

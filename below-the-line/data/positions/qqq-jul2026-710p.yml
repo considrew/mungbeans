@@ -1,0 +1,21 @@
+id: qqq-jul2026-710p
+asset_type: put
+ticker: QQQ
+status: closed
+thesis: >-
+  The hedge that hit: early-July downside insurance, cashed on the one red
+  day it was bought for.
+verdict: hedge
+strike: 710
+expiry: "2026-07-08"
+current_mark: 4.25
+events:
+  - date: "2026-07-06"
+    action: open
+    contracts: 8
+    price: 1.06
+  - date: "2026-07-07"
+    action: close
+    contracts: 8
+    price: 4.25
+    note: Sold into the selloff at 4x.

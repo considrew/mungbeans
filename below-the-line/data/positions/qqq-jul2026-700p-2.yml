@@ -1,0 +1,19 @@
+id: qqq-jul2026-700p-2
+asset_type: put
+ticker: QQQ
+status: closed
+thesis: >-
+  Another week of index insurance. The tape stayed green; cut it.
+verdict: hedge
+strike: 700
+expiry: "2026-07-17"
+current_mark: 0.94
+events:
+  - date: "2026-07-14"
+    action: open
+    contracts: 10
+    price: 1.38
+  - date: "2026-07-15"
+    action: close
+    contracts: 10
+    price: 0.94

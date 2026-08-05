@@ -1,9 +1,14 @@
 id: ganx-stock
 asset_type: stock
 ticker: GANX
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  Buyout or zero, and priced like it. Very early pre-Phase 2 Parkinson's data
+  showed return of the sense of smell and mobility improvement in every
+  patient - not double-blinded, so it proves less than it suggests, but what
+  it suggests is large. The company is running out of cash, which is the
+  whole risk and the whole reason it's cheap. Will add on support.
+verdict: binary
 events:
   - date: "2026-07-17"
     action: open
@@ -13,3 +18,4 @@ events:
     action: trim
     shares: 750
     price: 1.82
+    note: Took half off when other risks looked more timely; the core stays for the binary.

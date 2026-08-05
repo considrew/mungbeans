@@ -1,12 +1,14 @@
 id: uber-mar2027-70c
 asset_type: call
 ticker: UBER
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  A copy trade: Pelosi's disclosed UBER calls, taken at a cheaper basis than
+  hers. The edge is the disclosure lag working in my favor for once.
 strike: 70
 expiry: "2027-03-19"
 current_mark: 9.65
+verdict: speculative-buy
 events:
   - date: "2026-07-28"
     action: open

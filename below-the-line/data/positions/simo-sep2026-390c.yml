@@ -1,0 +1,20 @@
+id: simo-sep2026-390c
+asset_type: call
+ticker: SIMO
+status: closed
+thesis: >-
+  The second attempt at the same trade, averaged in a strike lower and cut
+  the next day with the first.
+verdict: swing
+strike: 390
+expiry: "2026-09-18"
+current_mark: 17.4
+events:
+  - date: "2026-07-15"
+    action: open
+    contracts: 1
+    price: 28.65
+  - date: "2026-07-16"
+    action: close
+    contracts: 1
+    price: 17.4

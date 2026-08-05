@@ -1,0 +1,17 @@
+id: tsem-stock
+asset_type: stock
+ticker: TSEM
+status: closed
+thesis: >-
+  The stock leg of the TSEM earnings swing: in at 238.25, out the next day.
+  The calls carried the rest.
+verdict: swing
+events:
+  - date: "2026-08-03"
+    action: open
+    shares: 30
+    price: 238.25
+  - date: "2026-08-04"
+    action: close
+    shares: 30
+    price: 213.82

@@ -1,9 +1,12 @@
 id: tndm-stock
 asset_type: stock
 ticker: TNDM
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  Binary play from the WSB thesis
+  (reddit.com/r/wallstreetbets/comments/1tqaidt): bought near support, holding
+  a core until the speculative buyout resolves one way or the other.
+verdict: speculative-buy
 events:
   - date: "2026-07-29"
     action: open

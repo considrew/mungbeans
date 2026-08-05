@@ -1,0 +1,20 @@
+id: nflx-jul2026-80c
+asset_type: call
+ticker: NFLX
+status: closed
+thesis: >-
+  Short-dated NFLX earnings bet that expired worthless. Logged in full.
+verdict: lotto
+strike: 80
+expiry: "2026-07-24"
+current_mark: 0.0
+events:
+  - date: "2026-07-15"
+    action: open
+    contracts: 10
+    price: 1.41
+  - date: "2026-07-24"
+    action: close
+    contracts: 10
+    price: 0.0
+    note: Expired worthless.

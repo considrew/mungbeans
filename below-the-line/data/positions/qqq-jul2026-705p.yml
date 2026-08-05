@@ -1,0 +1,19 @@
+id: qqq-jul2026-705p
+asset_type: put
+ticker: QQQ
+status: closed
+thesis: >-
+  A same-day scalp inside the hedge complex.
+verdict: swing
+strike: 705
+expiry: "2026-07-08"
+current_mark: 0.91
+events:
+  - date: "2026-07-06"
+    action: open
+    contracts: 10
+    price: 0.82
+  - date: "2026-07-06"
+    action: close
+    contracts: 10
+    price: 0.91

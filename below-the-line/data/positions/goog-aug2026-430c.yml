@@ -1,0 +1,21 @@
+id: goog-aug2026-430c
+asset_type: call
+ticker: GOOG
+status: closed
+thesis: >-
+  The higher strike of the same GOOGL trade; cut when the momentum went
+  shaky.
+article: /deep-dives/googl-berkshires-bet-on-the-ai-era/
+verdict: swing
+strike: 430
+expiry: "2026-08-21"
+current_mark: 1.42
+events:
+  - date: "2026-07-08"
+    action: open
+    contracts: 5
+    price: 1.96
+  - date: "2026-07-13"
+    action: close
+    contracts: 5
+    price: 1.42

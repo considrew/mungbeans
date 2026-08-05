@@ -1,12 +1,14 @@
 id: spcx-nov2026-70p
 asset_type: put
 ticker: SPCX
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  The second leg of the re-short after the $110s paid out. Overvaluation
+  thesis unchanged; entries timed to the spikes.
 strike: 70
 expiry: "2026-11-20"
 current_mark: 2.4
+verdict: speculative-short
 events:
   - date: "2026-08-04"
     action: open

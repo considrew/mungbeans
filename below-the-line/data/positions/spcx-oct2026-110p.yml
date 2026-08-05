@@ -19,4 +19,4 @@ events:
     action: close
     contracts: 4
     price: 18.75
-    note: The overvaluation call paid 4x when the stock broke. Rolled exposure down to the October $50s and November $70s.
+    note: Option volume was signaling a move up just before earnings. Secured the 4x rather than argue with the flow, and re-shorted lower on the spikes.

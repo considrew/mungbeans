@@ -1,0 +1,20 @@
+id: spcx-aug2026-70p
+asset_type: put
+ticker: SPCX
+status: closed
+thesis: >-
+  The interim leg of the SPCX re-short, superseded by the October $50s and
+  November $70s and cut at a small loss.
+verdict: speculative-short
+strike: 70
+expiry: "2026-08-21"
+current_mark: 0.6
+events:
+  - date: "2026-07-28"
+    action: open
+    contracts: 15
+    price: 0.8
+  - date: "2026-08-03"
+    action: close
+    contracts: 15
+    price: 0.6

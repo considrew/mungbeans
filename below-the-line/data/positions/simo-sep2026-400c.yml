@@ -1,0 +1,21 @@
+id: simo-sep2026-400c
+asset_type: call
+ticker: SIMO
+status: closed
+thesis: >-
+  Logged without a story: a September call bought into July strength and cut
+  ten days later for half. Not every trade gets a thesis; every one gets
+  recorded.
+verdict: swing
+strike: 400
+expiry: "2026-09-18"
+current_mark: 17.6
+events:
+  - date: "2026-07-06"
+    action: open
+    contracts: 1
+    price: 36.31
+  - date: "2026-07-16"
+    action: close
+    contracts: 1
+    price: 17.6

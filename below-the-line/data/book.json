@@ -1,13 +1,13 @@
 {
   "inception": "2026-05-28",
-  "as_of": "2026-08-04",
+  "as_of": "2026-08-05",
   "refresh_mode": "A",
   "cash": 11180.75,
   "headline": {
-    "return_pct": -6.1,
+    "return_pct": 35.7,
     "spy_return_pct": 2.2,
-    "max_drawdown_pct": -21.2,
-    "open_positions": 7
+    "max_drawdown_pct": -33.5,
+    "open_positions": 21
   },
   "series": {
     "dates": [
@@ -21,7 +21,7 @@
       "2026-07-17",
       "2026-07-24",
       "2026-07-31",
-      "2026-08-04"
+      "2026-08-05"
     ],
     "portfolio": [
       100.0,
@@ -30,11 +30,11 @@
       100.55,
       105.24,
       101.98,
-      97.79,
-      91.26,
-      82.97,
-      102.03,
-      93.87
+      91.59,
+      80.21,
+      70.01,
+      86.92,
+      135.73
     ],
     "spy": [
       100.0,
@@ -169,6 +169,69 @@
       "note": null
     },
     {
+      "position_id": "goog-aug2026-400c",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "GOOG",
+      "committed_usd": 1236.0,
+      "price": 6.18,
+      "note": null
+    },
+    {
+      "position_id": "pl-aug2026-40c",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "PL",
+      "committed_usd": 1348.0,
+      "price": 3.37,
+      "note": "Date and price estimated from account cost basis; fill predates the exported history."
+    },
+    {
+      "position_id": "pl-aug2026-60c",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "PL",
+      "committed_usd": 4752.0,
+      "price": 7.92,
+      "note": "Date estimated; fill predates the exported history."
+    },
+    {
+      "position_id": "qqq-jul2026-705p",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "QQQ",
+      "committed_usd": 820.0,
+      "price": 0.82,
+      "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-705p",
+      "date": "2026-07-06",
+      "action": "close",
+      "ticker": "QQQ",
+      "committed_usd": 910.0,
+      "price": 0.91,
+      "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-710p",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "QQQ",
+      "committed_usd": 848.0,
+      "price": 1.06,
+      "note": null
+    },
+    {
+      "position_id": "simo-sep2026-400c",
+      "date": "2026-07-06",
+      "action": "open",
+      "ticker": "SIMO",
+      "committed_usd": 3631.0,
+      "price": 36.31,
+      "note": null
+    },
+    {
       "position_id": "qqq-jul2026-670p",
       "date": "2026-07-07",
       "action": "close",
@@ -187,12 +250,93 @@
       "note": "Hedge expired against a quiet tape. Cost of insurance, paid in full."
     },
     {
+      "position_id": "qqq-jul2026-710p",
+      "date": "2026-07-07",
+      "action": "close",
+      "ticker": "QQQ",
+      "committed_usd": 3400.0,
+      "price": 4.25,
+      "note": "Sold into the selloff at 4x."
+    },
+    {
+      "position_id": "goog-aug2026-430c",
+      "date": "2026-07-08",
+      "action": "open",
+      "ticker": "GOOG",
+      "committed_usd": 980.0,
+      "price": 1.96,
+      "note": null
+    },
+    {
+      "position_id": "goog-aug2026-400c",
+      "date": "2026-07-09",
+      "action": "add",
+      "ticker": "GOOG",
+      "committed_usd": 1688.0,
+      "price": 4.22,
+      "note": null
+    },
+    {
+      "position_id": "intc-sep2026-80p",
+      "date": "2026-07-10",
+      "action": "open",
+      "ticker": "INTC",
+      "committed_usd": 1700.0,
+      "price": 4.25,
+      "note": null
+    },
+    {
       "position_id": "ampx-nov2026-13c",
       "date": "2026-07-13",
       "action": "add",
       "ticker": "AMPX",
       "committed_usd": 864.0,
       "price": 2.16,
+      "note": null
+    },
+    {
+      "position_id": "goog-aug2026-430c",
+      "date": "2026-07-13",
+      "action": "close",
+      "ticker": "GOOG",
+      "committed_usd": 710.0,
+      "price": 1.42,
+      "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-700p-2",
+      "date": "2026-07-14",
+      "action": "open",
+      "ticker": "QQQ",
+      "committed_usd": 1380.0,
+      "price": 1.38,
+      "note": null
+    },
+    {
+      "position_id": "nflx-jul2026-80c",
+      "date": "2026-07-15",
+      "action": "open",
+      "ticker": "NFLX",
+      "committed_usd": 1410.0,
+      "price": 1.41,
+      "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-700p-2",
+      "date": "2026-07-15",
+      "action": "close",
+      "ticker": "QQQ",
+      "committed_usd": 940.0,
+      "price": 0.94,
+      "note": null
+    },
+    {
+      "position_id": "simo-sep2026-390c",
+      "date": "2026-07-15",
+      "action": "open",
+      "ticker": "SIMO",
+      "committed_usd": 2865.0,
+      "price": 28.65,
       "note": null
     },
     {
@@ -205,6 +349,42 @@
       "note": "Cut the size after the first rally faded; six contracts stay for the re-rate."
     },
     {
+      "position_id": "goog-aug2026-400c",
+      "date": "2026-07-16",
+      "action": "close",
+      "ticker": "GOOG",
+      "committed_usd": 4296.0,
+      "price": 7.16,
+      "note": null
+    },
+    {
+      "position_id": "simo-sep2026-390c",
+      "date": "2026-07-16",
+      "action": "close",
+      "ticker": "SIMO",
+      "committed_usd": 1740.0,
+      "price": 17.4,
+      "note": null
+    },
+    {
+      "position_id": "simo-sep2026-400c",
+      "date": "2026-07-16",
+      "action": "close",
+      "ticker": "SIMO",
+      "committed_usd": 1760.0,
+      "price": 17.6,
+      "note": null
+    },
+    {
+      "position_id": "ganx-stock",
+      "date": "2026-07-17",
+      "action": "open",
+      "ticker": "GANX",
+      "committed_usd": 2580.0,
+      "price": 1.72,
+      "note": null
+    },
+    {
       "position_id": "geni",
       "date": "2026-07-22",
       "action": "add",
@@ -214,6 +394,15 @@
       "note": "Added into the pre-earnings run at $6.39."
     },
     {
+      "position_id": "intc-sep2026-80p",
+      "date": "2026-07-22",
+      "action": "add",
+      "ticker": "INTC",
+      "committed_usd": 2375.0,
+      "price": 4.75,
+      "note": null
+    },
+    {
       "position_id": "celh-jan2027-40c",
       "date": "2026-07-23",
       "action": "add",
@@ -221,6 +410,51 @@
       "committed_usd": 965.0,
       "price": 1.93,
       "note": null
+    },
+    {
+      "position_id": "ganx-stock",
+      "date": "2026-07-23",
+      "action": "trim",
+      "ticker": "GANX",
+      "committed_usd": 1365.0,
+      "price": 1.82,
+      "note": "Took half off when other risks looked more timely; the core stays for the binary."
+    },
+    {
+      "position_id": "intc-sep2026-80p",
+      "date": "2026-07-23",
+      "action": "trim",
+      "ticker": "INTC",
+      "committed_usd": 2515.0,
+      "price": 5.03,
+      "note": null
+    },
+    {
+      "position_id": "mram-stock",
+      "date": "2026-07-23",
+      "action": "open",
+      "ticker": "MRAM",
+      "committed_usd": 4902.0,
+      "price": 16.34,
+      "note": null
+    },
+    {
+      "position_id": "mram-stock",
+      "date": "2026-07-23",
+      "action": "close",
+      "ticker": "MRAM",
+      "committed_usd": 4977.0,
+      "price": 16.59,
+      "note": null
+    },
+    {
+      "position_id": "nflx-jul2026-80c",
+      "date": "2026-07-24",
+      "action": "close",
+      "ticker": "NFLX",
+      "committed_usd": 0.0,
+      "price": 0.0,
+      "note": "Expired worthless."
     },
     {
       "position_id": "geni-jan2027-12-5c",
@@ -241,13 +475,85 @@
       "note": null
     },
     {
+      "position_id": "spcx-aug2026-70p",
+      "date": "2026-07-28",
+      "action": "open",
+      "ticker": "SPCX",
+      "committed_usd": 1200.0,
+      "price": 0.8,
+      "note": null
+    },
+    {
+      "position_id": "spcx-oct2026-50p",
+      "date": "2026-07-28",
+      "action": "open",
+      "ticker": "SPCX",
+      "committed_usd": 915.0,
+      "price": 0.61,
+      "note": "Rolled down from the closed October $110s."
+    },
+    {
+      "position_id": "uber-mar2027-70c",
+      "date": "2026-07-28",
+      "action": "open",
+      "ticker": "UBER",
+      "committed_usd": 3138.0,
+      "price": 10.46,
+      "note": null
+    },
+    {
+      "position_id": "par-stock",
+      "date": "2026-07-29",
+      "action": "open",
+      "ticker": "PAR",
+      "committed_usd": 1753.0,
+      "price": 17.53,
+      "note": null
+    },
+    {
+      "position_id": "tndm-stock",
+      "date": "2026-07-29",
+      "action": "open",
+      "ticker": "TNDM",
+      "committed_usd": 1799.0,
+      "price": 17.99,
+      "note": null
+    },
+    {
       "position_id": "celh-jan2027-40c",
       "date": "2026-07-30",
       "action": "close",
       "ticker": "CELH",
       "committed_usd": 2170.0,
       "price": 2.17,
-      "note": "Closed the position at a loss; the recovery thesis moved to the June 2027 $50s only."
+      "note": "One I should have held, honestly. Closed to concentrate on GENI, where the conviction was stronger; the recovery case lives on in the June 2027 $50s."
+    },
+    {
+      "position_id": "intc-aug2026-85p",
+      "date": "2026-07-30",
+      "action": "open",
+      "ticker": "INTC",
+      "committed_usd": 750.0,
+      "price": 1.5,
+      "note": null
+    },
+    {
+      "position_id": "intc-aug2026-85p",
+      "date": "2026-07-31",
+      "action": "add",
+      "ticker": "INTC",
+      "committed_usd": 490.0,
+      "price": 0.98,
+      "note": null
+    },
+    {
+      "position_id": "par-stock",
+      "date": "2026-07-31",
+      "action": "close",
+      "ticker": "PAR",
+      "committed_usd": 1680.0,
+      "price": 16.8,
+      "note": null
     },
     {
       "position_id": "spcx-oct2026-110p",
@@ -256,10 +562,152 @@
       "ticker": "SPCX",
       "committed_usd": 7500.0,
       "price": 18.75,
-      "note": "The overvaluation call paid 4x when the stock broke. Rolled exposure down to the October $50s and November $70s."
+      "note": "Option volume was signaling a move up just before earnings. Secured the 4x rather than argue with the flow, and re-shorted lower on the spikes."
+    },
+    {
+      "position_id": "grnd-aug2026-25c",
+      "date": "2026-08-03",
+      "action": "open",
+      "ticker": "GRND",
+      "committed_usd": 500.0,
+      "price": 0.05,
+      "note": null
+    },
+    {
+      "position_id": "grnd-jan2027-20c",
+      "date": "2026-08-03",
+      "action": "open",
+      "ticker": "GRND",
+      "committed_usd": 1930.0,
+      "price": 1.93,
+      "note": null
+    },
+    {
+      "position_id": "intc-aug2026-85p",
+      "date": "2026-08-03",
+      "action": "close",
+      "ticker": "INTC",
+      "committed_usd": 1280.0,
+      "price": 1.28,
+      "note": null
+    },
+    {
+      "position_id": "intc-sep2026-80p",
+      "date": "2026-08-03",
+      "action": "close",
+      "ticker": "INTC",
+      "committed_usd": 2160.0,
+      "price": 5.4,
+      "note": null
+    },
+    {
+      "position_id": "spcx-aug2026-70p",
+      "date": "2026-08-03",
+      "action": "close",
+      "ticker": "SPCX",
+      "committed_usd": 900.0,
+      "price": 0.6,
+      "note": null
+    },
+    {
+      "position_id": "tsem-stock",
+      "date": "2026-08-03",
+      "action": "open",
+      "ticker": "TSEM",
+      "committed_usd": 7147.5,
+      "price": 238.25,
+      "note": null
+    },
+    {
+      "position_id": "ampx-aug2026-18c",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "AMPX",
+      "committed_usd": 325.0,
+      "price": 0.13,
+      "note": null
+    },
+    {
+      "position_id": "infq-aug2026-20c",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "INFQ",
+      "committed_usd": 360.0,
+      "price": 0.09,
+      "note": null
+    },
+    {
+      "position_id": "mram-aug2026-30c",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "MRAM",
+      "committed_usd": 200.0,
+      "price": 0.2,
+      "note": null
+    },
+    {
+      "position_id": "onds-aug2026-16c",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "ONDS",
+      "committed_usd": 250.0,
+      "price": 0.05,
+      "note": null
+    },
+    {
+      "position_id": "pl-aug2026-40c",
+      "date": "2026-08-04",
+      "action": "add",
+      "ticker": "PL",
+      "committed_usd": 120.0,
+      "price": 0.03,
+      "note": null
+    },
+    {
+      "position_id": "spcx-nov2026-70p",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "SPCX",
+      "committed_usd": 520.0,
+      "price": 2.6,
+      "note": null
+    },
+    {
+      "position_id": "tsem-sep2026-300c",
+      "date": "2026-08-04",
+      "action": "open",
+      "ticker": "TSEM",
+      "committed_usd": 2100.0,
+      "price": 7.0,
+      "note": "Net position after a same-week round trip (3 opened 8/3 at ~10.95, sold 8/4 at 14.46, re-opened at 7.00)."
+    },
+    {
+      "position_id": "tsem-stock",
+      "date": "2026-08-04",
+      "action": "close",
+      "ticker": "TSEM",
+      "committed_usd": 6414.6,
+      "price": 213.82,
+      "note": null
     }
   ],
   "open_positions": [
+    {
+      "position_id": "ampx-aug2026-18c",
+      "ticker": "AMPX",
+      "asset_type": "call",
+      "market_value": 325.0,
+      "unrealized_pct": 0.0,
+      "vs_spy_since_entry_pct": 0,
+      "entry_date": "2026-08-04",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 25.0,
+      "strike": 18,
+      "expiry": "2026-08-21",
+      "current_mark": 0.13
+    },
     {
       "position_id": "ampx-nov2026-13c",
       "ticker": "AMPX",
@@ -291,6 +739,19 @@
       "strike": 50,
       "expiry": "2027-06-17",
       "current_mark": 1.99
+    },
+    {
+      "position_id": "ganx-stock",
+      "ticker": "GANX",
+      "asset_type": "stock",
+      "market_value": 1320.0,
+      "unrealized_pct": 2.3,
+      "vs_spy_since_entry_pct": -1.5,
+      "entry_date": "2026-07-17",
+      "verdict": "binary",
+      "price_ok": true,
+      "marked": true,
+      "shares": 750.0
     },
     {
       "position_id": "geni-jan2027-10c",
@@ -368,6 +829,195 @@
       "price_ok": true,
       "marked": true,
       "shares": 1750.0
+    },
+    {
+      "position_id": "grnd-aug2026-25c",
+      "ticker": "GRND",
+      "asset_type": "call",
+      "market_value": 500.0,
+      "unrealized_pct": 0.0,
+      "vs_spy_since_entry_pct": -1.8,
+      "entry_date": "2026-08-03",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 100.0,
+      "strike": 25,
+      "expiry": "2026-08-21",
+      "current_mark": 0.05
+    },
+    {
+      "position_id": "grnd-jan2027-20c",
+      "ticker": "GRND",
+      "asset_type": "call",
+      "market_value": 1750.0,
+      "unrealized_pct": -9.3,
+      "vs_spy_since_entry_pct": -11.1,
+      "entry_date": "2026-08-03",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 10.0,
+      "strike": 20,
+      "expiry": "2027-01-15",
+      "current_mark": 1.75
+    },
+    {
+      "position_id": "infq-aug2026-20c",
+      "ticker": "INFQ",
+      "asset_type": "call",
+      "market_value": 200.0,
+      "unrealized_pct": -44.4,
+      "vs_spy_since_entry_pct": -44.4,
+      "entry_date": "2026-08-04",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 40.0,
+      "strike": 20,
+      "expiry": "2026-08-21",
+      "current_mark": 0.05
+    },
+    {
+      "position_id": "mram-aug2026-30c",
+      "ticker": "MRAM",
+      "asset_type": "call",
+      "market_value": 150.0,
+      "unrealized_pct": -25.0,
+      "vs_spy_since_entry_pct": -25.0,
+      "entry_date": "2026-08-04",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 10.0,
+      "strike": 30,
+      "expiry": "2026-08-21",
+      "current_mark": 0.15
+    },
+    {
+      "position_id": "onds-aug2026-16c",
+      "ticker": "ONDS",
+      "asset_type": "call",
+      "market_value": 250.0,
+      "unrealized_pct": 0.0,
+      "vs_spy_since_entry_pct": 0,
+      "entry_date": "2026-08-04",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 50.0,
+      "strike": 16,
+      "expiry": "2026-08-21",
+      "current_mark": 0.05
+    },
+    {
+      "position_id": "pl-aug2026-40c",
+      "ticker": "PL",
+      "asset_type": "call",
+      "market_value": 132.0,
+      "unrealized_pct": -91.0,
+      "vs_spy_since_entry_pct": -93.7,
+      "entry_date": "2026-07-06",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 44.0,
+      "strike": 40,
+      "expiry": "2026-08-21",
+      "current_mark": 0.03
+    },
+    {
+      "position_id": "pl-aug2026-60c",
+      "ticker": "PL",
+      "asset_type": "call",
+      "market_value": 6.0,
+      "unrealized_pct": -99.9,
+      "vs_spy_since_entry_pct": -102.6,
+      "entry_date": "2026-07-06",
+      "verdict": "lotto",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 6.0,
+      "strike": 60,
+      "expiry": "2026-08-21",
+      "current_mark": 0.01
+    },
+    {
+      "position_id": "spcx-nov2026-70p",
+      "ticker": "SPCX",
+      "asset_type": "put",
+      "market_value": 480.0,
+      "unrealized_pct": -7.7,
+      "vs_spy_since_entry_pct": -7.7,
+      "entry_date": "2026-08-04",
+      "verdict": "speculative-short",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 2.0,
+      "strike": 70,
+      "expiry": "2026-11-20",
+      "current_mark": 2.4
+    },
+    {
+      "position_id": "spcx-oct2026-50p",
+      "ticker": "SPCX",
+      "asset_type": "put",
+      "market_value": 525.0,
+      "unrealized_pct": -42.6,
+      "vs_spy_since_entry_pct": -46.7,
+      "entry_date": "2026-07-28",
+      "verdict": "speculative-short",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 15.0,
+      "strike": 50,
+      "expiry": "2026-10-16",
+      "current_mark": 0.35
+    },
+    {
+      "position_id": "tndm-stock",
+      "ticker": "TNDM",
+      "asset_type": "stock",
+      "market_value": 2020.0,
+      "unrealized_pct": 12.3,
+      "vs_spy_since_entry_pct": 6.6,
+      "entry_date": "2026-07-29",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "shares": 100.0
+    },
+    {
+      "position_id": "tsem-sep2026-300c",
+      "ticker": "TSEM",
+      "asset_type": "call",
+      "market_value": 3780.0,
+      "unrealized_pct": 80.0,
+      "vs_spy_since_entry_pct": 80.0,
+      "entry_date": "2026-08-04",
+      "verdict": "swing",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 3.0,
+      "strike": 300,
+      "expiry": "2026-09-18",
+      "current_mark": 12.6
+    },
+    {
+      "position_id": "uber-mar2027-70c",
+      "ticker": "UBER",
+      "asset_type": "call",
+      "market_value": 2895.0,
+      "unrealized_pct": -7.7,
+      "vs_spy_since_entry_pct": -11.8,
+      "entry_date": "2026-07-28",
+      "verdict": "speculative-buy",
+      "price_ok": true,
+      "marked": true,
+      "contracts": 3.0,
+      "strike": 70,
+      "expiry": "2027-03-19",
+      "current_mark": 9.65
     }
   ],
   "approximation_note": "Endpoints are real (current prices and authored cash); the in-between path is reconstructed from authored events priced against public market data. Options are valued from manually entered marks, stepwise.",

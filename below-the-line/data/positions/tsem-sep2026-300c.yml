@@ -1,12 +1,14 @@
 id: tsem-sep2026-300c
 asset_type: call
 ticker: TSEM
-# DRAFT: thesis pending from the author - excluded from the page until written.
-status: draft
-thesis: ""
+status: open
+thesis: >-
+  A pure earnings gamble on two days of momentum, played as a swing through
+  the day. Not a screener trade and not pretending to be one.
 strike: 300
 expiry: "2026-09-18"
 current_mark: 12.6
+verdict: swing
 events:
   - date: "2026-08-04"
     action: open

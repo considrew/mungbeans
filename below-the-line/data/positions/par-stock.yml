@@ -1,0 +1,16 @@
+id: par-stock
+asset_type: stock
+ticker: PAR
+status: closed
+thesis: >-
+  A two-day PAR trade that did not work. Logged.
+verdict: swing
+events:
+  - date: "2026-07-29"
+    action: open
+    shares: 100
+    price: 17.53
+  - date: "2026-07-31"
+    action: close
+    shares: 100
+    price: 16.8

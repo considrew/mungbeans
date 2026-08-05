@@ -1,0 +1,17 @@
+id: mram-stock
+asset_type: stock
+ticker: MRAM
+status: closed
+thesis: >-
+  Same-day scalp around the spintronics position.
+article: /deep-dives/mram-vs-nvec-spintronics-thesis/
+verdict: swing
+events:
+  - date: "2026-07-23"
+    action: open
+    shares: 300
+    price: 16.34
+  - date: "2026-07-23"
+    action: close
+    shares: 300
+    price: 16.59
