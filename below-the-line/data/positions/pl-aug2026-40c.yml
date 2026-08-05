@@ -1,0 +1,19 @@
+id: pl-aug2026-40c
+asset_type: call
+ticker: PL
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 40
+expiry: "2026-08-21"
+current_mark: 0.03
+events:
+  - date: "2026-07-06"
+    action: open
+    contracts: 4
+    price: 3.37
+    note: Date and price estimated from account cost basis; fill predates the exported history.
+  - date: "2026-08-04"
+    action: add
+    contracts: 40
+    price: 0.03

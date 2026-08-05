@@ -1,0 +1,14 @@
+id: mram-aug2026-30c
+asset_type: call
+ticker: MRAM
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 30
+expiry: "2026-08-21"
+current_mark: 0.15
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 10
+    price: 0.2

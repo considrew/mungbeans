@@ -1813,7 +1813,33 @@ def main():
         except Exception as e:
             print(f"  ✗ {symbol}: Unexpected error - {e}")
             errors.append(symbol)
-    
+
+    # Carry forward last-known records for tickers that failed this run, so a
+    # transient fetch failure (or a Yahoo history reset after a corporate
+    # action) cannot silently remove a stock from the site. Carried records
+    # are flagged stale and refresh automatically the first week the fetch
+    # succeeds again.
+    try:
+        _prev_full = {}
+        _pf = OUTPUT_DIR / 'stocks.json'
+        if _pf.exists():
+            with open(_pf) as _fh:
+                _prev_full = {s['symbol']: s for s in json.load(_fh).get('stocks', [])}
+        _cur_syms = {s['symbol'] for s in all_stocks}
+        _carried = []
+        for _sym in errors:
+            _rec = _prev_full.get(_sym)
+            if _rec and _sym not in _cur_syms:
+                _rec = dict(_rec)
+                _rec['stale'] = True
+                _rec.setdefault('stale_since', time.strftime('%Y-%m-%d'))
+                all_stocks.append(_rec)
+                _carried.append(_sym)
+        if _carried:
+            print(f"\n  Carried forward {len(_carried)} stale records: " + ", ".join(sorted(_carried)))
+    except Exception as e:
+        print(f"\n  Stale carry-forward failed (non-fatal): {e}")
+
     all_stocks.sort(key=lambda x: x['pct_from_wma'])
 
     # Cross-sectional dislocation scores (sector-relative z, insider

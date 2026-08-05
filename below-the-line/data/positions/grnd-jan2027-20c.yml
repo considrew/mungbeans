@@ -1,0 +1,14 @@
+id: grnd-jan2027-20c
+asset_type: call
+ticker: GRND
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 20
+expiry: "2027-01-15"
+current_mark: 1.75
+events:
+  - date: "2026-08-03"
+    action: open
+    contracts: 10
+    price: 1.93

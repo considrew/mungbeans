@@ -118,6 +118,15 @@
       <span class="company-name">{{ .Params.name }}</span>
       {{ if .Params.sector }}<span class="sector">{{ .Params.sector }}</span>{{ end }}
       {{ if .Params.ir_url }}<a href="{{ .Params.ir_url }}" target="_blank" rel="noopener" class="ir-link">Investor Relations →</a>{{ end }}
+      {{ $sym := upper (printf "%v" (.Params.symbol | default .Title)) }}
+      {{ range where site.RegularPages "Section" "deep-dives" }}
+        {{ $dive := . }}
+        {{ $hit := eq (upper (printf "%v" ($dive.Params.ticker | default ""))) $sym }}
+        {{ range $suffix := slice "b" "c" "d" "e" }}
+          {{ if eq (upper (printf "%v" ((index $dive.Params (printf "ticker_%s" $suffix)) | default ""))) $sym }}{{ $hit = true }}{{ end }}
+        {{ end }}
+        {{ if $hit }}<a href="{{ $dive.Permalink }}" class="ir-link" style="color:var(--bench)">Deep dive →</a>{{ end }}
+      {{ end }}
     </p>
     
     <!-- WOW Signal Badge -->

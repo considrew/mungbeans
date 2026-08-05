@@ -23,8 +23,11 @@
           {{ if .Params.ticker }}
           <span class="stat-badge">{{ .Params.ticker }}</span>
           {{ end }}
-          {{ if .Params.ticker_b }}
-          <span class="stat-badge">{{ .Params.ticker_b }}</span>
+          {{ $card := . }}
+          {{ range $suffix := slice "b" "c" "d" "e" }}
+            {{ with index $card.Params (printf "ticker_%s" $suffix) }}
+            <span class="stat-badge">{{ . }}</span>
+            {{ end }}
           {{ end }}
           {{ if .Params.verdict }}
           <span class="stat-badge {{ if eq .Params.verdict "deep-value" }}recovered{{ else if eq .Params.verdict "value-trap" }}below{{ else }}approaching{{ end }}">{{ .Params.verdict_label | default .Params.verdict }}</span>
@@ -36,13 +39,13 @@
           <span class="stat-badge performance-badge {{ if $isZero }}perf-neutral{{ else if $isPositive }}perf-positive{{ else }}perf-negative{{ end }}">
             {{ .Params.ticker }} {{ $perf }}
           </span>
-          {{ if .Params.performance_since_b }}
-          {{ $perfB := .Params.performance_since_b }}
-          {{ $isPositiveB := hasPrefix $perfB "+" }}
-          {{ $isZeroB := eq $perfB "+0.0%" }}
-          <span class="stat-badge performance-badge {{ if $isZeroB }}perf-neutral{{ else if $isPositiveB }}perf-positive{{ else }}perf-negative{{ end }}">
-            {{ .Params.ticker_b }} {{ $perfB }}
-          </span>
+          {{ range $suffix := slice "b" "c" "d" "e" }}
+            {{ with index $card.Params (printf "performance_since_%s" $suffix) }}
+            {{ $p := . }}
+            <span class="stat-badge performance-badge {{ if eq $p "+0.0%" }}perf-neutral{{ else if hasPrefix $p "+" }}perf-positive{{ else }}perf-negative{{ end }}">
+              {{ index $card.Params (printf "ticker_%s" $suffix) }} {{ $p }}
+            </span>
+            {{ end }}
           {{ end }}
           {{ end }}
         </div>

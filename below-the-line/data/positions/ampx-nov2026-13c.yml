@@ -9,9 +9,18 @@ thesis: >-
 verdict: speculative-buy
 strike: 13
 expiry: "2026-11-20"
-current_mark: 2.85
+current_mark: 1.90
 events:
   - date: "2026-06-30"
     action: open
     contracts: 12
     price: 3.89
+  - date: "2026-07-13"
+    action: add
+    contracts: 4
+    price: 2.16
+  - date: "2026-07-16"
+    action: trim
+    contracts: 10
+    price: 1.65
+    note: Cut the size after the first rally faded; six contracts stay for the re-rate.

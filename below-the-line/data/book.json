@@ -1,13 +1,13 @@
 {
   "inception": "2026-05-28",
-  "as_of": "2026-07-04",
+  "as_of": "2026-08-04",
   "refresh_mode": "A",
-  "cash": 9500.0,
+  "cash": 11180.75,
   "headline": {
-    "return_pct": -2.5,
-    "spy_return_pct": -1.3,
-    "max_drawdown_pct": -7.0,
-    "open_positions": 11
+    "return_pct": -6.1,
+    "spy_return_pct": 2.2,
+    "max_drawdown_pct": -21.2,
+    "open_positions": 7
   },
   "series": {
     "dates": [
@@ -17,16 +17,24 @@
       "2026-06-19",
       "2026-06-26",
       "2026-07-03",
-      "2026-07-04"
+      "2026-07-10",
+      "2026-07-17",
+      "2026-07-24",
+      "2026-07-31",
+      "2026-08-04"
     ],
     "portfolio": [
       100.0,
-      102.34,
-      101.78,
-      103.95,
-      104.82,
-      97.49,
-      97.49
+      97.87,
+      100.65,
+      100.55,
+      105.24,
+      101.98,
+      97.79,
+      91.26,
+      82.97,
+      102.03,
+      93.87
     ],
     "spy": [
       100.0,
@@ -35,7 +43,11 @@
       98.97,
       96.61,
       98.71,
-      98.71
+      100.05,
+      98.51,
+      97.93,
+      99.01,
+      102.23
     ]
   },
   "markers": [
@@ -155,6 +167,96 @@
       "committed_usd": 822.0,
       "price": 2.74,
       "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-670p",
+      "date": "2026-07-07",
+      "action": "close",
+      "ticker": "QQQ",
+      "committed_usd": 80.0,
+      "price": 0.08,
+      "note": null
+    },
+    {
+      "position_id": "qqq-jul2026-700p",
+      "date": "2026-07-07",
+      "action": "close",
+      "ticker": "QQQ",
+      "committed_usd": 12.0,
+      "price": 0.04,
+      "note": "Hedge expired against a quiet tape. Cost of insurance, paid in full."
+    },
+    {
+      "position_id": "ampx-nov2026-13c",
+      "date": "2026-07-13",
+      "action": "add",
+      "ticker": "AMPX",
+      "committed_usd": 864.0,
+      "price": 2.16,
+      "note": null
+    },
+    {
+      "position_id": "ampx-nov2026-13c",
+      "date": "2026-07-16",
+      "action": "trim",
+      "ticker": "AMPX",
+      "committed_usd": 1650.0,
+      "price": 1.65,
+      "note": "Cut the size after the first rally faded; six contracts stay for the re-rate."
+    },
+    {
+      "position_id": "geni",
+      "date": "2026-07-22",
+      "action": "add",
+      "ticker": "GENI",
+      "committed_usd": 4792.5,
+      "price": 6.39,
+      "note": "Added into the pre-earnings run at $6.39."
+    },
+    {
+      "position_id": "celh-jan2027-40c",
+      "date": "2026-07-23",
+      "action": "add",
+      "ticker": "CELH",
+      "committed_usd": 965.0,
+      "price": 1.93,
+      "note": null
+    },
+    {
+      "position_id": "geni-jan2027-12-5c",
+      "date": "2026-07-27",
+      "action": "trim",
+      "ticker": "GENI",
+      "committed_usd": 1000.0,
+      "price": 0.5,
+      "note": "Took half off at +31%; the rest rides into the print."
+    },
+    {
+      "position_id": "celh-jan2027-40c",
+      "date": "2026-07-28",
+      "action": "trim",
+      "ticker": "CELH",
+      "committed_usd": 2736.0,
+      "price": 2.28,
+      "note": null
+    },
+    {
+      "position_id": "celh-jan2027-40c",
+      "date": "2026-07-30",
+      "action": "close",
+      "ticker": "CELH",
+      "committed_usd": 2170.0,
+      "price": 2.17,
+      "note": "Closed the position at a loss; the recovery thesis moved to the June 2027 $50s only."
+    },
+    {
+      "position_id": "spcx-oct2026-110p",
+      "date": "2026-07-31",
+      "action": "close",
+      "ticker": "SPCX",
+      "committed_usd": 7500.0,
+      "price": 18.75,
+      "note": "The overvaluation call paid 4x when the stock broke. Rolled exposure down to the October $50s and November $70s."
     }
   ],
   "open_positions": [
@@ -162,41 +264,25 @@
       "position_id": "ampx-nov2026-13c",
       "ticker": "AMPX",
       "asset_type": "call",
-      "market_value": 3420.0,
-      "unrealized_pct": -26.7,
-      "vs_spy_since_entry_pct": -26.4,
+      "market_value": 1140.0,
+      "unrealized_pct": -45.0,
+      "vs_spy_since_entry_pct": -48.3,
       "entry_date": "2026-06-30",
       "verdict": "speculative-buy",
       "price_ok": true,
       "marked": true,
-      "contracts": 12.0,
+      "contracts": 6.0,
       "strike": 13,
       "expiry": "2026-11-20",
-      "current_mark": 2.85
-    },
-    {
-      "position_id": "celh-jan2027-40c",
-      "ticker": "CELH",
-      "asset_type": "call",
-      "market_value": 7531.0,
-      "unrealized_pct": 9.7,
-      "vs_spy_since_entry_pct": 10.7,
-      "entry_date": "2026-05-28",
-      "verdict": "speculative-buy",
-      "price_ok": true,
-      "marked": true,
-      "contracts": 17.0,
-      "strike": 40,
-      "expiry": "2027-01-15",
-      "current_mark": 4.43
+      "current_mark": 1.9
     },
     {
       "position_id": "celh-jun2027-50c",
       "ticker": "CELH",
       "asset_type": "call",
-      "market_value": 2115.0,
-      "unrealized_pct": 14.0,
-      "vs_spy_since_entry_pct": 12.8,
+      "market_value": 995.0,
+      "unrealized_pct": -46.4,
+      "vs_spy_since_entry_pct": -51.2,
       "entry_date": "2026-06-05",
       "verdict": "speculative-buy",
       "price_ok": true,
@@ -204,15 +290,15 @@
       "contracts": 5.0,
       "strike": 50,
       "expiry": "2027-06-17",
-      "current_mark": 4.23
+      "current_mark": 1.99
     },
     {
       "position_id": "geni-jan2027-10c",
       "ticker": "GENI",
       "asset_type": "call",
-      "market_value": 1500.0,
-      "unrealized_pct": 9.1,
-      "vs_spy_since_entry_pct": 10.4,
+      "market_value": 2375.0,
+      "unrealized_pct": 72.7,
+      "vs_spy_since_entry_pct": 70.5,
       "entry_date": "2026-05-29",
       "verdict": "speculative-buy",
       "price_ok": true,
@@ -220,31 +306,31 @@
       "contracts": 25.0,
       "strike": 10,
       "expiry": "2027-01-15",
-      "current_mark": 0.6
+      "current_mark": 0.95
     },
     {
       "position_id": "geni-jan2027-12-5c",
       "ticker": "GENI",
       "asset_type": "call",
-      "market_value": 1120.0,
-      "unrealized_pct": -26.3,
-      "vs_spy_since_entry_pct": -24.9,
+      "market_value": 1100.0,
+      "unrealized_pct": 44.7,
+      "vs_spy_since_entry_pct": 42.6,
       "entry_date": "2026-06-04",
       "verdict": "speculative-buy",
       "price_ok": true,
       "marked": true,
-      "contracts": 40.0,
+      "contracts": 20.0,
       "strike": 12.5,
       "expiry": "2027-01-15",
-      "current_mark": 0.28
+      "current_mark": 0.55
     },
     {
       "position_id": "geni-jan2028-5c",
       "ticker": "GENI",
       "asset_type": "call",
-      "market_value": 2950.0,
-      "unrealized_pct": 27.7,
-      "vs_spy_since_entry_pct": 26.3,
+      "market_value": 4100.0,
+      "unrealized_pct": 77.5,
+      "vs_spy_since_entry_pct": 72.5,
       "entry_date": "2026-06-25",
       "verdict": "speculative-buy",
       "price_ok": true,
@@ -252,15 +338,15 @@
       "contracts": 10.0,
       "strike": 5,
       "expiry": "2028-01-21",
-      "current_mark": 2.95
+      "current_mark": 4.1
     },
     {
       "position_id": "geni-oct2026-7-5c",
       "ticker": "GENI",
       "asset_type": "call",
-      "market_value": 1460.0,
-      "unrealized_pct": -13.1,
-      "vs_spy_since_entry_pct": -14.1,
+      "market_value": 2800.0,
+      "unrealized_pct": 66.7,
+      "vs_spy_since_entry_pct": 62.1,
       "entry_date": "2026-06-08",
       "verdict": "speculative-buy",
       "price_ok": true,
@@ -268,68 +354,20 @@
       "contracts": 20.0,
       "strike": 7.5,
       "expiry": "2026-10-16",
-      "current_mark": 0.73
+      "current_mark": 1.4
     },
     {
       "position_id": "geni",
       "ticker": "GENI",
       "asset_type": "stock",
-      "market_value": 6430.0,
-      "unrealized_pct": 4.7,
-      "vs_spy_since_entry_pct": 5.0,
+      "market_value": 14140.0,
+      "unrealized_pct": 29.3,
+      "vs_spy_since_entry_pct": 26.0,
       "entry_date": "2026-06-18",
       "verdict": "speculative-buy",
       "price_ok": true,
       "marked": true,
-      "shares": 1000.0
-    },
-    {
-      "position_id": "qqq-jul2026-670p",
-      "ticker": "QQQ",
-      "asset_type": "put",
-      "market_value": 510.0,
-      "unrealized_pct": -29.2,
-      "vs_spy_since_entry_pct": -29.2,
-      "entry_date": "2026-07-02",
-      "verdict": "hedge",
-      "price_ok": true,
-      "marked": true,
-      "contracts": 10.0,
-      "strike": 670,
-      "expiry": "2026-07-08",
-      "current_mark": 0.51
-    },
-    {
-      "position_id": "qqq-jul2026-700p",
-      "ticker": "QQQ",
-      "asset_type": "put",
-      "market_value": 702.0,
-      "unrealized_pct": -14.6,
-      "vs_spy_since_entry_pct": -14.6,
-      "entry_date": "2026-07-02",
-      "verdict": "hedge",
-      "price_ok": true,
-      "marked": true,
-      "contracts": 3.0,
-      "strike": 700,
-      "expiry": "2026-07-07",
-      "current_mark": 2.34
-    },
-    {
-      "position_id": "spcx-oct2026-110p",
-      "ticker": "SPCX",
-      "asset_type": "put",
-      "market_value": 2740.0,
-      "unrealized_pct": 48.6,
-      "vs_spy_since_entry_pct": 47.8,
-      "entry_date": "2026-06-17",
-      "verdict": "speculative-short",
-      "price_ok": true,
-      "marked": true,
-      "contracts": 4.0,
-      "strike": 110,
-      "expiry": "2026-10-16",
-      "current_mark": 6.85
+      "shares": 1750.0
     }
   ],
   "approximation_note": "Endpoints are real (current prices and authored cash); the in-between path is reconstructed from authored events priced against public market data. Options are valued from manually entered marks, stepwise.",

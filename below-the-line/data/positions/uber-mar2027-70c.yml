@@ -1,0 +1,14 @@
+id: uber-mar2027-70c
+asset_type: call
+ticker: UBER
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 70
+expiry: "2027-03-19"
+current_mark: 9.65
+events:
+  - date: "2026-07-28"
+    action: open
+    contracts: 3
+    price: 10.46

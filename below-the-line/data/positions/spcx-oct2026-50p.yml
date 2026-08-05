@@ -1,0 +1,15 @@
+id: spcx-oct2026-50p
+asset_type: put
+ticker: SPCX
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 50
+expiry: "2026-10-16"
+current_mark: 0.35
+events:
+  - date: "2026-07-28"
+    action: open
+    contracts: 15
+    price: 0.61
+    note: Rolled down from the closed October $110s.

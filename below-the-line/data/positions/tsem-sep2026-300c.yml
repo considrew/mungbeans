@@ -1,0 +1,15 @@
+id: tsem-sep2026-300c
+asset_type: call
+ticker: TSEM
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 300
+expiry: "2026-09-18"
+current_mark: 12.6
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 3
+    price: 7.0
+    note: Net position after a same-week round trip (3 opened 8/3 at ~10.95, sold 8/4 at 14.46, re-opened at 7.00).

@@ -65,7 +65,7 @@
         <h1>{{ .Title }}</h1>
         <div class="post-summary-stats">
           {{ if .Params.ticker }}
-          <span class="stat-badge">{{ .Params.ticker }}</span>
+          <a href="/stocks/{{ .Params.ticker | lower }}/" class="stat-badge">{{ .Params.ticker }}</a>
           {{ end }}
           {{ if .Params.verdict }}
           <span class="stat-badge {{ if eq .Params.verdict "deep-value" }}recovered{{ else if eq .Params.verdict "value-trap" }}below{{ else }}approaching{{ end }}">{{ .Params.verdict_label | default .Params.verdict }}</span>
@@ -76,7 +76,7 @@
           {{ range $suffix := slice "b" "c" "d" "e" }}
             {{ $tickerKey := printf "ticker_%s" $suffix }}
             {{ with index $.Params $tickerKey }}
-            <span class="stat-badge">{{ . }}</span>
+            <a href="/stocks/{{ . | lower }}/" class="stat-badge">{{ . }}</a>
             {{ end }}
           {{ end }}
         </div>

@@ -1,0 +1,14 @@
+id: spcx-nov2026-70p
+asset_type: put
+ticker: SPCX
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 70
+expiry: "2026-11-20"
+current_mark: 2.4
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 2
+    price: 2.6

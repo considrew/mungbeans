@@ -11,7 +11,7 @@ article: /deep-dives/geni/
 verdict: speculative-buy
 strike: 12.5
 expiry: "2027-01-15"
-current_mark: 0.28
+current_mark: 0.55
 events:
   - date: 2026-06-04
     action: open
@@ -22,3 +22,8 @@ events:
     action: add
     contracts: 20
     price: 0.38
+  - date: "2026-07-27"
+    action: trim
+    contracts: 20
+    price: 0.50
+    note: Took half off at +31%; the rest rides into the print.

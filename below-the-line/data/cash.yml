@@ -9,3 +9,9 @@ balances:
   # Running balance after all buys - matches the flows, so no re-anchor jump.
   - date: "2026-07-02"
     amount: 9500
+  # 4 Aug 2026, from the account statement: money market + unsettled credit.
+  # NOTE: until the fourteen draft positions get theses (and the July round
+  # trips get logged as closed positions), the curve around this anchor is
+  # approximate - draft outflows and unlogged realized gains meet here.
+  - date: "2026-08-04"
+    amount: 11180.75

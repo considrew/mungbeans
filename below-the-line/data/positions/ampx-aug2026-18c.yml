@@ -1,0 +1,14 @@
+id: ampx-aug2026-18c
+asset_type: call
+ticker: AMPX
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 18
+expiry: "2026-08-21"
+current_mark: 0.13
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 25
+    price: 0.13

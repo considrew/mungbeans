@@ -1,0 +1,15 @@
+id: ganx-stock
+asset_type: stock
+ticker: GANX
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+events:
+  - date: "2026-07-17"
+    action: open
+    shares: 1500
+    price: 1.72
+  - date: "2026-07-23"
+    action: trim
+    shares: 750
+    price: 1.82

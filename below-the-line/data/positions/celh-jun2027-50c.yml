@@ -9,7 +9,7 @@ article: /deep-dives/celh-deep-value-or-value-trap/
 verdict: speculative-buy
 strike: 50
 expiry: "2027-06-17"
-current_mark: 4.23
+current_mark: 1.99
 events:
   - date: "2026-06-05"
     action: open

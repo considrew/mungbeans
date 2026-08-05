@@ -1,0 +1,14 @@
+id: onds-aug2026-16c
+asset_type: call
+ticker: ONDS
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 16
+expiry: "2026-08-21"
+current_mark: 0.05
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 50
+    price: 0.05

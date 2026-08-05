@@ -1,7 +1,7 @@
 id: qqq-jul2026-670p
 asset_type: put
 ticker: QQQ
-status: open
+status: closed
 thesis: >-
   The deeper leg of the same short-dated index hedge: cheap tail exposure a
   day further out.
@@ -14,3 +14,7 @@ events:
     action: open
     contracts: 10
     price: 0.72
+  - date: "2026-07-07"
+    action: close
+    contracts: 10
+    price: 0.08

@@ -1,0 +1,11 @@
+id: tndm-stock
+asset_type: stock
+ticker: TNDM
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+events:
+  - date: "2026-07-29"
+    action: open
+    shares: 100
+    price: 17.99

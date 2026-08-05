@@ -1,0 +1,14 @@
+id: infq-aug2026-20c
+asset_type: call
+ticker: INFQ
+# DRAFT: thesis pending from the author - excluded from the page until written.
+status: draft
+thesis: ""
+strike: 20
+expiry: "2026-08-21"
+current_mark: 0.05
+events:
+  - date: "2026-08-04"
+    action: open
+    contracts: 40
+    price: 0.09

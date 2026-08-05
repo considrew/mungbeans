@@ -1,7 +1,7 @@
 id: celh-jan2027-40c
 asset_type: call
 ticker: CELH
-status: open
+status: closed
 thesis: >-
   The deep-dive case: CELH below the line with the growth story intact.
   Seventeen contracts accumulated into the dislocation; January 2027 gives
@@ -21,3 +21,16 @@ events:
     action: add
     contracts: 8
     price: 4.04
+  - date: "2026-07-23"
+    action: add
+    contracts: 5
+    price: 1.93
+  - date: "2026-07-28"
+    action: trim
+    contracts: 12
+    price: 2.28
+  - date: "2026-07-30"
+    action: close
+    contracts: 10
+    price: 2.17
+    note: Closed the position at a loss; the recovery thesis moved to the June 2027 $50s only.

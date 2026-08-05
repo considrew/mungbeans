@@ -21,3 +21,8 @@ events:
     shares: 1000
     price: 6.14
     note: Common stock core of the GENI position; options carry the convexity.
+  - date: "2026-07-22"
+    action: add
+    shares: 750
+    price: 6.39
+    note: Added into the pre-earnings run at $6.39.
