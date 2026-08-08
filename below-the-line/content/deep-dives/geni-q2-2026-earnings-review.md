@@ -1,32 +1,20 @@
 ---
-title: "GENI After the Line: What To Do When the Signal Fires and Then Runs"
-date: 2026-08-06
-draft: true
+title: "GENI Q2 Review: What the Screener Found, and What the Business Proved"
+date: 2026-08-08
+draft: false
 tags: ["deep-dive", "GENI", "earnings-review", "methodology"]
-description: "GENI crossed below the 200-week line in February, hit every entry condition, and has now run 39% past the publish price into its first combined-quarter earnings. The harder question the screener never answers: what do you do after it works? A post-earnings review."
+description: "Eight of nine calls from the June thesis landed inside six weeks. Q2 beat on revenue and margin, Legend backs out to ~$274M annualized, and both Polymarket and Kalshi signed before the print. The 200-week line found the question; the business answered it. Revised target $15.41 on 311M fully diluted shares, with GAAP positivity as the gate."
 ticker: "GENI"
-verdict: "hold-update"
-performance_price_at_publish: ""
-performance_since: ""
-performance_as_of: ""
+verdict: "speculative-buy"
+verdict_label: "Constructive — the gate is GAAP, not the platform"
+performance_price_at_publish: "$7.59"
+performance_since: "+0.0%"
+performance_price_current: "$7.59"
+performance_as_of: "2026-08-08"
 ---
 
-<!-- QUEUED: Thursday 6 Aug 2026, post-Q2-print. Use the mungbeans-deep-dive
-skill. Outline agreed with the author:
+The full review lives at [/deep-dives/geni-q2-review/](/deep-dives/geni-q2-review/).
 
-1. The record so far: published 25 Jun at $5.83, corrected to 311M diluted /
-   ~$15 DCF on 4 Jul, $8.08 into the print. Every number cited from the
-   original page, tag intact.
-2. The methodology piece: what to do AFTER the line. Buying below the 200WMA
-   is the screener's whole pitch; nobody writes about the exit discipline.
-   GENI is now above its 200DMA (~$8) and closing on the 200WMA ($7.12 -
-   crossed back). The three-layer answer: shares are the long hold (swing
-   sway acknowledged), short-dated calls were strictly the Q2 re-rate bet
-   and resolve this week, the 2027-28 legs carry the recognition thesis.
-3. Q2 print review: revenue/EBITDA vs the $185M/$45M guide, Legend's first
-   combined quarter, margin hold, the four synergies (any in motion?),
-   prediction-market revenue first appearance, updated FY guide, diluted
-   count from the 6-K vs our 311M.
-4. Refresh the DCF with actuals. State what changed and what didn't.
-5. Book actions taken, with fills, cross-referenced to /book/.
--->
+This is the post-earnings follow-up to the [25 June thesis](/deep-dives/geni/), published at $5.83. Q2 2026 reported 6 August: revenue $195.5M against a $185M guide, adjusted EBITDA $52.6M against $45M, and full-year guidance raised on both lines.
+
+Five tabs: the scorecard of what was called against what printed, the Legend revenue back-out, the GAAP-positivity gate that keeps the multiple suppressed, a valuation of the Polymarket and Kalshi agreements, and the revised price target.
