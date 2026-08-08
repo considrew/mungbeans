@@ -1,10 +1,9 @@
-name: Monthly Bean Score Update
+name: Weekly Bean Score Update
 
 on:
   schedule:
-    # Every Saturday at 10am UTC; the first step exits early unless it's the
-    # first Saturday of the month. (POSIX cron ORs day-of-month with
-    # day-of-week, so '0 10 1-7 * 6' fired on days 1-7 AND every Saturday.)
+    # Every Saturday at 10am UTC, after the 06:00 stock update. Weekly
+    # snapshots feed the Bean Score signal-accuracy tracker.
     - cron: '0 10 * * 6'
   workflow_dispatch:
 
@@ -13,12 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check if first Saturday of month
+      - name: Gate
         id: gate
-        run: |
-          DAY=$(date -u +%d)
-          # Weekly snapshots feed the Bean Score signal-accuracy tracker.
-          echo "run=true" >> "$GITHUB_OUTPUT"
+        run: echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: Checkout repository
         if: steps.gate.outputs.run == 'true'
@@ -59,17 +55,92 @@ jobs:
           cp below-the-line/assets/data/bean_score_alerts.json below-the-line/static/data/bean_score_alerts.json
           cp below-the-line/assets/data/bean_score_history.json below-the-line/static/data/bean_score_history.json
 
+      # The weekly stock update runs with SKIP_BEAN_SCORE=true and merges
+      # whatever bean_score_latest.json is on disk, which is the PREVIOUS
+      # cycle's. Regenerating the display levels here (from the scores just
+      # computed above) and merging them into stocks.json is what keeps the
+      # live stock pages on the same cycle as the scores.
+      - name: Merge fresh Bean Score levels into stocks.json
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          cd below-the-line
+          python - <<'PY'
+          import sys, json, collections
+          sys.path.insert(0, 'scripts')
+          from bean_score_levels import generate_bean_score_display
+
+          disp = generate_bean_score_display(verbose=False)
+          if not disp:
+              print("ERROR: no display records generated; refusing to touch stocks.json")
+              sys.exit(1)
+
+          path = 'assets/data/stocks.json'
+          data = json.load(open(path))
+          before = len(data['stocks'])
+          merged = 0
+          for s in data['stocks']:
+              if s['symbol'] in disp:
+                  s['bean_score_data'] = disp[s['symbol']]
+                  merged += 1
+
+          if merged < len(disp) * 0.5:
+              print(f"ERROR: only {merged} merged from {len(disp)} records; refusing to write")
+              sys.exit(1)
+
+          json.dump(data, open(path, 'w'), separators=(',', ':'))
+          after = len(json.load(open(path))['stocks'])
+          assert after == before, f"stock count changed {before} -> {after}"
+
+          ca = collections.Counter(
+              str((s.get('bean_score_data') or {}).get('computed_at'))[:10]
+              for s in data['stocks'] if s.get('bean_score_data'))
+          print(f"Merged Bean Score levels into {merged} of {before} stocks")
+          print(f"computed_at distribution: {ca.most_common(3)}")
+          PY
+
       - name: Commit and push
         if: steps.gate.outputs.run == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f below-the-line/assets/data/stocks.json || true
           git add -f below-the-line/assets/data/bean_score_latest.json || true
           git add -f below-the-line/assets/data/bean_score_alerts.json || true
           git add -f below-the-line/assets/data/bean_score_history.json || true
           git add -f below-the-line/static/data/bean_score_latest.json || true
           git add -f below-the-line/static/data/bean_score_alerts.json || true
           git add -f below-the-line/static/data/bean_score_history.json || true
-          git diff --staged --quiet || git commit -m "Monthly Bean Score update $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Weekly Bean Score update $(date +'%Y-%m-%d')"
           git pull --rebase origin main
           git push
+
+      # The weekly deploy runs before this job, so without rebuilding here the
+      # live stock pages keep last cycle's Bean Score levels for another week.
+      - name: Setup Hugo
+        if: steps.gate.outputs.run == 'true'
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'
+          extended: true
+
+      - name: Install Node dependencies
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          cd below-the-line
+          hugo --minify
+
+      - name: Deploy to Netlify
+        if: steps.gate.outputs.run == 'true'
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './below-the-line/public'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
