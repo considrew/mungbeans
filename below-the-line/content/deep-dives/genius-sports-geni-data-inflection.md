@@ -9,9 +9,9 @@ ticker_b: "SRAD"
 verdict: "speculative-buy"
 verdict_label: "Buy — the platform is further along than the stock price reflects"
 performance_price_at_publish: "$5.83"
-performance_since: "+18.9%"
-performance_price_current: "$6.93"
-performance_as_of: "2026-08-01"
+performance_since: "+30.2%"
+performance_price_current: "$7.59"
+performance_as_of: "2026-08-08"
 ---
 
 ## Why This Takes A Full Read
