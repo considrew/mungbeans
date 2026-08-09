@@ -41,3 +41,15 @@ mungbeans.io, its owners, and its contributors shall not be held liable for any 
 ---
 
 *Last updated: {{ now.Format "January 2006" }}*
+
+## Affiliate disclosure
+
+mungbeans.io carries no advertising. One paid link appears on the site and in the
+weekly email: a referral link to Godel Terminal, a research terminal I subscribe
+to and use for the filing and ownership work behind the deep dives. If you
+subscribe through that link, mungbeans.io earns a commission at no additional
+cost to you, and the accompanying promo code gives you 30% off your first month.
+
+I have no other commercial relationship with Godel Terminal or its operators, no
+equity, and no editorial arrangement. Nothing on this site is written or altered
+in exchange for compensation.

@@ -240,6 +240,24 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
             {'<a href="' + post_url + '" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">View Full Report</a>' if blog_generated else '<a href="https://mungbeans.io/stocks/" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">Browse All Stocks</a>'}
           </p>
         </td></tr>
+        <tr><td style="padding:32px 0 0 0;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#16162a; border:1px solid #2a2a3e; border-left:2px solid #e2b714; border-radius:8px;">
+            <tr><td style="padding:20px 22px;">
+              <p style="margin:0 0 4px 0; font-family:monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#666;">the terminal I use &middot; referral link</p>
+              <p style="margin:0 0 8px 0; font-size:19px; color:#ffffff; font-weight:600;">Godel Terminal</p>
+              <p style="margin:0 0 14px 0; color:#c9c9d4; font-size:14px; line-height:1.6;">
+                A browser-based research terminal with a Bloomberg-style command interface, at $996 a year against Bloomberg's roughly $27,000. Real-time quotes, filings, financials and ownership data. Research and analysis only, so it sits alongside a broker rather than replacing one. Fourteen-day trial.
+              </p>
+              <p style="margin:0 0 12px 0;">
+                <a href="https://app.godelterminal.com/?via=mungbeans" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:10px 22px; border-radius:5px; font-weight:600; font-size:14px;">Try Godel Terminal &rarr;</a>
+              </p>
+              <p style="margin:0 0 12px 0; font-family:monospace; font-size:13px; color:#c9c9d4;">code <b style="color:#e2b714;">mungbeans</b> &middot; 30% off your first month</p>
+              <p style="margin:0; font-size:11.5px; color:#666; line-height:1.6;">
+                Disclosure: referral link. mungbeans.io earns a commission if you subscribe, at no extra cost to you. I pay for it myself. This is the only paid link in this email, which carries no advertising.
+              </p>
+            </td></tr>
+          </table>
+        </td></tr>
         <tr><td style="padding:40px 0 0 0; border-top:1px solid #2a2a3e; margin-top:40px;">
           <p style="color:#666; font-size:13px; margin:20px 0 0 0;">
             You're receiving this because you signed up at mungbeans.io.<br>

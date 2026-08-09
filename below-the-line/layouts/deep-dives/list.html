@@ -13,6 +13,8 @@
 
     {{ partial "deepdive-signup.html" . }}
 
+    {{ partial "godel.html" . }}
+
     <div class="blog-posts">
       {{ range .Pages.ByDate.Reverse }}
       <a href="{{ .Permalink }}" class="blog-card">

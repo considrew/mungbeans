@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAR · Deep Dive — mungbeans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15120e; --card:#1d1914; --card2:#241f18;
+    --ink:#ece6da; --dim:#a89e8c; --faint:#6f6757; --line:#332c22;
+    --gain:#8fbf6f; --bench:#c9a24a; --trim:#d4a24a; --closed:#5fa8b5; --loss:#c2604f;
+    --gain-soft:rgba(143,191,111,.12); --loss-soft:rgba(194,96,79,.12);
+    --bench-soft:rgba(201,162,74,.12); --faint-soft:rgba(111,103,87,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;padding:clamp(16px,4vw,52px);font-size:17px}
+  .wrap{max-width:840px;margin:0 auto}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--faint)}
+  h2{font-weight:500;font-size:23px;letter-spacing:-.01em;margin-bottom:4px}
+  h3{font-weight:600;font-size:16px;margin:22px 0 8px;color:var(--ink)}
+  p{margin-bottom:13px;color:#d8d1c4}
+  p.sub{color:var(--dim);font-size:15px}
+  b,strong{color:var(--ink);font-weight:600}
+  em{color:var(--bench)}
+
+  /* masthead */
+  .mast{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:22px;flex-wrap:wrap;gap:6px}
+  .mast .brand{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink)}
+  .mast .brand span{color:var(--faint)}
+  .mast .asof{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+
+  .ticker-row{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;letter-spacing:.1em;
+    color:var(--gain);border:1px solid var(--gain);padding:2px 8px;border-radius:3px;background:var(--gain-soft)}
+  .nm{color:var(--dim);font-size:15px}
+  .px{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dim)}
+  .px b{color:var(--ink)} .px .up{color:var(--gain)}
+
+  .perf-since{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-bottom:18px}
+  hr.sec{border:none;border-top:1px solid var(--line);margin:28px 0}
+
+  /* tabs */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:26px;
+    overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);background:none;border:none;border-bottom:2px solid transparent;
+    padding:10px 14px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+  .tab:hover{color:var(--dim)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gain)}
+  .tab .n{color:var(--faint);margin-right:6px}
+  .tab.active .n{color:var(--gain)}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* verdict */
+  .verdict{font-size:clamp(24px,4vw,34px);line-height:1.18;font-weight:500;letter-spacing:-.01em;
+    margin-bottom:12px;max-width:20ch}
+  .callbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 24px}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 11px;border-radius:4px;border:1px solid var(--line)}
+  .pill b{display:block;font-size:14px;letter-spacing:0;text-transform:none;margin-top:2px}
+  .pill.lean{border-color:rgba(194,96,79,.4)} .pill.lean b{color:var(--loss)}
+
+  /* gauge */
+  .gauge{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:20px 22px 16px;margin:8px 0 6px}
+  .gauge-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+  .gauge-head .l{font-size:14px;color:var(--ink);font-weight:500}
+  .gauge-head .t{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--bench);
+    background:var(--bench-soft);border:1px solid rgba(201,162,74,.3);padding:3px 8px;border-radius:3px}
+  .track{position:relative;height:44px;margin:0 4px}
+  .axis{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line)}
+  .gapfill{position:absolute;top:calc(50% - 12px);height:24px;border-radius:4px;
+    background:repeating-linear-gradient(45deg,var(--loss-soft),var(--loss-soft) 6px,transparent 6px,transparent 12px);
+    border-left:1px dashed rgba(194,96,79,.5);border-right:1px dashed rgba(194,96,79,.5)}
+  .mk{position:absolute;top:50%;transform:translate(-50%,-50%);text-align:center}
+  .mk .d{width:10px;height:10px;border-radius:50%;margin:0 auto 6px}
+  .mk .v{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);font-weight:500}
+  .mk .c{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;margin-top:1px}
+  .mk.p .d{background:var(--ink)} .mk.f .d{background:transparent;border:2px solid var(--bench)}
+  .gnote{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:20px}
+
+  /* overhang cards */
+  .ohcard{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:15px 17px;margin-bottom:10px}
+  .oh-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .arr{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;width:16px}
+  .up .arr{color:var(--gain)} .risk .arr{color:var(--loss)} .dorm .arr{color:var(--faint)}
+  .oh-title{font-weight:600;font-size:15.5px;flex:1}
+  .oh-layer{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .oh-score{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px}
+  .up .oh-score{color:var(--gain)} .risk .oh-score{color:var(--loss)} .dorm .oh-score{color:var(--faint)}
+  .sbar{height:3px;background:var(--line);border-radius:2px;margin:9px 0 11px;overflow:hidden}
+  .sbar i{display:block;height:100%}
+  .up .sbar i{background:var(--gain)} .risk .sbar i{background:var(--loss)} .dorm .sbar i{background:var(--faint)}
+  .oh-mech{font-size:14.5px;color:#d8d1c4;line-height:1.5}
+  .oh-foot{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+  .ff{font-size:12px;color:var(--faint)}
+  .ff b{font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--dim);font-weight:500;display:block;margin-bottom:1px}
+  .dorm{opacity:.66}
+  .dtag{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);border:1px solid var(--line);padding:2px 6px;border-radius:3px}
+
+  /* metric grid + tables */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;margin:14px 0}
+  .met{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+  .met .ml{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .met .mv{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:500;color:var(--ink)}
+  .met .mv.g{color:var(--gain)} .met .mv.r{color:var(--loss)}
+  .met .mn{font-size:11px;color:var(--faint);margin-top:4px;line-height:1.35}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-family:"IBM Plex Mono",monospace;font-size:13px}
+  th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+    font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);color:#d8d1c4}
+  td.r,th.r{text-align:right}
+  tr .scen{font-family:"Newsreader",serif;color:var(--dim);font-size:12px}
+  .g{color:var(--gain)} .r{color:var(--loss)} .b{color:var(--bench)}
+
+  .note{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--bench);
+    border-radius:6px;padding:13px 16px;margin:16px 0;font-size:14px;color:var(--dim)}
+  .note b{color:var(--ink)}
+  /* thesis tab prose */
+  .thesis-body h3{margin-top:32px}
+  .thesis-body table{font-size:12px}
+
+  footer{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--faint);line-height:1.6}
+  @media(max-width:560px){.px{margin-left:0;width:100%}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mast">
+    <a class="brand" href="/" style="text-decoration:none">mungbeans <span>// deep dive</span></a>
+    <div class="asof">5 aug 2026 · drafted pre-Q2 · not yet published</div>
+  </div>
+
+  <div class="ticker-row">
+    <a class="tk" href="/stocks/par/" style="text-decoration:none">PAR</a>
+    <span class="nm">PAR Technology · NYSE · the enterprise restaurant stack</span>
+    <span class="px"><b>$17.62</b> · cap <b>$727M</b> · 52w 11.59–60.42</span>
+  </div>
+  <div class="perf-since">drafted 5 aug at $17.62 · publish price and performance tag set after the Q2 print (6 aug, 4:00pm ET)</div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-p="thesis"><span class="n">01</span>Thesis</button>
+    <button class="tab" data-p="verdict"><span class="n">02</span>Verdict</button>
+    <button class="tab" data-p="overhangs"><span class="n">03</span>Overhangs</button>
+    <button class="tab" data-p="numbers"><span class="n">04</span>Numbers</button>
+    <button class="tab" data-p="bear"><span class="n">05</span>Bear case</button>
+  </div>
+
+
+  <section class="panel active" data-panel="thesis">
+    <h2>PAR Technology (PAR): The Platform Is Built. Now It Has To Grow.</h2>
+    <p class="sub">Drafted 5 August 2026, the day before Q2 — the full thesis, written to be graded by the print.</p>
+
+    <div class="thesis-body">
+
+    <div class="note"><b>Timing note.</b> I wrote this on 5 August 2026, one day before PAR reports Q2 at 4:00pm ET. Everything below is built on Q1 2026 filings and the 7 May call. I am publishing the reasoning first and the call second, so that the record shows what I believed <em>before</em> the number landed. Price at draft: $17.62.</div>
+
+    <h3>Why This Takes A Full Read</h3>
+    <p>PAR is down 76% over twelve months and trades at 0.85x book value with a subscription business that is 63% of revenue. Both of those facts are true at the same time, which is the whole reason this is interesting.</p>
+    <p>The stories I keep reading about PAR pick one of two shortcuts. The bull shortcut says a 16%-growing SaaS business at 3.3x ARR is obviously cheap next to Toast at 7.7x. The bear shortcut says revenue growth fell from 30% to a guided 11% while net debt sits at $347 million, so the rollup is over. Neither one survives contact with the segment disclosures.</p>
+    <p>This piece goes line by line: what PAR actually sells, who actually pays (one customer is 21% of revenue and rising), what the deceleration is made of, why the subscription gross margin fell 350 basis points while management says the underlying number is fine, what $426 million of convertible debt at three different conversion prices does to the equity, and the one metric in Thursday's release that decides everything.</p>
+    <p>I own no position as I write this. I traded PAR for two days in late July and lost money on it, which is in The Book. This draft is me doing the work I should have done first.</p>
+
+    <hr class="sec">
+
+    <h3>The Company: 58 Years, Then Seven That Mattered</h3>
+    <p>PAR Technology was founded in 1968 in New Hartford, New York, and spent most of its life as two unrelated businesses stapled together: a defence contractor doing intelligence and surveillance work for the Department of Defense, and a maker of cash registers for restaurants. It sold point-of-sale terminals to McDonald's starting in the 1980s. For decades that was the entire story.</p>
+    <p>By 2018 the company had $3.4 million in cash, a Department of Justice investigation, activist investors on the board, and a share price that had gone nowhere for twenty years. The 33-year total return through mid-2026 is 324% against 2,998% for the S&P 500. That is 4.4% annualised versus 10.8%. Whatever PAR is, it has not historically been a compounder.</p>
+    <p>Savneet Singh took over as CEO in 2018. He was 35, had co-founded a precious-metals software platform called GBI, ran a small software holding company called Tera Holdings, and had come onto PAR's board as an investor. He inherited a hardware company with a software product bolted on and decided to invert it.</p>
+    <p>The capital allocation record since then is the actual business:</p>
+    <table>
+      <tr><th>Date</th><th>Move</th><th>Price</th><th>What it bought</th></tr>
+      <tr><td>2014</td><td>Brink POS</td><td>~$8M</td><td>Cloud POS; the beachhead product</td></tr>
+      <tr><td>2019</td><td>Restaurant Magic</td><td>~$43M</td><td>Data Central back-office</td></tr>
+      <tr><td>Apr 2021</td><td>Punchh</td><td>$500M</td><td>Enterprise loyalty; still the crown jewel</td></tr>
+      <tr><td>Jul 2022</td><td>MENU</td><td>~$18M</td><td>Digital ordering (now PAR Ordering)</td></tr>
+      <tr><td>Jun 2024</td><td class="g">Government segment sold</td><td class="g">+$102M</td><td>PGSC to Booz Allen ($95M), Rome Research to NexTech ($7M)</td></tr>
+      <tr><td>Mar 2024</td><td>Stuzo</td><td>~$190M</td><td>Convenience/fuel loyalty (now PAR Retail)</td></tr>
+      <tr><td>Jul 2024</td><td>TASK Group</td><td>~$206M</td><td>International enterprise POS, APAC</td></tr>
+      <tr><td>2025</td><td>Delaget</td><td>$132M</td><td>Restaurant analytics, mostly in stock</td></tr>
+      <tr><td>Mar 2026</td><td class="g">Bridg</td><td class="g">$27.5M</td><td>Identity resolution, from Cardlytics, in stock</td></tr>
+    </table>
+    <p>Two things in that table deserve attention. The Government sale in June 2024 is the cleanest capital-allocation decision Singh has made: it converted a low-multiple services business into $102 million of cash and let the remaining company be valued as software. The Bridg purchase is the second. Cardlytics paid roughly $350 million for Bridg in 2021 and sold it to PAR for $27.5 million in stock five years later. PAR acquired $14.4 million of annual recurring revenue for 1.9x ARR from a seller who needed the money.</p>
+    <p>The rest of the table is more ambiguous. PAR spent roughly $1.1 billion on acquisitions and carries $897 million of goodwill against a market capitalisation of $727 million. The market's current position is that Singh overpaid.</p>
+
+    <hr class="sec">
+
+    <h3>The Management Team</h3>
+    <p><b>Savneet Singh (CEO since 2018)</b> is the reason this company exists in its present form, and he is also the reason the balance sheet looks the way it does. Eight years in, he has taken revenue from roughly $187 million to a guided $500-515 million and taken the share count from 16 million to 41 million doing it. Those two facts belong in the same sentence.</p>
+    <p>His communication style has a tell that is useful to track. On the Q1 2026 call he said PAR has been "fundamentally miscast in the public market" and that the company would "let consistent execution, quarter by quarter, correct that." A CEO who frames the stock price as a market error rather than a verdict is either right or is about to give you a lot of information about how he handles being wrong. The introduction of formal guidance in the same quarter, for the first time in the company's history, is the concrete version of that claim. Guidance is a commitment device. He now has a number to miss.</p>
+    <p><b>Bryan Menar (CFO)</b> has been in the seat since 2018 and gave the most specific disclosure on the Q1 call: over 60% of full-year 2025 churn landed in Q1 2026 because management deliberately offboarded a set of legacy Punchh customers priced at roughly an 80% discount to standard. That is a CFO volunteering the worst-looking number in his own release and framing it. I weight that positively.</p>
+    <p>The bench matters less here than the pattern. PAR reorganised its business teams into two verticals at the end of Q1 and finished the restructuring in early Q2, and management has committed to sequential operating expense declines in every quarter of 2026. Non-GAAP operating expense fell to 43.3% of revenue in Q1 from 49.8% a year earlier. That is a 650 basis point improvement in four quarters, and it is the single most credible thing in the Q1 release.</p>
+
+    <hr class="sec">
+
+    <h3>The Business: Three Revenue Lines, Two Clouds</h3>
+    <p>PAR reports three revenue lines and organises its recurring revenue into two product clouds. The distinction matters because the three revenue lines have completely different economics and the market keeps averaging them.</p>
+
+    <p class="eyebrow">1. Subscription Service — 63% of revenue, the actual company</p>
+    <p>This is the software. It carried a 65.6% non-GAAP gross margin in Q1 2026 and it is the only part of PAR that justifies a software multiple. It splits into two clouds.</p>
+    <p><b>Operator Cloud</b> runs the store: PAR POS (the old Brink), PAR Pay, PAR OPS (Data Central plus Delaget), and TASK. Q1 2026 ARR of $131.8 million across 60,300 active sites, up 12% year over year. That works out to roughly $2,190 of annual recurring revenue per site.</p>
+    <p><b>Engagement Cloud</b> runs the guest: PAR Engagement (Punchh plus PAR Ordering), PAR Retail (the Stuzo asset, aimed at fuel and convenience), Plexure, and now Bridg. Q1 2026 ARR of $198.3 million across 139,000 active sites, up 20% year over year, though $14.4 million of that is Bridg arriving in the last week of the quarter. Roughly $1,430 per site.</p>
+    <table>
+      <tr><th>Period</th><th>Subscription rev</th><th>Total ARR</th><th class="r">YoY ARR</th></tr>
+      <tr><td>Q2 2025</td><td>$71.9M</td><td>$286.7M</td><td class="r g">+49% (org. +16%)</td></tr>
+      <tr><td>Q4 2025</td><td>$76.1M</td><td>$315.4M</td><td class="r g">+16% (org. +15%)</td></tr>
+      <tr><td>Q1 2026</td><td>$78.5M</td><td>$330.1M</td><td class="r g">+16% (org. +11%)</td></tr>
+    </table>
+    <p>Read that table down the organic column: 16%, 15%, 11%. That is the trend line that matters, and it is going the wrong way.</p>
+
+    <p class="eyebrow">2. Hardware — 24% of revenue, growing fastest, worth the least</p>
+    <p>Terminals, kiosks, drive-thru headsets. The PAR Wave is the enterprise standard during a refresh cycle. Hardware revenue grew 34% year over year in Q1 2026 to $29.3 million, faster than any other line, at a 22% gross margin that fell from 25% on tariffs and chip costs. Management guided hardware margin to stabilise in the low twenties.</p>
+    <table>
+      <tr><th>Period</th><th>Hardware rev</th><th class="r">YoY</th><th class="r">Gross margin</th></tr>
+      <tr><td>FY2024</td><td>$87.0M</td><td class="r">—</td><td class="r">24.3%</td></tr>
+      <tr><td>FY2025</td><td>$106.4M</td><td class="r g">+22%</td><td class="r">22.9%</td></tr>
+      <tr><td>Q1 2026</td><td>$29.3M</td><td class="r g">+34%</td><td class="r r">21.6%</td></tr>
+    </table>
+    <p>Here is the thing about a 19% total revenue growth quarter where subscription grew 15% and hardware grew 34%. The mix moved toward the worst-margin line. Hardware growth is a refresh cycle at existing accounts, primarily McDonald's, and refresh cycles end.</p>
+
+    <p class="eyebrow">3. Professional Service — 13% of revenue, the installation tax</p>
+    <p>Installation, training, technical support. $16.2 million in Q1 2026, up 19%, at a 28% margin that improved from 25%. This line moves with tier-one rollouts, so it is a leading indicator dressed as a revenue line. Burger King going live at over 400 sites per month shows up here before it shows up in ARR.</p>
+
+    <hr class="sec">
+
+    <h3>The Customers: One of Them Is 21% of the Company</h3>
+    <p>PAR's customer analysis has a headline that most write-ups bury. <b>McDonald's represented 21% of PAR's 2025 revenue, up from 15% in 2024.</b> Concentration that is <em>increasing</em> is a different risk from concentration that is stable.</p>
+    <p>The nature of that revenue is the problem, and it is worth being specific about what PAR actually sells into those restaurants, because the assumption I keep meeting is that PAR builds the ordering kiosk in the lobby.</p>
+    <p>It does not. McDonald's self-order kiosks are overwhelmingly <b>Acrelec</b>, which has more than 80,000 kiosk installations across 80 countries and roughly 16% of global kiosk hardware shipments, with Zivelo and Diebold taking smaller shares. The screen a customer touches on the way in is somebody else's box.</p>
+    <p>What PAR supplies McDonald's sits behind the counter and out at the drive-thru: <b>POS terminals</b> (PAR Wave, PAR Phase, EverServ 600), <b>drive-thru headsets</b> (the G5 headset and basestation), <b>drive-thru timers</b> resold through Techknow, kitchen display systems and in-store peripherals, plus <b>hardware repair services</b>. Much of it moves through a channel partnership with Opsio. On the Q1 2026 call Singh described "continued partnership with Opsio and McDonald's across both hardware and services sales." Hardware and services. He has never described McDonald's as a PAR POS software account, and McDonald's appears in none of PAR's tier-one software win announcements, which are Burger King and Papa John's.</p>
+    <p>So the largest customer relationship in the company, at 21% of revenue and climbing, lives almost entirely in the 22%-gross-margin line that carries no ARR. That single fact reconciles two things the market treats as contradictory: revenue accelerating to 19% while organic ARR growth decelerates to 11%. It also means the McDonald's relationship is a <em>replacement cycle</em>, not a subscription. Terminals and headsets get refreshed on a schedule, the schedule ends, and the revenue does not renew itself the way a Punchh contract does.</p>
+    <p>The software customer base is more interesting and much more fragmented:</p>
+    <table>
+      <tr><th>Brand</th><th>Product</th><th>Status</th></tr>
+      <tr><td><b>Burger King</b></td><td>PAR POS (exclusive, North America)</td><td class="g">Rolling out, 400+ sites/month, 3,000+ more in 2026</td></tr>
+      <tr><td><b>Papa John's</b></td><td>PAR POS + Data Central</td><td class="g">Signed; US-wide implementation starts late 2026, live 2027</td></tr>
+      <tr><td><b>Wendy's</b></td><td>Punchh loyalty</td><td>~6,500 locations, live</td></tr>
+      <tr><td><b>McDonald's</b></td><td>POS terminals, drive-thru headsets &amp; timers, KDS, repair (via Opsio). Kiosks are Acrelec.</td><td class="r">21% of 2025 revenue · no ARR</td></tr>
+      <tr><td><b>Cumberland Farms, Parker's</b></td><td>PAR Retail + PAR Intelligence</td><td class="g">Early AI deployments</td></tr>
+      <tr><td><b>Pizza Factory</b></td><td>Full platform (110 locations)</td><td class="g">All-PAR win, Q1 2026</td></tr>
+      <tr><td><b>Jacksons Food Stores</b></td><td>PAR Retail loyalty (300+ sites)</td><td class="g">Signed July 2026</td></tr>
+      <tr><td><b>Bolla Market</b></td><td>PAR Retail (160+ sites)</td><td class="g">Signed June 2026</td></tr>
+      <tr><td><b>Smoothie King</b></td><td>Punchh + PAR Games</td><td>Live, cited for engagement lift</td></tr>
+    </table>
+    <p>The pattern in the wins is consistent and it is the strongest operational evidence in the business. Nearly 90% of new Operator Cloud deals in Q1 2026 were multi-product, and over 80% of Engagement deals were. Punchh's competitive win rate went from 35-40% historically to above 50% in Q1. The average existing customer still uses fewer than two of PAR's core software products, which means the cross-sell runway inside the installed base is real and largely untouched.</p>
+    <p>The counterweight: Operator Cloud active sites went from 60,100 at the end of 2025 to 60,300 at the end of Q1 2026. Net 200 sites. Burger King alone should have added roughly 1,200 in that window at the stated pace. Something is leaving through a door management has not described.</p>
+
+    <hr class="sec">
+
+    <h3>What The Deceleration Is Actually Made Of</h3>
+    <p>This is the section that changed my view, so I will be precise about it.</p>
+    <p>PAR grew revenue 30.2% in 2025 and guides to roughly 11% in 2026. That looks like demand falling off a cliff. Most of it is arithmetic. Stuzo closed in March 2024, TASK in July 2024, and Delaget in 2025. Those three deals were still annualising into the comparison base through 2025, which is why the 2025 number was 30%. Once the acquired revenue laps itself, the reported growth rate collapses toward the organic rate whether or not anything changed in the business. Organic subscription revenue grew 14% in Q1 2026. That is the number the 30% was always going to fall to.</p>
+    <p>So far, so benign. Here is the part that is not.</p>
+    <p><b>Organic ARR was flat sequentially in Q1 2026.</b> Total ARR went from $315.4 million to $330.1 million, and $14.4 million of that $14.7 million increase was Bridg. Strip Bridg and PAR added roughly $300,000 of net new recurring revenue in a quarter, against $17.0 million added in Q4 2025. Break it by cloud and Operator added about $1.8 million organically while Engagement went backwards by roughly $1.5 million.</p>
+    <p>Management's explanation is specific, falsifiable, and I think probably true: they deliberately offboarded a small set of legacy Punchh customers who were priced at roughly an 80% discount to standard, one of them large. Menar said over 60% of the full year's churn was pulled into Q1. Organic Engagement Cloud ARPU rose 27% year over year as a result, which is the arithmetic signature of removing very cheap customers rather than repricing everyone.</p>
+    <p>That story is checkable in exactly one place, and it is Thursday's release.</p>
+
+    <hr class="sec">
+
+    <h3>The ARPU Ceiling, And Why Toast Is The Wrong Comp</h3>
+    <p>PAR reports 199,300 active sites across its two clouds. Toast reports approximately 180,000 locations. PAR's ARR is $330 million; Toast's is $2.4 billion.</p>
+    <p>Toast monetises a restaurant location at roughly $13,300 a year. PAR monetises a site at roughly $1,430 in Engagement and $2,190 in Operator, so about $3,600 for a location running both. Toast extracts something like 3.7x more from a comparable footprint.</p>
+    <p>Almost all of that difference is payments. Toast owns the payment rail and takes a spread on $60.7 billion of annual gross payment volume. PAR Pay exists inside Operator Cloud, and PAR has said for years that increasing payment attach is the lever on both ARPU and gross margin.</p>
+    <p>The bull case treats that gap as the opportunity. I think it is mostly a structural ceiling, and the reason is the customer type. Toast sells to independents and small chains who have no payments leverage and hand over the rail as part of the bundle. PAR sells to Burger King, Papa John's, Wendy's and McDonald's, who negotiate their own interchange, run their own treasury, and will not surrender payment economics to their POS vendor. The enterprise focus that makes PAR's contracts long and its churn low is the same thing that caps what it can charge per site.</p>
+    <p>Enterprise focus buys durability. It does not buy Toast's take rate. Any model that assumes PAR closes the ARPU gap is modelling a customer base PAR does not have.</p>
+
+    <hr class="sec">
+
+    <h3>Below The Line: What The 200WMA Says</h3>
+    <p>PAR crossed below its 200-week moving average on 8 September 2025 and has been under it for 47 weeks. The line sits at $41.89. At $17.62 the stock sits 57.9% below it; the 1 August screen run, on a $16.95 close, put it 59.5% below and flagged the extreme value zone.</p>
+    <p>The base rate is encouraging and the specifics are not. Across 28 touches going back to 1983, PAR's average return after crossing below the line is +32.6% and the average time below is 44.6 weeks. Twelve months after a touch the average return is +34.6%, though the median is +5% and only 60% of episodes are positive. That spread between mean and median tells you the average is carried by a few violent recoveries.</p>
+    <p>The current episode has a maximum drawdown of 72.9% from the line. Only two prior episodes in 43 years went that deep: December 1997, which took 226 weeks to recover, and July 2006, which took 319 weeks. Both of those were roughly the same depth as this one and both took four to six years to climb back. The depth is the signal, and what it says is that episodes this severe do not usually resolve in a quarter.</p>
+    <p>One more screen output worth stating plainly. Trailing twelve-month free cash flow is negative $36.7 million and worsening, with Q4 2025 at negative $13.9 million and Q1 2026 at negative $19.3 million. My own compound-signal framework wants free cash flow growing while a stock is below the line. PAR fails that test today. Management has guided to positive operating cash flow for the remainder of 2026, which makes Thursday the first datapoint on whether that guidance was real.</p>
+
+    <hr class="sec">
+
+    <h3>The Balance Sheet, And The Trap At $19.02</h3>
+    <p>PAR carried $424.6 million of debt at 31 March 2026 against $77.2 million of cash. Net debt of roughly $347 million against a $727 million market capitalisation means the equity is a levered claim on the EBITDA ramp.</p>
+    <table>
+      <tr><th>Tranche</th><th>Coupon</th><th>Matures</th><th>Conversion</th><th class="r">Shares if converted</th></tr>
+      <tr><td>2027 notes (~$46M left)</td><td>1.50%</td><td>Oct 2027</td><td>$77.00</td><td class="r">0.6M</td></tr>
+      <tr><td>2030 notes (~$100-115M)</td><td>1.00%</td><td>Jan 2030</td><td>$97.00</td><td class="r">1.2M</td></tr>
+      <tr><td><b>2031 notes ($265M)</b></td><td class="r">4.00%</td><td>Mar 2031</td><td class="r">$19.02</td><td class="r r">13.9M</td></tr>
+    </table>
+    <p>In March 2026 PAR issued $265 million of 4.00% notes due 2031, used about $207.5 million to repurchase $212 million of the 1.50% notes due 2027, and spent $33.1 million buying back roughly 2.09 million shares at around $15.84. The refinancing pushed a 2027 maturity out to 2031. It also more than doubled the cash coupon on the largest tranche, taking pro-forma cash interest from roughly $6 million a year to roughly $12.5 million. That is a defensive refinancing, and management's own description of it as creating a "cash flow engine" understates what it cost.</p>
+    <p>The 2031 notes convert at $19.02, which is 8% above where the stock trades today. Those 13.9 million shares sit against 41.2 million outstanding. Any re-rate through $19.02 starts sharing the upside with a third more shares. It is a soft ceiling on the equity between roughly $19 and $25 until those notes are retired or converted, and I think it explains why sell-side price targets have converged into the low twenties.</p>
+    <p><b>Fully diluted share count.</b> 41.25 million outstanding at 31 March 2026, plus roughly 3.0 million of unvested RSUs and PSUs (my estimate from the $30.6 million 2025 stock compensation run rate), plus 13.9 million from the 2031 notes, plus 1.8 million from the 2027 and 2030 notes if the stock ever reached $77 and $97. Every per-share figure below uses <b>44.25 million</b> where the stock is under $19.02 and <b>58.2 million</b> where it is above, with the $265 million of 2031 debt removed in the second case.</p>
+
+    <hr class="sec">
+
+    <h3>NPV Estimate</h3>
+    <p>I built this from guidance rather than from the ARR growth target, because guidance is the thing management committed to in public and the mid-teens ARR target is the thing they have already missed sequentially once.</p>
+    <p>Free cash flow here is adjusted EBITDA less stock-based compensation, less cash interest, less capital expenditure. I deduct stock compensation in full and hold the share count roughly flat, which is the conservative pairing. PAR's share count grew 5.0% in the last year and 48.8% over three years, so a flat count is generous. Base case assumptions: WACC of 12% reflecting the leverage and the negative free cash flow, terminal growth of 3%.</p>
+    <table>
+      <tr><th>Year</th><th>Revenue</th><th>Growth</th><th>Adj. EBITDA</th><th>Margin</th><th>FCF</th><th class="r">Disc. FCF</th></tr>
+      <tr><td>2026</td><td>$508M</td><td>guide</td><td>$46M</td><td>9.0%</td><td class="r">−$12M</td><td class="r r">−$11M</td></tr>
+      <tr><td>2027</td><td>$563M</td><td class="g">11%</td><td>$73M</td><td>13.0%</td><td>$24M</td><td class="r">$19M</td></tr>
+      <tr><td>2028</td><td>$619M</td><td class="g">10%</td><td>$99M</td><td>16.0%</td><td>$49M</td><td class="r">$35M</td></tr>
+      <tr><td>2029</td><td>$675M</td><td class="g">9%</td><td>$122M</td><td>18.0%</td><td>$72M</td><td class="r">$45M</td></tr>
+      <tr><td>2030</td><td>$729M</td><td class="g">8%</td><td>$146M</td><td>20.0%</td><td>$95M</td><td class="r">$54M</td></tr>
+      <tr><td>2031</td><td>$780M</td><td class="g">7%</td><td>$164M</td><td>21.0%</td><td>$115M</td><td class="r">$58M</td></tr>
+      <tr><td>2032</td><td>$827M</td><td class="g">6%</td><td>$182M</td><td>22.0%</td><td>$133M</td><td class="r">$60M</td></tr>
+    </table>
+    <p>Discounted cash flows sum to roughly $261 million. Terminal value of about $1,522 million discounts back to roughly $689 million. Enterprise value of approximately <b>$950 million</b>. Less $347 million of net debt gives equity value of about $603 million, or <b>$13.62 per share</b> across 44.25 million shares.</p>
+    <p>The stock is at $17.62. My base case says it is roughly 29% <em>above</em> fair value.</p>
+    <p><b>Sensitivity.</b> At a 10% WACC the model produces about $21.35. At 14% it produces about $8.80. That range is uncomfortably wide, and the width is the leverage. With $347 million of net debt against a $727 million market cap, small changes in the discount rate or the margin path move the equity a long way.</p>
+    <p><b>Multiple sanity check.</b> PAR trades at 2.1x guided 2026 revenue, 23.6x guided 2026 adjusted EBITDA, and 3.3x Q1 ARR. On 2027 estimated EBITDA of $73 million: 12x gives $11.90, 15x gives $16.90, 18x gives $21.80. The current price implies roughly 14.7x 2027 EBITDA, which is a full multiple for a business growing organic ARR at 11% with negative free cash flow.</p>
+    <p><b>What the sell side thinks.</b> Goldman raised its target to $20.50 on 8 July. Reported consensus averages have been quoted near $26.80, down from roughly $59 earlier in 2026. Benchmark cut its target explicitly on the dilution from the convertible. The direction of travel across the whole group has been down all year, and I am below all of them.</p>
+
+    <hr class="sec">
+
+    <h3>PAR vs. TOST: The Head-to-Head</h3>
+    <p>Toast is the comparison everyone reaches for and the comparison that flatters PAR most, so it deserves the most scrutiny.</p>
+
+    <p class="eyebrow">The Financial Comparison</p>
+    <table>
+      <tr><th>Metric</th><th>PAR</th><th>TOST</th></tr>
+      <tr><td><b>Market cap</b></td><td>~$727M</td><td>~$20.2B</td></tr>
+      <tr><td><b>Latest quarter revenue</b></td><td>$124.0M (Q1)</td><td class="g">$1,910M (Q2)</td></tr>
+      <tr><td><b>Revenue growth</b></td><td>+19.4%</td><td class="g">+23.1%</td></tr>
+      <tr><td><b>ARR</b></td><td>$330M</td><td class="g">$2,400M</td></tr>
+      <tr><td><b>ARR growth</b></td><td class="r">+16% (organic +11%)</td><td class="g">+25%</td></tr>
+      <tr><td><b>Locations / active sites</b></td><td>199,300 (two clouds)</td><td>~180,000</td></tr>
+      <tr><td><b>ARR per location</b></td><td class="r">~$1,430–2,190 per cloud</td><td class="g">~$13,300</td></tr>
+      <tr><td><b>Adj. EBITDA (latest qtr)</b></td><td>$8.9M</td><td class="g">$221M</td></tr>
+      <tr><td><b>GAAP net income</b></td><td class="r">−$16.2M</td><td class="g">+$154M</td></tr>
+      <tr><td><b>Net cash / (net debt)</b></td><td class="r">−$347M</td><td class="g">+$1.71B cash &amp; securities</td></tr>
+      <tr><td><b>EV / ARR</b></td><td>~3.3x</td><td>~7.7x</td></tr>
+      <tr><td><b>EV / ARR per point of growth</b></td><td>0.21x on reported · <b>0.30x on organic</b></td><td><b>0.31x</b></td></tr>
+    </table>
+    <p>That last row is the whole argument. On headline ARR growth PAR looks like it trades at two-thirds of Toast's growth-adjusted multiple. Use organic ARR growth of 11% instead of reported 16%, and PAR trades at 0.30x against Toast's 0.31x. The discount evaporates.</p>
+    <p>Against Toast, PAR is priced almost identically, on a business with a fifth of Toast's per-location monetisation, negative free cash flow against $221 million of quarterly EBITDA, and $347 million of net debt against $1.7 billion of net cash. The cheapness people think they are buying here is an artefact of counting acquired ARR as growth.</p>
+
+    <p class="eyebrow">Where PAR Actually Wins</p>
+    <p>Two places, and both are real.</p>
+    <p>Enterprise depth. Toast built its business on independents and small chains and has spent the last three years trying to move upmarket, announcing enterprise logos like Best Western and TGI Fridays UK. PAR has been the enterprise vendor for forty years. Burger King's exclusive North American POS contract and Papa John's US-wide implementation are the kind of deals that take three years to win and ten years to lose. Multi-year, per-store contracts with brands that cannot easily rip out a POS during a franchise cycle.</p>
+    <p>Loyalty. Punchh is the best enterprise loyalty product in the market and PAR's win rate above 50% against competitive fields supports that. Toast's loyalty offering is a feature inside a bundle. Punchh is the reason Wendy's, with 6,500 locations, is a PAR customer without PAR touching the POS.</p>
+    <p>Neither advantage produces Toast's economics. They produce durable, low-churn, low-ARPU relationships. That is a good business. It is a good business worth roughly what it is currently trading for.</p>
+
+    <hr class="sec">
+
+    <h3>The Risks</h3>
+    <p><b>Customer concentration, and it is getting worse.</b> McDonald's was 21% of 2025 revenue, up from 15% in 2024, and it sits in POS terminals, drive-thru headsets, timers and repair services at roughly 22% gross margin. The lobby kiosks are Acrelec's, so PAR holds the hardware layer that is easiest to competitively re-bid at the next refresh. A cycle ending or a vendor decision going the other way removes a fifth of revenue and a larger share of reported growth. This is the single largest risk in the business and none of it is in the ARR figure.</p>
+    <p><b>Adjusted EBITDA roughly equals stock compensation.</b> Stock-based compensation was $30.6 million in 2025 against $23.0 million of adjusted EBITDA. Guided 2026 adjusted EBITDA of $44-47 million sits against a compensation run rate near $29 million. The profitability inflection management is selling is real in the direction of travel and close to a wash in cash terms once dilution is counted. Share count grew 48.8% in three years.</p>
+    <p><b>Goodwill is bigger than the market cap.</b> $897 million of goodwill and $220 million of intangibles against $826 million of shareholders' equity and a $727 million market capitalisation. Trading below book value with book value made mostly of acquisition goodwill invites an impairment test. PAR already wrote off the Brink trademark in Q4 2025. A large goodwill impairment would not touch cash or adjusted EBITDA, and it would be a headline that moves the stock anyway.</p>
+    <p><b>The convertible ceiling.</b> The $265 million of 2031 notes convert at $19.02 into 13.9 million shares against 41.2 million outstanding. Upside above that price is shared roughly 25% with new shares. This is a structural drag on the re-rate the bull case depends on.</p>
+    <p><b>Negative free cash flow into a rising coupon.</b> Trailing twelve-month free cash flow is negative $36.7 million, Q1 2026 was negative $19.3 million, and cash interest roughly doubled with the March refinancing. Management guides to positive operating cash flow for the balance of 2026 on working capital improvement and profitability. If that does not land, PAR is burning cash with $426 million of debt and $77 million on the balance sheet.</p>
+    <p><b>Organic ARR could stay flat.</b> Everything above assumes the Q1 flatness was the Punchh offboarding and nothing else. If Q2 shows another flat or negative organic sequential, the mid-teens ARR target is dead, the 2027 EBITDA path resets lower, and my bear case is the live scenario rather than the tail.</p>
+    <p><b>AI disruption of vertical SaaS.</b> The broad de-rating that took PAR from $60 to $17 is partly a sector view that AI compresses software pricing. Singh's counter is that PAR prices per store rather than per seat, so headcount reduction at customers does not hit revenue. I find that argument reasonably strong. It also does not protect against a competitor building a cheaper stack faster with the same tools PAR is using.</p>
+
+    <hr class="sec">
+
+    <h3>What Q2 Has To Show</h3>
+    <p>PAR reports Thursday 6 August at 4:00pm ET, with the call at 4:30. Here is what I am watching, in the order I care about it.</p>
+    <table>
+      <tr><th>#</th><th>Metric</th><th>Q1 2026 / comp</th><th>What confirms · what breaks</th></tr>
+      <tr><td><b>1</b></td><td><b>Organic sequential ARR</b></td><td>flat q/q; $315.7M ex-Bridg</td><td class="g">Confirms: +$10M or better organic sequential. <span class="r">Breaks: flat or negative again.</span></td></tr>
+      <tr><td><b>2</b></td><td><b>Operating cash flow</b></td><td>−$17M in Q1; TTM FCF −$36.7M</td><td class="g">Confirms: positive, as guided. <span class="r">Breaks: another negative quarter.</span></td></tr>
+      <tr><td><b>3</b></td><td>Adj. EBITDA vs guide</td><td>guide $9.5–11.5M vs $5.5M in Q2'25</td><td>Below $9.5M kills the credibility of first-ever guidance in quarter two of giving it.</td></tr>
+      <tr><td><b>4</b></td><td>Operator Cloud active sites</td><td>60,300, up 200 q/q</td><td>Burger King should add ~1,200/qtr. Below 61,000 means real attrition underneath.</td></tr>
+      <tr><td><b>5</b></td><td>Subscription gross margin</td><td>65.6% non-GAAP (71% ex-contract)</td><td>Needs to stop falling. Another 200bp decline makes the "fixed-profit contract" explanation harder to accept.</td></tr>
+      <tr><td><b>6</b></td><td>FY26 guidance revision</td><td>$500–515M rev, $44–47M EBITDA</td><td>Any trim eight weeks after issuing the first guidance in company history is a serious signal.</td></tr>
+      <tr><td><b>7</b></td><td>PAR Intelligence revenue</td><td>0; "must come this year"</td><td>Singh committed to monetising in 2026. First dollar, or the first excuse.</td></tr>
+      <tr><td><b>8</b></td><td>Tier-one pipeline</td><td>"outcomes in the second half"</td><td>A named tier-one win is the one thing that could re-rate this regardless of the quarter.</td></tr>
+    </table>
+    <p>Items 1 and 2 are the thesis. Everything else is texture. If organic sequential ARR is up meaningfully and operating cash flow turns positive, the story management told in May was true and the stock is cheap against a 2027 EBITDA number that then looks conservative. If either one misses, the May story was a narrative laid over a decelerating business, and the leverage does the rest.</p>
+
+    <hr class="sec">
+
+    <h3>The Path From Here</h3>
+    <p>I came into this expecting to find a mispriced compounder trading below book at the bottom of an AI-driven SaaS de-rating. What I found is a company that spent seven years and $1.1 billion assembling a platform that is good, sticky, and structurally limited in what it can charge.</p>
+    <p>The operational evidence is strong. Nearly 90% of new Operator deals are multi-product. Punchh's win rate went from 35-40% to over 50%. Burger King is rolling at 400 sites a month and Papa John's starts late this year. Operating expense fell 650 basis points as a share of revenue in twelve months. Adjusted EBITDA went from negative $6.4 million in 2024 to $23.0 million in 2025 to a guided $44-47 million. Singh bought Bridg for 1.9x ARR from a distressed seller and sold the Government business to Booz Allen at a good price. He is a capable operator.</p>
+    <p>The financial evidence is weaker than the operational evidence, and that gap is the position. Organic ARR was flat last quarter. Free cash flow is negative $36.7 million and worsening. Adjusted EBITDA is roughly equal to stock compensation. Net debt is $347 million against a $727 million market cap on a coupon that just doubled. The largest customer is 21% of revenue in the lowest-margin line and growing. And the 2031 convertible caps the re-rate at $19.02.</p>
+    <p>The one outside vote that argues against me is worth stating clearly. Voss Capital, which owns more than 10% of the company, bought roughly $37.5 million of stock across five open-market purchases in the last twelve months. My screen itemises four of them: 196,035 shares at about $36.24 in January, 526,202 at about $27.88 in February, 719,900 at about $14.59 in May, and 350,000 at about $14.46 in June. That is a cluster buy from a holder with a public $80 price target, and my screen flags it at the 98th percentile of insider intensity. It is also a fund averaging down through a 60% decline, with the January and February lots deeply underwater.</p>
+    <p>My DCF says $13.62. The base scenario on 2027 EBITDA says roughly $15.20. The stock is $17.62. On my numbers the market is already paying for the margin expansion and has not yet been asked to pay for growth that has not shown up. The setup I want is a print that proves the Q1 flatness was a one-time reset, and I would rather pay $19 for that certainty than $17.62 for the hope of it.</p>
+    <p>Thursday at 4:00pm decides it.</p>
+
+    <!-- ================================================================
+         POST-EARNINGS APPEND — Q2 2026, reported 6 Aug 2026 4:00pm ET.
+         Uncomment, fill, and leave everything above this line untouched.
+         The pre-print reasoning stays on the record; the result gets
+         appended as a dated note, per the corrections rule.
+
+    <hr class="sec">
+
+    <h3>Q2 2026: What Actually Happened</h3>
+    <div class="note"><b>Update (7 Aug 2026).</b> PAR reported Q2 2026 after the close on
+    6 August. Nothing above this line has been edited. Here is how the eight checkpoints
+    scored, and what I got right and wrong.</div>
+
+    <table>
+      <tr><th>#</th><th>Metric</th><th>My checkpoint</th><th class="r">Actual</th><th>Verdict</th></tr>
+      <tr><td><b>1</b></td><td>Organic sequential ARR</td><td>+$10M confirms · flat breaks</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>2</b></td><td>Operating cash flow</td><td>positive confirms · negative breaks</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>3</b></td><td>Adj. EBITDA vs guide</td><td>$9.5–11.5M</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>4</b></td><td>Operator Cloud sites</td><td>&gt;61,000</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>5</b></td><td>Subscription gross margin</td><td>stop falling from 65.6%</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>6</b></td><td>FY26 guidance</td><td>$500–515M · $44–47M</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>7</b></td><td>PAR Intelligence revenue</td><td>first dollar in 2026</td><td class="r">___</td><td>___</td></tr>
+      <tr><td><b>8</b></td><td>Tier-one pipeline</td><td>named win in H2</td><td class="r">___</td><td>___</td></tr>
+    </table>
+
+    <p>[Reported numbers: revenue ___, subscription ___, ARR ___ (organic ___),
+    adj. EBITDA ___, GAAP EPS ___, operating cash flow ___, cash ___.]</p>
+
+    <p><b>What I got wrong.</b> [Be specific. Name the paragraph above that was mistaken
+    and say what the right read was.]</p>
+
+    <p><b>What held.</b> [Same discipline. No victory laps on the things that were coin flips.]</p>
+
+    <p><b>The call.</b> [Pass still stands / upgraded / the invalidation fired. State the
+    new price, the new anchor if it moved, and whether a position was opened.]</p>
+
+    ================================================================ -->
+
+    <div class="note" style="margin-top:28px"><b>Disclaimer.</b> Not financial advice. Do your own research. All figures from company filings, the Q1 2026 earnings release and transcript (7 May 2026), the Q2 2025 and Q4 2025 releases, and public disclosures. Price at draft: $17.62 (5 August 2026). Publish price to be set after the Q2 print.</div>
+
+    </div>
+  </section>
+
+
+  <section class="panel" data-panel="verdict">
+    <h1 class="verdict">A good business, fully priced, one print from being either.</h1>
+    <p class="sub">The platform works and the operating leverage is real. Organic ARR went flat last quarter, free cash flow is negative $36.7 million, and the equity carries $347 million of net debt behind a convertible that caps the upside at $19.02. I want the Q2 confirmation more than I want the entry.</p>
+
+    <div class="callbar">
+      <span class="pill">Call<b style="color:var(--bench)">Pass at $17.62 · revisit on the print</b></span>
+      <span class="pill">Conviction<b>Moderate</b></span>
+      <span class="pill lean">Net overhang lean<b>Negative</b></span>
+      <span class="pill">Recognition<b>Q2 print · 6 Aug, 4:00pm ET</b></span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head"><span class="l">Recognition gap</span><span class="t">resolves ~ 6 Aug · Q2 earnings</span></div>
+      <div class="track">
+        <div class="axis"></div>
+        <div class="gapfill" style="left:52%;right:32%"></div>
+        <div class="mk f" style="left:52%"><div class="d"></div><div class="v">~$15.20</div><div class="c">driver-adjusted</div></div>
+        <div class="mk p" style="left:68%"><div class="d"></div><div class="v">$17.62</div><div class="c">price now</div></div>
+      </div>
+      <div class="gnote">anchor blends my DCF (~$13.60 at 12% WACC) with the 14× 2027E EBITDA base case (~$15.20), against sell-side targets of $20.50 (GS, 8 Jul) to a reported ~$26.80 average that has fallen from ~$59 this year · price sits ~16% <span class="r">above</span> my anchor</div>
+    </div>
+    <div class="note"><b>Key levels.</b> $14.50 is where Voss bought twice and where the May lows sat · $19.02 is the 2031 convertible strike and a structural ceiling · $11.59 is the 52-week low. The thesis I would buy needs organic sequential ARR back above $10M and positive operating cash flow in the same release.</div>
+  </section>
+
+
+  <section class="panel" data-panel="overhangs">
+    <h2>Overhang ledger</h2>
+    <p class="sub">Drivers the metrics don't show yet, scored materiality × unpriced × low-attention × linkage. Net lean negative; the operating leverage is the live counterweight and it is credible.</p>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">Organic ARR went flat and nobody modelled it</span><span class="oh-layer">micro · 1st-order</span><span class="oh-score">0.74</span></div>
+      <div class="sbar"><i style="width:74%"></i></div>
+      <div class="oh-mech">Q1 total ARR rose $14.7M and $14.4M of it was Bridg. Organic added ~$300k against $17.0M in Q4 2025. Management attributes it entirely to a planned Punchh offboarding of 80%-discount legacy accounts, with 60%+ of the year's churn pulled forward. Consensus still models mid-teens ARR growth, so a second flat quarter is <b>unpriced</b>.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low — buried under a revenue beat</div><div class="ff"><b>Trigger</b>Q2 print, 6 Aug</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">McDonald's at 21% and rising, in the wrong revenue line</span><span class="oh-layer">micro · structural</span><span class="oh-score">0.61</span></div>
+      <div class="sbar"><i style="width:61%"></i></div>
+      <div class="oh-mech">Up from 15% of revenue in 2024. The relationship is POS terminals, drive-thru headsets and timers, KDS and repair services through Opsio, at ~22% gross margin, on a refresh cycle. The lobby kiosks are Acrelec's, so this is the re-biddable hardware layer and it carries <b>no ARR</b>. It explains why revenue accelerated to +19% while organic ARR decelerated to +11%. The market reads the revenue line and misses that its fastest-growing component is the least durable.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low — rarely quantified</div><div class="ff"><b>Trigger</b>Refresh cycle completing · 10-K concentration note</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">Operating leverage is real and mechanically continuing</span><span class="oh-layer">micro · 1st-order</span><span class="oh-score">0.57</span></div>
+      <div class="sbar"><i style="width:57%"></i></div>
+      <div class="oh-mech">Non-GAAP opex fell to 43.3% of revenue from 49.8% in a year. The two-vertical reorganisation finished in early Q2 with the remaining transitions in Q3, so the largest cost step-down lands in H2 and is <b>already contracted</b> rather than forecast. Adjusted EBITDA: −$6.4M (2024) → $23.0M (2025) → $44–47M guided.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>Medium</div><div class="ff"><b>Trigger</b>H2 prints showing sequential margin expansion</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">The $19.02 convertible ceiling</span><span class="oh-layer">micro · capital structure</span><span class="oh-score">0.53</span></div>
+      <div class="sbar"><i style="width:53%"></i></div>
+      <div class="oh-mech">$265M of 4.00% notes due 2031 convert into 13.9M shares at $19.02, against 41.2M outstanding. Every dollar of re-rate above the strike is shared with ~25% more equity. Sell-side targets clustering at $20.50 suggests the desks have priced it; retail commentary comparing PAR to Toast has not.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>Low outside the sell side</div><div class="ff"><b>Trigger</b>Any move through $19.02</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">Cross-sell runway inside the installed base</span><span class="oh-layer">micro · 2nd-order</span><span class="oh-score">0.49</span></div>
+      <div class="sbar"><i style="width:49%"></i></div>
+      <div class="oh-mech">Nearly 90% of new Operator deals and over 80% of Engagement deals were multi-product in Q1, yet the average existing customer uses fewer than two of the core products. Punchh win rates moved from 35–40% to above 50% once ordering and payments could be bundled. This growth needs no new logos and no tier-one lottery ticket.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low</div><div class="ff"><b>Trigger</b>ARPU expansion showing in organic ARR</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">Goodwill exceeds the market capitalisation</span><span class="oh-layer">micro · accounting</span><span class="oh-score">0.41</span></div>
+      <div class="sbar"><i style="width:41%"></i></div>
+      <div class="oh-mech">$897M of goodwill and $826M of book equity against a $727M market cap. Price-to-book of 0.85 on a balance sheet made largely of acquisition premium is the classic setup for an impairment test. The Brink trademark write-off in Q4 2025 was the small version. Non-cash, and it moves the stock anyway.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Very low</div><div class="ff"><b>Trigger</b>Annual impairment testing · sustained sub-book trading</div></div>
+    </div>
+
+    <div class="ohcard dorm">
+      <div class="oh-top"><span class="arr">○</span><span class="oh-title">Tier-one win announced out of cycle</span><span class="oh-layer">micro · dormant</span><span class="dtag">fires on anomaly</span></div>
+      <div class="oh-mech">Singh said tier-one outcomes land in the second half and that PAR deliberately excludes mega-deals from its mid-teens ARR target. A named tier-one POS win would add ARR the model does not contain and would reset the growth narrative independent of the quarter. Held dormant because tier-one deals are, in his own words, "always 50/50."</div>
+    </div>
+  </section>
+
+
+  <section class="panel" data-panel="numbers">
+    <h2>Numbers</h2>
+    <p class="eyebrow">Q1 2026 — the last reported quarter</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Revenue</div><div class="mv g">$124.0M</div><div class="mn">+19.4% y/y</div></div>
+      <div class="met"><div class="ml">Subscription rev</div><div class="mv g">$78.5M</div><div class="mn">+14.8% y/y · 63% of total</div></div>
+      <div class="met"><div class="ml">Total ARR</div><div class="mv g">$330.1M</div><div class="mn">+16% · organic +11%</div></div>
+      <div class="met"><div class="ml">Organic ARR q/q</div><div class="mv r">~flat</div><div class="mn">+$0.3M vs +$17.0M in Q4</div></div>
+      <div class="met"><div class="ml">Adj. EBITDA</div><div class="mv g">$8.9M</div><div class="mn">from $4.5M · 5th seq. gain</div></div>
+      <div class="met"><div class="ml">GAAP net loss</div><div class="mv r">−$16.2M</div><div class="mn">−$0.39/sh · improved from −$0.61</div></div>
+      <div class="met"><div class="ml">Sub. gross margin</div><div class="mv r">65.6%</div><div class="mn">non-GAAP · from 69.1% · 71% ex-contract</div></div>
+      <div class="met"><div class="ml">Hardware margin</div><div class="mv r">21.6%</div><div class="mn">from 24.6% on tariffs</div></div>
+      <div class="met"><div class="ml">Non-GAAP opex</div><div class="mv g">43.3%</div><div class="mn">of revenue · from 49.8%</div></div>
+      <div class="met"><div class="ml">Operating cash flow</div><div class="mv r">−$17M</div><div class="mn">TTM FCF −$36.7M</div></div>
+      <div class="met"><div class="ml">Cash</div><div class="mv">$77.2M</div><div class="mn">vs $424.6M debt</div></div>
+      <div class="met"><div class="ml">Price / book</div><div class="mv">0.85×</div><div class="mn">book $20.04/sh</div></div>
+    </div>
+
+    <p class="eyebrow" style="margin-top:18px">Guidance — first ever, issued 7 May 2026</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Q2 revenue</div><div class="mv">$122.5–127.5M</div><div class="mn">vs $112.4M in Q2'25 · +9% to +13%</div></div>
+      <div class="met"><div class="ml">Q2 adj. EBITDA</div><div class="mv g">$9.5–11.5M</div><div class="mn">vs $5.5M in Q2'25</div></div>
+      <div class="met"><div class="ml">FY26 revenue</div><div class="mv">$500–515M</div><div class="mn">vs $455.5M · +10% to +13%</div></div>
+      <div class="met"><div class="ml">FY26 adj. EBITDA</div><div class="mv g">$44–47M</div><div class="mn">vs $23.0M · ~9% margin</div></div>
+      <div class="met"><div class="ml">ARR target</div><div class="mv">mid-teens</div><div class="mn">excludes tier-one mega deals</div></div>
+      <div class="met"><div class="ml">Bridg contribution</div><div class="mv">~$10M</div><div class="mn">FY26 sub. rev · minimal EBITDA</div></div>
+    </div>
+
+    <p class="eyebrow" style="margin-top:18px">Below the line — screen output, 1 Aug 2026</p>
+    <div class="grid">
+      <div class="met"><div class="ml">200-week MA</div><div class="mv">$41.89</div><div class="mn">57.9% below · 59.5% at 1 Aug close</div></div>
+      <div class="met"><div class="ml">Weeks below</div><div class="mv">47</div><div class="mn">since 8 Sep 2025 · avg 44.6</div></div>
+      <div class="met"><div class="ml">Max depth</div><div class="mv r">72.9%</div><div class="mn">3rd deepest of 28 touches</div></div>
+      <div class="met"><div class="ml">Avg return after touch</div><div class="mv g">+32.6%</div><div class="mn">median 12m only +5%</div></div>
+      <div class="met"><div class="ml">Insider intensity</div><div class="mv g">98.1</div><div class="mn">Voss cluster buy, $37.5M/12m</div></div>
+      <div class="met"><div class="ml">FCF trend</div><div class="mv r">declining</div><div class="mn">fails the below-line FCF test</div></div>
+    </div>
+
+    <h3>Scenario targets — EV/2027E adjusted EBITDA</h3>
+    <table>
+      <tr><th>Scenario</th><th>Multiple</th><th class="r">Implied</th><th>Path</th></tr>
+      <tr><td class="b">Bear</td><td>10× on $58M</td><td class="r r">~$5.25</td><td class="scen">organic ARR stays flat, hardware refresh ends, cost cuts don't stick, leverage does the rest</td></tr>
+      <tr><td class="b">Base</td><td>14× on $73M</td><td class="r">~$15.20</td><td class="scen">guidance holds, organic ARR back to low double digits, restructuring lands in H2</td></tr>
+      <tr><td class="b">Bull</td><td>18× on $85M</td><td class="r g">~$24.90</td><td class="scen">tier-one win + payments attach + PAR Intelligence revenue; 2031 notes convert, 58.2M shares, $265M debt removed</td></tr>
+    </table>
+    <div class="note"><b>The gaps.</b> PAR does not disclose payment attach rate or PAR Pay volume, so the single largest ARPU lever is unmeasurable from outside. The "fixed-profit contract acquired in 2024" that costs 500bp of subscription margin is never named, its size is never given, and its runoff schedule is unknown. The 2030 notes were issued at $100M with a $15M over-allotment; I have inferred ~$115M from the balance sheet rather than confirmed it from the note disclosure. Unvested RSU/PSU count is my estimate from the compensation run rate, not a disclosed figure. Net revenue retention is not reported at all, which for a company whose whole case is cross-sell into the installed base is a conspicuous absence.</div>
+  </section>
+
+
+  <section class="panel" data-panel="bear">
+    <h2>Bear case</h2>
+    <p>The steelman, given equal room. On my numbers this is closer to the base case than I would like.</p>
+    <h3>The short thesis</h3>
+    <p>PAR is a <b>seven-year rollup that has run out of things to buy</b> and is now being asked to grow on its own for the first time. The answer in Q1 was that it did not: organic ARR was flat sequentially, and the $14.4M that made the number look fine was a distressed asset bought two weeks before quarter end. Underneath, the fastest-growing revenue line is 22%-margin hardware sold to a single customer at 21% of the company. Adjusted EBITDA of $44-47M is roughly equal to $29M of stock compensation plus $12.5M of newly doubled cash interest, which means the celebrated profitability inflection nets to approximately zero in cash. Free cash flow is negative $36.7M and getting worse. Against that, $426M of debt, $897M of goodwill on a $727M market cap, and a share count that grew 48.8% in three years.</p>
+    <h3>Why the re-rate may never fire</h3>
+    <p>The bull case requires the market to re-rate PAR toward Toast's multiple. It is already there. At 0.30x EV/ARR per point of <em>organic</em> growth against Toast's 0.31x, the discount investors think they are buying does not exist once you strip acquired ARR out of the growth rate. Above that, the 2031 convertible at $19.02 hands a quarter of any re-rate to noteholders, which is why the sell side has converged on targets in the low twenties rather than the fifties they carried in January.</p>
+    <p>My own screen makes the timing argument sharper. PAR has crossed below its 200-week moving average 28 times since 1983, and the two prior episodes that went as deep as this one — December 1997 and July 2006, both around 72% — took 226 and 319 weeks to recover. Median twelve-month return after a touch is +5%, and only 60% of episodes are positive at all. The +32.6% average is carried by a handful of violent recoveries in a much smaller company. Depth this severe historically resolves in years.</p>
+    <p>And the smart-money signal cuts both ways. Voss Capital bought $37.5M across twelve months, which my screen reads as conviction. It also bought 722,237 of those shares above $27 and is down more than 40% on them. A large holder averaging down is evidence of belief, not of being right.</p>
+    <h3>Pre-committed invalidations</h3>
+    <table>
+      <tr><td>Organic sequential ARR is flat or negative again in Q2 (the Punchh explanation fails)</td></tr>
+      <tr><td>Operating cash flow is negative in Q2 despite the guide to positive for the balance of 2026</td></tr>
+      <tr><td>FY26 revenue or adjusted EBITDA guidance is trimmed within two quarters of being issued</td></tr>
+      <tr><td>Operator Cloud active sites come in below 61,000 despite the Burger King rollout pace</td></tr>
+      <tr><td>Subscription gross margin falls another 200bp without the fixed-profit contract being quantified</td></tr>
+      <tr><td>McDonald's concentration rises above 25% of revenue in the FY26 10-K</td></tr>
+    </table>
+    <p class="sub" style="margin-top:14px">Conversely, the bull invalidations of <em>my</em> pass: organic sequential ARR above $10M with positive operating cash flow in the same release, or a named tier-one POS win. Either one and I am buying, above $19.02 if I have to.</p>
+  </section>
+
+  <footer>
+    Drafted 5 Aug 2026 at $17.62, one day ahead of the Q2 print. Publish price, performance tag and post-earnings corrections to be applied after 6 Aug. Fundamentals from filings, the Q1 2026 earnings release and transcript (7 May 2026), the Q2 2025 and Q4 2025 releases, and public disclosures. Below-the-line figures from the mungbeans screen, 1 Aug 2026. Recognition-gap anchor derived from my DCF and a 2027 EBITDA multiple, discounted against sell-side targets. Not investment advice. A record of reasoning.
+  </footer>
+
+</div>
+<script>
+  const tabs=[...document.querySelectorAll('.tab')];
+  const panels=[...document.querySelectorAll('.panel')];
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector(`[data-panel="${t.dataset.p}"]`).classList.add('active');
+  }));
+</script>
+</body>
+</html>
