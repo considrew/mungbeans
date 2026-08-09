@@ -92,39 +92,46 @@ def get_subscribers() -> list[str]:
         print(f"ERROR: Failed to fetch forms: {e}")
         sys.exit(1)
 
-    form_id = None
-    for form in forms:
-        if form.get('name') == 'notify':
-            form_id = form['id']
-            break
+    # One list, two intake points. "notify" is the original homepage signup;
+    # "deepdive-notify" is the form on the deep-dive pages. Both feed the same
+    # send, so a reader who signed up at either place gets the same email and
+    # is only ever counted once.
+    SUBSCRIBE_FORMS = ('notify', 'deepdive-notify')
 
-    if not form_id:
-        print("ERROR: 'notify' form not found on Netlify site.")
+    form_ids = {f['name']: f['id'] for f in forms if f.get('name') in SUBSCRIBE_FORMS}
+    if not form_ids:
+        print(f"ERROR: none of {SUBSCRIBE_FORMS} found on Netlify site.")
         sys.exit(1)
+    for name in SUBSCRIBE_FORMS:
+        if name not in form_ids:
+            print(f"  note: form '{name}' not present yet; skipping.")
 
-    # Fetch all submissions (paginated)
+    # Fetch all submissions across every intake form (paginated)
     emails = set()
-    page = 1
-    while True:
-        try:
-            req = urllib.request.Request(
-                f"https://api.netlify.com/api/v1/forms/{form_id}/submissions?per_page=100&page={page}",
-                headers={"Authorization": f"Bearer {netlify_token}"}
-            )
-            with urllib.request.urlopen(req) as resp:
-                subs = json.loads(resp.read())
-        except Exception as e:
-            print(f"WARNING: Failed to fetch submissions page {page}: {e}")
-            break
+    for name, form_id in form_ids.items():
+        before = len(emails)
+        page = 1
+        while True:
+            try:
+                req = urllib.request.Request(
+                    f"https://api.netlify.com/api/v1/forms/{form_id}/submissions?per_page=100&page={page}",
+                    headers={"Authorization": f"Bearer {netlify_token}"}
+                )
+                with urllib.request.urlopen(req) as resp:
+                    subs = json.loads(resp.read())
+            except Exception as e:
+                print(f"WARNING: Failed to fetch '{name}' submissions page {page}: {e}")
+                break
 
-        if not subs:
-            break
+            if not subs:
+                break
 
-        for sub in subs:
-            email = sub.get('data', {}).get('email', '').strip().lower()
-            if email:
-                emails.add(email)
-        page += 1
+            for sub in subs:
+                email = sub.get('data', {}).get('email', '').strip().lower()
+                if email:
+                    emails.add(email)
+            page += 1
+        print(f"  {name}: +{len(emails) - before} new addresses ({len(emails)} unique so far)")
 
     # Fetch unsubscribes from Netlify Blobs API
     unsubscribed = set()
