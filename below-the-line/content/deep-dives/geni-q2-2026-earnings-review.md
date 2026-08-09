@@ -5,6 +5,7 @@ draft: false
 tags: ["deep-dive", "GENI", "earnings-review", "methodology"]
 description: "Eight of nine calls from the June thesis landed inside six weeks. Q2 beat on revenue and margin, Legend backs out to ~$274M annualized, and both Polymarket and Kalshi signed before the print. The 200-week line found the question; the business answered it. Revised target $15.41 on 311M fully diluted shares, with GAAP positivity as the gate."
 ticker: "GENI"
+canonical_url: "/deep-dives/geni-q2-review/"
 verdict: "speculative-buy"
 verdict_label: "Constructive — the gate is GAAP, not the platform"
 performance_price_at_publish: "$7.59"

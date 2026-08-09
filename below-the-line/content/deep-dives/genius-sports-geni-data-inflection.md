@@ -5,6 +5,7 @@ draft: false
 tags: ["deep-dive", "growth", "data", "sports-betting", "media", "advertising", "GENI", "turnaround"]
 description: "GENI has assembled the only platform that owns sports data at the camera, owns the fan at the destination, and sits between both and the advertiser. Revenue is compounding at 30%+. Margins are expanding 500bps in a single transaction. The market has it down 45% in 2026. I go line by line through the business to understand why."
 ticker: "GENI"
+canonical_url: "/deep-dives/geni/"
 ticker_b: "SRAD"
 verdict: "speculative-buy"
 verdict_label: "Buy — the platform is further along than the stock price reflects"

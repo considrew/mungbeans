@@ -42,7 +42,7 @@ mungbeans.io, its owners, and its contributors shall not be held liable for any 
 
 *Last updated: {{ now.Format "January 2006" }}*
 
-## Affiliate disclosure
+## Affiliate disclosure {#affiliate-disclosure}
 
 mungbeans.io carries no advertising. One paid link appears on the site and in the
 weekly email: a referral link to Godel Terminal, a research terminal I subscribe

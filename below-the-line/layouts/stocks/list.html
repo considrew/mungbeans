@@ -35,6 +35,8 @@
     <h1>All Stocks</h1>
     <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}.</p>
 
+    {{ partial "godel-inline.html" . }}
+
     <!-- Search Box -->
     <div class="search-container">
       <input type="text" id="stockSearch" placeholder="Search by symbol or name..." class="search-input">
@@ -556,8 +558,7 @@
     </table>
     
     <p class="results-count" id="resultsCount"></p>
-        {{ partial "godel.html" . }}
-  </main>
+      </main>
 
   {{ partial "footer.html" . }}
 

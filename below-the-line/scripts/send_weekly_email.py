@@ -159,6 +159,61 @@ def get_subscribers() -> list[str]:
     return active
 
 
+
+CONTENT_DIR = Path(__file__).parent.parent / 'content' / 'deep-dives'
+
+
+def _frontmatter(path: Path) -> dict:
+    """Minimal YAML-ish frontmatter reader: flat `key: "value"` pairs only."""
+    out = {}
+    try:
+        text = path.read_text(encoding='utf-8')
+    except Exception:
+        return out
+    if not text.startswith('---'):
+        return out
+    body = text.split('---', 2)
+    if len(body) < 3:
+        return out
+    for line in body[1].splitlines():
+        if ':' not in line or line.lstrip().startswith('#'):
+            continue
+        k, _, v = line.partition(':')
+        v = v.strip().strip('"').strip("'")
+        out[k.strip()] = v
+    return out
+
+
+def latest_deep_dive() -> dict | None:
+    """Newest published deep dive, as {title, description, url, date}.
+
+    Stubs that front a standalone HTML article carry `canonical_url`; anything
+    else resolves to its own slug.
+    """
+    if not CONTENT_DIR.exists():
+        return None
+    best = None
+    for md in CONTENT_DIR.glob('*.md'):
+        if md.name.startswith('_'):
+            continue
+        fm = _frontmatter(md)
+        if str(fm.get('draft', 'false')).lower() == 'true':
+            continue
+        date = fm.get('date', '')
+        if not date:
+            continue
+        if best is None or date > best[0]:
+            url = fm.get('canonical_url') or f"/deep-dives/{md.stem}/"
+            best = (date, {
+                'title': fm.get('title', ''),
+                'description': fm.get('description', ''),
+                'ticker': fm.get('ticker', ''),
+                'url': 'https://mungbeans.io' + url,
+                'date': date,
+            })
+    return best[1] if best else None
+
+
 def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
     """Build the email subject and HTML body from crossings data.
 
@@ -168,6 +223,25 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
     slug = crossings.get('blog_slug', f"{crossings['date']}-weekly-signal-report")
     post_url = f"https://mungbeans.io/blog/{slug}/"
     blog_generated = crossings.get('blog_generated', True)  # default True for old crossings.json files
+
+    # Latest deep dive teaser. Silently omitted when nothing is published.
+    dive = latest_deep_dive()
+    if dive:
+        _blurb = dive['description']
+        if len(_blurb) > 220:
+            _blurb = _blurb[:217].rsplit(' ', 1)[0] + '...'
+        _tag = f'<span style="font-family:monospace; font-size:11px; color:#1a1a2e; background-color:#e2b714; padding:2px 7px; border-radius:3px; font-weight:700;">{dive["ticker"]}</span> ' if dive.get('ticker') else ''
+        deep_dive_section = f"""
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#16162a; border:1px solid #2a2a3e; border-left:2px solid #e2b714; border-radius:8px; margin:0 0 26px 0;">
+            <tr><td style="padding:18px 20px;">
+              <p style="margin:0 0 8px 0; font-family:monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#888;">latest deep dive</p>
+              <p style="margin:0 0 8px 0; font-size:17px; line-height:1.4; color:#ffffff; font-weight:600;">{_tag}<a href="{dive['url']}" style="color:#ffffff; text-decoration:none;">{dive['title']}</a></p>
+              <p style="margin:0 0 12px 0; color:#c9c9d4; font-size:14px; line-height:1.6;">{_blurb}</p>
+              <p style="margin:0;"><a href="{dive['url']}" style="color:#e2b714; text-decoration:none; font-size:14px; font-weight:600;">Read the deep dive &rarr;</a></p>
+            </td></tr>
+          </table>"""
+    else:
+        deep_dive_section = ''
 
     newly_below = crossings.get('newly_below', [])
     newly_recovered = crossings.get('newly_recovered', [])
@@ -241,6 +315,7 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
         <tr><td style="color:#e0e0e0; font-size:16px; line-height:1.6;">
           <p style="margin:0 0 8px 0; font-size:22px; color:#ffffff; font-weight:600;">Weekly Signal Report</p>
           <p style="margin:0 0 20px 0; color:#888; font-size:14px;">{date_display} — 200-week moving average crossings</p>
+          {deep_dive_section}
           {below_section}
           {recovered_section}
           <p style="margin:28px 0 0 0;">
@@ -363,18 +438,36 @@ def send_emails(crossings: dict, subscribers: list[str]):
 
 
 def main():
+    dry_run = '--dry-run' in sys.argv
+
     print("=" * 60)
-    print("Below The Line - Weekly Email Sender")
+    print("Below The Line - Weekly Email Sender" + ("  [DRY RUN]" if dry_run else ""))
     print(f"Run at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
 
     # 1. Load and validate crossings data
     crossings = load_crossings()
 
-    # 2. Fetch subscriber list
-    subscribers = get_subscribers()
+    # 2. Render the email. In a dry run this is the whole job: write the HTML
+    #    to disk for eyeballing, print the subject, and touch no network.
+    if dry_run:
+        subject, html = build_email_html(
+            crossings, 'https://mungbeans.io/.netlify/functions/unsubscribe?email=preview%40example.com')
+        out = Path(__file__).parent.parent / 'email-preview.html'
+        out.write_text(html, encoding='utf-8')
+        dive = latest_deep_dive()
+        print(f"\nSubject: {subject}")
+        print(f"Deep dive teaser: {dive['title'] if dive else '(none published)'}")
+        print(f"  -> {dive['url'] if dive else ''}")
+        print(f"Godel block: {'present' if 'godelterminal.com' in html else 'MISSING'}")
+        print(f"Crossings: {len(crossings.get('newly_below', []))} below, "
+              f"{len(crossings.get('newly_recovered', []))} recovered")
+        print(f"\nPreview written to: {out}")
+        print("No subscribers fetched and no mail sent.")
+        return
 
-    # 3. Send emails
+    # 3. Fetch subscriber list and send
+    subscribers = get_subscribers()
     send_emails(crossings, subscribers)
 
 
