@@ -149,9 +149,9 @@
   <div class="ticker-row">
     <a class="tk" href="/stocks/geni/" style="text-decoration:none">GENI</a>
     <span class="nm">Genius Sports · NYSE · the operating system of sport</span>
-    <span class="px"><b>$6.43</b> · cap <b>$1.65B</b> · 52w 3.83–13.73</span>
+    <span class="px" id="livePx" data-symbol="GENI" data-publish="5.83" data-shares="311000000"><b>$6.43</b> · cap <b>$1.82B</b></span>
   </div>
-  <div class="perf-since">published 25 jun at $5.83 · <span class="g">+10.3% since publish</span></div>
+  <div class="perf-since">published 25 jun at $5.83 · <span class="g" id="livePerf">+10.3% since publish</span><span id="liveStamp"></span></div>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-p="thesis"><span class="n">01</span>Thesis</button>
@@ -554,6 +554,46 @@
     t.classList.add('active');
     document.querySelector(`[data-panel="${t.dataset.p}"]`).classList.add('active');
   }));
+</script>
+
+<script>
+// Live price for the masthead, using the same /.netlify/functions/quote proxy
+// the individual stock pages call. Server-side, CDN-cached, no API key. The
+// publish price stays hardcoded because it is history; only the current price
+// and the since-publish percentage are fetched, so the article cannot go stale
+// between builds.
+(function () {
+  var el = document.getElementById("livePx");
+  if (!el) return;
+  var symbol = el.dataset.symbol;
+  var publish = parseFloat(el.dataset.publish);
+  var shares = parseFloat(el.dataset.shares || "0");
+  var debt = parseFloat(el.dataset.netdebt || "0");
+
+  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (q) {
+      if (!q || !q.price) return;
+      var px = q.price;
+      var parts = ["<b>$" + px.toFixed(2) + "</b>"];
+      if (shares > 0) {
+        var cap = px * shares;
+        parts.push("cap <b>$" + (cap / 1e9).toFixed(2) + "B</b>");
+        if (debt) parts.push("EV <b>$" + ((cap + debt) / 1e9).toFixed(2) + "B</b>");
+      }
+      el.innerHTML = parts.join(" · ");
+
+      var perf = document.getElementById("livePerf");
+      if (perf && publish > 0) {
+        var chg = (px / publish - 1) * 100;
+        perf.className = chg >= 0 ? "g" : "r";
+        perf.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(1) + "% since publish";
+      }
+      var stamp = document.getElementById("liveStamp");
+      if (stamp) stamp.textContent = " · live";
+    })
+    .catch(function () {});
+})();
 </script>
 </body>
 </html>
