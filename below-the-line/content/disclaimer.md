@@ -44,12 +44,24 @@ mungbeans.io, its owners, and its contributors shall not be held liable for any 
 
 ## Affiliate disclosure {#affiliate-disclosure}
 
-mungbeans.io carries no advertising. One paid link appears on the site and in the
-weekly email: a referral link to Godel Terminal, a research terminal I subscribe
-to and use for the filing and ownership work behind the deep dives. If you
-subscribe through that link, mungbeans.io earns a commission at no additional
-cost to you, and the accompanying promo code gives you 30% off your first month.
+mungbeans.io carries no advertising. It does carry referral links, and every one
+of them is listed on a single page at [/tools/](/tools/) with what the tool is
+for and where it falls short. As of this writing there are two:
 
-I have no other commercial relationship with Godel Terminal or its operators, no
-equity, and no editorial arrangement. Nothing on this site is written or altered
-in exchange for compensation.
+- **Godel Terminal** — a research terminal I subscribe to and use for the filing
+  and ownership work behind the deep dives. The accompanying promo code gives you
+  30% off your first month.
+- **Simply Wall St** — visual company reports I use as a second read on a single
+  ticker. No code; the free tier covers five company reports a month.
+
+If you subscribe through either link, mungbeans.io earns a commission at no
+additional cost to you.
+
+I pay for both tools with my own money. I hold no equity in either company, have
+no editorial arrangement with either, and neither reviewed this site before
+publication. Nothing here is written or altered in exchange for compensation, and
+a tool comes off the page when it stops earning its place regardless of what the
+referral pays.
+
+Where a link is missing from a placement it is because the program has not
+approved the account yet, and no link appears until it does.

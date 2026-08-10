@@ -35,7 +35,7 @@
     <h1>All Stocks</h1>
     <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}.</p>
 
-    {{ partial "godel-inline.html" . }}
+    {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-list") }}
 
     <!-- Search Box -->
     <div class="search-container">

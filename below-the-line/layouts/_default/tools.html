@@ -1,0 +1,52 @@
+{{ define "main" }}
+<article class="tools-page">
+  <header class="tools-head">
+    <div class="eyebrow">disclosure</div>
+    <h1>{{ .Title }}</h1>
+    <div class="tools-intro">{{ .Content }}</div>
+  </header>
+
+  {{ range $t := where site.Data.tools.tools "live" true }}
+  <section class="tool-entry{{ if $t.featured }} tool-entry-featured{{ end }}">
+    <div class="tool-entry-head">
+      <h2>{{ $t.name }}</h2>
+      {{ if $t.featured }}<span class="tool-entry-badge">what I use most</span>{{ end }}
+    </div>
+    <p class="tool-entry-tagline">{{ $t.tagline }}</p>
+    {{ with $t.price }}<p class="tool-entry-price">{{ . }}{{ with $t.price_note }} <span class="tool-entry-pricenote">{{ . }}</span>{{ end }}</p>{{ end }}
+
+    <p class="tool-entry-lede">{{ $t.lede }}</p>
+    {{ with $t.body }}<p class="tool-entry-body">{{ . }}</p>{{ end }}
+
+    {{ with $t.image }}
+    <figure class="tool-rec-shot">
+      <a href="{{ $t.url }}" target="_blank" rel="noopener sponsored">
+        <img src="{{ . }}" alt="{{ $t.image_alt }}" loading="lazy">
+      </a>
+      <figcaption>{{ $t.image_caption }}</figcaption>
+    </figure>
+    {{ end }}
+
+    <dl class="tool-entry-facts">
+      {{ with $t.what_it_is_for }}<dt>Good for</dt><dd>{{ . }}</dd>{{ end }}
+      {{ with $t.what_it_is_not }}<dt>Not for</dt><dd>{{ . }}</dd>{{ end }}
+    </dl>
+
+    <div class="tool-rec-cta">
+      <a class="tool-rec-btn" href="{{ $t.url }}" target="_blank" rel="noopener sponsored">Try {{ $t.name }} →</a>
+      {{ with $t.code }}<span class="tool-rec-code">code <b>{{ . }}</b>{{ with $t.offer }} · {{ . }}{{ end }}</span>{{ end }}
+    </div>
+    <p class="tool-entry-disc">Referral link. mungbeans.io earns a commission if you subscribe, at no additional cost to you.</p>
+  </section>
+  {{ end }}
+
+  {{ with where site.Data.tools.tools "live" false }}
+  <section class="tool-pending">
+    <div class="eyebrow">not live</div>
+    <p>{{ range $i, $t := . }}{{ if $i }}, {{ end }}<b>{{ $t.name }}</b> — {{ $t.tagline | lower }}{{ end }}. Applied for, not approved, and carrying no link until it is. Listed here so the page stays a complete account rather than a convenient one.</p>
+  </section>
+  {{ end }}
+
+  <p class="tools-foot">Full terms in the <a href="/disclaimer/#affiliate-disclosure">affiliate disclosure</a>. mungbeans.io carries no advertising and takes no payment for coverage.</p>
+</article>
+{{ end }}

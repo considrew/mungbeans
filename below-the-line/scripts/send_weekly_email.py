@@ -334,9 +334,21 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
                 <a href="https://app.godelterminal.com/?via=mungbeans" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:10px 22px; border-radius:5px; font-weight:600; font-size:14px;">Try Godel Terminal &rarr;</a>
               </p>
               <p style="margin:0 0 12px 0; font-family:monospace; font-size:13px; color:#c9c9d4;">code <b style="color:#e2b714;">mungbeans</b> &middot; 30% off your first month</p>
-              <p style="margin:0; font-size:11.5px; color:#666; line-height:1.6;">
-                Disclosure: referral link. mungbeans.io earns a commission if you subscribe, at no extra cost to you. I pay for it myself. This is the only paid link in this email, which carries no advertising.
+              <p style="margin:0 0 16px 0; font-size:11.5px; color:#666; line-height:1.6;">
+                Disclosure: referral link. mungbeans.io earns a commission if you subscribe, at no extra cost to you. I pay for it myself.
               </p>
+              <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #2a2a3e;">
+                <tr><td style="padding:14px 0 0 0;">
+                  <p style="margin:0 0 4px 0; font-family:monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#666;">also on the desk</p>
+                  <p style="margin:0 0 8px 0; color:#c9c9d4; font-size:13.5px; line-height:1.6;">
+                    <a href="https://simplywall.st/register?referrer_code=a32b7ed506a963a86c00e64f87045877" style="color:#e2b714; text-decoration:none; font-weight:600;">Simply Wall St</a>
+                    &middot; visual company reports and write-ups, one stock at a time. The free tier covers five reports a month, which is enough to check a name this report surfaces. Referral link on the same terms.
+                  </p>
+                  <p style="margin:0; font-size:11.5px; color:#666; line-height:1.6;">
+                    Both links are listed with what each tool is for and where it falls short at <a href="https://mungbeans.io/tools/" style="color:#888;">mungbeans.io/tools</a>. This email carries no advertising.
+                  </p>
+                </td></tr>
+              </table>
             </td></tr>
           </table>
         </td></tr>
@@ -460,6 +472,8 @@ def main():
         print(f"Deep dive teaser: {dive['title'] if dive else '(none published)'}")
         print(f"  -> {dive['url'] if dive else ''}")
         print(f"Godel block: {'present' if 'godelterminal.com' in html else 'MISSING'}")
+        print(f"Simply Wall St line: {'present' if 'simplywall.st' in html else 'MISSING'}")
+        print(f"Tools page link: {'present' if 'mungbeans.io/tools' in html else 'MISSING'}")
         print(f"Crossings: {len(crossings.get('newly_below', []))} below, "
               f"{len(crossings.get('newly_recovered', []))} recovered")
         print(f"\nPreview written to: {out}")

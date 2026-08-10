@@ -1,0 +1,108 @@
+# Referral links. One source of truth — the page, the boxes, the inline strips
+# and the weekly email all read from here.
+#
+# featured: true         -> gets the full box in the reading flow. Keep exactly one.
+# live: false            -> written but not rendered anywhere. Use for pending approvals.
+# placements:            -> where the compact strip is allowed to appear
+#                           stocks-single | stocks-list | deep-dives | email
+#
+# Adding a tool: add a block, set live: true, done. Nothing else to touch.
+
+tools:
+  - key: godel
+    name: Godel Terminal
+    featured: true
+    live: true
+    url: https://app.godelterminal.com/?via=mungbeans
+    code: mungbeans
+    offer: 30% off your first month
+    price: $996/yr
+    price_note: against Bloomberg's roughly $27,000
+    eyebrow: the terminal I use
+    tagline: Bloomberg-style research terminal in a browser
+    lede: >-
+      A browser-based research terminal with a Bloomberg-style command interface:
+      DES, FOCUS, TAS, HDS. Real-time quotes, filings, financials, ownership and
+      news, at $996 a year against Bloomberg's roughly $27,000.
+    body: >-
+      I use it for the filing and ownership work behind the deep dives, the part
+      that used to mean six browser tabs and a spreadsheet. It handles research
+      and analysis; order execution and dealer chat are not in it, so it sits
+      alongside a broker rather than replacing one. There is a 14-day trial, so
+      the cheapest way to judge it is to run it against whatever you use now.
+    strip_note: Bloomberg-style research at $996/yr. Code <b>mungbeans</b> for 30% off month one.
+    image: /images/godel-terminal-ganx.png
+    image_alt: >-
+      Godel Terminal showing GANX: description, float and institutional
+      ownership, valuation ratios, price chart, and a live news and filings feed
+    image_caption: >-
+      GANX in Godel: float, insider and institutional ownership, valuation ratios
+      and the filings feed on one screen. That name is a position in The Book.
+    placements:
+      - deep-dives
+      - stocks-list
+      - email
+    what_it_is_for: >-
+      Primary research. Filings, ownership, transcripts and real-time data in one
+      command-driven window.
+    what_it_is_not: >-
+      A broker. No order execution, no dealer chat.
+
+  - key: simplywallst
+    name: Simply Wall St
+    featured: false
+    live: true
+    url: https://simplywall.st/register?referrer_code=a32b7ed506a963a86c00e64f87045877
+    code: ""
+    offer: ""
+    price: free tier, paid plans from about $10/mo billed yearly
+    price_note: ""
+    eyebrow: the write-ups I read
+    tagline: Visual company reports, one stock at a time
+    lede: >-
+      Company reports built around a single visual summary of value, future,
+      past, health and dividend, with the reasoning written out underneath. The
+      free tier covers five company reports a month, which is enough to check a
+      name the screener surfaces.
+    body: >-
+      It answers a different question than a terminal does. Godel gives me the
+      raw filing; Simply Wall St gives me a fast second read on whether a name is
+      worth the afternoon. The valuation work is model-driven and the growth
+      inputs come from analyst consensus, so I treat the output as a starting
+      position rather than a conclusion. On the names in the deep dives I have
+      disagreed with it more than once.
+    strip_note: Visual company reports and write-ups. Free tier covers five reports a month.
+    image: ""
+    image_alt: ""
+    image_caption: ""
+    placements:
+      - stocks-single
+      - email
+    what_it_is_for: >-
+      A quick, readable second opinion on a single ticker.
+    what_it_is_not: >-
+      A source of truth. Consensus-driven, and it does not replace the filing.
+
+  # Approval pending. Flip live to true when it lands; nothing else needs editing.
+  - key: tipranks
+    name: TipRanks
+    featured: false
+    live: false
+    url: ""
+    code: ""
+    offer: ""
+    price: ""
+    price_note: ""
+    eyebrow: analyst tracking
+    tagline: Analyst and insider track records
+    lede: >-
+      Scores analysts and insiders on their own historical accuracy rather than
+      on the rating they just issued.
+    body: ""
+    strip_note: ""
+    image: ""
+    image_alt: ""
+    image_caption: ""
+    placements: []
+    what_it_is_for: ""
+    what_it_is_not: ""

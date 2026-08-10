@@ -158,8 +158,9 @@
       </div>
 
       <p class="wow-disclaimer">
-        Named after the 1977 Big Ear radio telescope signal: unmistakable not because any
-        one metric is unusual, but because they all converge simultaneously. Not a buy signal.
+        Named after the 1977 Big Ear radio telescope signal, which stood out because several
+        readings converged at once rather than because any single one was extreme. Convergence
+        here marks an analysis point. What it means still has to be worked out from the filings.
       </p>
     </div>
 
@@ -425,7 +426,7 @@
     <!-- Key Metrics -->
     <div class="metrics-row">
       <div class="metric">
-        <span class="metric-label">Buy Threshold</span>
+        <span class="metric-label" title="The 200-week moving average. Crossing below it is an analysis point, not an entry.">Signal Threshold</span>
         <span class="metric-value">${{ printf "%.2f" .Params.buy_threshold }}</span>
       </div>
       <div class="metric">
@@ -1255,11 +1256,11 @@
             <td>{{ printf "%+.0f" .sigma }}σ</td>
             <td>{{ if .price }}${{ printf "%.2f" .price }}{{ else }}<em>N/A</em>{{ end }}</td>
             <td>
-              {{ if eq .sigma 2.0 }}Unusually cheap — potential buy zone
+              {{ if eq .sigma 2.0 }}Unusually cheap — analysis point
               {{ else if eq .sigma 1.0 }}Cheap vs. own history
               {{ else if eq .sigma 0.0 }}Historical mean behavior
               {{ else if eq .sigma -1.0 }}Expensive vs. own history
-              {{ else }}Unusually expensive — potential trim zone
+              {{ else }}Unusually expensive — analysis point
               {{ end }}
             </td>
           </tr>
@@ -1448,13 +1449,15 @@
         </div>
       </div>
 
-      <!-- Disclaimer -->
+      {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-single") }}
+
+    <!-- Disclaimer -->
       <div class="bean-disclaimer">
         <p>
           <strong>Theoretical framework — not backtested or forward-tested.</strong>
           The Bean Score uses trailing twelve-month free cash flow yield as a dislocation identifier.
           It measures whether the market has pushed a stock's yield unusually far from its own baseline behavior.
-          These levels are reference points for identifying potential swing trade opportunities, not buy/sell signals.
+          These levels are analysis points: prices at which the yield deviation becomes unusual enough to justify the work.
           FCF values update quarterly with earnings; between reports, all movement is price-driven.
         </p>
       </div>
@@ -1741,8 +1744,8 @@
       <div class="bean-disclaimer">
         <p>
           <strong>Theoretical framework — not backtested.</strong>
-          These scores describe how unusual today's readings are for this specific company. They are
-          starting points for research, not buy or sell signals. Annual-statement scores (buyback,
+          These scores describe how unusual today's readings are for this specific company. Each one is
+          an analysis point, a reason to open the filings. Annual-statement scores (buyback,
           accruals, FCF vs history) rest on only ~4 yearly data points and are deltas, not sigmas.
         </p>
       </div>

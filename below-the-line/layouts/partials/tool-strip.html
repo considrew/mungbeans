@@ -1,0 +1,19 @@
+{{/* Compact one-line referral strip.
+     Call with a placement key:  {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-single") }}
+     Renders only tools that are live and list that placement. Featured tool
+     first, so Godel always leads where both are eligible. */}}
+{{ $at := .at }}
+{{ $live := where site.Data.tools.tools "live" true }}
+{{ $eligible := slice }}
+{{ range $live }}
+  {{ if in .placements $at }}{{ $eligible = $eligible | append . }}{{ end }}
+{{ end }}
+{{ range $eligible }}
+<p class="tool-inline">
+  <span class="tool-inline-label">{{ .eyebrow }}</span>
+  <a href="{{ .url }}" target="_blank" rel="noopener sponsored">{{ .name }}</a>
+  <span class="tool-inline-sep">·</span>
+  <span class="tool-inline-note">{{ .strip_note | safeHTML }}</span>
+  <a class="tool-inline-disc" href="/tools/" title="Referral link: mungbeans.io earns a commission if you subscribe, at no extra cost to you.">referral</a>
+</p>
+{{ end }}
