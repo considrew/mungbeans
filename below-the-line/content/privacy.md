@@ -5,51 +5,74 @@ description: "Privacy policy for mungbeans.io."
 
 # Privacy Policy
 
-*Last updated: February 2026*
+*Last updated: August 2026*
 
 ## The Short Version
 
-mungbeans.io is a simple stock screening tool. We don't require accounts, we don't collect personal information, and we don't sell data to anyone.
+mungbeans.io is a stock screening tool and a place I write about what it finds.
+There are no accounts, no advertising, and nothing is sold to anyone. The one
+thing collected beyond ordinary traffic measurement is a count of clicks on the
+referral links, described below.
 
 ## What We Collect
 
 ### Analytics
 
-We may use basic analytics (such as Google Analytics) to understand how many people visit the site and which pages are most useful. This data is aggregated and anonymous — we can't identify individual visitors.
+Google Analytics 4 measures how many people visit, which pages they read, and
+roughly where they came from. IP addresses are anonymized and Do Not Track is
+respected. The data is aggregated; individual visitors are not identifiable.
 
-### Advertising
+### Referral link clicks
 
-We use Google AdSense to display ads on the site. Google may use cookies to serve ads based on your prior visits to this or other websites. You can opt out of personalized advertising by visiting [Google's Ad Settings](https://adssettings.google.com/).
+The site carries referral links to research tools, all of them listed at
+[/tools/](/tools/). When one is clicked, an event is recorded in Google
+Analytics noting which tool was clicked, which page it was clicked from, and
+which style of link it was. No personal information is attached and the click
+is not tied to an identity.
 
-### Affiliate Links
+This exists so the placements can be judged on whether anyone finds them useful
+rather than on guesswork. If you subscribe to one of those tools, mungbeans.io
+earns a commission at no additional cost to you, as described in the
+[affiliate disclosure](/disclaimer/#affiliate-disclosure).
 
-Some links on this site (such as brokerage referral links) are affiliate links. If you click one and sign up, we may earn a commission. This doesn't affect the content we show or the stocks we track.
+### Email
+
+If you subscribe to the mailing list, your email address is stored by Netlify
+Forms and used to send the weekly signal report and deep dive notifications.
+Every email carries an unsubscribe link, which removes the address.
 
 ## What We Don't Collect
 
 - No account creation or login
-- No email addresses
 - No personal financial information
-- No tracking across other websites (beyond what Google Analytics/AdSense does as described above)
+- No advertising, and no advertising cookies. The Google AdSense integration
+  that a previous version of this policy described was removed in July 2026
+- No tracking across other websites beyond what Google Analytics does as
+  described above
 
 ## Cookies
 
-Cookies on this site come from third-party services (Google Analytics, Google AdSense). We don't set our own cookies. You can manage cookie preferences through your browser settings.
+Cookies on this site come from Google Analytics. mungbeans.io sets no cookies of
+its own. You can manage cookie preferences through your browser settings, and
+the site works normally with them blocked.
 
 ## Third-Party Services
 
-- **Google Analytics**: Traffic measurement. [Google's privacy policy](https://policies.google.com/privacy)
-- **Google AdSense**: Advertising. [Google's advertising policies](https://policies.google.com/technologies/ads)
-- **Netlify**: Site hosting. [Netlify's privacy policy](https://www.netlify.com/privacy/)
+- **Google Analytics**: traffic and referral click measurement. [Google's privacy policy](https://policies.google.com/privacy)
+- **Netlify**: site hosting and form handling. [Netlify's privacy policy](https://www.netlify.com/privacy/)
+- **ZeptoMail**: sends the weekly email. [Zoho's privacy policy](https://www.zoho.com/privacy.html)
+
+Clicking a referral link takes you to that company's own site, where their
+privacy policy applies rather than this one.
 
 ## Changes
 
-If this policy changes, we'll update the date at the top. Given the simplicity of this site, we don't expect it to change much.
+If this policy changes, the date at the top changes with it.
 
 ## Contact
 
-Questions? Reach out via the [GitHub repository](https://github.com/).
+Questions? Reach out at [considinedrew@gmail.com](mailto:considinedrew@gmail.com).
 
 ---
 
-*See also: [Disclaimer](/disclaimer/)*
+*See also: [Disclaimer](/disclaimer/) · [Tools](/tools/)*

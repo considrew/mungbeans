@@ -9,6 +9,7 @@
     gtag('js', new Date());
     gtag('config', 'G-KMCNBWBVVE');
   </script>
+<script src="/js/referral-events.js" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ .Params.symbol }} 200-Week Moving Average | {{ .Params.name }} {{ if .Params.below_line }}{{ printf "%.1f%%" (math.Abs .Params.pct_from_wma) }} Below{{ else }}{{ printf "%.1f%%" .Params.pct_from_wma }} Above{{ end }} - mungbeans.io</title>
