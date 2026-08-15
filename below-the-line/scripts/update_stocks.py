@@ -1840,6 +1840,61 @@ def main():
     except Exception as e:
         print(f"\n  Stale carry-forward failed (non-fatal): {e}")
 
+    # Corporate-action integrity check.
+    #
+    # Yahoo restates history retroactively for splits, so price and the
+    # 200-week line move together and the ratio the site cares about is
+    # unaffected. That also means a split shows up here as a large one-week
+    # jump in the stored line, which is indistinguishable at a glance from
+    # genuinely corrupt data. So: flag every large jump, then confirm a split
+    # explains it. Anything unexplained is a data problem worth seeing.
+    #
+    # (The mid-week live check has the harder version of this problem, since it
+    # compares a post-split quote to a pre-split stored line. That is handled
+    # client-side via the quote function's splitFactor.)
+    try:
+        _WMA_JUMP = 0.20
+        suspicious, explained = [], []
+        for s in all_stocks:
+            prev = _prev_full.get(s['symbol'])
+            if not prev or s.get('stale'):
+                continue
+            pw, cw = prev.get('wma_200'), s.get('wma_200')
+            if not pw or not cw or pw <= 0:
+                continue
+            ratio = cw / pw
+            if abs(ratio - 1) <= _WMA_JUMP:
+                continue
+            implied = 1 / ratio          # 2-for-1 halves the line, implying 2
+            try:
+                sp = yf.Ticker(s['symbol']).splits
+                recent = [(d, float(v)) for d, v in sp.items()
+                          if (pd.Timestamp.now(tz=d.tz) - d).days <= 21] if len(sp) else []
+            except Exception:
+                recent = []
+            match = [(d, v) for d, v in recent if abs(v - implied) / implied < 0.10]
+            if match:
+                d, v = match[-1]
+                s['split_adjusted'] = True
+                s['split_note'] = f"{v:g}-for-1 split {d.date()}"
+                explained.append(f"{s['symbol']} ({v:g}-for-1, {d.date()})")
+            else:
+                suspicious.append(
+                    f"{s['symbol']}: 200WMA {pw:.2f} -> {cw:.2f} "
+                    f"({(ratio - 1) * 100:+.1f}%), no split found")
+
+        if explained:
+            print(f"\n  Split restatements confirmed ({len(explained)}): "
+                  + ", ".join(sorted(explained)))
+        if suspicious:
+            print(f"\n  ⚠ UNEXPLAINED 200WMA JUMPS ({len(suspicious)}) — check before trusting:")
+            for line in sorted(suspicious)[:25]:
+                print(f"      {line}")
+            if len(suspicious) > 25:
+                print(f"      ... and {len(suspicious) - 25} more")
+    except Exception as e:
+        print(f"\n  Split integrity check failed (non-fatal): {e}")
+
     all_stocks.sort(key=lambda x: x['pct_from_wma'])
 
     # Cross-sectional dislocation scores (sector-relative z, insider

@@ -380,6 +380,7 @@
       @keyframes midweek-pulse { 50% { opacity: 0.4; } }
       .midweek-check strong { color: var(--color-text); }
       .midweek-crossed { color: var(--bench); font-weight: 600; }
+      .midweek-split { color: var(--color-text-muted); font-style: italic; }
     </style>
     <script>
     (function() {
@@ -394,10 +395,20 @@
       var ageDays = (Date.now() - new Date(lastUpdated + "T21:00:00Z").getTime()) / 864e5;
       if (ageDays < 1) return;
 
-      fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol))
+      fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol) +
+            "&since=" + encodeURIComponent(lastUpdated))
         .then(function(r) { return r.ok ? r.json() : null; })
         .then(function(q) {
           if (!q || !q.price) return;
+
+          // The stored line is in pre-split terms until Saturday's run restates
+          // it. Comparing a post-split quote against it invents a crossing:
+          // Monster split 2-for-1 on 11 Aug 2026 and read 25% below a line it
+          // was 49% above. Restate the line before comparing.
+          var splitFactor = (typeof q.splitFactor === "number" && isFinite(q.splitFactor)
+                             && q.splitFactor > 0) ? q.splitFactor : 1;
+          threshold = threshold / splitFactor;
+
           var livePct = ((q.price - threshold) / threshold) * 100;
           var box = document.getElementById("midweekCheck");
           var txt = document.getElementById("midweekText");
@@ -412,6 +423,18 @@
                      Math.abs(livePct).toFixed(1) + "% " + dir + "</strong> the line " +
                      "(Friday: " + Math.abs(fridayPct).toFixed(1) + "% " +
                      (fridayPct < 0 ? "below" : "above") + ").";
+
+          // A split makes the Friday and live figures incomparable in dollar
+          // terms, so say so rather than reporting a crossing that is really a
+          // change in the unit. Percentages either side of the split are still
+          // comparable, which is why the crossing test below still runs.
+          if (splitFactor !== 1 && q.splits && q.splits.length) {
+            var s = q.splits[q.splits.length - 1];
+            html += " <span class='midweek-split'>Adjusted for the " +
+                    (s.label || splitFactor + "-for-1") + " split on " + s.date +
+                    "; Friday's dollar figures predate it.</span>";
+          }
+
           if (fridayPct >= 0 && livePct < 0) {
             html += " <span class='midweek-crossed'>Crossed below since Friday.</span>";
           } else if (fridayPct < 0 && livePct >= 0) {

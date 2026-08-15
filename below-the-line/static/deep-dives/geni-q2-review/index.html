@@ -164,7 +164,7 @@
   <div class="ticker-row">
     <a class="tk" href="/stocks/geni/" style="text-decoration:none">GENI</a>
     <span class="nm">Genius Sports · NYSE · the operating system of sport</span>
-    <span class="px" id="livePx" data-symbol="GENI" data-publish="5.83" data-shares="311000000" data-netdebt="745000000"><b>$7.59</b> · cap <b>$2.36B</b> · EV <b>$3.11B</b></span>
+    <span class="px" id="livePx" data-symbol="GENI" data-since="2026-08-08" data-publish="5.83" data-shares="311000000" data-netdebt="745000000"><b>$7.59</b> · cap <b>$2.36B</b> · EV <b>$3.11B</b></span>
   </div>
   <div class="perf-since">thesis published 25 jun at $5.83 · <span class="g" id="livePerf">+30.2% since publish</span><span id="liveStamp"></span> · Q2 reported 6 aug</div>
 
@@ -541,11 +541,26 @@
   var shares = parseFloat(el.dataset.shares || "0");
   var debt = parseFloat(el.dataset.netdebt || "0");
 
-  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol))
+  var since = el.dataset.since || "";
+
+  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol) +
+        (since ? "&since=" + encodeURIComponent(since) : ""))
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (q) {
       if (!q || !q.price) return;
       var px = q.price;
+
+      // The publish price and share count above are in the terms that applied
+      // on the publish date. A split since then changes the unit, not the
+      // value: restate both so "since publish" measures the business rather
+      // than the share count. Market cap is unaffected either way, since price
+      // and shares move in opposite directions by the same factor.
+      var sf = (typeof q.splitFactor === "number" && isFinite(q.splitFactor)
+                && q.splitFactor > 0) ? q.splitFactor : 1;
+      if (sf !== 1) {
+        publish = publish / sf;
+        shares = shares * sf;
+      }
       var parts = ["<b>$" + px.toFixed(2) + "</b>"];
       if (shares > 0) {
         var cap = px * shares;
