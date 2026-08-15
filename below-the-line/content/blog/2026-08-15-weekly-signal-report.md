@@ -2,29 +2,10 @@
 title: "Weekly Signal Report — August 15, 2026"
 date: 2026-08-15
 slug: "2026-08-15-weekly-signal-report"
-description: "30 stocks crossed below and 28 recovered above the 200-week moving average this week."
-newly_below_count: 30
+description: "29 stocks crossed below and 28 recovered above the 200-week moving average this week."
+newly_below_count: 29
 newly_recovered_count: 28
 newly_below:
-  - symbol: "MNST"
-    name: "Monster Beverage Corporation"
-    close: 46.82
-    pct_below: 22.7
-    wma_200: 60.54
-    rsi_14: 22.5
-    rvol_14: 1.5
-    accumulation_ratio: 0.97
-    volume_signal: "neutral"
-    touch_count: 27
-    avg_return_after_touch: 24.4
-    buffett_quality: false
-    dividend_aristocrat: false
-    yartseva_candidate: false
-    fcf_trend: "insufficient_data"
-    fcf_yield: 0.0
-    has_conviction_buy: false
-    sector: "Consumer Staples - Beverages"
-    market_cap_display: "N/A"
   - symbol: "CLBT"
     name: "Cellebrite DI Ltd."
     close: 11.14

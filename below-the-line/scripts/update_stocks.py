@@ -1635,7 +1635,8 @@ def detect_crossings(current_stocks: list, previous_stocks: dict) -> dict:
     """Detect stocks that newly crossed below or recovered above the 200WMA."""
     newly_below = []
     newly_recovered = []
-    
+    held = []
+
     for stock in current_stocks:
         symbol = stock['symbol']
         prev = previous_stocks.get(symbol)
@@ -1645,19 +1646,33 @@ def detect_crossings(current_stocks: list, previous_stocks: dict) -> dict:
         was_below = prev.get('below_line', False)
         is_below = stock.get('below_line', False)
         
+        # A stock flagged upstream as a suspected split artifact has not moved;
+        # its price was restated into new units while the 200-week line was
+        # not. Publishing that as a crossing sends subscribers a signal that
+        # does not exist. Hold it — next week's run restates history and, if it
+        # really is below the line, reports it truthfully then.
+        if stock.get('suspect_split'):
+            held.append(stock)
+            continue
+
         if is_below and not was_below:
             newly_below.append(stock)
         elif not is_below and was_below:
             newly_recovered.append(stock)
-    
+
     # Sort newly below by depth (deepest first)
     newly_below.sort(key=lambda x: x['pct_from_wma'])
     # Sort recovered by how far above (closest to line first)
     newly_recovered.sort(key=lambda x: x['pct_from_wma'])
-    
+
+    if held:
+        print(f"\n  Held {len(held)} suspected split artifact(s) out of crossings: "
+              + ", ".join(sorted(s['symbol'] for s in held)))
+
     return {
         'newly_below': newly_below,
-        'newly_recovered': newly_recovered
+        'newly_recovered': newly_recovered,
+        'held_split_artifacts': [s['symbol'] for s in held],
     }
 
 
@@ -1852,48 +1867,51 @@ def main():
     # (The mid-week live check has the harder version of this problem, since it
     # compares a post-split quote to a pre-split stored line. That is handled
     # client-side via the quote function's splitFactor.)
+    # Purely offline: compares this run to the previous stocks.json. No network
+    # call, because anything that reaches out here can hang the whole build —
+    # yfinance's .splits pulls full history per symbol and stalls under
+    # throttling with no timeout.
+    #
+    # The signature: a split restates the newest weekly bar into post-split
+    # dollars while the preceding 200 bars stay pre-split, so the price gaps
+    # down by the split ratio and the 200-week line does not move at all. A
+    # real decline of the same size drags the line with it, because the new bar
+    # enters the mean. Monster on 15 Aug 2026: price -48.2%, line +0.02%.
+    # Leslie's the same week: price -45.3%, line -1.53%, and that one was real.
     try:
-        _WMA_JUMP = 0.20
-        suspicious, explained = [], []
+        _CRASH = -0.35       # weekly move beyond which a flat line is suspect
+        _FLAT = 0.005        # line movement small enough to call unmoved
+        flagged = []
         for s in all_stocks:
             prev = _prev_full.get(s['symbol'])
             if not prev or s.get('stale'):
                 continue
+            pc, cc = prev.get('close'), s.get('close')
             pw, cw = prev.get('wma_200'), s.get('wma_200')
-            if not pw or not cw or pw <= 0:
+            if not (pc and cc and pw and cw) or pc <= 0 or pw <= 0:
                 continue
-            ratio = cw / pw
-            if abs(ratio - 1) <= _WMA_JUMP:
-                continue
-            implied = 1 / ratio          # 2-for-1 halves the line, implying 2
-            try:
-                sp = yf.Ticker(s['symbol']).splits
-                recent = [(d, float(v)) for d, v in sp.items()
-                          if (pd.Timestamp.now(tz=d.tz) - d).days <= 21] if len(sp) else []
-            except Exception:
-                recent = []
-            match = [(d, v) for d, v in recent if abs(v - implied) / implied < 0.10]
-            if match:
-                d, v = match[-1]
-                s['split_adjusted'] = True
-                s['split_note'] = f"{v:g}-for-1 split {d.date()}"
-                explained.append(f"{s['symbol']} ({v:g}-for-1, {d.date()})")
-            else:
-                suspicious.append(
-                    f"{s['symbol']}: 200WMA {pw:.2f} -> {cw:.2f} "
-                    f"({(ratio - 1) * 100:+.1f}%), no split found")
+            px_chg = cc / pc - 1
+            line_chg = abs(cw / pw - 1)
+            if px_chg <= _CRASH and line_chg < _FLAT:
+                implied = pc / cc
+                s['suspect_split'] = True
+                s['suspect_split_note'] = (
+                    f"price {px_chg * 100:+.1f}% with the 200-week line unmoved "
+                    f"({line_chg * 100:.2f}%); implies a {implied:.2f}-for-1 split "
+                    f"not yet reflected in history")
+                flagged.append(
+                    f"{s['symbol']}: {pc:.2f} -> {cc:.2f} ({px_chg * 100:+.1f}%), "
+                    f"line {pw:.2f} -> {cw:.2f} ({line_chg * 100:.2f}%), "
+                    f"implies {implied:.2f}-for-1")
 
-        if explained:
-            print(f"\n  Split restatements confirmed ({len(explained)}): "
-                  + ", ".join(sorted(explained)))
-        if suspicious:
-            print(f"\n  ⚠ UNEXPLAINED 200WMA JUMPS ({len(suspicious)}) — check before trusting:")
-            for line in sorted(suspicious)[:25]:
+        if flagged:
+            print(f"\n  ⚠ SUSPECTED SPLIT ARTIFACTS ({len(flagged)}) — held out of crossings:")
+            for line in sorted(flagged):
                 print(f"      {line}")
-            if len(suspicious) > 25:
-                print(f"      ... and {len(suspicious) - 25} more")
+            print("      These read as crossings but the line is still pre-split.")
+            print("      Next week's run restates history and publishes them truthfully.")
     except Exception as e:
-        print(f"\n  Split integrity check failed (non-fatal): {e}")
+        print(f"\n  Split artifact check failed (non-fatal): {e}")
 
     all_stocks.sort(key=lambda x: x['pct_from_wma'])
 
