@@ -1,0 +1,86 @@
+{{/* Live option chain. Rendered only for the test set; the function returns 404
+     for anything else, so the gate is here as well to avoid a pointless fetch. */}}
+{{ $enabled := slice "AAPL" "MSFT" "GOOGL" "GOOG" "AMZN" "NVDA" "META" "TSLA" }}
+{{ if in $enabled .Params.symbol }}
+<section class="options-panel" id="optionsPanel" data-symbol="{{ .Params.symbol }}">
+  <div class="options-head">
+    <h2>Options</h2>
+    <span class="options-badge">test set</span>
+  </div>
+  <p class="options-intro">
+    Monthly and LEAPS contracts only, priced off the ask, filtered to open interest
+    above 100 and spreads under 15% so every line is one you could leave.
+    <b>Cheap</b> here means the ask plus the strike costs less than the shares,
+    after subtracting the dividends you would give up — a discounted entry rather
+    than free money, since you carry the exercise mechanics and forgo the payout.
+  </p>
+
+  <div id="optionsStatus" class="options-status">Loading chain…</div>
+  <div id="optionsWrap" style="display:none">
+    <table class="options-table">
+      <thead>
+        <tr>
+          <th>Expiry</th><th>Strike</th><th></th>
+          <th class="num">Ask</th><th class="num">Intrinsic</th>
+          <th class="num">Time value</th><th class="num">per day</th>
+          <th class="num">IV</th><th class="num">OI</th><th class="num">Spread</th>
+          <th class="num">vs shares</th>
+        </tr>
+      </thead>
+      <tbody id="optionsBody"></tbody>
+    </table>
+    <p class="options-foot" id="optionsFoot"></p>
+  </div>
+</section>
+
+<script>
+(function () {
+  var panel = document.getElementById("optionsPanel");
+  if (!panel) return;
+  var sym = panel.dataset.symbol;
+  var status = document.getElementById("optionsStatus");
+
+  fetch("/.netlify/functions/options?symbol=" + encodeURIComponent(sym) + "&expiries=4")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.contracts) { status.textContent = "Chain unavailable right now."; return; }
+      if (!d.contracts.length) {
+        status.textContent = "No contracts cleared the liquidity filters.";
+        return;
+      }
+
+      var rows = d.contracts.slice(0, 40).map(function (c) {
+        var disc = c.discountPct;
+        var vs = disc === null ? "—"
+               : (disc > 0 ? "<b class='opt-cheap'>" + disc.toFixed(2) + "% under</b>"
+                           : (-disc).toFixed(2) + "% over");
+        return "<tr class='" + (c.belowParity ? "opt-row-cheap" : "") + "'>" +
+          "<td>" + c.expiry + "</td>" +
+          "<td>$" + c.strike + "</td>" +
+          "<td class='opt-type opt-" + c.type + "'>" + c.type + "</td>" +
+          "<td class='num'>" + c.ask.toFixed(2) + "</td>" +
+          "<td class='num'>" + c.intrinsic.toFixed(2) + "</td>" +
+          "<td class='num'>" + c.timeValue.toFixed(2) + "</td>" +
+          "<td class='num'>" + (c.timeValuePerDay === null ? "—" : c.timeValuePerDay.toFixed(3)) + "</td>" +
+          "<td class='num'>" + (c.iv === null ? "—" : c.iv.toFixed(0) + "%") + "</td>" +
+          "<td class='num'>" + c.openInterest.toLocaleString() + "</td>" +
+          "<td class='num'>" + c.spreadPct.toFixed(1) + "%</td>" +
+          "<td class='num'>" + vs + "</td></tr>";
+      }).join("");
+
+      document.getElementById("optionsBody").innerHTML = rows;
+
+      var foot = "Spot $" + d.spot.toFixed(2) +
+        (d.dividendYield > 0 ? " · dividend yield " + d.dividendYield.toFixed(2) + "%" +
+          " (subtracted from the parity test)" : " · pays no dividend") +
+        " · " + d.expiriesChecked + " expirations checked · " +
+        d.belowParityCount + " below parity. " + d.delayNote;
+      document.getElementById("optionsFoot").textContent = foot;
+
+      status.style.display = "none";
+      document.getElementById("optionsWrap").style.display = "";
+    })
+    .catch(function () { status.textContent = "Chain unavailable right now."; });
+})();
+</script>
+{{ end }}

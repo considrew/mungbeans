@@ -1473,7 +1473,9 @@
         </div>
       </div>
 
-      {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-single") }}
+    {{ partial "options-panel.html" $ }}
+
+    {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-single") }}
 
     <!-- Disclaimer -->
       <div class="bean-disclaimer">

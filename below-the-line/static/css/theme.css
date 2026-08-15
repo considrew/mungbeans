@@ -1312,3 +1312,33 @@ a:hover { color: var(--ink); }
   .tool-entry-facts { grid-template-columns: 1fr; gap: 2px 0; }
   .tool-entry-facts dd { margin-bottom: 10px; }
 }
+
+/* ---- options panel ---- */
+.options-panel { margin: 34px 0; padding-top: 24px; border-top: 1px solid var(--line); }
+.options-head { display: flex; align-items: baseline; gap: 12px; }
+.options-head h2 { margin: 0; }
+.options-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--bench); border: 1px solid var(--bench);
+  border-radius: 3px; padding: 2px 7px; }
+.options-intro { font-size: 14px; line-height: 1.65; color: var(--dim); margin: 10px 0 16px; }
+.options-status { font-family: var(--font-mono); font-size: 12px; color: var(--faint); padding: 10px 0; }
+.options-table { width: 100%; border-collapse: collapse; font-size: 13px;
+  font-variant-numeric: tabular-nums; }
+.options-table th { text-align: left; font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--faint);
+  border-bottom: 1px solid var(--line); padding: 6px 8px; font-weight: 500; }
+.options-table td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.options-table .num { text-align: right; }
+.options-table tbody tr:hover { background: var(--panel); }
+.opt-row-cheap { background: rgba(201, 162, 74, 0.07); }
+.opt-cheap { color: var(--gain); }
+.opt-type { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--faint); }
+.opt-call { color: var(--gain); }
+.opt-put { color: var(--loss); }
+.options-foot { font-family: var(--font-mono); font-size: 11px; color: var(--faint);
+  margin-top: 12px; line-height: 1.6; }
+@media (max-width: 700px) {
+  .options-table { font-size: 11px; }
+  .options-table th, .options-table td { padding: 5px 4px; }
+}
