@@ -1,0 +1,552 @@
+<title>The 0DTE Gate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+:root{
+  --bg:#F2F4F3; --surface:#FFFFFF; --surface-2:#E9EDEB;
+  --ink:#16202A; --muted:#5C6B78; --faint:#8496A0;
+  --rule:#D3DAD9; --rule-strong:#B9C3C1;
+  --accent:#B4741E; --accent-soft:#F0E2CC;
+  --pos:#2E7D6B; --pos-soft:#DCEBE6;
+  --neg:#B3453A; --neg-soft:#F3DEDB;
+  --shadow:0 1px 2px rgba(22,32,42,.05),0 8px 24px -12px rgba(22,32,42,.15);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#12181B; --surface:#1A2226; --surface-2:#212B30;
+    --ink:#E6EBEA; --muted:#93A2A8; --faint:#6F8087;
+    --rule:#2A353A; --rule-strong:#3A484E;
+    --accent:#D99A46; --accent-soft:#3A2E1C;
+    --pos:#4FA890; --pos-soft:#1B322D;
+    --neg:#D06A5C; --neg-soft:#36211E;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12181B; --surface:#1A2226; --surface-2:#212B30;
+  --ink:#E6EBEA; --muted:#93A2A8; --faint:#6F8087;
+  --rule:#2A353A; --rule-strong:#3A484E;
+  --accent:#D99A46; --accent-soft:#3A2E1C;
+  --pos:#4FA890; --pos-soft:#1B322D;
+  --neg:#D06A5C; --neg-soft:#36211E;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif; font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+.col{max-width:68ch;margin-inline:auto}
+
+h1,h2,h3,.disp{font-family:"Bricolage Grotesque",system-ui,sans-serif;text-wrap:balance;line-height:1.1}
+h2{font-size:clamp(1.5rem,1.1rem + 1.6vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin:0 0 .4rem}
+h3{font-size:1.1rem;font-weight:600;letter-spacing:-.01em;margin:2rem 0 .5rem}
+p{margin:0 0 1.1rem}
+strong{font-weight:600}
+code,.mono,td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+code{font-size:.86em;background:var(--surface-2);padding:.12em .38em;border-radius:3px}
+a{color:var(--accent)}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:.7rem;font-weight:500;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+}
+
+/* ---- hero ---- */
+.hero{border-bottom:1px solid var(--rule);padding:clamp(48px,7vw,84px) 0 44px;margin-bottom:44px}
+.hero h1{font-size:clamp(2.4rem,1.4rem + 4vw,4.2rem);font-weight:800;letter-spacing:-.035em;margin:.5rem 0 0}
+.hero .sub{font-size:clamp(1.05rem,1rem + .4vw,1.3rem);color:var(--muted);margin-top:1.1rem;max-width:56ch}
+.verdict{
+  margin-top:32px;padding:22px 26px;background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--accent);border-radius:4px;box-shadow:var(--shadow);max-width:62ch;
+}
+.verdict p{margin:0;font-size:1.05rem}
+
+/* ---- stat row ---- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:28px 0 34px}
+.stat{background:var(--surface);padding:18px 20px}
+.stat .v{font-family:"IBM Plex Mono",monospace;font-size:1.55rem;font-weight:600;
+  font-variant-numeric:tabular-nums;letter-spacing:-.02em;display:block}
+.stat .k{font-size:.78rem;color:var(--muted);line-height:1.4;margin-top:5px;display:block;font-family:"Bricolage Grotesque",sans-serif}
+.v.neg{color:var(--neg)} .v.pos{color:var(--pos)} .v.acc{color:var(--accent)}
+
+/* ---- sections ---- */
+section{margin:0 0 60px}
+.sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;
+  padding-bottom:10px;border-bottom:1px solid var(--rule)}
+
+/* ---- tables ---- */
+.tbl-wrap{overflow-x:auto;margin:20px 0 26px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap}
+thead th{font-family:"Bricolage Grotesque",sans-serif;font-size:.72rem;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--muted);font-weight:600;background:var(--surface-2)}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right}
+td.lbl{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;white-space:normal;min-width:170px}
+.note{font-size:.82rem;color:var(--muted);margin-top:-14px;margin-bottom:26px}
+
+/* ---- chips ---- */
+.chip{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.68rem;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:3px;vertical-align:middle}
+.chip.ok{background:var(--pos-soft);color:var(--pos)}
+.chip.no{background:var(--neg-soft);color:var(--neg)}
+.chip.part{background:var(--accent-soft);color:var(--accent)}
+
+/* ---- callout ---- */
+.callout{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:20px 24px;margin:26px 0}
+.callout.warn{border-left:3px solid var(--neg)}
+.callout.good{border-left:3px solid var(--pos)}
+.callout p:last-child{margin-bottom:0}
+.callout .eyebrow{display:block;margin-bottom:8px}
+
+/* ---- pipeline ---- */
+.pipe{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin:24px 0}
+.step{background:var(--surface);padding:18px 22px;display:grid;grid-template-columns:36px 1fr;gap:16px;align-items:start}
+.step .n{font-family:"IBM Plex Mono",monospace;font-size:.8rem;font-weight:600;color:var(--accent);padding-top:3px}
+.step h4{font-family:"Bricolage Grotesque",sans-serif;font-size:1rem;font-weight:600;margin:0 0 5px}
+.step p{margin:0;font-size:.92rem;color:var(--muted)}
+
+/* ---- checklist prototype ---- */
+.proto{background:var(--surface);border:1px solid var(--rule-strong);border-radius:6px;
+  box-shadow:var(--shadow);overflow:hidden;margin:26px 0}
+.proto-head{padding:18px 24px;border-bottom:1px solid var(--rule);background:var(--surface-2);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.proto-head h4{font-family:"Bricolage Grotesque",sans-serif;margin:0;font-size:1.05rem;font-weight:600}
+.proto-head .tick{font-family:"IBM Plex Mono",monospace;font-size:.78rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.grp{padding:14px 24px 4px}
+.grp+.grp{border-top:1px solid var(--rule)}
+.grp>.eyebrow{display:block;margin-bottom:10px}
+.item{display:grid;grid-template-columns:22px 1fr;gap:12px;align-items:start;
+  padding:8px 0;font-size:.93rem;line-height:1.5}
+.item input{margin:4px 0 0;width:16px;height:16px;accent-color:var(--accent);cursor:pointer}
+.item label{cursor:pointer}
+.item .why{display:block;font-size:.8rem;color:var(--faint);margin-top:2px}
+.req{font-family:"IBM Plex Mono",monospace;font-size:.62rem;color:var(--neg);
+  letter-spacing:.06em;margin-left:6px;vertical-align:1px}
+.proto-foot{padding:20px 24px;border-top:1px solid var(--rule);background:var(--surface-2);
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+button.confirm{font-family:"Bricolage Grotesque",sans-serif;font-size:.95rem;font-weight:600;
+  padding:11px 26px;border-radius:4px;border:1px solid transparent;cursor:pointer;
+  background:var(--accent);color:#fff;transition:opacity .15s}
+button.confirm[disabled]{background:var(--surface);color:var(--faint);
+  border-color:var(--rule-strong);cursor:not-allowed}
+button.confirm:not([disabled]):hover{opacity:.88}
+button.confirm:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gate-msg{font-size:.86rem;color:var(--muted)}
+.gate-msg.ready{color:var(--pos);font-weight:600}
+
+ul.tight{margin:0 0 1.1rem;padding-left:1.1rem}
+ul.tight li{margin-bottom:.45rem}
+
+.ask{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:6px 24px;margin:24px 0}
+.ask dl{margin:0}
+.ask dt{font-family:"Bricolage Grotesque",sans-serif;font-weight:600;margin:16px 0 3px;font-size:.98rem}
+.ask dd{margin:0 0 16px;color:var(--muted);font-size:.92rem}
+
+footer{border-top:1px solid var(--rule);margin-top:60px;padding:28px 0 60px;color:var(--faint);font-size:.84rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="col">
+    <span class="eyebrow">Research for approval · 0DTE–weekly · QQQ / SPX / SPY</span>
+    <h1>Most days, the answer is no.</h1>
+    <p class="sub">I tested the premise before designing the tool. Buying 0DTE premium is
+    structurally negative-EV across 1,067 sessions — so the system's primary job is
+    refusal, not selection.</p>
+    <div class="verdict">
+      <p>The scoring engine is worth building. But it should be built as a <strong>gate</strong>
+      that stays shut on most sessions, not a signal generator that names a trade every
+      morning. Everything below follows from that.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 01</span><h2>The base rate</h2></div>
+    <p>I priced an at-the-money 0DTE option at each session's open using VIX1D as the
+    volatility input, then settled it against that session's actual close. No costs, no
+    slippage — the friendliest possible assumptions.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="v neg">−5.3%</span><span class="k">Mean return, ATM call bought at open, held to close</span></div>
+    <div class="stat"><span class="v neg">−15.1%</span><span class="k">Mean return, ATM put, same</span></div>
+    <div class="stat"><span class="v neg">−81.2%</span><span class="k">Median call outcome — the typical trade is near-total loss</span></div>
+    <div class="stat"><span class="v">1,067</span><span class="k">Sessions tested, May 2022 – Aug 2026</span></div>
+  </div>
+
+  <div class="col">
+    <p>The reason is visible in the distribution. The market's realized move is
+    consistently smaller than the options imply:</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Measure</th><th class="num">Observed</th><th class="num">If fairly priced</th></tr></thead>
+        <tbody>
+          <tr><td class="lbl">Median |close − open| ÷ implied 1σ</td><td class="num">0.615</td><td class="num">≈ 0.79</td></tr>
+          <tr><td class="lbl">Sessions exceeding 1σ implied</td><td class="num">26.0%</td><td class="num">31.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Implied 1σ = spot × VIX1D ÷ √252, taken at the open. VIX1D history begins 13 May 2022.</p>
+    <p>That gap is the volatility risk premium, and it is what the seller collects and the
+    buyer pays. A long-premium 0DTE strategy starts every day in a hole.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 02</span><h2>Selling before expiry helps — but doesn't rescue it</h2></div>
+    <p>Your instinct to close the position into a swing rather than hold to settlement is
+    correct, and it is worth a great deal. It is not, on its own, an edge.</p>
+    <p>I rebuilt the test on 721 sessions of hourly path data, entering at a fixed time and
+    exiting on the first touch of a profit target or stop, otherwise flat by 15:30 ET:</p>
+  </div>
+
+  <div class="tbl-wrap col">
+    <table>
+      <thead><tr><th>Entry</th><th class="num">Target</th><th class="num">Stop</th><th class="num">Trades</th><th class="num">Mean</th><th class="num">Win rate</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">10:30</td><td class="num">+30%</td><td class="num">−30%</td><td class="num">1,442</td><td class="num">−8.4%</td><td class="num">36.1%</td></tr>
+        <tr><td class="mono">10:30</td><td class="num">+50%</td><td class="num">−30%</td><td class="num">1,442</td><td class="num">−6.4%</td><td class="num">30.0%</td></tr>
+        <tr><td class="mono">10:30</td><td class="num">+50%</td><td class="num">−50%</td><td class="num">1,442</td><td class="num">−15.4%</td><td class="num">33.9%</td></tr>
+        <tr><td class="mono">10:30</td><td class="num">+100%</td><td class="num">−50%</td><td class="num">1,442</td><td class="num">−12.7%</td><td class="num">27.5%</td></tr>
+        <tr><td class="mono">11:30</td><td class="num">+30%</td><td class="num">−30%</td><td class="num">1,442</td><td class="num">−9.8%</td><td class="num">33.4%</td></tr>
+        <tr><td class="mono">11:30</td><td class="num">+100%</td><td class="num">−50%</td><td class="num">1,442</td><td class="num">−13.9%</td><td class="num">26.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <p class="note">Both sides tested on every session, so direction is unselected — this is the
+    cost of the structure alone, before any view.</p>
+    <p>Median outcome improves enormously — from −80% to −30% — because you stop donating
+    the last hours of theta. But every configuration is still negative. Exiting early
+    controls the <em>loss</em>; it does not create the <em>gain</em>.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 03</span><h2>The bar the scorer has to clear</h2></div>
+    <p>If exit mechanics can't produce edge, direction has to. So I measured exactly how
+    accurate a directional call must be to break even, by weighting each session's
+    winning and losing side:</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span class="v">50%</span><span class="k">Coin flip → −10.3% per trade</span></div>
+    <div class="stat"><span class="v acc">≈56%</span><span class="k">Break-even accuracy, before costs</span></div>
+    <div class="stat"><span class="v pos">60%</span><span class="k">→ +7.6% per trade</span></div>
+    <div class="stat"><span class="v pos">+79.2%</span><span class="k">Perfect foresight ceiling</span></div>
+  </div>
+
+  <div class="col">
+    <div class="callout warn">
+      <span class="eyebrow">The design constraint</span>
+      <p>Roughly <strong>56% directional accuracy</strong> is break-even before commissions and
+      spread. Add realistic friction and the real bar is near <strong>60%</strong>. That is a
+      demanding but not absurd target — and critically, it only has to be met on the
+      sessions the system actually trades. A gate that fires on 15% of days and is right
+      62% of the time on those days is a viable system. One that trades daily at 52% is not.</p>
+    </div>
+    <p>This reframes the whole build. The scorer isn't ranking which option to buy; it is
+    answering <em>"is today one of the rare days where a directional bet is justified?"</em>
+    and defaulting to no.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 04</span><h2>The vendor's greeks are unusable</h2></div>
+    <p>Cboe publishes free delayed chains for SPX, SPY and QQQ including IV and all five
+    greeks. The greeks are wrong in a way that would quietly corrupt every downstream
+    calculation, so I checked them.</p>
+    <p>At the same strike and expiry, a call and a put must imply the same volatility.
+    Cboe's published figures don't:</p>
+  </div>
+
+  <div class="tbl-wrap col">
+    <table>
+      <thead><tr><th class="num">Strike</th><th class="num">Cboe call IV</th><th class="num">Cboe put IV</th><th class="num">Our call IV</th><th class="num">Our put IV</th></tr></thead>
+      <tbody>
+        <tr><td class="num">7600</td><td class="num">0.105</td><td class="num">0.155</td><td class="num">0.1344</td><td class="num">0.1355</td></tr>
+        <tr><td class="num">7700</td><td class="num">0.102</td><td class="num">0.111</td><td class="num">0.0950</td><td class="num">0.0949</td></tr>
+        <tr><td class="num">7725</td><td class="num">0.095</td><td class="num">0.103</td><td class="num">0.0872</td><td class="num">0.0871</td></tr>
+        <tr><td class="num">7750</td><td class="num">0.090</td><td class="num">0.099</td><td class="num">0.0821</td><td class="num">0.0823</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <p>Cboe appears to compute IV against the index spot. SPX options price off the
+    <em>forward</em>, and the feed's own index quote is unreliable — it printed a
+    7675 / 7748 bid-ask around a 7708 level. Repricing the chain naively gave a mean error
+    of <strong>$7.01</strong>.</p>
+    <p>Implying the forward from put-call parity instead — it came out 16.17 points above
+    the quoted spot — and solving our own volatilities from mid prices collapses the error:</p>
+    <div class="callout good">
+      <span class="eyebrow">Validation result</span>
+      <p>Mean absolute repricing error <strong>$7.01 → $1.28</strong>. Call and put implied
+      vols at the same strike agree to a <strong>median of 0.0001 vol points</strong> — an
+      internally arbitrage-free surface. The engine must build its own surface and ignore
+      the vendor greeks entirely.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 05</span><h2>Instrument choice is not a cost decision</h2></div>
+    <p>My first pass here was wrong, for a reason worth recording. Measured properly on near-ATM contracts of the front unexpired expiry:</p>
+  </div>
+  <div class="tbl-wrap col">
+    <table>
+      <thead><tr><th>Instrument</th><th class="num">Median spread</th><th class="num">As % of mid</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">SPX</td><td class="num">$0.20</td><td class="num">1.8%</td><td>Cash-settled, no assignment risk, 60/40 tax treatment</td></tr>
+        <tr><td class="lbl">SPY</td><td class="num">$0.04</td><td class="num">1.7%</td><td>Tightest proportionally; American-style, so assignment is live</td></tr>
+        <tr><td class="lbl">QQQ</td><td class="num">$0.02</td><td class="num">2.6%</td><td>Slightly wider; distinct tech-beta behaviour</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <p class="note">Near-ATM contracts on the front unexpired expiry, snapshot taken outside
+    regular trading hours — which widens quotes, so these are upper bounds. The build should
+    sample spreads live during RTH and store the real distribution.</p>
+    <p>All three are close enough that <strong>execution cost does not decide the
+    instrument</strong>. Against a target of roughly +30% on a winner, a ~2% round trip is
+    tolerable everywhere. SPX earns the default slot on structure instead — cash settlement,
+    no early-assignment risk, and 60/40 tax treatment — with QQQ carried for its different
+    beta rather than being ruled out on spread.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Finding 06</span><h2>The bug that hides the whole 0DTE surface</h2></div>
+    <p>Worth stating plainly because it silently corrupted my own first pass and would
+    corrupt anyone else's. SPX options trade under <em>two</em> roots:
+    <code>SPX</code> for the AM-settled standard monthlies, and <code>SPXW</code> for the
+    PM-settled weeklies — and every daily expiry lives under <code>SPXW</code>.</p>
+    <p>Parsing the OCC symbol by slicing at a fixed offset therefore works on monthlies and
+    quietly mangles every 0DTE contract. My first probe reported <em>zero</em> 0DTE contracts
+    on a chain that in fact carried thousands, and my initial spread figures were measured
+    against the wrong expiry entirely. Nothing errored; the numbers just came out wrong.</p>
+    <div class="callout warn">
+      <span class="eyebrow">Build requirement</span>
+      <p>Parse contract symbols by pattern, never by offset, and assert that the selected
+      expiry is unexpired. The feed retains settled expiries with stale two-sided quotes, so
+      pricing at <code>T ≤ 0</code> returns intrinsic values that look like working output.
+      Both checks are in the committed <code>--selftest</code>.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Data</span><h2>What I can and cannot get</h2></div>
+  </div>
+  <div class="tbl-wrap col">
+    <table>
+      <thead><tr><th>Source</th><th>Provides</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="lbl">Cboe delayed quotes</td><td>Full SPX/SPY/QQQ chains — bid, ask, IV, 5 greeks, OI, volume</td><td><span class="chip ok">free, no key</span></td></tr>
+        <tr><td class="lbl">Cboe index history</td><td>VIX1D (2022+), VIX9D (2011+), VIX, VVIX, SKEW, SPX daily</td><td><span class="chip ok">free, no key</span></td></tr>
+        <tr><td class="lbl">Yahoo charts</td><td>1h bars ≈3 yrs · 5m ≈60 d · 1m ≈8 d/request · daily decades</td><td><span class="chip ok">free, no key</span></td></tr>
+        <tr><td class="lbl">Yahoo option chains</td><td>—</td><td><span class="chip no">now crumb-gated</span></td></tr>
+        <tr><td class="lbl">DoltHub options</td><td>Monthly expiries only, SPY sparse, no QQQ, no 0DTE</td><td><span class="chip no">unusable here</span></td></tr>
+        <tr><td class="lbl">Cboe historical chains</td><td>Per-contract history</td><td><span class="chip no">403 / paid</span></td></tr>
+        <tr><td class="lbl">FMP intraday</td><td>Minute bars</td><td><span class="chip no">paid tier</span></td></tr>
+        <tr><td class="lbl">Alpha Vantage</td><td>Historical chains w/ greeks</td><td><span class="chip part">needs your key</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <div class="callout warn">
+      <span class="eyebrow">Honest limitation</span>
+      <p>No free source carries historical 0DTE option quotes. Every backtest number above is
+      <strong>model-repriced</strong>: real underlying paths and real VIX1D, but theoretical
+      option prices with no historical bid-ask. That is sound for measuring structural
+      drag — which is what I used it for — and <em>not</em> sound for validating a specific
+      entry rule's fill quality. Anything claiming precise historical P&L would be fiction.</p>
+      <p>The fix is forward, not backward: have the tool snapshot live chains on every run so
+      real out-of-sample data accumulates from day one.</p>
+    </div>
+    <p><strong>Note on your repo:</strong> <code>below-the-line/scripts/options_screener.py</code>
+    reads Yahoo's option endpoint, which now returns <code>Invalid Crumb</code>. That screener
+    is likely broken in production. Migrating it to the Cboe source would fix it — worth
+    flagging separately from this build.</p>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Proposal</span><h2>What I'd build</h2></div>
+    <p>A single Python engine plus a static HTML panel, matching the existing repo idiom —
+    pure functions behind a <code>--selftest</code> flag, JSON to <code>assets/data/</code>,
+    prose docstrings explaining the reasoning.</p>
+  </div>
+
+  <div class="pipe col">
+    <div class="step"><span class="n">01</span><div>
+      <h4>Gates — run first, cheap, and fatal</h4>
+      <p>VIX1D inside a usable band; no scheduled macro event in the holding window unless
+      deliberately traded; spread and open-interest floors met; entry inside 10:00–13:00 ET.
+      Any gate failing ends the run with <em>no trade</em> and a stated reason.</p></div></div>
+    <div class="step"><span class="n">02</span><div>
+      <h4>Direction score — one call or one put</h4>
+      <p>Weighted: trend alignment across 5m/15m/1h and VWAP position (25), momentum thrust
+      (15), volatility regime — is VIX1D cheap against its own 20-day median and against
+      realized (20), term structure VIX1D/VIX9D/VIX (10), 25Δ skew (10), QQQ-vs-SPX
+      confirmation (10), and level structure including net gamma by strike computed from the
+      chain's open interest (10). Below a conviction floor: no trade.</p></div></div>
+    <div class="step"><span class="n">03</span><div>
+      <h4>Duration — solve it, don't assume it</h4>
+      <p>For the expected move and expected time-to-target, compute return per unit premium
+      net of theta and spread across 0DTE, 1DTE, 2DTE and the weekly. 0DTE wins only when the
+      move is expected fast; a swing needing more than a few hours usually prefers 1–2DTE.
+      The tool reports which and why.</p></div></div>
+    <div class="step"><span class="n">04</span><div>
+      <h4>Target price — from the surface, not a rule of thumb</h4>
+      <p>Entry limit anchored to mid with a hard cap on how far into the spread to pay.
+      Exit target = the option repriced at the target underlying level, at the expected exit
+      time, with an IV-crush haircut. Stop = repriced at the invalidation level. Output:
+      entry limit, target, stop, breakeven underlying, theta cost per hour, R:R.</p></div></div>
+    <div class="step"><span class="n">05</span><div>
+      <h4>Checklist gate — no confirm until every mandatory item is ticked</h4>
+      <p>Prototyped live below.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Prototype</span><h2>The pre-entry checklist</h2></div>
+    <p>Working, not a mockup — tick items and the confirm button unlocks only when all
+    mandatory checks pass. This is the interaction I'd ship; the content is what I'd
+    populate it with.</p>
+  </div>
+
+  <div class="proto col" id="proto">
+    <div class="proto-head">
+      <h4>Confirm entry — SPX 0DTE</h4>
+      <span class="tick" id="counter">0 of 11 required</span>
+    </div>
+
+    <div class="grp">
+      <span class="eyebrow">Market context</span>
+      <div class="item"><input type="checkbox" data-req id="c1"><label for="c1">No tier-1 macro release inside the holding window<span class="req">REQ</span><span class="why">CPI, NFP, FOMC and Powell remarks reprice the surface mid-trade</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c2"><label for="c2">VIX1D inside the tradeable band<span class="req">REQ</span><span class="why">Too low and there's no move to capture; too high and premium overwhelms the target</span></label></div>
+      <div class="item"><input type="checkbox" id="c3"><label for="c3">Term structure checked (VIX1D vs VIX9D vs VIX)<span class="why">Backwardation signals a known catalyst — trade it deliberately or not at all</span></label></div>
+      <div class="item"><input type="checkbox" id="c4"><label for="c4">Index and sector agree on direction<span class="why">QQQ against SPX is a warning, not a confirmation</span></label></div>
+    </div>
+
+    <div class="grp">
+      <span class="eyebrow">Contract</span>
+      <div class="item"><input type="checkbox" data-req id="c5"><label for="c5">Bid-ask ≤ threshold for this instrument<span class="req">REQ</span><span class="why">Measured now, in hours — not from a stored average</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c6"><label for="c6">Open interest and session volume above floors<span class="req">REQ</span><span class="why">You must be able to leave the position, not just enter it</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c7"><label for="c7">Duration solved, not assumed<span class="req">REQ</span><span class="why">0DTE only when the expected move is expected fast</span></label></div>
+      <div class="item"><input type="checkbox" id="c8"><label for="c8">Strike is clear of a major gamma wall<span class="why">Large opposing open interest pins price and kills the swing</span></label></div>
+    </div>
+
+    <div class="grp">
+      <span class="eyebrow">Pricing</span>
+      <div class="item"><input type="checkbox" data-req id="c9"><label for="c9">Entry limit set at or near mid — never the ask<span class="req">REQ</span><span class="why">Paying the ask on a 2.8% spread forfeits a tenth of the target</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c10"><label for="c10">Breakeven underlying level is inside today's expected range<span class="req">REQ</span><span class="why">If the breakeven needs more than 1σ, the trade is a lottery ticket</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c11"><label for="c11">Target price computed with IV-crush haircut applied<span class="req">REQ</span><span class="why">The underlying can reach your level and the option still not reach your price</span></label></div>
+      <div class="item"><input type="checkbox" id="c12"><label for="c12">Theta cost per hour understood and accepted<span class="why">The position bleeds while you wait to be right</span></label></div>
+    </div>
+
+    <div class="grp">
+      <span class="eyebrow">Risk and execution</span>
+      <div class="item"><input type="checkbox" data-req id="c13"><label for="c13">Position sized so a total loss is survivable<span class="req">REQ</span><span class="why">0DTE goes to zero routinely — size for that outcome, not the target</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c14"><label for="c14">Hard time-stop set — flat by 15:30 ET regardless<span class="req">REQ</span><span class="why">Terminal gamma makes the last half hour a different instrument</span></label></div>
+      <div class="item"><input type="checkbox" data-req id="c15"><label for="c15">Stop level and target both entered as orders, not intentions<span class="req">REQ</span></label></div>
+      <div class="item"><input type="checkbox" id="c16"><label for="c16">Daily loss limit not already breached<span class="why">The gate should refuse to open after a set number of losses</span></label></div>
+    </div>
+
+    <div class="proto-foot">
+      <button class="confirm" id="btn" disabled>Confirm entry</button>
+      <span class="gate-msg" id="msg">11 required checks outstanding</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="col">
+    <div class="sec-head"><span class="eyebrow">Decisions</span><h2>What I need from you</h2></div>
+    <div class="ask">
+      <dl>
+        <dt>Where does this live?</dt>
+        <dd>A branch of <code>mungbeans</code> keeps it near the existing screener and its
+        Hugo pipeline, but this is a private trading tool and the site is public. My
+        recommendation is a self-contained <code>tools/odte/</code> directory that runs
+        locally and publishes nothing.</dd>
+
+        <dt>Does the negative base rate change your appetite?</dt>
+        <dd>I'd build this as a refusal engine that trades rarely. If you wanted a tool
+        that names a position every session, the evidence says that tool loses money and I'd
+        rather say so now than after building it.</dd>
+
+        <dt>Do you have an Alpha Vantage key?</dt>
+        <dd>Your README references <code>ALPHA_VANTAGE_KEY</code> but it isn't set here. If
+        the plan tier includes <code>HISTORICAL_OPTIONS</code>, real historical chains with
+        greeks become available and a genuine fill-accurate backtest is back on the table.</dd>
+
+        <dt>Live paper-trade log?</dt>
+        <dd>Recommended. Every run snapshots the chain and records the decision, so real
+        out-of-sample evidence accumulates. Without it there is no honest way to know whether
+        the scorer clears 56%.</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="col">
+    Research only — no position is recommended and nothing here is investment advice.
+    Backtest figures are model-repriced from real underlying paths and real VIX1D, with
+    theoretical option prices and no historical bid-ask. Sources: Cboe delayed quotes and
+    index history, Yahoo Finance charts. Sessions 13 May 2022 – 19 Aug 2026.
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var proto=document.getElementById('proto');
+  var boxes=[].slice.call(proto.querySelectorAll('input[type=checkbox]'));
+  var req=boxes.filter(function(b){return b.hasAttribute('data-req')});
+  var btn=document.getElementById('btn'),msg=document.getElementById('msg'),ctr=document.getElementById('counter');
+  function sync(){
+    var done=req.filter(function(b){return b.checked}).length;
+    var left=req.length-done;
+    ctr.textContent=done+' of '+req.length+' required';
+    btn.disabled=left>0;
+    if(left>0){
+      msg.className='gate-msg';
+      msg.textContent=left+' required check'+(left===1?'':'s')+' outstanding';
+    }else{
+      msg.className='gate-msg ready';
+      msg.textContent='All required checks passed — entry unlocked';
+    }
+  }
+  boxes.forEach(function(b){b.addEventListener('change',sync)});
+  btn.addEventListener('click',function(){
+    msg.className='gate-msg ready';
+    msg.textContent='Confirmed — this is where the order ticket would be written';
+  });
+  sync();
+})();
+</script>
