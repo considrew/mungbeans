@@ -1,4 +1,10 @@
-# 0DTE / weekly options scoring — research phase
+# Research phase — how we got to the fade watcher
+
+> **Outcome:** this study killed the 0DTE framing and pointed at the 2–5 DTE
+> overnight fade. The live tool that resulted is `../fade_watch.py`; see
+> `../README.md`. The findings below stand as the reasoning behind it.
+
+## Original brief: 0DTE / weekly options scoring
 
 Status: **research only, pending approval. Nothing here trades or is wired into the site.**
 
