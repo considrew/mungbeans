@@ -74,30 +74,27 @@ HERE = Path(__file__).resolve().parent
 ALERT_LOG = HERE / 'alerts.jsonl'
 STATE = HERE / '.fade_watch_state.json'
 
+sys.path.insert(0, str(HERE))
+import signals  # noqa: E402  (sibling module; path set above so it resolves from anywhere)
+
 # --- configuration: everything tunable lives here ----------------------------
 
 CONFIG = {
     'symbols': ['SPX', 'QQQ'],
 
-    # The setup score is a weighted blend of components, each mapped to 0..1.
-    # Weights sum to 100. Extension is deliberately dominant: the backtest edge
-    # is monotonic in the size of the move being faded, and nothing else came
-    # close to it.
-    'weights': {
-        'extension': 55,     # how far the session has run from the prior close
-        'exhaustion': 20,    # how far price has backed off the session extreme
-        'late_day': 15,      # setups that carry into the close pay 'on the open'
-        'vol_regime': 10,    # a live tape (elevated short-vol) reverts harder
+    # The trigger is a CONFLUENCE of real signals, not a weighted score. It is
+    # silent until VWAP-extension (the required spine) plus at least
+    # `min_confirm` of the other enabled signals all point the same way. See
+    # signals.py for what each one measures. This is deliberately mostly-off:
+    # a fuzzy score that is always partly lit is exactly what we are replacing.
+    'signals': {
+        'enabled': ['vwap', 'rsi2', 'atr', 'band', 'pdl'],
+        'vwap_sigma_gate': 2.0,    # price this many sigma off VWAP to arm the spine
+        'rsi2_hi': 95,             # RSI(2) at/above -> stretched up (fade with puts)
+        'rsi2_lo': 5,              # at/below -> stretched down (fade with calls)
+        'atr_ext_min': 1.5,        # move >= this many ATRs to count
+        'min_confirm': 2,          # confirmations required beyond the VWAP spine
     },
-    'trigger': 62,           # fire at or above this score
-
-    # Extension mapped to 0..1: 1.0% of move earns ~0.45, 2.0% earns ~0.9.
-    # Below ~1% there is no measured edge, so the map starts near zero there.
-    'extension_full_pct': 2.2,     # move (%) that maxes the extension component
-    'extension_floor_pct': 0.8,    # below this, extension contributes ~nothing
-
-    # Exhaustion: fraction the price has retraced off the session extreme.
-    'exhaustion_full': 0.004,      # backed off 0.4% of spot off the high/low -> full
 
     # Contract selection.
     'otm_target_pct': 1.75,        # centre of your 1.5-2.0% OTM band
@@ -121,7 +118,6 @@ CONFIG = {
     'rate': 0.04,
     'poll_seconds': 120,
     'realert_cooldown_min': 45,    # do not re-fire the same side within this
-    'realert_score_bump': 8,       # ...unless the score rose at least this much
 }
 
 TIMEOUT = 20
@@ -208,72 +204,9 @@ def parse_occ(sym: str):
     return m.group('exp'), m.group('cp'), int(m.group('strike')) / 1000.0
 
 
-# --- setup scoring: pure functions -------------------------------------------
-
-def clamp01(x: float) -> float:
-    return 0.0 if x < 0 else 1.0 if x > 1 else x
-
-
-def extension_component(move_pct: float, cfg: dict) -> float:
-    """0..1 in the magnitude of the move being faded.
-
-    Flat-zero below the floor where the backtest shows no edge, rising to 1 at
-    the level that maxed the tested return. Direction is handled elsewhere;
-    only magnitude scores here.
-    """
-    floor = cfg['extension_floor_pct']
-    full = cfg['extension_full_pct']
-    return clamp01((abs(move_pct) - floor) / (full - floor))
-
-
-def exhaustion_component(spot: float, extreme: float, move_up: bool, cfg: dict) -> float:
-    """0..1 in how far price has backed off the session extreme.
-
-    A move still making new extremes is a trend, not a fade. A move that has
-    stalled and started to retrace is a thesis changing -- which is the tingle
-    this is trying to catch. For an up-move the extreme is the high and we want
-    price below it; for a down-move, the low and price above it.
-    """
-    if extreme <= 0:
-        return 0.0
-    backoff = (extreme - spot) / extreme if move_up else (spot - extreme) / extreme
-    return clamp01(backoff / cfg['exhaustion_full'])
-
-
-def late_day_component(minutes_into_session: float, session_minutes: float = 390.0) -> float:
-    """0..1 rising through the session.
-
-    The paydays land 'on the open' of the next day, so a setup that forms late
-    and carries overnight is worth more than the same setup at 10 a.m. that has
-    all day to resolve before you are holding anything.
-    """
-    return clamp01(minutes_into_session / session_minutes)
-
-
-def vol_regime_component(vix_short: float | None) -> float:
-    """0..1 in the short-dated vol level.
-
-    Reversion is sharper when the tape is hot. Mapped gently: 15 -> ~0.3,
-    25 -> ~0.7, 35+ -> ~1.0. None (no data) returns a neutral 0.4 rather than
-    zeroing a component we simply could not measure.
-    """
-    if vix_short is None:
-        return 0.4
-    return clamp01((vix_short - 10.0) / 25.0)
-
-
-def setup_score(move_pct, spot, extreme, minutes_in, vix_short, cfg):
-    """Blend the components into a 0..100 score plus a breakdown."""
-    move_up = move_pct > 0
-    comps = {
-        'extension': extension_component(move_pct, cfg),
-        'exhaustion': exhaustion_component(spot, extreme, move_up, cfg),
-        'late_day': late_day_component(minutes_in),
-        'vol_regime': vol_regime_component(vix_short),
-    }
-    w = cfg['weights']
-    score = sum(comps[k] * w[k] for k in w)
-    return score, comps
+# The setup decision now lives in signals.py (VWAP/RSI/ATR/Bollinger/prior-day
+# confluence). fade_watch consumes signals.compute() + signals.evaluate_signals()
+# and owns only the contract selection, pricing and ladder below.
 
 
 # --- reversion ladder --------------------------------------------------------
@@ -343,16 +276,6 @@ def fetch_chain(symbol: str):
     key = '_SPX' if symbol.upper() == 'SPX' else symbol.upper()
     raw = json.loads(_get(f'https://cdn.cboe.com/api/global/delayed_quotes/options/{key}.json'))
     return raw['data']
-
-
-def fetch_vix_short() -> float | None:
-    """Latest VIX9D close -- the vol horizon nearest these 2-5 day contracts."""
-    try:
-        txt = _get('https://cdn.cboe.com/api/global/us_indices/daily_prices/VIX9D_History.csv').decode()
-        last = txt.strip().splitlines()[-1]
-        return float(last.split(',')[-1])
-    except Exception:
-        return None
 
 
 # --- contract selection ------------------------------------------------------
@@ -440,39 +363,48 @@ def select_contract(chain, symbol, cp, spot, cfg, market_now):
 
 # --- evaluation --------------------------------------------------------------
 
-def evaluate(symbol: str, cfg: dict, vix_short=None):
+def evaluate(symbol: str, cfg: dict):
     """Full evaluation for one symbol. Returns a result dict (never raises for
-    ordinary data gaps -- it reports them in 'error')."""
+    ordinary data gaps -- it reports them in 'error').
+
+    The setup read (VWAP/RSI/ATR/Bollinger/prior-day confluence) comes from
+    signals.py, on the symbol's tradeable proxy. Only if it fires do we touch
+    the option chain, so a quiet tape costs one intraday request, not a chain.
+    """
+    sig = signals.compute(symbol)
+    if sig.get('error'):
+        return {'symbol': symbol, 'error': sig['error']}
+    dec = signals.evaluate_signals(sig, cfg['signals'])
+
+    result = {
+        'symbol': symbol, 'proxy': sig['proxy'],
+        'spot': sig['spot'], 'prev_close': sig['prev_close'], 'move_pct': sig['move_pct'],
+        'side': 'PUT (fade up)' if dec['side'] == 'P' else 'CALL (fade down)',
+        'cp': dec['side'],
+        'read': {'vwap_sigma': sig['vwap_sigma'], 'rsi2': sig['rsi2'], 'rsi14': sig['rsi14'],
+                 'atr_ext': sig['atr_ext'], 'pctb': sig['pctb'],
+                 'band_tag': sig['band_tag'], 'pd_tag': sig['pd_tag']},
+        'votes': dec['votes'], 'spine_ok': dec['spine_ok'],
+        'confirmations': dec['confirmations'], 'n_confirm': dec['n_confirm'],
+        'ripe': dec['fired'], 'error': None,
+    }
+    if not dec['fired']:
+        return result
+
+    # fired: now price the real option off the Cboe chain for the true underlying
     try:
         chain = fetch_chain(symbol)
     except Exception as e:
-        return {'symbol': symbol, 'error': f'chain fetch failed: {e}'}
+        result['error'] = f'chain fetch failed: {e}'
+        return result
     intr = intraday_from_chain(chain)
     if not intr:
-        return {'symbol': symbol, 'error': 'no underlying data in chain header'}
-
-    spot, prev = intr['spot'], intr['prev_close']
-    move_pct = 100 * (spot - prev) / prev
-    move_up = move_pct > 0
-    extreme = intr['high'] if move_up else intr['low']
-    score, comps = setup_score(move_pct, spot, extreme, intr['minutes_in'], vix_short, cfg)
-
-    # fade: an up-day is faded with puts, a down-day with calls.
-    cp = 'P' if move_up else 'C'
-    result = {
-        'symbol': symbol, 'clock': intr['clock'].strftime('%Y-%m-%d %H:%M ET'),
-        'spot': round(spot, 2), 'prev_close': round(prev, 2),
-        'move_pct': round(move_pct, 2), 'side': 'PUT (fade up)' if move_up else 'CALL (fade down)',
-        'cp': cp, 'session_extreme': round(extreme, 2),
-        'minutes_in': round(intr['minutes_in']),
-        'score': round(score, 1), 'components': {k: round(v, 2) for k, v in comps.items()},
-        'trigger': cfg['trigger'], 'ripe': score >= cfg['trigger'],
-        'error': None,
-    }
-    if score < cfg['trigger']:
+        result['error'] = 'no underlying data in chain header'
         return result
+    spot, prev = intr['spot'], intr['prev_close']
+    result['clock'] = intr['clock'].strftime('%Y-%m-%d %H:%M ET')
 
-    contract, why = select_contract(chain, symbol, cp, spot, cfg, intr['clock'])
+    contract, why = select_contract(chain, symbol, dec['side'], spot, cfg, intr['clock'])
     if contract is None:
         result['error'] = why
         return result
@@ -480,7 +412,7 @@ def evaluate(symbol: str, cfg: dict, vix_short=None):
     faded_move_abs = abs(spot - prev)
     T_exit = max(contract['T'] - cfg['exit_hold_days'] / 252.0, 1e-5)
     ladder = build_ladder(contract['entry_mid'], contract['forward'], contract['strike'],
-                          contract['iv'], T_exit, cfg['rate'], cp, faded_move_abs, spot, cfg)
+                          contract['iv'], T_exit, cfg['rate'], dec['side'], faded_move_abs, spot, cfg)
     result['contract'] = contract
     result['ladder'] = ladder
     return result
@@ -490,11 +422,15 @@ def evaluate(symbol: str, cfg: dict, vix_short=None):
 
 def format_alert(res: dict) -> str:
     c = res['contract']
+    rd = res['read']
     lines = [
-        f"\a=== FADE SETUP RIPE: {res['symbol']} ===  score {res['score']}/{res['trigger']}  ({res['clock']})",
+        f"\a=== FADE SETUP RIPE: {res['symbol']} ===  ({res.get('clock', '')})",
         f"  {res['symbol']} {res['spot']}  ({res['move_pct']:+.2f}% from prior close {res['prev_close']})",
         f"  SIDE: {res['side']}",
-        f"  components: " + "  ".join(f"{k} {v}" for k, v in res['components'].items()),
+        f"  signals fired: VWAP {rd['vwap_sigma']:+.2f}sd + " +
+        " + ".join(res['confirmations']) + f"  ({res['n_confirm']} confirmations)",
+        f"  read: RSI2 {rd['rsi2']}  RSI14 {rd['rsi14']}  ATR-ext {rd['atr_ext']}  "
+        f"%b {rd['pctb']}  band {rd['band_tag']:+d}  pd {rd['pd_tag']:+d}",
         f"  CONTRACT: {res['symbol']} {c['expiry']} {c['strike']:.0f}{c['cp']}"
         f"  ({c['otm_pct']}% OTM, {c['dte']}d)",
         f"    entry ~{c['entry_mid']} (ask {c['entry_ask']})  IV {c['iv']}  "
@@ -517,7 +453,7 @@ def deliver(res: dict):
         try:
             urllib.request.urlopen(urllib.request.Request(
                 f'https://ntfy.sh/{topic}', data=text.replace('\a', '').encode(),
-                headers={'Title': f"Fade setup: {res['symbol']} {res['score']}",
+                headers={'Title': f"Fade {res['symbol']} {res['cp']} ({res['n_confirm']}+VWAP)",
                          'Priority': 'high', 'Tags': 'chart_with_downwards_trend'}), timeout=TIMEOUT)
         except Exception as e:
             print(f'  (ntfy push failed: {e})', file=sys.stderr)
@@ -550,7 +486,8 @@ def _save_state(s: dict):
 
 
 def should_alert(res: dict, cfg: dict) -> bool:
-    """Fire once per ripening; re-fire only if the setup materially strengthens."""
+    """Fire once per ripening; re-fire only after the cooldown, or if another
+    signal has joined the confluence since (a materially stronger setup)."""
     if not res.get('ripe') or res.get('error') or 'contract' not in res:
         return False
     st = _load_state()
@@ -560,35 +497,30 @@ def should_alert(res: dict, cfg: dict) -> bool:
     if prev:
         last = datetime.fromisoformat(prev['ts'])
         cooled = (now - last).total_seconds() / 60.0 >= cfg['realert_cooldown_min']
-        stronger = res['score'] - prev['score'] >= cfg['realert_score_bump']
+        stronger = res['n_confirm'] > prev.get('n_confirm', 0)
         if not (cooled or stronger):
             return False
-    st[key] = {'ts': now.isoformat(), 'score': res['score']}
+    st[key] = {'ts': now.isoformat(), 'n_confirm': res['n_confirm']}
     _save_state(st)
     return True
 
 
 # --- loop --------------------------------------------------------------------
 
-def in_session(clock: datetime) -> bool:
-    """Rough RTH check on the feed's own clock (ET). Weekends excluded."""
-    if clock.weekday() >= 5:
-        return False
-    mins = clock.hour * 60 + clock.minute
-    return 9 * 60 + 30 <= mins <= 16 * 60
-
-
 def run_loop(cfg: dict):
     print(f"fade_watch: polling {', '.join(cfg['symbols'])} every {cfg['poll_seconds']}s. "
           f"Ctrl-C to stop.", file=sys.stderr)
     while True:
-        vix = fetch_vix_short()
         for sym in cfg['symbols']:
-            res = evaluate(sym, cfg, vix)
-            clk = res.get('clock', '')
+            res = evaluate(sym, cfg)
             tag = 'RIPE' if res.get('ripe') else 'quiet'
-            note = res['error'] if res.get('error') else f"score {res.get('score')}"
-            print(f"  [{clk}] {sym}: {tag}  {note}", file=sys.stderr)
+            if res.get('error'):
+                note = res['error']
+            else:
+                rd = res.get('read', {})
+                note = (f"move {res.get('move_pct')}%  VWAP {rd.get('vwap_sigma')}sd  "
+                        f"RSI2 {rd.get('rsi2')}  confirms {res.get('n_confirm')}")
+            print(f"  {sym}: {tag}  {note}", file=sys.stderr)
             if should_alert(res, cfg):
                 deliver(res)
         time.sleep(cfg['poll_seconds'])
@@ -614,20 +546,15 @@ def selftest() -> int:
     assert parse_occ('SPXW260819P00700000') == ('260819', 'P', 700.0)
     assert parse_occ('QQQ260819C00600000') == ('260819', 'C', 600.0)
 
-    # scoring: extension is monotonic and floored
-    assert extension_component(0.5, CONFIG) == 0.0
-    assert extension_component(2.5, CONFIG) == 1.0
-    assert extension_component(1.5, CONFIG) > extension_component(1.0, CONFIG)
-
-    # exhaustion: new-high trend scores ~0, a backoff scores higher
-    assert exhaustion_component(spot=100.0, extreme=100.0, move_up=True, cfg=CONFIG) == 0.0
-    assert exhaustion_component(spot=99.5, extreme=100.0, move_up=True, cfg=CONFIG) > 0.5
-
-    # a big faded move late in a hot session must clear the trigger; a quiet
-    # midday drift must not
-    hot, _ = setup_score(2.3, 100.0, 100.6, 360, 22.0, CONFIG)
-    calm, _ = setup_score(0.4, 100.0, 100.1, 120, 13.0, CONFIG)
-    assert hot >= CONFIG['trigger'] > calm, (hot, calm)
+    # the setup decision lives in signals.py; confirm the wiring holds here
+    hot = signals.evaluate_signals(
+        {'move_pct': 1.8, 'vwap_sigma': 2.4, 'rsi2': 97, 'atr_ext': 1.7,
+         'band_tag': 1, 'pd_tag': 0}, CONFIG['signals'])
+    assert hot['fired'] and hot['side'] == 'P'
+    calm = signals.evaluate_signals(
+        {'move_pct': 0.3, 'vwap_sigma': 0.4, 'rsi2': 55, 'atr_ext': 0.3,
+         'band_tag': 0, 'pd_tag': 0}, CONFIG['signals'])
+    assert not calm['fired']
 
     # ladder: rungs are increasing in retrace and the gains are ordered for a put
     lad = build_ladder(1.0, 5000.0, 4912.0, 0.15, 2 / 252, r, 'P',
@@ -663,20 +590,21 @@ def main() -> int:
         return 0
 
     # default: --once
-    vix = fetch_vix_short()
-    out = [evaluate(s, cfg, vix) for s in cfg['symbols']]
+    out = [evaluate(s, cfg) for s in cfg['symbols']]
     if args.json:
         print(json.dumps(out, indent=2))
         return 0
     for res in out:
         if res.get('error') and not res.get('ripe'):
-            print(f"{res['symbol']}: {res.get('score', '-')}  ({res['error']})")
+            print(f"{res['symbol']}: ({res['error']})")
         elif res.get('ripe') and 'contract' in res:
             print(format_alert(res))
         else:
-            comp = "  ".join(f"{k} {v}" for k, v in res.get('components', {}).items())
-            print(f"{res['symbol']} {res.get('spot')}  {res.get('move_pct')}%  "
-                  f"score {res.get('score')}/{cfg['trigger']} (quiet)  [{comp}]")
+            rd = res.get('read', {})
+            print(f"{res['symbol']} {res.get('spot')}  {res.get('move_pct')}%  (quiet)  "
+                  f"VWAP {rd.get('vwap_sigma')}sd  RSI2 {rd.get('rsi2')}  "
+                  f"ATR-ext {rd.get('atr_ext')}  %b {rd.get('pctb')}  "
+                  f"confirms {res.get('n_confirm')}/{cfg['signals']['min_confirm']}")
     return 0
 
 

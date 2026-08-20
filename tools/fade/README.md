@@ -44,20 +44,36 @@ python3 fade_watch.py --loop            # poll during the session, alert on ripe
 
 What it does each poll:
 
-1. Reads the underlying's session state (move from prior close, running
-   high/low, clock) and the full option chain in **one** Cboe request — the
-   delayed-quote feed carries both, and it is not rate-limited the way the
-   chart endpoints are.
-2. Scores the setup 0–100 from four transparent components — extension
-   (dominant), exhaustion off the session extreme, time of day, and short-vol
-   regime — all tunable at the top of the file.
-3. On a score at/above the trigger, selects the expiry (2–5 DTE) and the
-   strike (your 1.5–2% OTM band), prices it off a **self-built** surface — the
-   forward implied from put-call parity, IV solved from the mid — because the
-   vendor's own greeks are internally inconsistent (see research), and lays out
-   a scale-out ladder.
-4. Fires one alert (de-duped per side, with a cooldown) and logs it to
+1. Computes a **signal read** on the symbol's tradeable proxy (SPY for SPX,
+   QQQ direct) from 5-minute bars — see `signals.py`.
+2. Decides on **confluence**, not a score: the trigger is silent until the
+   VWAP σ-extension spine is armed **and** at least `min_confirm` of the other
+   enabled signals point the same way. A quiet tape costs one intraday
+   request, not a chain.
+3. Only if it fires does it touch the Cboe chain — selecting the expiry
+   (2–5 DTE) and strike (your 1.5–2% OTM band), pricing off a **self-built**
+   surface (forward implied from put-call parity, IV from the mid, because the
+   vendor greeks are internally inconsistent — see research), and building the
+   scale-out ladder.
+4. Fires one alert naming exactly which signals lit up (de-duped per side, with
+   a cooldown; re-fires if another signal joins the confluence) and logs it to
    `alerts.jsonl`.
+
+### The signals (`signals.py`)
+
+Each is a standard, individually-computable read; the tingle is quantified as
+their agreement. All thresholds live at the top of `fade_watch.py` under
+`CONFIG['signals']`.
+
+| Signal | Measures | Fires when |
+|---|---|---|
+| **VWAP σ-extension** (spine, required) | stretch from the session's volume-weighted fair price | \|z\| ≥ 2σ |
+| **RSI(2)** | fast momentum exhaustion (Connors' index reversal) | ≥ 95 / ≤ 5 |
+| **ATR-normalized move** | the move in units of normal daily range | ≥ 1.5 ATR |
+| **Bollinger tag-reject** | pierced a 2σ band and closed back inside | cross back through 1.0 / 0.0 |
+| **Prior-day level tag** | tagged the prior-day high/low and rejected | tag + reject |
+
+Run a live read on its own: `python3 signals.py --symbol SPY --json`.
 
 ### Getting the ping on your phone
 
@@ -72,9 +88,11 @@ export FADE_WATCH_WEBHOOK=https://discord.com/api/webhooks/...   # POSTs the ale
 ### A fired alert looks like
 
 ```
-=== FADE SETUP RIPE: SPX ===  score 76.1/62
+=== FADE SETUP RIPE: SPX ===
   SPX 7707.98  (+2.30% from prior close 7534.68)
   SIDE: PUT (fade up)
+  signals fired: VWAP +2.41sd + rsi2 + atr + band  (3 confirmations)
+  read: RSI2 96.8  RSI14 74.2  ATR-ext 1.9  %b 0.88  band +1  pd +0
   CONTRACT: SPX 260824 7575P  (1.73% OTM, 4.02d)
     entry ~3.45  IV 0.1304  delta -0.073  theta -1.82/day  OI 824  spread 2.9%
   SCALE-OUT LADDER:
