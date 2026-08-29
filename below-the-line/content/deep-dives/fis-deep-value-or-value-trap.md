@@ -8,10 +8,10 @@ ticker: "FIS"
 verdict: "deep-value"
 verdict_label: "Deep Value"
 pct_below_200wma: "26"
-performance_since: "-16.8%"
+performance_since: "-16.6%"
 performance_price_at_publish: "$49.70"
-performance_price_current: "$41.34"
-performance_as_of: "2026-08-22"
+performance_price_current: "$41.44"
+performance_as_of: "2026-08-29"
 ---
 
 ## The Setup

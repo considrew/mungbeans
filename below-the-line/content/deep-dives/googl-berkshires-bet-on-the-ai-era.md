@@ -8,10 +8,10 @@ ticker: "GOOGL"
 verdict: "wait"
 verdict_label: "Wait for Better Entry"
 pct_below_200wma: "0"
-performance_since: "-13.1%"
+performance_since: "-12.6%"
 performance_price_at_publish: "$396.78"
-performance_price_current: "$344.82"
-performance_as_of: "2026-08-22"
+performance_price_current: "$346.59"
+performance_as_of: "2026-08-29"
 ---
 
 ## The Setup
