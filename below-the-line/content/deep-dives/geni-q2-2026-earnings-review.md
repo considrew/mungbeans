@@ -11,7 +11,7 @@ verdict_label: "Constructive — the gate is GAAP, not the platform"
 performance_price_at_publish: "$7.59"
 performance_since: "+5.7%"
 performance_price_current: "$8.02"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 The full review lives at [/deep-dives/geni-q2-review/](/deep-dives/geni-q2-review/).

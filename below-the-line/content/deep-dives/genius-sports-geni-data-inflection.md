@@ -12,7 +12,7 @@ verdict_label: "Buy — the platform is further along than the stock price refle
 performance_price_at_publish: "$5.83"
 performance_since: "+37.6%"
 performance_price_current: "$8.02"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 ## Why This Takes A Full Read

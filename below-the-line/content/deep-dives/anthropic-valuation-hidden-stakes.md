@@ -12,7 +12,7 @@ pct_below_200wma: "0"
 performance_since: "+1.3%"
 performance_price_at_publish: "$97.15"
 performance_price_current: "$98.43"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 ## The Setup

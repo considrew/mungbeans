@@ -13,7 +13,7 @@ performance_since: "+12.4%"
 performance_price_at_publish: "$89.74"
 performance_price_current: "$100.89"
 performance_price_at_publish_b: "$33.68"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 ## Why These Two Together

@@ -15,7 +15,7 @@ performance_price_at_publish: "$24.86"
 performance_price_at_publish_b: "$108.34"
 performance_price_current: "$46.60"
 performance_price_current_b: "$97.39"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*

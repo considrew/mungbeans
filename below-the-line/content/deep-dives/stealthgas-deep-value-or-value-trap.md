@@ -11,7 +11,7 @@ pct_below_200wma: "0"
 performance_since: "+15.2%"
 performance_price_at_publish: "$8.24"
 performance_price_current: "$9.49"
-performance_as_of: "2026-08-29"
+performance_as_of: "2026-09-05"
 ---
 
 *A mungbeans.io forensic deep-dive — February 22, 2026*

@@ -1,277 +1,110 @@
 {
-  "date": "2026-08-29",
-  "date_display": "August 29, 2026",
-  "blog_slug": "2026-08-29-weekly-signal-report",
+  "date": "2026-09-05",
+  "date_display": "September 05, 2026",
+  "blog_slug": "2026-09-05-weekly-signal-report",
   "blog_generated": true,
   "newly_below": [
     {
-      "symbol": "DKS",
-      "name": "DICK'S Sporting Goods, Inc.",
-      "pct_from_wma": -23.23,
-      "rsi_14": 22.4
-    },
-    {
-      "symbol": "BBW",
-      "name": "Build-A-Bear Workshop",
-      "pct_from_wma": -11.8,
-      "rsi_14": 35.9
-    },
-    {
-      "symbol": "BXC",
-      "name": "BlueLinx Holdings Inc.",
-      "pct_from_wma": -5.99,
-      "rsi_14": 67.1
-    },
-    {
-      "symbol": "BTDR",
-      "name": "Bitdeer Technologies Group",
-      "pct_from_wma": -5.77,
-      "rsi_14": 37.8
-    },
-    {
-      "symbol": "HOFT",
-      "name": "Hooker Furnishings Corporation",
-      "pct_from_wma": -5.55,
-      "rsi_14": 50.1
-    },
-    {
-      "symbol": "CAR",
-      "name": "Avis Budget Group, Inc.",
-      "pct_from_wma": -4.92,
-      "rsi_14": 36.5
-    },
-    {
-      "symbol": "BNTX",
-      "name": "BioNTech SE",
-      "pct_from_wma": -4.86,
-      "rsi_14": 56.9
-    },
-    {
-      "symbol": "BBAI",
-      "name": "BigBear.ai Holdings Inc.",
-      "pct_from_wma": -3.88,
-      "rsi_14": 35.8
-    },
-    {
-      "symbol": "HSY",
-      "name": "The Hershey Company",
-      "pct_from_wma": -3.83,
-      "rsi_14": 39.2
-    },
-    {
-      "symbol": "LTBR",
-      "name": "Lightbridge Corporation",
-      "pct_from_wma": -3.5,
-      "rsi_14": 30.5
-    },
-    {
-      "symbol": "ACHR",
-      "name": "Archer Aviation Inc.",
-      "pct_from_wma": -2.96,
-      "rsi_14": 45.8
-    },
-    {
-      "symbol": "CBRL",
-      "name": "Cracker Barrel Old Country Store, Inc.",
-      "pct_from_wma": -2.76,
-      "rsi_14": 83.8
-    },
-    {
-      "symbol": "COIN",
-      "name": "Coinbase Global Inc.",
-      "pct_from_wma": -2.6,
-      "rsi_14": 48.0
-    },
-    {
-      "symbol": "BRKR",
-      "name": "Bruker Corporation",
-      "pct_from_wma": -1.95,
-      "rsi_14": 61.1
-    },
-    {
-      "symbol": "CAMP",
-      "name": "CAMP4 THERAPEUTICS CORPORATION",
-      "pct_from_wma": -1.94,
-      "rsi_14": 46.8
-    },
-    {
-      "symbol": "BRSP",
-      "name": "BrightSpire Capital, Inc.",
-      "pct_from_wma": -1.74,
-      "rsi_14": 27.7
-    },
-    {
-      "symbol": "INVH",
-      "name": "Invitation Homes Inc.",
-      "pct_from_wma": -1.55,
-      "rsi_14": 51.5
-    },
-    {
-      "symbol": "HUBG",
-      "name": "Hub Group, Inc.",
-      "pct_from_wma": -1.53,
-      "rsi_14": 47.1
-    },
-    {
-      "symbol": "MIDD",
-      "name": "The Middleby Corporation",
-      "pct_from_wma": -1.51,
-      "rsi_14": 44.0
-    },
-    {
-      "symbol": "WYNN",
-      "name": "Wynn Resorts Limited",
-      "pct_from_wma": -1.5,
-      "rsi_14": 47.9
-    },
-    {
-      "symbol": "VKTX",
-      "name": "Viking Therapeutics, Inc.",
-      "pct_from_wma": -1.48,
-      "rsi_14": 52.1
-    },
-    {
-      "symbol": "HD",
-      "name": "The Home Depot Inc.",
-      "pct_from_wma": -1.24,
-      "rsi_14": 57.5
-    },
-    {
-      "symbol": "AVY",
-      "name": "Avery Dennison Corporation",
-      "pct_from_wma": -1.14,
-      "rsi_14": 68.3
-    },
-    {
-      "symbol": "PPC",
-      "name": "Pilgrim's Pride Corporation",
-      "pct_from_wma": -1.09,
-      "rsi_14": 61.0
-    },
-    {
-      "symbol": "TMUS",
-      "name": "T-Mobile US Inc.",
-      "pct_from_wma": -0.87,
-      "rsi_14": 44.6
-    },
-    {
-      "symbol": "CDRE",
-      "name": "Cadre Holdings, Inc.",
-      "pct_from_wma": -0.83,
-      "rsi_14": 51.7
-    },
-    {
-      "symbol": "PCG",
-      "name": "PG&E Corporation",
-      "pct_from_wma": -0.77,
-      "rsi_14": 51.4
-    },
-    {
-      "symbol": "STWD",
-      "name": "Starwood Property Trust, Inc.",
-      "pct_from_wma": -0.46,
-      "rsi_14": 36.4
-    },
-    {
-      "symbol": "SNY",
-      "name": "Sanofi",
-      "pct_from_wma": -0.11,
-      "rsi_14": 52.2
-    },
-    {
-      "symbol": "GGG",
-      "name": "Graco Inc.",
-      "pct_from_wma": -0.06,
-      "rsi_14": 59.9
-    },
-    {
-      "symbol": "CSV",
-      "name": "Carriage Services, Inc.",
-      "pct_from_wma": -0.03,
-      "rsi_14": 29.7
-    },
-    {
-      "symbol": "MDLZ",
-      "name": "Mondelez International Inc.",
-      "pct_from_wma": -0.03,
-      "rsi_14": 53.2
-    }
-  ],
-  "newly_recovered": [
-    {
-      "symbol": "OCSL",
-      "name": "Oaktree Specialty Lending Corporation",
-      "pct_from_wma": 0.03
-    },
-    {
-      "symbol": "KE",
-      "name": "Kimball Electronics, Inc.",
-      "pct_from_wma": 0.76
-    },
-    {
-      "symbol": "BHF",
-      "name": "Brighthouse Financial, Inc.",
-      "pct_from_wma": 0.91
-    },
-    {
-      "symbol": "XP",
-      "name": "XP Inc.",
-      "pct_from_wma": 1.33
-    },
-    {
-      "symbol": "TENB",
-      "name": "Tenable Holdings Inc.",
-      "pct_from_wma": 1.56
-    },
-    {
-      "symbol": "NOW",
-      "name": "ServiceNow Inc.",
-      "pct_from_wma": 1.75
-    },
-    {
-      "symbol": "PEGA",
-      "name": "Pegasystems Inc.",
-      "pct_from_wma": 2.39
-    },
-    {
-      "symbol": "AEO",
-      "name": "American Eagle Outfitters Inc.",
-      "pct_from_wma": 3.5
-    },
-    {
-      "symbol": "AGCO",
-      "name": "AGCO Corporation",
-      "pct_from_wma": 4.58
-    },
-    {
-      "symbol": "KURA",
-      "name": "Kura Oncology, Inc.",
-      "pct_from_wma": 4.77
-    },
-    {
-      "symbol": "MEI",
-      "name": "Methode Electronics, Inc.",
-      "pct_from_wma": 8.61
-    },
-    {
-      "symbol": "CRM",
-      "name": "Salesforce Inc.",
-      "pct_from_wma": 9.41
-    },
-    {
-      "symbol": "CRSR",
-      "name": "Corsair Gaming",
-      "pct_from_wma": 9.85
-    },
-    {
-      "symbol": "TEAM",
-      "name": "Atlassian Corporation",
-      "pct_from_wma": 9.95
+      "symbol": "BYND",
+      "name": "Beyond Meat, Inc.",
+      "pct_from_wma": -93.83,
+      "rsi_14": 19.9
     },
     {
       "symbol": "BRCC",
       "name": "BRC Inc.",
-      "pct_from_wma": 151.48
+      "pct_from_wma": -73.38,
+      "rsi_14": 12.8
+    },
+    {
+      "symbol": "ADSK",
+      "name": "Autodesk, Inc.",
+      "pct_from_wma": -12.12,
+      "rsi_14": 45.9
+    },
+    {
+      "symbol": "ALB",
+      "name": "Albemarle Corporation",
+      "pct_from_wma": -6.77,
+      "rsi_14": 32.4
+    },
+    {
+      "symbol": "CCS",
+      "name": "Century Communities, Inc.",
+      "pct_from_wma": -5.46,
+      "rsi_14": 63.9
+    },
+    {
+      "symbol": "AMBA",
+      "name": "Ambarella, Inc.",
+      "pct_from_wma": -4.54,
+      "rsi_14": 45.6
+    },
+    {
+      "symbol": "AAL",
+      "name": "American Airlines Group Inc.",
+      "pct_from_wma": -3.56,
+      "rsi_14": 44.3
+    },
+    {
+      "symbol": "AON",
+      "name": "Aon plc",
+      "pct_from_wma": -2.41,
+      "rsi_14": 53.0
+    },
+    {
+      "symbol": "BCSF",
+      "name": "Bain Capital Specialty Finance, Inc.",
+      "pct_from_wma": -0.02,
+      "rsi_14": 36.6
+    },
+    {
+      "symbol": "ABT",
+      "name": "Abbott Laboratories",
+      "pct_from_wma": -0.0,
+      "rsi_14": 74.0
+    }
+  ],
+  "newly_recovered": [
+    {
+      "symbol": "COIN",
+      "name": "Coinbase Global Inc.",
+      "pct_from_wma": 0.33
+    },
+    {
+      "symbol": "ARTNA",
+      "name": "Artesian Resources Corporation",
+      "pct_from_wma": 0.4
+    },
+    {
+      "symbol": "BRKR",
+      "name": "Bruker Corporation",
+      "pct_from_wma": 0.55
+    },
+    {
+      "symbol": "ALNY",
+      "name": "Alnylam Pharmaceuticals Inc.",
+      "pct_from_wma": 2.95
+    },
+    {
+      "symbol": "CRK",
+      "name": "Comstock Resources, Inc.",
+      "pct_from_wma": 3.8
+    },
+    {
+      "symbol": "DG",
+      "name": "Dollar General Corporation",
+      "pct_from_wma": 3.99
+    },
+    {
+      "symbol": "CAMP",
+      "name": "CAMP4 THERAPEUTICS CORPORATION",
+      "pct_from_wma": 4.16
+    },
+    {
+      "symbol": "BTDR",
+      "name": "Bitdeer Technologies Group",
+      "pct_from_wma": 12.94
     }
   ]
 }

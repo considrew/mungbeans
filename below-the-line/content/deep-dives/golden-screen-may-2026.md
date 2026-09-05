@@ -22,12 +22,12 @@ performance_price_current_c: "$39.60"
 performance_price_at_publish_d: "$33.46"
 performance_price_current_d: "$38.03"
 performance_price_at_publish_e: "$25.20"
-performance_price_current_e: "$27.06"
-performance_as_of: "2026-08-29"
+performance_price_current_e: "$26.49"
+performance_as_of: "2026-09-05"
 performance_since_b: "-5.0%"
 performance_since_c: "-11.3%"
 performance_since_d: "+13.7%"
-performance_since_e: "+7.4%"
+performance_since_e: "+5.1%"
 ---
 
 ## What This Is
