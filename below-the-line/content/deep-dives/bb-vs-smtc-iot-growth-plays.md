@@ -9,13 +9,13 @@ ticker_b: "SMTC"
 verdict: "mixed"
 verdict_label: "BB: Emerging Buy Case / SMTC: Wait"
 pct_below_200wma: "0"
-performance_since: "+24.4%"
+performance_since: "+23.9%"
 performance_price_at_publish: "$6.19"
-performance_price_current: "$7.70"
+performance_price_current: "$7.67"
 performance_price_at_publish_b: "$146.53"
-performance_as_of: "2026-09-05"
-performance_since_b: "-10.5%"
-performance_price_current_b: "$131.17"
+performance_as_of: "2026-09-12"
+performance_since_b: "+14.1%"
+performance_price_current_b: "$167.24"
 ---
 
 ## Why These Two Together
