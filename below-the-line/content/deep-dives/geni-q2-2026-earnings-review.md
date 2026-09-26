@@ -9,9 +9,9 @@ canonical_url: "/deep-dives/geni-q2-review/"
 verdict: "speculative-buy"
 verdict_label: "Constructive — the gate is GAAP, not the platform"
 performance_price_at_publish: "$7.59"
-performance_since: "-25.7%"
-performance_price_current: "$5.64"
-performance_as_of: "2026-09-19"
+performance_since: "-15.2%"
+performance_price_current: "$6.44"
+performance_as_of: "2026-09-26"
 ---
 
 The full review lives at [/deep-dives/geni-q2-review/](/deep-dives/geni-q2-review/).
