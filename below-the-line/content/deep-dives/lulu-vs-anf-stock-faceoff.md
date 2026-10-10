@@ -10,12 +10,12 @@ verdict: "deep-value"
 verdict_label: "Winner: LULU"
 pct_below_200wma: "50"
 performance_since: "-40.1%"
-performance_since_b: "+66.0%"
+performance_since_b: "+74.2%"
 performance_price_at_publish: "$157.78"
 performance_price_at_publish_b: "$81.86"
-performance_price_current: "$94.46"
-performance_price_current_b: "$135.91"
-performance_as_of: "2026-10-03"
+performance_price_current: "$94.50"
+performance_price_current_b: "$142.58"
+performance_as_of: "2026-10-10"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*
