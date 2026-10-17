@@ -8,10 +8,10 @@ ticker: "PATH"
 verdict: "deep-value"
 verdict_label: "Deep Value"
 pct_below_200wma: "30"
-performance_since: "+22.7%"
+performance_since: "+16.9%"
 performance_price_at_publish: "$10.99"
-performance_price_current: "$13.48"
-performance_as_of: "2026-10-10"
+performance_price_current: "$12.85"
+performance_as_of: "2026-10-17"
 ---
 
 ## The Setup

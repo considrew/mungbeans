@@ -9,11 +9,11 @@ ticker_b: "MRAM"
 verdict: "mixed"
 verdict_label: "NVEC: Wait / MRAM: Speculative"
 pct_below_200wma: "0"
-performance_since: "+26.8%"
+performance_since: "+10.5%"
 performance_price_at_publish: "$89.74"
-performance_price_current: "$113.82"
+performance_price_current: "$99.13"
 performance_price_at_publish_b: "$33.68"
-performance_as_of: "2026-10-10"
+performance_as_of: "2026-10-17"
 ---
 
 ## Why These Two Together
