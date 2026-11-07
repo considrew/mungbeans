@@ -8,10 +8,10 @@ ticker: "SIRI"
 verdict: "deep-value"
 verdict_label: "Deep Value — Munger-Grade Cash Cow"
 pct_below_200wma: "39.3"
-performance_since: "+40.3%"
+performance_since: "+56.7%"
 performance_price_at_publish: "$20.68"
-performance_price_current: "$29.01"
-performance_as_of: "2026-10-31"
+performance_price_current: "$32.40"
+performance_as_of: "2026-11-07"
 ---
 
 *A mungbeans.io forensic deep-dive — February 8, 2026*
