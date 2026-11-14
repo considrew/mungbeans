@@ -9,13 +9,13 @@ ticker_b: "APPF"
 verdict: "deep-value"
 verdict_label: "Winner: APPF"
 pct_below_200wma: "1"
-performance_since: "+17.6%"
-performance_since_b: "+33.8%"
+performance_since: "+19.8%"
+performance_since_b: "+30.1%"
 performance_price_at_publish: "$99.29"
 performance_price_at_publish_b: "$172.50"
-performance_price_current: "$116.75"
-performance_price_current_b: "$230.74"
-performance_as_of: "2026-11-07"
+performance_price_current: "$118.97"
+performance_price_current_b: "$224.34"
+performance_as_of: "2026-11-14"
 ---
 
 *A mungbeans.io stock faceoff — March 14, 2026*
