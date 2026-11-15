@@ -11,14 +11,28 @@ nothing, and say plainly what blocked you in your final message.
 
 ## 0. Setup
 
-Work in the `considrew/mungbeans` repository, from the repo root, starting from
-the latest `main`:
+Work in the `considrew/mungbeans` repository, from the repo root. The
+repository should be attached to this session with push access. Check that
+first, before spending any effort:
 
-    git fetch origin main && git checkout -B "$(git branch --show-current)" origin/main
-    pip install -q pandas yfinance
+    git push --dry-run origin HEAD:refs/heads/claude/deep-dive-access-check
 
-Stay on the `claude/*` branch this session was given. Never push to `main`; the
-publish workflow does that after its own checks.
+If that is refused (the git proxy reports the repository is not in the
+session's authorized set), stop now and report: "the scheduled task has no
+repository attached; add considrew/mungbeans to it in the Claude scheduled
+tasks settings." Do not write a piece that cannot be published.
+
+Work on a `claude/*` branch cut from the latest `main`. If the session was
+given one, use it. If you are on `main`, create one:
+
+    git fetch origin main
+    BR=$(git branch --show-current); case "$BR" in claude/*) ;; *) BR="claude/weekly-deep-dive-$(date -u +%Y-%m-%d)";; esac
+    git checkout -B "$BR" origin/main
+    python -m pip install -q pandas yfinance
+
+Use `python -m pip`, so the packages land in the interpreter that runs the
+scripts. Never push to `main`; the publish workflow does that after its own
+checks.
 
 If `below-the-line/scripts/deep_dive/submit.py` does not exist on `main`, the
 pipeline has not been merged yet: stop and say so.
@@ -65,10 +79,12 @@ request.
 
 ## 5. Confirm
 
-Check that the workflow run for your push succeeded (GitHub Actions tools, the
-"Weekly Deep Dive" workflow). It takes roughly five minutes. If it failed, read
-the failing step's log, fix the cause if it is in the article or meta.json,
-re-run `submit.py`, and push again. Two attempts at most.
+If you have GitHub tools that can read Actions runs, check that the "Weekly
+Deep Dive" run for your push succeeded. It takes roughly five minutes. If it
+failed, read the failing step's log, fix the cause if it is in the article or
+meta.json, re-run `submit.py`, and push again. Two attempts at most. If you
+have no such tools, say in your report that the publish run was not confirmed;
+a failed publish opens a GitHub issue on its own.
 
 Finish with a short report: ticker, title, verdict, price at publish, the live
 URL (`https://mungbeans.io/deep-dives/<ticker lowercase>/`), the three other
