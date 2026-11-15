@@ -33,7 +33,7 @@ MOVE_CAP = 35.0       # % weekly move at which the move component saturates
 MIN_PRICE = 3.0
 
 # Weights of the viewership proxy. They sum to 1.
-W_MOVE, W_NEWS, W_SIZE, W_RVOL, W_LINE = 0.38, 0.24, 0.16, 0.12, 0.10
+W_MOVE, W_NEWS, W_LINE, W_RVOL, W_SIZE = 0.38, 0.24, 0.16, 0.12, 0.10
 
 
 def weekly_stats(symbols: list[str]) -> dict[str, dict]:

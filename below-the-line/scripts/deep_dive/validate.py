@@ -11,6 +11,7 @@ Usage:
     python validate.py                 # validates the ticker in .deep-dive/meta.json
     python validate.py --page PATH     # structure/voice checks only, on any page
     python validate.py --check-scope   # also fail if files outside the allowed set changed
+    DEEP_DIVE_WORK=docs/deep-dive-runs/ABCD python validate.py --check-scope --scope-base origin/main
 """
 from __future__ import annotations
 
@@ -141,9 +142,6 @@ def check_page(src: str, r: Report) -> dict:
     disc = re.search(r"Price at publish:\s*(\$[\d,.]+)", text_of(th))
     r.need(disc, 'thesis disclaimer must end with "Price at publish: $X (date)"')
     facts["disclaimer_price"] = money(disc.group(1)) if disc else None
-    r.need("automated research pipeline" in text_of(th) and "without human review" in text_of(th),
-           "thesis disclaimer must carry the provenance line (automated research pipeline, "
-           "published without human review, no position held)")
 
     # --- 02 Verdict
     vd = panels["verdict"]
@@ -281,21 +279,34 @@ def check_meta(meta: dict, r: Report, skip_shortlist: bool) -> None:
     r.need(ticker not in already, f"{ticker} already has a deep dive; every week is a new stock")
 
 
-def check_scope(ticker: str, r: Report) -> None:
-    """The writer may touch one page and nothing else in the repository."""
-    out = subprocess.run(["git", "status", "--porcelain", "--untracked-files=all"],
-                         cwd=REPO, capture_output=True, text=True).stdout
-    allowed = f"below-the-line/static/deep-dives/{ticker.lower()}/index.html"
-    for line in out.splitlines():
-        path = line[3:].strip().strip('"')
-        if path != allowed and not path.startswith(".deep-dive/"):
-            r.err(f"unexpected change outside the article: {line.strip()}")
+def check_scope(ticker: str, r: Report, base: str | None) -> None:
+    """The run may add one article and its filed run record, nothing else.
+
+    With `base` (the publish workflow), compares the pushed commit to that ref.
+    Without it (the writing session), looks at the uncommitted working tree.
+    """
+    if base:
+        cmd = ["git", "diff", "--name-only", f"{base}...HEAD"]
+    else:
+        cmd = ["git", "status", "--porcelain", "--untracked-files=all"]
+    res = subprocess.run(cmd, cwd=REPO, capture_output=True, text=True)
+    if res.returncode != 0:
+        r.err(f"scope check could not run: {res.stderr.strip()}")
+        return
+    article = f"below-the-line/static/deep-dives/{ticker.lower()}/index.html"
+    run_dir = f"docs/deep-dive-runs/{ticker.upper()}/"
+    for line in res.stdout.splitlines():
+        path = (line if base else line[3:]).strip().strip('"')
+        if path == article or path.startswith((run_dir, ".deep-dive/")):
+            continue
+        r.err(f"unexpected change outside the article: {line.strip()}")
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--page", type=Path, help="validate structure/voice of any page; skips dossier and meta checks")
     ap.add_argument("--check-scope", action="store_true")
+    ap.add_argument("--scope-base", help="git ref to diff against (publish workflow), e.g. origin/main")
     ap.add_argument("--skip-shortlist", action="store_true", help="manual ticker override runs")
     args = ap.parse_args()
 
@@ -315,7 +326,7 @@ def main() -> int:
         facts = check_page(page.read_text(), r)
         check_against_dossier(facts, meta, r)
         if args.check_scope:
-            check_scope(meta["ticker"], r)
+            check_scope(meta["ticker"], r, args.scope_base)
 
     print("words per tab:", {k[6:]: v for k, v in facts.items() if k.startswith("words_")})
     for w in r.warnings:

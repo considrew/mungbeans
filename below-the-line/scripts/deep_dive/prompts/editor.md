@@ -75,8 +75,7 @@ prints PASS.
 Then decide whether this piece should be published. If you found a problem you
 could not fix (the central thesis rests on something unverifiable, the data is
 too thin for the format, the numbers do not reconcile), write
-`.deep-dive/HOLD` containing one paragraph explaining why. The workflow will
-stop and open an issue instead of publishing. Holding a weak piece is a good
-outcome.
+`.deep-dive/HOLD` containing one paragraph explaining why. Nothing will be
+published this week. Holding a weak piece is a good outcome.
 
 Print a short list of what you changed and the validator's last line.

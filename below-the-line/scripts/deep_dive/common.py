@@ -2,22 +2,36 @@
 
 Pipeline (see .github/workflows/weekly-deep-dive.yml):
 
+A Claude scheduled task (prompts/scheduled-task.md) does the writing, on the
+account's subscription. GitHub Actions does the publishing.
+
+  In the scheduled Claude session:
     select_candidates.py  -> .deep-dive/candidates.json   (deterministic shortlist)
     Claude (writer)       -> picks one, writes the page + .deep-dive/meta.json
     dossier.py TICKER     -> .deep-dive/dossier-TICKER.json (numbers Claude writes from)
     Claude (editor)       -> fresh-context fact check and voice pass
-    validate.py           -> hard gate; nothing publishes unless it exits 0
-    finalize.py           -> stub, redirect, selection log
+    submit.py             -> validates, files the run under docs/deep-dive-runs/TICKER/,
+                             commits; the session pushes its claude/* branch
+
+  In .github/workflows/weekly-deep-dive.yml, on that push:
+    validate.py           -> hard gate, re-run from the filed run; nothing
+                             publishes unless it exits 0
+    finalize.py           -> stub, redirect, selection log; then commit to main
+                             and deploy
 """
 from __future__ import annotations
 
 import json
+import os
 import re
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parents[2]          # below-the-line/
 REPO = SITE.parent
-WORK = REPO / ".deep-dive"                            # scratch, git-ignored
+# Scratch while writing (git-ignored). The publish workflow points this at the
+# filed run instead: DEEP_DIVE_WORK=docs/deep-dive-runs/<TICKER>.
+WORK = Path(os.environ.get("DEEP_DIVE_WORK") or REPO / ".deep-dive").resolve()
+RUNS = REPO / "docs" / "deep-dive-runs"               # committed record of each run
 
 STOCKS_JSON = SITE / "assets" / "data" / "stocks.json"
 CONTENT_DIR = SITE / "content" / "deep-dives"

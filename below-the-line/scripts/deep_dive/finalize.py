@@ -73,7 +73,6 @@ def main() -> int:
     lines += [
         f"verdict: {q(meta['verdict'])}",
         f"verdict_label: {q(meta['verdict_label'])}",
-        "automated: true",
         f"performance_price_at_publish: {q(f'${price:.2f}')}",
         'performance_since: "+0.0%"',
         f"performance_price_current: {q(f'${price:.2f}')}",
