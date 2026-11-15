@@ -1,0 +1,875 @@
+{
+  "generated_at": "2026-11-15T15:57:08+00:00",
+  "price_date": "2026-11-13",
+  "weights": {
+    "move": 0.38,
+    "news": 0.24,
+    "size": 0.1,
+    "rvol": 0.12,
+    "line": 0.16
+  },
+  "excluded_already_covered": [
+    "ADBE",
+    "BB",
+    "BMBL",
+    "CELH",
+    "CGEN",
+    "DIS",
+    "DPZ",
+    "FIS",
+    "GASS",
+    "GENI",
+    "GOOGL",
+    "HD",
+    "IRDM",
+    "LULU",
+    "NKE",
+    "NVEC",
+    "PAR",
+    "PATH",
+    "PYPL",
+    "SIRI",
+    "SPGI",
+    "TTD",
+    "ZM",
+    "ZTS"
+  ],
+  "candidates": [
+    {
+      "ticker": "HIMS",
+      "name": "Hims & Hers Health, Inc.",
+      "sector": "Healthcare - Telehealth & Wellness",
+      "market_cap": 4624956928,
+      "close": 19.73,
+      "close_date": "2026-11-13",
+      "prev_week_close": 26.0,
+      "week_return_pct": -24.12,
+      "max_day_move_pct": 16.61,
+      "rvol": 3.07,
+      "wma_200": 24.35,
+      "pct_from_wma": -19.0,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "What Hims & Hers Health Investors Missed Before The Fall",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/healthcare/articles/hims-hers-health-investors-missed-080809196.html"
+        },
+        {
+          "title": "LifeStance, Private Equity Rollup Turned Organic Growth Stock, Targets A Profound Void",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-13",
+          "url": "https://www.investors.com/research/the-new-america/lifestance-private-equity-rollup-turned-organic-grower-targets-a-profound-void/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "Should Hims & Hers Stock's Drop After Earnings Worry You?",
+          "publisher": "Trefis",
+          "date": "2026-11-13",
+          "url": "https://www.trefis.com/stock/hims/articles/624992/should-hims-hers-stocks-drop-after-earnings-worry-you/2026-11-13"
+        },
+        {
+          "title": "Hims & Hers Stock Just Plummeted 17%. Is the Stock a Buy Ahead of a Peptide Push?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-13",
+          "url": "https://www.fool.com/investing/2026/11/13/hims-and-hers-stock-drop-17-is-stock-buy-ahead-peptide-push/"
+        },
+        {
+          "title": "HIMS Partners With Lilly to Offer FDA-Approved Weight-Loss Drugs",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/healthcare/articles/hims-partners-lilly-offer-fda-151200800.html"
+        },
+        {
+          "title": "Hims & Hers Health, Inc. (HIMS) Is a Trending Stock: Facts to Know Before Betting on It",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/hims-hers-health-inc-hims-130003430.html"
+        },
+        {
+          "title": "The RFK Jr. Effect: Why GLP-1s Won't Be The Last 'Explosive' Story In Peptides. What Comes Next.",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-12",
+          "url": "https://www.investors.com/news/technology/hims-stock-peptides-rfk-jr-hhs-ruling/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "FDA Adds a Vision Warning to Zepbound Days After Lilly\u2019s November 6 Hims & Hers Deal",
+          "publisher": "TIKR",
+          "date": "2026-11-12",
+          "url": "https://www.tikr.com/blog/fda-adds-a-vision-warning-to-zepbound-days-after-lillys-november-6-hims-hers-deal?ref=yahoofinance&tlnk=yf-261112-mvwm5m3v"
+        },
+        {
+          "title": "Which Dates Could Move Hims & Hers Stock Most?",
+          "publisher": "Trefis",
+          "date": "2026-11-12",
+          "url": "https://www.trefis.com/stock/hims/articles/624759/which-dates-could-move-hims-hers-stock-most/2026-11-12"
+        },
+        {
+          "title": "What Does Progyny's Falling Multiple Really Say?",
+          "publisher": "Trefis",
+          "date": "2026-11-12",
+          "url": "https://www.trefis.com/stock/pgny/articles/624711/what-does-progynys-falling-multiple-really-say-2/2026-11-12"
+        }
+      ],
+      "viewership_score": 74.6,
+      "score_parts": {
+        "move": 0.69,
+        "rvol": 0.52,
+        "size": 0.22,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 1
+    },
+    {
+      "ticker": "AAON",
+      "name": "AAON, Inc.",
+      "sector": "Industrials - Building Products & Equipment",
+      "market_cap": 6617618432,
+      "close": 80.25,
+      "close_date": "2026-11-13",
+      "prev_week_close": 57.19,
+      "week_return_pct": 40.32,
+      "max_day_move_pct": 19.31,
+      "rvol": 1.72,
+      "wma_200": 85.13,
+      "pct_from_wma": -5.7,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "MarketBeat Week in Review \u2013 11/9 - 11/13",
+          "publisher": "MarketBeat",
+          "date": "2026-11-14",
+          "url": "https://www.marketbeat.com/articles/marketbeat-week-in-review-11-9-11-13/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "What Makes Aaon (AAON) a New Strong Buy Stock",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/makes-aaon-aaon-strong-buy-160003067.html"
+        },
+        {
+          "title": "Why AAON Stock Surged 37.8% This Week",
+          "publisher": "Motley Fool",
+          "date": "2026-11-13",
+          "url": "https://www.fool.com/coverage/market-movers/2026/11/13/why-aaon-stock-surged-378-this-week/"
+        },
+        {
+          "title": "Wall Street Analysts Think Aaon (AAON) Could Surge 34.26%: Read This Before Placing a Bet",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-analysts-think-aaon-135503057.html"
+        },
+        {
+          "title": "Are Construction Stocks Lagging  Quanta Services (PWR) This Year?",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/construction-stocks-lagging-quanta-services-134004672.html"
+        },
+        {
+          "title": "AAON (AAON) Stock Fair Value Moves Lower After Analysts Trim Targets",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/aaon-aaon-stock-fair-value-131203683.html"
+        },
+        {
+          "title": "New Strong Buy Stocks for November 13th",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/strong-buy-stocks-november-13th-075100623.html"
+        },
+        {
+          "title": "AAON (AAON) Stock May Look Reasonable Despite Raised Full Year Outlook",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/aaon-aaon-stock-may-look-061008287.html"
+        },
+        {
+          "title": "How Investors Are Reacting To AAON (AAON) Strong Q3 Earnings",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/investors-reacting-aaon-aaon-strong-051833666.html"
+        },
+        {
+          "title": "AAON (AAON) Could Be 33% Undervalued Following Its Expanded Credit Facility",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/aaon-aaon-could-33-undervalued-043535153.html"
+        }
+      ],
+      "viewership_score": 66.9,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.18,
+        "size": 0.27,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 2
+    },
+    {
+      "ticker": "MOD",
+      "name": "Modine Manufacturing Company",
+      "sector": "Consumer Cyclical - Auto Parts",
+      "market_cap": 7216694272,
+      "close": 135.66,
+      "close_date": "2026-11-13",
+      "prev_week_close": 96.61,
+      "week_return_pct": 40.42,
+      "max_day_move_pct": 27.86,
+      "rvol": 1.33,
+      "wma_200": 113.77,
+      "pct_from_wma": 19.2,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Modine Manufacturing (MOD) is Soaring by Double Digits \u2014 This Development May Explain Why",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/modine-manufacturing-mod-soaring-double-050520038.html"
+        },
+        {
+          "title": "Modine Manufacturing (MOD) In Reported Talks Over Data Center Cooling Business",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/modine-manufacturing-mod-reported-talks-011851223.html"
+        },
+        {
+          "title": "Samsung Eyeing Deal To Buy Data Center Supplier Modine; Stock Soars 35%",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-13",
+          "url": "https://www.investors.com/news/samsung-modine-manufacturing-ai-data-center/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "MOD Stock Jumps 30% as Samsung Reportedly Explores Acquisition of Modine",
+          "publisher": "Barchart",
+          "date": "2026-11-13",
+          "url": "https://www.barchart.com/story/news/8827949/mod-stock-jumps-30-as-samsung-reportedly-explores-acquisition-of-modine"
+        },
+        {
+          "title": "Modine Stock Just Soared 29% on a Report That Samsung Wants to Buy It. Is It Too Late to Buy?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-13",
+          "url": "https://www.fool.com/investing/2026/11/13/modine-stock-just-soared-29-on-a-report-that-samsung-wants-to-buy-it-is-it-too-late-to-buy/"
+        },
+        {
+          "title": "Options Bulls Target 2 Rallying AI Infrastructure Stocks",
+          "publisher": "Schaeffer's Investment Research",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/options/articles/options-bulls-target-2-rallying-173434672.html"
+        },
+        {
+          "title": "Samsung Wants to Buy an American AI Data Center Cooling Company",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-13",
+          "url": "https://247wallst.com/investing/2026/11/13/samsung-wants-to-buy-an-american-ai-data-center-cooling-company/"
+        },
+        {
+          "title": "Samsung in Talks to Buy Modine as Data Center Cooling Stock Surges 29%",
+          "publisher": "International Business Times",
+          "date": "2026-11-13",
+          "url": "https://www.ibtimes.com/samsung-talks-acquire-modine-data-center-cooling-3809734"
+        },
+        {
+          "title": "Modine Stock On Pace for Best Day in 17 Years as Samsung Eyes Data-Center Cooling Provider",
+          "publisher": "Barrons.com",
+          "date": "2026-11-13",
+          "url": "https://www.barrons.com/articles/modine-stock-samsung-ai-data-centers-d99df226?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Modine Stock Gets a Potential $5.6 Billion Takeover Catalyst From Samsung",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/modine-stock-gets-potential-5-114103515.html"
+        }
+      ],
+      "viewership_score": 65.9,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.08,
+        "size": 0.29,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 3
+    },
+    {
+      "ticker": "MUX",
+      "name": "McEwen Inc.",
+      "sector": "Basic Materials - Other Precious Metals & Mining",
+      "market_cap": 733052992,
+      "close": 11.9,
+      "close_date": "2026-11-13",
+      "prev_week_close": 15.48,
+      "week_return_pct": -23.13,
+      "max_day_move_pct": 16.51,
+      "rvol": 2.47,
+      "wma_200": 11.93,
+      "pct_from_wma": -0.3,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "McEwen (MUX) Stock Fair Value Moves Lower After Analysts Flag Cost And Execution Risks",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/mcewen-mux-stock-fair-value-211138610.html"
+        },
+        {
+          "title": "McEwen Inc (MUX) (Q3 2026) Earnings Call Highlights: Gold Bar Recovery and Los Azules Progress ...",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-11",
+          "url": "https://finance.yahoo.com/markets/commodities/articles/mcewen-inc-mux-q3-2026-010722686.html"
+        },
+        {
+          "title": "McEwen Q3 Earnings Call Highlights",
+          "publisher": "MarketBeat",
+          "date": "2026-11-10",
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-mcewen-q3-earnings-call-highlights-2026-11-10/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "McEwen Inc. (MUX) Q3 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-10",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/10/mcewen-inc-mux-q3-2026-earnings-call-transcript/"
+        },
+        {
+          "title": "McEwen Mining Inc. Q3 2026 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-10",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-mcewen-mining-inc-q3-2026-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "McEwen Mining Reports Q3 Loss and 14% Revenue Decline as Gold Production Falls",
+          "publisher": "InvestorsHub",
+          "date": "2026-11-10",
+          "url": "https://investorshub.advfn.com/market-news/article/39625/mcewen-mining-reports-q3-loss-and-14-revenue-decline-as-gold-production-falls"
+        },
+        {
+          "title": "McEwen (MUX) Reports Q3 Loss, Misses Revenue Estimates",
+          "publisher": "Zacks",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/mcewen-mux-reports-q3-loss-010502001.html"
+        },
+        {
+          "title": "McEwen: Q3 Earnings Snapshot",
+          "publisher": "Associated Press",
+          "date": "2026-11-09",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/mcewen-q3-earnings-snapshot-224738520.html"
+        }
+      ],
+      "viewership_score": 64.7,
+      "score_parts": {
+        "move": 0.66,
+        "rvol": 0.37,
+        "size": 0.0,
+        "line": 1.0,
+        "news": 0.8
+      },
+      "rank": 4
+    },
+    {
+      "ticker": "BABA",
+      "name": "Alibaba Group Holding Limited",
+      "sector": "Consumer Discretionary - E-Commerce",
+      "market_cap": 234793369600,
+      "close": 94.38,
+      "close_date": "2026-11-13",
+      "prev_week_close": 109.45,
+      "week_return_pct": -13.77,
+      "max_day_move_pct": 7.05,
+      "rvol": 1.45,
+      "wma_200": 103.7,
+      "pct_from_wma": -9.0,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Alibaba Slides 7% as Wu\u2019s Promise to \u201cAccelerate Further\u201d Runs Into U.S. Chip Curbs",
+          "publisher": "TIKR",
+          "date": "2026-11-15",
+          "url": "https://www.tikr.com/blog/alibaba-slides-7-as-wus-promise-to-accelerate-further-runs-into-u-s-chip-curbs?ref=yahoofinance&tlnk=yf-261115-qw87353j"
+        },
+        {
+          "title": "What Citi Expects From Alibaba (BABA) Before November 19",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/citi-expects-alibaba-baba-november-191647796.html"
+        },
+        {
+          "title": "Alibaba vs. Uber Technologies: Which Tech Platform Stock Is a Better Buy for 2027?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-14",
+          "url": "https://www.fool.com/coverage/better-buy/2026/11/14/alibaba-vs-uber-technologies-which-tech-platform-stock-is-a-better-buy-for-2027/"
+        },
+        {
+          "title": "Alibaba vs. Coupang: Which Asia Consumer Giant Is the Better Stock Buy for 2027?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-14",
+          "url": "https://www.fool.com/coverage/better-buy/2026/11/14/alibaba-vs-coupang-which-asia-consumer-giant-is-the-better-stock-buy-for-2027/"
+        },
+        {
+          "title": "Anthropic\u2019s $1.4 Trillion IPO Is Nov. 19. U.S. AI Giants Are Trouncing China 10-to-1",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-14",
+          "url": "https://247wallst.com/investing/2026/11/14/anthropics-1-4-trillion-ipo-is-nov-19-u-s-ai-giants-are-trouncing-china-10-to-1/"
+        },
+        {
+          "title": "\u201cVery Bad\u201d News for Alibaba: Nvidia\u2019s B300 Servers Now Cost Nearly $3 Million in China.",
+          "publisher": "TIKR",
+          "date": "2026-11-14",
+          "url": "https://www.tikr.com/blog/very-bad-news-for-alibaba-nvidias-b300-servers-now-cost-nearly-3-million-in-china?ref=yahoofinance&tlnk=yf-261114-gw9r3274"
+        },
+        {
+          "title": "Alibaba\u2019s (BABA) AI Growth Prospects Remain Masked by Short-Term Challenges",
+          "publisher": "TipRanks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/technology/ai/articles/alibaba-baba-ai-growth-prospects-205249409.html"
+        },
+        {
+          "title": "How Nvidia\u2019s Scandal Will Reverberate Across Washington",
+          "publisher": "Barrons.com",
+          "date": "2026-11-13",
+          "url": "https://www.barrons.com/articles/nvidia-export-controls-change-jensen-huang-scandal-5311bfd7?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Forget Nvidia: Curbs on China\u2019s Remote Chip Access Are a \u201cNightmare Scenario\u201d for Oracle",
+          "publisher": "TIKR",
+          "date": "2026-11-13",
+          "url": "https://www.tikr.com/blog/forget-nvidia-curbs-on-chinas-remote-chip-access-are-a-nightmare-scenario-for-oracle?ref=yahoofinance&tlnk=yf-261113-ff3m8w53"
+        },
+        {
+          "title": "Anthropic IPO: Buy Day One Or Wait?",
+          "publisher": "Trefis",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/anthropic-ipo-buy-day-one-121251355.html"
+        }
+      ],
+      "viewership_score": 64.2,
+      "score_parts": {
+        "move": 0.39,
+        "rvol": 0.11,
+        "size": 0.79,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 5
+    },
+    {
+      "ticker": "APPS",
+      "name": "Digital Turbine Inc.",
+      "sector": "Technology - Mobile Apps",
+      "market_cap": 927622976,
+      "close": 7.61,
+      "close_date": "2026-11-13",
+      "prev_week_close": 10.38,
+      "week_return_pct": -26.69,
+      "max_day_move_pct": 35.84,
+      "rvol": 3.32,
+      "wma_200": 5.92,
+      "pct_from_wma": 28.5,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Why Digital Turbine Stock Plunged This Week",
+          "publisher": "Motley Fool",
+          "date": "2026-11-13",
+          "url": "https://www.fool.com/coverage/market-movers/2026/11/13/why-digital-turbine-stock-plunged-this-week/"
+        },
+        {
+          "title": "APPS Q2 Earnings Beat Estimates on Strong Ad Growth, Guidance Up",
+          "publisher": "Zacks",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/apps-q2-earnings-beat-estimates-191200244.html"
+        },
+        {
+          "title": "4 Post-Earnings Losers Drawing Unusual Options Volume",
+          "publisher": "Schaeffer's Investment Research",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/options/articles/4-post-earnings-losers-drawing-183526713.html"
+        },
+        {
+          "title": "Digital Turbine Stock Sinks 35% as AI Investments Turn Earnings Into \u2018Deflated Balloon\u2019",
+          "publisher": "Barrons.com",
+          "date": "2026-11-10",
+          "url": "https://www.barrons.com/articles/digital-turbine-earnings-stock-price-ai-investments-7dc84eef?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Digital Turbine Q2 Earnings Call Highlights AI-Led Growth",
+          "publisher": "Zacks",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/technology/ai/articles/digital-turbine-q2-earnings-call-140000048.html"
+        },
+        {
+          "title": "Digital Turbine Plunges 23% Despite Revenue Beat as Margins Shrink and Profit Outlook Stays Put; Unity Slides 2%, AppLovin Dips",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-10",
+          "url": "https://247wallst.com/investing/2026/11/10/digital-turbine-plunges-23-despite-revenue-beat-as-margins-shrink-and-profit-outlook-stays-put-unity-slides-2-applovin-dips/"
+        },
+        {
+          "title": "APPS Stock Eyes Worst Day In Two Years \u2014 CEO Says AI-Driven Open Web Traffic Declines Shifting Ads To Apps",
+          "publisher": "Stocktwits",
+          "date": "2026-11-10",
+          "url": "https://stocktwits.com/news-articles/markets/equity/apps-stock-eyes-worst-day-in-two-years-ceo-says-ai-driven-open-web-traffic-declines-shifting-ads-to-apps/cNGuK30R97z"
+        },
+        {
+          "title": "Digital Turbine Inc (APPS) (Q2 2027) Earnings Call Highlights: Revenue Jumps 27% as AI and Data ...",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/digital-turbine-inc-apps-q2-051154793.html"
+        },
+        {
+          "title": "Digital Turbine (APPS) Q2 2027 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-10",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/09/digital-turbine-apps-q2-2027-earnings-call-transcript/"
+        },
+        {
+          "title": "Digital Turbine, Inc. Q2 2027 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-10",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-digital-turbine-inc-q2-2027-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        }
+      ],
+      "viewership_score": 63.3,
+      "score_parts": {
+        "move": 0.85,
+        "rvol": 0.58,
+        "size": 0.0,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 6
+    },
+    {
+      "ticker": "IONS",
+      "name": "Ionis Pharmaceuticals Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "market_cap": 4839800832,
+      "close": 29.06,
+      "close_date": "2026-11-13",
+      "prev_week_close": 39.42,
+      "week_return_pct": -26.28,
+      "max_day_move_pct": 21.36,
+      "rvol": 3.61,
+      "wma_200": 49.0,
+      "pct_from_wma": -40.7,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "The Strategy Exited Ionis Pharmaceuticals (IONS) Following Sequential Phase 3 Clinical Setbacks",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/healthcare/articles/strategy-exited-ionis-pharmaceuticals-ions-141044305.html"
+        },
+        {
+          "title": "What Moved Alnylam Stock?",
+          "publisher": "Trefis",
+          "date": "2026-11-12",
+          "url": "https://www.trefis.com/stock/alny/articles/624745/what-moved-alnylam-stock/2026-11-12"
+        },
+        {
+          "title": "Here's Why Ionis Pharmaceuticals' Stock is Down 28.5% Post Q3 Earnings",
+          "publisher": "Zacks",
+          "date": "2026-11-11",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/heres-why-ionis-pharmaceuticals-stock-160200707.html"
+        },
+        {
+          "title": "Ionis Pharmaceuticals Inc (IONS) (Q3 2026) Earnings Call Highlights: DAWNZERA Momentum and ...",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/healthcare/articles/ionis-pharmaceuticals-inc-ions-q3-110201512.html"
+        },
+        {
+          "title": "Ionis Pharmaceuticals, Inc. Q3 2026 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-10",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-ionis-pharmaceuticals-inc-q3-2026-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "Ionis Stock In Focus After Revenue Beat And Reaffirmed 2026 Outlook",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ionis-stock-focus-revenue-beat-021307310.html"
+        },
+        {
+          "title": "Ionis: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-10",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/09/ionis-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Ionis (IONS) Q3 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-09",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/09/ionis-ions-q3-2026-earnings-call-transcript/"
+        },
+        {
+          "title": "Ionis Is Among The Worst Performers In Its Industry Group Today. Here's Why.",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-09",
+          "url": "https://www.investors.com/news/technology/ionis-stock-ionis-pharmaceuticals-earnings-q3-2026/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "Mid-cap biotech catalysts: FDA dates, earnings, and pipeline data to watch",
+          "publisher": "Investing.com",
+          "date": "2026-11-09",
+          "url": "https://finance.yahoo.com/healthcare/articles/mid-cap-biotech-catalysts-fda-210612478.html"
+        }
+      ],
+      "viewership_score": 62.6,
+      "score_parts": {
+        "move": 0.75,
+        "rvol": 0.65,
+        "size": 0.23,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 7
+    },
+    {
+      "ticker": "PAYS",
+      "name": "Paysign, Inc.",
+      "sector": "Technology - Software - Infrastructure",
+      "market_cap": 541253312,
+      "close": 9.52,
+      "close_date": "2026-11-13",
+      "prev_week_close": 14.69,
+      "week_return_pct": -35.19,
+      "max_day_move_pct": 18.94,
+      "rvol": 2.69,
+      "wma_200": 4.77,
+      "pct_from_wma": 99.6,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Paysign: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-15",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/14/paysign-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Is Paysign (PAYS) a Solid Growth Stock? 3 Reasons to Think \"Yes\"",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/paysign-pays-solid-growth-stock-164502778.html"
+        },
+        {
+          "title": "All You Need to Know About Paysign (PAYS) Rating Upgrade to Buy",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/know-paysign-pays-rating-upgrade-160005013.html"
+        },
+        {
+          "title": "Down 39.2% in 4 Weeks, Here's Why Paysign (PAYS) Looks Ripe for a Turnaround",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/down-39-2-4-weeks-133502294.html"
+        },
+        {
+          "title": "PaySign, Inc. Q3 2026 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-10",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-paysign-inc-q3-2026-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "Paysign (PAYS) Q3 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-10",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/10/paysign-pays-q3-2026-earnings-call-transcript/"
+        },
+        {
+          "title": "PaySign Inc (PAYS) Q3 2026 Earnings Call Highlights: Record Revenue, Raised Guidance, and a ...",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-10",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/paysign-inc-pays-q3-2026-050946000.html"
+        },
+        {
+          "title": "Paysign Q3 Earnings Call Highlights",
+          "publisher": "MarketBeat",
+          "date": "2026-11-10",
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-paysign-q3-earnings-call-highlights-2026-11-09/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        }
+      ],
+      "viewership_score": 62.3,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.42,
+        "size": 0.0,
+        "line": 0.0,
+        "news": 0.8
+      },
+      "rank": 8
+    },
+    {
+      "ticker": "YETI",
+      "name": "YETI Holdings, Inc.",
+      "sector": "Consumer Discretionary - Outdoor Products",
+      "market_cap": 2867068160,
+      "close": 39.42,
+      "close_date": "2026-11-13",
+      "prev_week_close": 44.97,
+      "week_return_pct": -12.34,
+      "max_day_move_pct": 10.49,
+      "rvol": 3.25,
+      "wma_200": 40.17,
+      "pct_from_wma": -1.9,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "YETI Beat on Earnings, But Its Sales Tell a Different Story",
+          "publisher": "MarketBeat",
+          "date": "2026-11-14",
+          "url": "https://www.marketbeat.com/articles/yeti-beat-on-earnings-but-its-sales-tell-a-different-story/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "How Lowered Guidance At YETI Holdings (YETI) Has Changed Its Investment Story",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/lowered-guidance-yeti-holdings-yeti-231955888.html"
+        },
+        {
+          "title": "Why Did YETI Holdings (YETI) Shares Drop After Its Latest Update?",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/why-did-yeti-holdings-yeti-160954917.html"
+        },
+        {
+          "title": "YETI Holdings (YETI) Lowers Full Year Outlook After Mixed Third Quarter Results",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/yeti-holdings-yeti-lowers-full-141320844.html"
+        },
+        {
+          "title": "What YETI (YETI) Said on Its Q3 Earnings Call",
+          "publisher": "MarketBeat",
+          "date": "2026-11-13",
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-what-yeti-yeti-said-on-its-q3-earnings-call-2026-11-13/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "YETI Holdings, Inc. Q3 2026 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-12",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-yeti-holdings-inc-q3-2026-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "Yeti Is \u2018Cautious\u2019 Heading Into Holiday Sales Season. Investors Hate It.",
+          "publisher": "Barrons.com",
+          "date": "2026-11-12",
+          "url": "https://www.barrons.com/articles/yeti-earnings-stock-price-0ff30508?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "YETI: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-12",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/12/yeti-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Sector Update: Consumer Stocks Decline Late Afternoon",
+          "publisher": "MT Newswires",
+          "date": "2026-11-12",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/sector-consumer-stocks-decline-afternoon-204936730.html"
+        },
+        {
+          "title": "YETI (YETI) Q3 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-12",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/12/yeti-yeti-q3-2026-earnings-call-transcript/"
+        }
+      ],
+      "viewership_score": 61.7,
+      "score_parts": {
+        "move": 0.35,
+        "rvol": 0.56,
+        "size": 0.15,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 9
+    },
+    {
+      "ticker": "IREN",
+      "name": "Iris Energy Limited",
+      "sector": "Technology - Bitcoin Mining",
+      "market_cap": 7710573568,
+      "close": 18.17,
+      "close_date": "2026-11-13",
+      "prev_week_close": 21.64,
+      "week_return_pct": -16.04,
+      "max_day_move_pct": 7.85,
+      "rvol": 1.17,
+      "wma_200": 19.07,
+      "pct_from_wma": -4.7,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "IREN Is Down 63% in a Year. Is It Time to Sell, or Load Up?",
+          "publisher": "TIKR",
+          "date": "2026-11-15",
+          "url": "https://www.tikr.com/blog/iren-is-down-63-in-a-year-is-it-time-to-sell-or-load-up?ref=yahoofinance&tlnk=yf-261115-3wrpr5fw"
+        },
+        {
+          "title": "5 AI Infrastructure Stocks to Watch After CoreWeave\u2019s Earnings",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/technology/ai/articles/5-ai-infrastructure-stocks-watch-192326731.html"
+        },
+        {
+          "title": "Stock Market Today, Nov. 13: CoreWeave Falls Over 6% on AI-Cloud Selling and Reported $4 Billion Loan Talks",
+          "publisher": "Motley Fool",
+          "date": "2026-11-13",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/11/13/stock-market-today-nov-13-coreweave-falls-over-6-on-ai-cloud-selling-and-reported-usd4-billion-loan-talks/"
+        },
+        {
+          "title": "Nebius Plummeted 33% in 3 Months: High Target Price Predicting 220% Gains Holds Steady Ahead of Q3 Earnings as Firm Avoids Nvidia Entanglement",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-13",
+          "url": "https://247wallst.com/investing/2026/11/13/nebius-plummeted-33-in-3-months-high-target-price-predicting-220-gains-holds-steady-ahead-of-q3-earnings-as-firm-avoids-nvidia-entanglement/"
+        },
+        {
+          "title": "BC-Most Active Stocks",
+          "publisher": "Associated Press",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/bc-most-active-stocks-153018603.html"
+        },
+        {
+          "title": "CoreWeave and Nebius Lost a Friend in Huang. What Comes Next for Neoclouds.",
+          "publisher": "Barrons.com",
+          "date": "2026-11-13",
+          "url": "https://www.barrons.com/articles/coreweave-nebius-nvidia-huang-neocloud-stocks-9f8d90e7?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "IREN Is the Real Loser in Nvidia\u2019s Pullback: Nvidia Is Its $3.4 Billion Customer",
+          "publisher": "TIKR",
+          "date": "2026-11-13",
+          "url": "https://www.tikr.com/blog/iren-is-the-real-loser-in-nvidias-pullback-nvidia-is-its-3-4-billion-customer?ref=yahoofinance&tlnk=yf-261113-5fvvv3hr"
+        },
+        {
+          "title": "J.P. Morgan\u2019s $55 Target Says IREN\u2019s Selloff Went Too Far",
+          "publisher": "TIKR",
+          "date": "2026-11-13",
+          "url": "https://www.tikr.com/blog/j-p-morgans-55-target-says-irens-selloff-went-too-far?ref=yahoofinance&tlnk=yf-261113-x3mqg8jh"
+        },
+        {
+          "title": "Applied Digital Soars 20% in a Week. Jim Chanos Calls the Wait for Profits a \u201cNonsensical Narrative\u201d",
+          "publisher": "TIKR",
+          "date": "2026-11-13",
+          "url": "https://www.tikr.com/blog/applied-digital-soars-20-in-a-week-jim-chanos-calls-the-wait-for-profits-a-nonsensical-narrative?ref=yahoofinance&tlnk=yf-261113-p44qgxh4"
+        },
+        {
+          "title": "CRWV vs IREN vs NBIS: Which Neocloud Stock To Bet On After Q3 Reports Allay Durability Fears",
+          "publisher": "Stocktwits",
+          "date": "2026-11-13",
+          "url": "https://stocktwits.com/news-articles/markets/equity/crwv-vs-iren-vs-nbis-which-neocloud-stock-to-bet-on-after-q3-reports-allay-durability-fears/cNbbDRIR9OU"
+        }
+      ],
+      "viewership_score": 60.9,
+      "score_parts": {
+        "move": 0.46,
+        "rvol": 0.04,
+        "size": 0.3,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 10
+    }
+  ]
+}
