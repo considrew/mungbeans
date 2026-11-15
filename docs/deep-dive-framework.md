@@ -111,3 +111,38 @@ Errors get a dated `.note` block at the point of error ("Correction and update
 (4 Jul 2026). ...") explaining what was wrong, what changed, and what cuts the
 other way. Downstream numbers are corrected inline. Nothing is silently
 rewritten; the correction is part of the record.
+
+## The weekly automated deep dive
+
+One new stock a week is selected, written and published automatically. The
+writing is done by a Claude scheduled task on the account's Claude subscription
+(no API key anywhere in this repository). GitHub Actions does the publishing.
+
+The scheduled task fires Friday night US time, ahead of the Saturday data
+pipeline, so the weekly email teases the new piece and the performance tracker
+picks it up the same weekend. Its standing instruction is
+`below-the-line/scripts/deep_dive/prompts/scheduled-task.md`; edit that file on
+`main` to change the process.
+
+| Stage | Where | File | What it does |
+|---|---|---|---|
+| Shortlist | Claude session | `select_candidates.py` | Ranks the tracked universe by a viewership proxy: week's move (38%), news volume (24%), 200-week-line crossing (16%), relative volume (12%), company size (10%). Excludes every ticker that already has a deep dive, companies under $500M and stocks under $3. Top ten go to `.deep-dive/candidates.json`. |
+| Pick + write | Claude session | `prompts/writer.md` | Reads this framework, the GENI page and the template; picks one of the ten after reading the news; builds the numbers dossier (`dossier.py`); researches; writes the five-tab page and `.deep-dive/meta.json`. |
+| Edit | Claude subagent, fresh context | `prompts/editor.md` | Recomputes the tables and the DCF, verifies the load-bearing claims against primary sources, strengthens the bear case, enforces voice. Can write `.deep-dive/HOLD` to stop the week. |
+| Submit | Claude session | `submit.py` | Validates, files the run (meta, dossier, shortlist) under `docs/deep-dive-runs/<TICKER>/`, commits. The session pushes its `claude/*` branch. |
+| Gate | GitHub Actions | `validate.py` | Triggered by that push. Re-checks structure, the depth floor (GENI is the calibration), banned tics, publish price and share count against the dossier, and that the branch changed nothing but the article and its run record. Uses `main`'s copy of the validator. Non-zero exit publishes nothing. |
+| Publish | GitHub Actions | `finalize.py`, Hugo, Netlify | Stub, forced redirect, `data/deep_dive_log.json` entry, commit to `main`, deploy. |
+
+Rules specific to automated pieces:
+
+- The publish price and publish date are the last completed session's close,
+  taken from the dossier and nowhere else.
+- A held or failed week publishes nothing. A failed publish opens a GitHub
+  issue; a hold is reported in the scheduled session's final message.
+- After publish, an automated piece is under the same rules as any other:
+  the thesis tab is immutable, and errors get dated correction notes.
+
+To change what gets picked, edit the weights at the top of
+`select_candidates.py`. To change what gets written, edit the prompts. To raise
+or lower the bar, edit the floors at the top of `validate.py`. To publish a
+piece by hand, run Actions → Weekly Deep Dive with the branch that holds it.

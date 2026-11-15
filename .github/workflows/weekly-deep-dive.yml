@@ -1,0 +1,155 @@
+name: Weekly Deep Dive
+
+# Publishes the weekly deep dive. The writing is NOT done here: a Claude
+# scheduled task (below-the-line/scripts/deep_dive/prompts/scheduled-task.md)
+# picks the stock, writes and fact-checks the piece on the account's Claude
+# subscription, and pushes it to its claude/* branch with the run filed under
+# docs/deep-dive-runs/<TICKER>/. That push triggers this workflow, which
+# re-validates the piece, merges it to main, builds and deploys.
+#
+# No Anthropic API key or token is used anywhere in this repository.
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+    paths:
+      - 'docs/deep-dive-runs/**'
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch holding the submitted deep dive (claude/...)'
+        type: string
+        required: true
+
+concurrency:
+  group: weekly-deep-dive
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  DD: below-the-line/scripts/deep_dive
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Other work on claude/* branches can touch the runs folder; only a
+    # submit.py commit publishes.
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'Weekly deep dive:') }}
+
+    steps:
+      - name: Checkout the submitted branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch || github.ref }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Everything from here is deterministic. Nothing publishes unless the gate passes.
+      - name: Gate
+        id: gate
+        run: |
+          git fetch origin main
+          RUNS=$(git diff --name-only origin/main...HEAD -- docs/deep-dive-runs | cut -d/ -f3 | sort -u)
+          if [ "$(echo "$RUNS" | grep -c .)" != "1" ]; then
+            echo "::error::Expected exactly one new run under docs/deep-dive-runs, found: ${RUNS:-none}"; exit 1
+          fi
+          TICKER="$RUNS"
+          SLUG=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')
+          echo "ticker=$TICKER" >> "$GITHUB_OUTPUT"
+          echo "slug=$SLUG" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          # Validate with main's copy of the scripts, so a submitted branch
+          # cannot loosen its own gate.
+          git checkout origin/main -- $DD
+          DEEP_DIVE_WORK="docs/deep-dive-runs/$TICKER" \
+            python $DD/validate.py --check-scope --scope-base origin/main
+
+      - name: Move the piece onto main
+        run: |
+          git checkout -B publish origin/main
+          git checkout ${{ steps.gate.outputs.sha }} -- \
+            "below-the-line/static/deep-dives/${{ steps.gate.outputs.slug }}/index.html" \
+            "docs/deep-dive-runs/${{ steps.gate.outputs.ticker }}"
+
+      - name: Stub, redirect, selection log
+        run: DEEP_DIVE_WORK="docs/deep-dive-runs/${{ steps.gate.outputs.ticker }}" python $DD/finalize.py
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'  # keep in sync with netlify.toml HUGO_VERSION
+          extended: true
+
+      - name: Install Node dependencies
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site
+        run: |
+          cd below-the-line
+          hugo --minify
+          test -s public/deep-dives/${{ steps.gate.outputs.slug }}/index.html
+          grep -q "/deep-dives/${{ steps.gate.outputs.slug }}/" public/_redirects
+
+      - name: Commit and push to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "below-the-line/static/deep-dives/${{ steps.gate.outputs.slug }}/index.html"
+          git add "docs/deep-dive-runs/${{ steps.gate.outputs.ticker }}"
+          git add below-the-line/content/deep-dives/
+          git add below-the-line/static/_redirects
+          git add below-the-line/data/deep_dive_log.json
+          git commit -m "Weekly deep dive: ${{ steps.gate.outputs.ticker }} $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Rebuild on the pushed commit
+        run: |
+          cd below-the-line
+          hugo --minify
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './below-the-line/public'
+          production-deploy: true
+          deploy-message: "Weekly deep dive: ${{ steps.gate.outputs.ticker }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Summary
+        run: |
+          {
+            echo "### Deep dive: ${{ steps.gate.outputs.ticker }}"
+            echo "https://mungbeans.io/deep-dives/${{ steps.gate.outputs.slug }}/"
+            echo
+            python -c "import json;m=json.load(open('docs/deep-dive-runs/${{ steps.gate.outputs.ticker }}/meta.json'));print(m['title']);print();print(m['verdict_label']);print();print(m['selection_rationale'])"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # A week with no deep dive is acceptable. A silent one is not.
+      - name: Open an issue on failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "The weekly deep dive was submitted but did not publish."
+            echo
+            echo "Branch: \`${{ inputs.branch || github.ref_name }}\`"
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            echo "To retry after a fix: Actions → Weekly Deep Dive → Run workflow, with that branch."
+          } > /tmp/issue.md
+          gh issue create --title "Weekly deep dive failed to publish $(date +'%Y-%m-%d')" --body-file /tmp/issue.md

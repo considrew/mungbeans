@@ -25,3 +25,6 @@ Thumbs.db
 *.log
 health-dashboard-preview.html
 email-preview.html
+
+# Weekly deep dive scratch (candidates, dossier, meta)
+.deep-dive/

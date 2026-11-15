@@ -833,6 +833,11 @@ fcf_growing_below_line, health_chart
 10. Build: `hugo --minify`
 11. Deploy to Netlify via `nwtgck/actions-netlify@v3`
 
+### Weekly Deep Dive
+**File**: `.github/workflows/weekly-deep-dive.yml`
+
+**Trigger**: push to a `claude/**` branch that adds a run under `docs/deep-dive-runs/` (or manual). The piece itself is written by a Claude scheduled task on the Claude subscription, following `scripts/deep_dive/prompts/scheduled-task.md`; this workflow only re-validates it (`scripts/deep_dive/validate.py`), merges it to main, builds and deploys. No Anthropic API key is used. Full description in `docs/deep-dive-framework.md` ("The weekly automated deep dive").
+
 ### Micro Cap Innovation Screener
 **File**: `.github/workflows/microcap-screener.yml`
 
