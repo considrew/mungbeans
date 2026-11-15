@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KMCNBWBVVE');
+</script>
+<script src="/js/referral-events.js" defer></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{TICKER}} · Deep Dive — mungbeans</title>
+<meta name="description" content="{{META_DESCRIPTION}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -147,11 +157,14 @@
   </div>
 
   <div class="ticker-row">
-    <span class="tk">{{TICKER}}</span>
+    <a class="tk" href="/stocks/{{TICKER_LOWERCASE}}/" style="text-decoration:none">{{TICKER}}</a>
     <span class="nm">{{COMPANY_NAME}} · {{EXCHANGE}} · {{ONE_LINE_IDENTITY}}</span>
-    <span class="px"><b>${{CURRENT_PRICE}}</b> · cap <b>${{MARKET_CAP}}</b> · 52w {{WEEK52_LOW}}–{{WEEK52_HIGH}}</span>
+    <!-- data-publish is history and never changes. data-shares is the FULLY DILUTED count (plain integer).
+         data-since is the publish date (YYYY-MM-DD). The script at the bottom refreshes price, cap and the
+         since-publish figure live; the hardcoded values are the fallback. -->
+    <span class="px" id="livePx" data-symbol="{{TICKER}}" data-since="{{PUBLISH_DATE_ISO}}" data-publish="{{PUBLISH_PRICE}}" data-shares="{{DILUTED_SHARES_INTEGER}}"><b>${{PUBLISH_PRICE}}</b> · cap <b>${{MARKET_CAP}}</b></span>
   </div>
-  <div class="perf-since">published {{PUBLISH_DATE_SHORT}} at ${{PUBLISH_PRICE}} · <span class="g">{{PERF_SINCE}} since publish</span></div>
+  <div class="perf-since">published {{PUBLISH_DATE_SHORT}} at ${{PUBLISH_PRICE}} · <span class="g" id="livePerf">+0.0% since publish</span><span id="liveStamp"></span></div>
 
   <div class="tabs" id="tabs">
     <button class="tab active" data-p="thesis"><span class="n">01</span>Thesis</button>
@@ -204,7 +217,7 @@
     <h3>The Path From Here</h3>
     <!-- Close on evidence, the recognition-gap framing, and the checkpoint (next print). -->
 
-    <div class="note" style="margin-top:28px"><b>Disclaimer.</b> Not financial advice. Do your own research. All figures from company filings and public disclosures. Price at publish: ${{PUBLISH_PRICE}} ({{PUBLISH_DATE_LONG}}).</div>
+    <div class="note" style="margin-top:28px"><b>Disclaimer.</b> Not financial advice. Do your own research. All figures from company filings and public disclosures.{{PROVENANCE_LINE_IF_AUTOMATED}} Price at publish: ${{PUBLISH_PRICE}} ({{PUBLISH_DATE_LONG}}).</div>
     </div>
   </section>
 
@@ -295,6 +308,61 @@
     t.classList.add('active');
     document.querySelector(`[data-panel="${t.dataset.p}"]`).classList.add('active');
   }));
+</script>
+
+<script>
+// Live price for the masthead, using the same /.netlify/functions/quote proxy
+// the individual stock pages call. Server-side, CDN-cached, no API key. The
+// publish price stays hardcoded because it is history; only the current price
+// and the since-publish percentage are fetched, so the article cannot go stale
+// between builds.
+(function () {
+  var el = document.getElementById("livePx");
+  if (!el) return;
+  var symbol = el.dataset.symbol;
+  var publish = parseFloat(el.dataset.publish);
+  var shares = parseFloat(el.dataset.shares || "0");
+  var debt = parseFloat(el.dataset.netdebt || "0");
+
+  var since = el.dataset.since || "";
+
+  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol) +
+        (since ? "&since=" + encodeURIComponent(since) : ""))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (q) {
+      if (!q || !q.price) return;
+      var px = q.price;
+
+      // The publish price and share count above are in the terms that applied
+      // on the publish date. A split since then changes the unit, not the
+      // value: restate both so "since publish" measures the business rather
+      // than the share count. Market cap is unaffected either way, since price
+      // and shares move in opposite directions by the same factor.
+      var sf = (typeof q.splitFactor === "number" && isFinite(q.splitFactor)
+                && q.splitFactor > 0) ? q.splitFactor : 1;
+      if (sf !== 1) {
+        publish = publish / sf;
+        shares = shares * sf;
+      }
+      var parts = ["<b>$" + px.toFixed(2) + "</b>"];
+      if (shares > 0) {
+        var cap = px * shares;
+        parts.push("cap <b>$" + (cap / 1e9).toFixed(2) + "B</b>");
+        if (debt) parts.push("EV <b>$" + ((cap + debt) / 1e9).toFixed(2) + "B</b>");
+      }
+      el.innerHTML = parts.join(" · ");
+
+      var perf = document.getElementById("livePerf");
+      if (perf && publish > 0) {
+        var chg = (px / publish - 1) * 100;
+        perf.className = chg >= 0 ? "g" : "r";
+        perf.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(1) + "% since publish";
+      }
+      var stamp = document.getElementById("liveStamp");
+      if (stamp) stamp.textContent = " · live";
+    })
+    .catch(function () {});
+})();
 </script>
 </body>
 </html>

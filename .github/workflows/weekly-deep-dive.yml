@@ -1,0 +1,215 @@
+name: Weekly Deep Dive
+
+# One new stock every week, picked for likely readership from the week's price
+# move and news, researched and written by Claude to the GENI standard
+# (docs/deep-dive-framework.md), then validated, committed and deployed.
+#
+# Runs Friday night US time, after the close and before the Saturday 06:00 UTC
+# data pipeline, so the weekly email (which teases the newest deep dive) and
+# the performance tracker both pick the new piece up the same weekend.
+#
+# Needs one repository secret: ANTHROPIC_API_KEY (Claude Console key) or
+# CLAUDE_CODE_OAUTH_TOKEN (from `claude setup-token`, uses a Claude subscription).
+# Optional repository variable DEEP_DIVE_MODEL overrides the model.
+
+on:
+  schedule:
+    - cron: '0 1 * * 6'   # Sat 01:00 UTC = Fri 8pm ET (9pm during daylight time)
+  workflow_dispatch:
+    inputs:
+      ticker:
+        description: 'Force a ticker (skips the automatic pick). Leave empty for the normal run.'
+        type: string
+        default: ''
+      dry_run:
+        description: 'Write and validate, upload the draft as an artifact, publish nothing.'
+        type: boolean
+        default: true
+
+concurrency:
+  group: weekly-deep-dive
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+  id-token: write
+
+env:
+  DD: below-the-line/scripts/deep_dive
+  MODEL: ${{ vars.DEEP_DIVE_MODEL || 'claude-fable-5-2' }}
+  # Claude gets file tools, web research, and exactly two scripts. No git, no
+  # general shell: it reads untrusted web pages and its output is published.
+  CLAUDE_TOOLS: "Read,Write,Edit,Glob,Grep,WebSearch,WebFetch,Bash(python below-the-line/scripts/deep_dive/dossier.py *),Bash(python below-the-line/scripts/deep_dive/validate.py),Bash(python below-the-line/scripts/deep_dive/validate.py *),Bash(mkdir -p below-the-line/static/deep-dives/*),Bash(cp below-the-line/templates/deep-dive-v2-template.html below-the-line/static/deep-dives/*)"
+
+jobs:
+  deep-dive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas yfinance
+
+      - name: Build the shortlist
+        if: ${{ inputs.ticker == '' }}
+        run: python $DD/select_candidates.py
+
+      - name: Show the shortlist
+        if: ${{ inputs.ticker == '' }}
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d = json.load(open('.deep-dive/candidates.json'))
+          print(f"### Shortlist (prices as of {d['price_date']})\n")
+          print("| # | Ticker | Company | Week | RVOL | News | Score |")
+          print("|---|---|---|---|---|---|---|")
+          for c in d['candidates']:
+              print(f"| {c['rank']} | {c['ticker']} | {c['name']} | {c['week_return_pct']:+.1f}% "
+                    f"| {c['rvol']} | {len(c['headlines'])} | {c['viewership_score']} |")
+          PY
+
+      - name: Write the deep dive (Claude)
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Read below-the-line/scripts/deep_dive/prompts/writer.md and follow it exactly, start to finish.
+            ${{ inputs.ticker != '' && format('Ticker override: write this week''s deep dive on {0}. There is no candidates.json; skip Step 2 and run the validator with --skip-shortlist.', inputs.ticker) || '' }}
+          claude_args: |
+            --model ${{ env.MODEL }}
+            --max-turns 400
+            --allowedTools '${{ env.CLAUDE_TOOLS }}'
+
+      - name: Fact-check and edit (Claude, fresh context)
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: |
+            Read below-the-line/scripts/deep_dive/prompts/editor.md and follow it exactly, start to finish.
+            ${{ inputs.ticker != '' && 'This is a ticker-override run: pass --skip-shortlist to the validator.' || '' }}
+          claude_args: |
+            --model ${{ env.MODEL }}
+            --max-turns 300
+            --allowedTools '${{ env.CLAUDE_TOOLS }}'
+
+      # Everything below is deterministic. Nothing publishes unless this passes.
+      - name: Gate
+        id: gate
+        run: |
+          if [ -f .deep-dive/HOLD ]; then
+            echo "::error::The editor held the piece."; cat .deep-dive/HOLD; exit 1
+          fi
+          python $DD/validate.py --check-scope ${{ inputs.ticker != '' && '--skip-shortlist' || '' }}
+          TICKER=$(python -c "import json;print(json.load(open('.deep-dive/meta.json'))['ticker'].upper())")
+          echo "ticker=$TICKER" >> "$GITHUB_OUTPUT"
+          echo "slug=$(echo "$TICKER" | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Stub, redirect, selection log
+        run: python $DD/finalize.py
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'  # keep in sync with netlify.toml HUGO_VERSION
+          extended: true
+
+      - name: Install Node dependencies
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site
+        run: |
+          cd below-the-line
+          hugo --minify
+          test -s public/deep-dives/${{ steps.gate.outputs.slug }}/index.html
+          grep -q "/deep-dives/${{ steps.gate.outputs.slug }}/" public/_redirects
+
+      - name: Upload draft
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: deep-dive-${{ github.run_id }}
+          include-hidden-files: true
+          if-no-files-found: ignore
+          path: |
+            .deep-dive/
+            below-the-line/static/deep-dives/
+            !below-the-line/static/deep-dives/geni/
+            !below-the-line/static/deep-dives/geni-q2-review/
+            !below-the-line/static/deep-dives/par/
+
+      - name: Commit and push
+        if: ${{ github.event_name == 'schedule' || !inputs.dry_run }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add below-the-line/static/deep-dives/${{ steps.gate.outputs.slug }}/index.html
+          git add below-the-line/content/deep-dives/
+          git add below-the-line/static/_redirects
+          git add below-the-line/data/deep_dive_log.json
+          git commit -m "Weekly deep dive: ${{ steps.gate.outputs.ticker }} $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push
+
+      - name: Rebuild on the pushed commit
+        if: ${{ github.event_name == 'schedule' || !inputs.dry_run }}
+        run: |
+          cd below-the-line
+          hugo --minify
+
+      - name: Deploy to Netlify
+        if: ${{ github.event_name == 'schedule' || !inputs.dry_run }}
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './below-the-line/public'
+          production-deploy: true
+          deploy-message: "Weekly deep dive: ${{ steps.gate.outputs.ticker }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Summary
+        if: ${{ success() }}
+        run: |
+          {
+            echo "### Deep dive: ${{ steps.gate.outputs.ticker }}"
+            echo "https://mungbeans.io/deep-dives/${{ steps.gate.outputs.slug }}/"
+            echo
+            python -c "import json;m=json.load(open('.deep-dive/meta.json'));print(m['title']);print();print(m['verdict_label']);print();print(m['selection_rationale'])"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # A week with no deep dive is acceptable. A silent one is not.
+      - name: Open an issue on failure
+        if: ${{ failure() && github.event_name == 'schedule' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          {
+            echo "The weekly deep dive did not publish."
+            echo
+            echo "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            echo
+            if [ -f .deep-dive/HOLD ]; then echo "**Editor hold:**"; echo; cat .deep-dive/HOLD; echo; fi
+            echo "**Validator:**"
+            echo '```'
+            python $DD/validate.py 2>&1 | tail -40 || true
+            echo '```'
+            echo "The draft is attached to the run as an artifact. To retry: Actions → Weekly Deep Dive → Run workflow (untick dry run)."
+          } > /tmp/issue.md
+          gh issue create --title "Weekly deep dive failed $(date +'%Y-%m-%d')" --body-file /tmp/issue.md
