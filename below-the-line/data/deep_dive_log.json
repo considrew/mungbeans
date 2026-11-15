@@ -1,0 +1,106 @@
+[
+  {
+    "ticker": "HIMS",
+    "company": "Hims & Hers",
+    "published": "2026-11-13",
+    "price_at_publish": 19.73,
+    "url": "/deep-dives/hims/",
+    "stub": "hims-hers-hims-deep-dive.md",
+    "verdict": "value-trap",
+    "shortlist_rank": 1,
+    "viewership_score": 74.6,
+    "week_return_pct": -24.12,
+    "shortlist": [
+      "HIMS",
+      "AAON",
+      "MOD",
+      "MUX",
+      "BABA",
+      "APPS",
+      "IONS",
+      "PAYS",
+      "YETI",
+      "IREN"
+    ],
+    "selection_rationale": "HIMS topped the shortlist (score 74.6): down 24.1% on the week on 3x volume after a Q3 report with the first subscriber decline, a third EBITDA guidance cut and a Q4 revenue guide flat with Q3, plus five states joining the FTC suit, and it crossed below its 200-week line. It is the most recognisable name on the list with a live opportunity-or-trap debate and deep disclosure. The piece answers what the 49% revenue growth is made of and what the Eucalyptus deferred payments do to the share count. AAON and MOD rose on earnings and a takeover report; IONS fell on trial setbacks.",
+    "sources": [
+      {
+        "title": "Hims & Hers Q3 2026 Form 10-Q",
+        "url": "https://www.sec.gov/Archives/edgar/data/0001773751/000177375126000246/hims-20260930.htm"
+      },
+      {
+        "title": "Hims & Hers Q3 2026 earnings release (Form 8-K)",
+        "url": "https://www.sec.gov/Archives/edgar/data/0001773751/000177375126000242/hims-20260930x8xkearningsr.htm"
+      },
+      {
+        "title": "Hims & Hers FY2025 Form 10-K",
+        "url": "https://www.sec.gov/Archives/edgar/data/1773751/000177375126000022/hims-20251231.htm"
+      },
+      {
+        "title": "Hims & Hers Q3 2026 earnings call transcript (Motley Fool)",
+        "url": "https://www.fool.com/earnings/call-transcripts/2026/11/10/hims-hers-hims-q3-2026-earnings-call-transcript/"
+      },
+      {
+        "title": "Hims & Hers Q2 2026 results release",
+        "url": "https://investors.hims.com/news/news-details/2026/Hims--Hers-Health-Inc--Reports-Second-Quarter-2026-Financial-Results/default.aspx"
+      },
+      {
+        "title": "Hims & Hers executive management",
+        "url": "https://investors.hims.com/governance/executive-management/default.aspx"
+      },
+      {
+        "title": "FTC and seven states: amended complaint against Hims & Hers (PPC Land)",
+        "url": "https://ppc.land/hims-hers-faces-seven-states-as-five-join-ftc-privacy-and-billing-suit/"
+      },
+      {
+        "title": "Hims & Hers sinks on EBITDA guidance cut (TIKR)",
+        "url": "https://www.tikr.com/blog/hims-hers-sinks-9-on-ebitda-guidance-cut-as-ceo-says-hed-take-subscriber-losses-every-time"
+      },
+      {
+        "title": "Hims & Hers Q3: EPS miss, third EBITDA cut, first subscriber decline (Finviz)",
+        "url": "https://finviz.com/news/419702/hims-hers-accelerates-revenue-49-but-an-eps-miss-third-ebitda-cut-and-first-subscriber-decline-undercut-the-growth-story"
+      },
+      {
+        "title": "Why Hims & Hers stock just got destroyed, Feb 2026 (Motley Fool)",
+        "url": "https://www.fool.com/investing/2026/02/09/why-hims-hers-stock-just-got-destroyed"
+      },
+      {
+        "title": "Hims & Hers and Novo Nordisk end lawsuit, enter collaboration (AP via WTOP)",
+        "url": "https://wtop.com/national/2026/03/hims-hers-health-and-novo-nordisk-end-lawsuit-over-weight-loss-medications-enter-collaboration/"
+      },
+      {
+        "title": "Lilly and Hims & Hers expand access to FDA-approved Lilly medicines",
+        "url": "https://www.morningstar.com/news/pr-newswire/20261106de90839/lilly-and-hims-hers-expand-access-to-fda-approved-lilly-medicines"
+      },
+      {
+        "title": "FDA signals evolving stance on compounding of certain peptides (Goodwin)",
+        "url": "https://www.goodwinlaw.com/en/insights/blogs/2026/05/fda-signals-potentially-evolving-stance-toward-compounding-of-certain-peptides"
+      },
+      {
+        "title": "Hims & Hers to acquire Eucalyptus for up to $1.15B (Pulse 2.0)",
+        "url": "https://pulse2.com/hims-hers-health-to-acquire-eucalyptus-in-up-to-1-15-billion-cash-and-stock-deal"
+      },
+      {
+        "title": "LifeMD Q3 2026 results (Form 8-K, Ex. 99.1)",
+        "url": "https://www.sec.gov/Archives/edgar/data/0000948320/000149315226051397/ex99-1.htm"
+      },
+      {
+        "title": "Hims & Hers prices $350M convertible notes due 2032",
+        "url": "https://investors.hims.com/news/news-details/2026/Hims--Hers-Health-Inc--Prices-Upsized-350-Million-Convertible-Senior-Notes-Offering-to-Support-International-Expansion-and-Accelerate-AI-Driven-Platform-Investment/default.aspx"
+      },
+      {
+        "title": "Why did Hims & Hers drop ahead of results (Kalkine)",
+        "url": "https://kalkine.ca/news/healthcare/why-did-hims-hers-nysehims-drop-1177-ahead-of-results-then-slide-harder-after-hours"
+      },
+      {
+        "title": "Hims & Hers Q1 2026 results release",
+        "url": "https://investors.hims.com/news/news-details/2026/Hims--Hers-Health-Inc--Reports-First-Quarter-2026-Financial-Results/default.aspx"
+      },
+      {
+        "title": "Hims & Hers Q4 and FY2025 results release",
+        "url": "https://investors.hims.com/news/news-details/2026/Hims--Hers-Health-Inc--Reports-Fourth-Quarter-and-Full-Year-2025-Financial-Results/default.aspx"
+      }
+    ],
+    "logged_at": "2026-11-15T18:13:07+00:00"
+  }
+]
