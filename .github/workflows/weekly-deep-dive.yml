@@ -111,6 +111,9 @@ jobs:
           git add below-the-line/static/_redirects
           git add below-the-line/data/deep_dive_log.json
           git commit -m "Weekly deep dive: ${{ steps.gate.outputs.ticker }} $(date +'%Y-%m-%d')"
+          # The Hugo build rewrites tracked files (hugo_stats.json); drop those
+          # so the rebase has a clean tree.
+          git checkout -- .
           git pull --rebase origin main
           git push origin HEAD:main
 
