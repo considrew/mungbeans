@@ -92,8 +92,15 @@ def check_page(src: str, r: Report) -> dict:
     r.need("G-KMCNBWBVVE" in head, "GA4 tag missing from <head> (start from the template)")
     r.need("/js/referral-events.js" in head, "referral-events.js missing from <head>")
     r.need("Newsreader" in head and "IBM+Plex+Mono" in head, "template fonts missing")
+    r.need('rel="canonical"' in head, "canonical link missing from <head>")
+    r.need('property="og:title"' in head and 'property="og:description"' in head,
+           "Open Graph meta tags missing from <head>")
+    r.need('name="twitter:card"' in head, "Twitter Card meta tags missing from <head>")
+    r.need('application/ld+json' in head, "Article JSON-LD schema missing from <head>")
     r.need("/.netlify/functions/quote" in body, "live-price script missing")
     r.need('href="/"' in visible and "mungbeans" in visible, "masthead brand must link home")
+    r.need('name="deepdive-notify"' in visible, "mailing list signup form (deepdive-notify) missing")
+    r.need('rel="noopener sponsored"' in visible, "referral block (rel=\"noopener sponsored\") missing")
     r.need("A record of reasoning" in visible, "footer must carry the record-of-reasoning line")
 
     left = re.findall(r"\{\{[^}]*\}\}", visible + head)

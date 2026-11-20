@@ -98,8 +98,12 @@ peer comparison with two tables, and seven risks. That is the level of detail.
 ## Step 5. Write the page
 
 Copy the template to `below-the-line/static/deep-dives/<ticker>/index.html` and
-fill it. Keep the `<head>`, the CSS and both scripts exactly as they are. Remove
-every `{{PLACEHOLDER}}` and every HTML comment from the body.
+fill it. Keep the `<head>` (including canonical, Open Graph, Twitter Card and
+Article JSON-LD tags), the CSS, both scripts, the mailing-list signup section
+(`.dd-signup`) and the referral section (`.tool-rec`) intact. Remove every
+`{{PLACEHOLDER}}` and every HTML comment from the body. Avoid unescaped double
+quotes inside `{{ARTICLE_TITLE}}` and `{{META_DESCRIPTION}}` so the `<meta>`
+tags and JSON-LD stay valid.
 
 **01 Thesis.** The complete article, 5,000 to 7,000 words. Canonical order:
 Why This Takes A Full Read → The Company (history told as capital allocation) →
