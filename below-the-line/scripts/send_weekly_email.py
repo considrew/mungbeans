@@ -214,11 +214,56 @@ def latest_deep_dive() -> dict | None:
     return best[1] if best else None
 
 
-def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
+def load_weekly_highlights() -> dict:
+    """Extract WOW signals, top stacked dislocations, and +2σ Bean Score outliers from stocks.json."""
+    stocks_file = DATA_DIR / 'stocks.json'
+    out = {'wow': [], 'stacked': [], 'bean_cheap': []}
+    if not stocks_file.exists():
+        return out
+    try:
+        data = json.loads(stocks_file.read_text(encoding='utf-8'))
+    except Exception:
+        return out
+
+    stocks = data.get('stocks', [])
+    for s in stocks:
+        ws = s.get('wow_signal') or {}
+        if ws.get('wow'):
+            out['wow'].append(s)
+
+        dis = s.get('dislocation') or {}
+        stack = dis.get('dislocation_stack') or 0
+        if stack >= 3:
+            out['stacked'].append(s)
+
+        bs = (s.get('bean_score_data') or {}).get('current_score')
+        if bs is not None and bs >= 2.0 and s.get('has_positive_fcf'):
+            out['bean_cheap'].append(s)
+
+    out['wow'].sort(key=lambda x: (x.get('wow_signal') or {}).get('wow_score') or 0, reverse=True)
+    out['stacked'].sort(
+        key=lambda x: (
+            0 if (x.get('dislocation') or {}).get('quality_warning') else 1,
+            (x.get('dislocation') or {}).get('dislocation_stack') or 0,
+            (x.get('bean_score_data') or {}).get('current_score') or 0,
+        ),
+        reverse=True,
+    )
+    out['bean_cheap'].sort(
+        key=lambda x: (x.get('bean_score_data') or {}).get('current_score') or 0,
+        reverse=True,
+    )
+    return out
+
+
+def build_email_html(crossings: dict, unsub_url: str, highlights: dict | None = None) -> tuple[str, str]:
     """Build the email subject and HTML body from crossings data.
 
     Returns (subject, html_body).
     """
+    if highlights is None:
+        highlights = load_weekly_highlights()
+
     date_display = crossings.get('date_display', crossings['date'])
     slug = crossings.get('blog_slug', f"{crossings['date']}-weekly-signal-report")
     post_url = f"https://mungbeans.io/blog/{slug}/"
@@ -243,6 +288,30 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
     else:
         deep_dive_section = ''
 
+    # Active WOW (6EQUJ5) signals banner, if any fired this week.
+    wow_section = ""
+    wow_list = highlights.get('wow') or []
+    if wow_list:
+        wow_items = ""
+        for s in wow_list[:5]:
+            sym = s['symbol']
+            ws = s.get('wow_signal') or {}
+            score = ws.get('wow_score') or 0
+            pct = abs(s.get('pct_from_wma') or 0)
+            wow_items += f"""
+              <p style="margin:0 0 6px 0; font-size:14px; color:#e0e0e0;">
+                <a href="https://mungbeans.io/stocks/{sym.lower()}/" style="color:#e2b714; font-weight:700; text-decoration:none;">{sym}</a>
+                &middot; {s.get('name', sym)} &middot; <span style="color:#4ecdc4;">WOW {score:.1f}/10</span> &middot; {pct:.1f}% below line
+              </p>"""
+        wow_section = f"""
+          <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#16162a; border:1px solid #2a2a3e; border-left:2px solid #4ecdc4; border-radius:8px; margin:0 0 24px 0;">
+            <tr><td style="padding:16px 20px;">
+              <p style="margin:0 0 8px 0; font-family:monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#4ecdc4;">6EQUJ5 &middot; active WOW convergence</p>
+              {wow_items}
+              <p style="margin:10px 0 0 0;"><a href="https://mungbeans.io/screens/stacked-dislocations/" style="color:#4ecdc4; text-decoration:none; font-size:13px; font-weight:600;">View stacked dislocations &rarr;</a></p>
+            </td></tr>
+          </table>"""
+
     newly_below = crossings.get('newly_below', [])
     newly_recovered = crossings.get('newly_recovered', [])
 
@@ -254,7 +323,7 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
         rsi = s.get('rsi_14') or 0
         below_rows += f"""
         <tr>
-          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#e2b714; font-weight:600;">{symbol}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; font-weight:600;"><a href="https://mungbeans.io/stocks/{symbol.lower()}/" style="color:#e2b714; text-decoration:none;">{symbol}</a></td>
           <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ccc;">{name}</td>
           <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ff6b6b;">{pct:.1f}%</td>
           <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#aaa;">{rsi:.0f}</td>
@@ -267,7 +336,7 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
         pct = s.get('pct_from_wma', 0)
         recovered_rows += f"""
         <tr>
-          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#e2b714; font-weight:600;">{symbol}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; font-weight:600;"><a href="https://mungbeans.io/stocks/{symbol.lower()}/" style="color:#e2b714; text-decoration:none;">{symbol}</a></td>
           <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ccc;">{name}</td>
           <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#4ecdc4;">+{pct:.1f}%</td>
         </tr>"""
@@ -299,6 +368,37 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
           {recovered_rows}
         </table>"""
 
+    # Top Bean Score +2σ FCF-yield dislocations (compact 5-row highlight)
+    bean_section = ""
+    bean_list = highlights.get('bean_cheap') or []
+    if bean_list:
+        bean_rows = ""
+        for s in bean_list[:5]:
+            sym = s['symbol']
+            name = s.get('name', sym)
+            score = (s.get('bean_score_data') or {}).get('current_score') or 0
+            fcf_y = s.get('fcf_yield')
+            fcf_str = f"{fcf_y:.1f}%" if fcf_y is not None else "—"
+            bean_rows += f"""
+            <tr>
+              <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; font-weight:600;"><a href="https://mungbeans.io/stocks/{sym.lower()}/" style="color:#e2b714; text-decoration:none;">{sym}</a></td>
+              <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#ccc;">{name}</td>
+              <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#4ecdc4;">+{score:.1f}&sigma;</td>
+              <td style="padding:8px 12px; border-bottom:1px solid #2a2a3e; color:#aaa;">{fcf_str}</td>
+            </tr>"""
+        bean_section = f"""
+        <p style="margin:26px 0 6px 0; font-size:18px; color:#ffffff; font-weight:600;">Top Bean Score Dislocations (+2&sigma;)</p>
+        <p style="margin:0 0 12px 0; font-size:13px; color:#888;">{len(bean_list)} positive-FCF stocks trading at least 2&sigma; cheaper than their own FCF-yield baseline. <a href="https://mungbeans.io/screens/bean-score-deep-value/" style="color:#e2b714; text-decoration:none;">See all {len(bean_list)} &rarr;</a></p>
+        <table width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+          <tr style="color:#888; font-size:12px; text-transform:uppercase;">
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Ticker</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Name</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">Bean</td>
+            <td style="padding:8px 12px; border-bottom:2px solid #2a2a3e;">FCF Yield</td>
+          </tr>
+          {bean_rows}
+        </table>"""
+
     subject = f"Weekly Signal Report — {date_display}"
 
     html = f"""<!DOCTYPE html>
@@ -314,12 +414,15 @@ def build_email_html(crossings: dict, unsub_url: str) -> tuple[str, str]:
         </td></tr>
         <tr><td style="color:#e0e0e0; font-size:16px; line-height:1.6;">
           <p style="margin:0 0 8px 0; font-size:22px; color:#ffffff; font-weight:600;">Weekly Signal Report</p>
-          <p style="margin:0 0 20px 0; color:#888; font-size:14px;">{date_display} — 200-week moving average crossings</p>
+          <p style="margin:0 0 20px 0; color:#888; font-size:14px;">{date_display} — 200-week moving average crossings &amp; dislocations</p>
           {deep_dive_section}
+          {wow_section}
           {below_section}
           {recovered_section}
+          {bean_section}
           <p style="margin:28px 0 0 0;">
             {'<a href="' + post_url + '" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">View Full Report</a>' if blog_generated else '<a href="https://mungbeans.io/stocks/" style="display:inline-block; background-color:#e2b714; color:#1a1a2e; text-decoration:none; padding:12px 28px; border-radius:6px; font-weight:600; font-size:15px;">Browse All Stocks</a>'}
+            <a href="https://mungbeans.io/screens/" style="display:inline-block; color:#e2b714; text-decoration:none; padding:12px 18px; font-weight:600; font-size:14px;">Browse Weekly Screens &rarr;</a>
           </p>
         </td></tr>
         <tr><td style="padding:32px 0 0 0;">
@@ -388,9 +491,12 @@ def send_emails(crossings: dict, subscribers: list[str]):
     failed = 0
     failed_recipients = []
 
+    highlights = load_weekly_highlights()
+    print(f"Highlights: {len(highlights['wow'])} WOW, {len(highlights['bean_cheap'])} Bean Score +2σ")
+
     for recipient in subscribers:
         unsub_url = f"https://mungbeans.io/.netlify/functions/unsubscribe?email={urllib.parse.quote(recipient)}"
-        subject, html = build_email_html(crossings, unsub_url)
+        subject, html = build_email_html(crossings, unsub_url, highlights)
 
         payload = json.dumps({
             "from": {"address": zoho_email, "name": "mungbeans.io"},

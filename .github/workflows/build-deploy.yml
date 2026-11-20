@@ -1,27 +1,51 @@
 name: Weekly Stock Data Update and Deploy
 
+# Consolidated Saturday pipeline. Runs all weekly data jobs in strict order,
+# builds and deploys Hugo ONCE to Netlify, and then sends the weekly email
+# so every signal (200WMA crossings, fresh Bean Scores, Bean Score tracking,
+# Micro Cap screener, and latest deep dive) is live before the email lands.
+#
+# Individual workflows (bean-score.yml, microcap-screener.yml, weekly-email.yml)
+# remain available via workflow_dispatch for targeted manual reruns.
+
 on:
   schedule:
     - cron: '0 6 * * 6'
   workflow_dispatch:
     inputs:
       skip_blog:
-        description: 'Skip blog post generation'
+        description: 'Skip weekly blog post generation'
         type: boolean
         default: true
+      skip_bean_score:
+        description: 'Skip Bean Score + tracking update'
+        type: boolean
+        default: false
+      skip_microcap:
+        description: 'Skip Micro Cap Innovation Screener'
+        type: boolean
+        default: false
+      send_email:
+        description: 'Send weekly email after deploy (manual runs default false)'
+        type: boolean
+        default: false
+
+concurrency:
+  group: weekly-saturday-pipeline
+  cancel-in-progress: false
+
+permissions:
+  contents: write
 
 jobs:
-  update-and-deploy:
+  update-stocks:
+    name: 1. Update Stocks & Deep-Dive Performance
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - name: Pull latest changes
-        run: git pull origin main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,22 +67,166 @@ jobs:
         continue-on-error: true
         run: python scripts/update_deep_dive_performance.py
 
-      - name: Commit and push updated data
+      - name: Commit and push updated stock data
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add below-the-line/assets/data/stocks.json
           git add -f below-the-line/assets/data/stocks_baseline.json || true
           git add below-the-line/assets/data/crossings.json
-          git add -f below-the-line/assets/data/bean_score_latest.json || true
-          git add -f below-the-line/assets/data/bean_score_alerts.json || true
-          git add -f below-the-line/assets/data/bean_score_history.json || true
-          git add below-the-line/assets/data/microcap_screener.json || true
           git add below-the-line/content/blog/
           git add below-the-line/content/deep-dives/
           git diff --staged --quiet || git commit -m "Update stock data + weekly blog $(date +'%Y-%m-%d')"
           git pull --rebase origin main
           git push
+
+  bean-score:
+    name: 2. Bean Score + Out-of-Sample Tracking
+    needs: update-stocks
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.skip_bean_score }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas yfinance
+
+      - name: Run Bean Score computation
+        run: |
+          cd below-the-line/scripts
+          python -c "
+          import json, sys, os
+          sys.path.insert(0, os.getcwd())
+          from bean_score import weekly_bean_score_snapshot
+
+          with open('../assets/data/stocks.json') as f:
+              data = json.load(f)
+          tickers = [s['symbol'] for s in data.get('stocks', [])]
+          print(f'Computing Bean Scores for {len(tickers)} tickers...')
+          result = weekly_bean_score_snapshot(tickers, verbose=True)
+          print(f'Scored: {result[\"n_scored\"]}/{result[\"n_attempted\"]}')
+          "
+
+      - name: Compute Bean Score out-of-sample tracking
+        continue-on-error: true
+        run: |
+          cd below-the-line
+          python scripts/bean_score_tracking.py --verbose
+
+      - name: Sync Bean Score data to static dir
+        run: |
+          cp below-the-line/assets/data/bean_score_latest.json below-the-line/static/data/bean_score_latest.json
+          cp below-the-line/assets/data/bean_score_alerts.json below-the-line/static/data/bean_score_alerts.json
+          cp below-the-line/assets/data/bean_score_history.json below-the-line/static/data/bean_score_history.json
+          if [ -f below-the-line/assets/data/bean_score_tracking.json ]; then
+            cp below-the-line/assets/data/bean_score_tracking.json below-the-line/static/data/bean_score_tracking.json
+          fi
+
+      - name: Merge fresh Bean Score levels into stocks.json
+        run: |
+          cd below-the-line
+          python - <<'PY'
+          import sys, json, collections
+          sys.path.insert(0, 'scripts')
+          from bean_score_levels import generate_bean_score_display
+
+          disp = generate_bean_score_display(verbose=False)
+          if not disp:
+              print("ERROR: no display records generated; refusing to touch stocks.json")
+              sys.exit(1)
+
+          path = 'assets/data/stocks.json'
+          data = json.load(open(path))
+          before = len(data['stocks'])
+          merged = 0
+          for s in data['stocks']:
+              if s['symbol'] in disp:
+                  s['bean_score_data'] = disp[s['symbol']]
+                  merged += 1
+
+          if merged < len(disp) * 0.5:
+              print(f"ERROR: only {merged} merged from {len(disp)} records; refusing to write")
+              sys.exit(1)
+
+          json.dump(data, open(path, 'w'), separators=(',', ':'))
+          after = len(json.load(open(path))['stocks'])
+          assert after == before, f"stock count changed {before} -> {after}"
+
+          ca = collections.Counter(
+              str((s.get('bean_score_data') or {}).get('computed_at'))[:10]
+              for s in data['stocks'] if s.get('bean_score_data'))
+          print(f"Merged Bean Score levels into {merged} of {before} stocks")
+          print(f"computed_at distribution: {ca.most_common(3)}")
+          PY
+
+      - name: Commit and push Bean Score data
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f below-the-line/assets/data/stocks.json || true
+          git add -f below-the-line/assets/data/bean_score_latest.json || true
+          git add -f below-the-line/assets/data/bean_score_alerts.json || true
+          git add -f below-the-line/assets/data/bean_score_history.json || true
+          git add -f below-the-line/assets/data/bean_score_tracking.json || true
+          git add -f below-the-line/static/data/bean_score_latest.json || true
+          git add -f below-the-line/static/data/bean_score_alerts.json || true
+          git add -f below-the-line/static/data/bean_score_history.json || true
+          git add -f below-the-line/static/data/bean_score_tracking.json || true
+          git diff --staged --quiet || git commit -m "Weekly Bean Score update $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push
+
+  microcap-screener:
+    name: 3. Micro Cap Innovation Screener
+    needs: [update-stocks, bean-score]
+    if: ${{ always() && needs.update-stocks.result == 'success' && (github.event_name != 'workflow_dispatch' || !inputs.skip_microcap) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install pandas yfinance
+
+      - name: Run micro cap screener
+        run: |
+          cd below-the-line
+          python scripts/microcap/microcap_innovation_screener_v2.py
+
+      - name: Commit and push microcap results
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add below-the-line/assets/data/microcap_screener.json
+          git diff --staged --quiet || git commit -m "Update micro cap screener results [$(date +%Y-%m-%d)]"
+          git pull --rebase origin main
+          git push
+
+  build-and-deploy:
+    name: 4. Build Hugo & Deploy Once to Netlify
+    needs: [update-stocks, bean-score, microcap-screener]
+    if: ${{ always() && needs.update-stocks.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
@@ -83,4 +251,30 @@ jobs:
           production-deploy: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  send-weekly-email:
+    name: 5. Send Weekly Signal Email
+    needs: build-and-deploy
+    if: ${{ success() && (github.event_name != 'workflow_dispatch' || inputs.send_email) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Send weekly email
+        run: |
+          cd below-the-line
+          python scripts/send_weekly_email.py
+        env:
+          ZOHO_EMAIL: ${{ secrets.ZOHO_EMAIL }}
+          ZEPTOMAIL_API_TOKEN: ${{ secrets.ZEPTOMAIL_API_TOKEN }}
+          NETLIFY_API_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

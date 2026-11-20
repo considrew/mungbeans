@@ -1,10 +1,10 @@
-name: Weekly Bean Score Update
+name: Weekly Bean Score Update (Manual)
+
+# Scheduled Saturday runs are orchestrated by build-deploy.yml so Hugo builds
+# and deploys once after all weekly data updates finish. Keep this workflow
+# for manual one-off reruns.
 
 on:
-  schedule:
-    # Every Saturday at 10am UTC, after the 06:00 stock update. Weekly
-    # snapshots feed the Bean Score signal-accuracy tracker.
-    - cron: '0 10 * * 6'
   workflow_dispatch:
 
 jobs:
@@ -48,12 +48,22 @@ jobs:
           print(f'Scored: {result[\"n_scored\"]}/{result[\"n_attempted\"]}')
           "
 
+      - name: Compute Bean Score out-of-sample tracking
+        if: steps.gate.outputs.run == 'true'
+        continue-on-error: true
+        run: |
+          cd below-the-line
+          python scripts/bean_score_tracking.py --verbose
+
       - name: Sync bean score data to static dir (for dashboard)
         if: steps.gate.outputs.run == 'true'
         run: |
           cp below-the-line/assets/data/bean_score_latest.json below-the-line/static/data/bean_score_latest.json
           cp below-the-line/assets/data/bean_score_alerts.json below-the-line/static/data/bean_score_alerts.json
           cp below-the-line/assets/data/bean_score_history.json below-the-line/static/data/bean_score_history.json
+          if [ -f below-the-line/assets/data/bean_score_tracking.json ]; then
+            cp below-the-line/assets/data/bean_score_tracking.json below-the-line/static/data/bean_score_tracking.json
+          fi
 
       # The weekly stock update runs with SKIP_BEAN_SCORE=true and merges
       # whatever bean_score_latest.json is on disk, which is the PREVIOUS
@@ -107,9 +117,11 @@ jobs:
           git add -f below-the-line/assets/data/bean_score_latest.json || true
           git add -f below-the-line/assets/data/bean_score_alerts.json || true
           git add -f below-the-line/assets/data/bean_score_history.json || true
+          git add -f below-the-line/assets/data/bean_score_tracking.json || true
           git add -f below-the-line/static/data/bean_score_latest.json || true
           git add -f below-the-line/static/data/bean_score_alerts.json || true
           git add -f below-the-line/static/data/bean_score_history.json || true
+          git add -f below-the-line/static/data/bean_score_tracking.json || true
           git diff --staged --quiet || git commit -m "Weekly Bean Score update $(date +'%Y-%m-%d')"
           git pull --rebase origin main
           git push
