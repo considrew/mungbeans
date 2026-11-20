@@ -13,7 +13,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Stocks - 200-Week Moving Average Screener | mungbeans.io</title>
-  <meta name="description" content="Screen 1,700+ stocks against their 200-week moving average. Filter by signal status, insider buying, free cash flow trends, Buffett quality, and Dividend Aristocrats. Updated weekly.">
+  <meta name="description" content="Screen ~2,000 stocks against their 200-week moving average. Filter by signal status, Bean Score, insider buying, free cash flow trends, Buffett quality, and Dividend Aristocrats. Updated weekly.">
   <link rel="canonical" href="{{ .Permalink }}">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,7 +34,7 @@
 
   <main class="stocks-list-page">
     <h1>All Stocks</h1>
-    <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}.</p>
+    <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}. <a href="/screens/">Browse pre-built weekly screens &rarr;</a></p>
 
     {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-list") }}
 

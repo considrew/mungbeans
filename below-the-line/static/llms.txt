@@ -1,0 +1,41 @@
+# mungbeans.io
+
+> Independent, ad-free equity research and weekly stock screening around the 200-week moving average, FCF-yield dislocations (Bean Score), micro-cap innovation, and forensic single-stock deep dives. Updated every Saturday after Friday market close.
+
+## Core Research Sections
+
+- [Homepage](https://mungbeans.io/): Weekly summary of ~2,000 tracked stocks against their 200-week moving average, latest deep dives, and actionable value zones.
+- [All Stocks Screener](https://mungbeans.io/stocks/): Full interactive screener covering ~2,000 US equities with 200WMA distance, 14-week RSI, historical touch returns, Bean Score, insider buying, share buybacks, and Dislocation Stack.
+- [Stock Screens Index](https://mungbeans.io/screens/): Pre-built, static, weekly-updated stock lists filtered by quality, cash flow, insider buying, valuation dislocation, and momentum.
+- [Deep Dives](https://mungbeans.io/deep-dives/): Five-tab forensic single-stock theses (Thesis, Verdict, Overhangs, Numbers, Bear Case) with immutable publish prices and live performance tracking.
+- [Weekly Signal Reports](https://mungbeans.io/blog/): Saturday summaries of every stock that newly crossed below or recovered above its 200-week moving average.
+- [Micro Cap Innovation Screener](https://mungbeans.io/microcaps/): Sub-$500M innovation screen scoring cash runway, R&D intensity, patent activity, and revenue inflection.
+- [The Book](https://mungbeans.io/book/): Live real-money portfolio and dated call ledger tracked transparently against SPY.
+- [Tools I Pay For](https://mungbeans.io/tools/): Complete list of referral links on mungbeans.io with disclosures and honest limits. The site carries no display advertising.
+
+## Live Stock Screens (Updated Weekly)
+
+- [Large-Cap Stocks Below 200WMA](https://mungbeans.io/screens/large-cap-below-200wma/): Companies with $10B+ market cap trading below their 200-week moving average.
+- [Buffett Quality Below 200WMA](https://mungbeans.io/screens/buffett-quality-below-200wma/): ROE > 15%, debt-to-equity < 50%, positive free cash flow, profitable, and below the 200-week line.
+- [Dividend Aristocrats Below 200WMA](https://mungbeans.io/screens/dividend-aristocrats-below-200wma/): 25+ year dividend growers currently below their 200-week moving average.
+- [Conviction Insider Buying Below 200WMA](https://mungbeans.io/screens/insider-buying-below-200wma/): Stocks below the 200-week line with $500K+ open-market SEC Form 4 insider purchases in the last 12 months.
+- [Growing Free Cash Flow Below 200WMA](https://mungbeans.io/screens/growing-fcf-below-200wma/): Companies expanding free cash flow while trading below their 200-week moving average.
+- [Wide-Moat Stocks Below 200WMA](https://mungbeans.io/screens/wide-moat-below-200wma/): Gross margin > 40% and ROE > 15% while below the 200-week moving average.
+- [Share Cannibals Below 200WMA](https://mungbeans.io/screens/share-cannibals-below-200wma/): Companies that reduced shares outstanding by 5%+ over 3 years while trading below the 200-week line.
+- [Oversold Stocks Below 200WMA (RSI < 30)](https://mungbeans.io/screens/oversold-below-200wma/): Stocks below their 200-week moving average with 14-week RSI below 30.
+- [Small-Cap Value Multibaggers Below 200WMA](https://mungbeans.io/screens/yartseva-multibaggers-below-200wma/): Sub-$2B companies with positive equity, FCF yield >= 5%, and book-to-market >= 0.4 below the 200-week line.
+- [Approaching 200WMA (Within 5%)](https://mungbeans.io/screens/approaching-200wma/): Watchlist of stocks sitting 0% to 5% above their 200-week moving average.
+- [Bean Score Deep Value (+2σ FCF Dislocation)](https://mungbeans.io/screens/bean-score-deep-value/): Stocks whose trailing FCF yield sits at least two standard deviations cheaper than their own quarterly baseline.
+- [Stacked Dislocations & WOW (6EQUJ5) Signals](https://mungbeans.io/screens/stacked-dislocations/): Multi-factor convergence screen combining price drawdown, FCF yield, dividend yield, sector-relative dislocation, buyback acceleration, and insider intensity.
+
+## URL Conventions
+
+- Individual stock signal page: `https://mungbeans.io/stocks/<ticker-lowercase>/` (example: `https://mungbeans.io/stocks/nvda/`)
+- Forensic deep dive: `https://mungbeans.io/deep-dives/<ticker-lowercase>/` (examples: `https://mungbeans.io/deep-dives/hims/`, `https://mungbeans.io/deep-dives/geni/`)
+
+## Methodology & Editorial Policy
+
+- **200-Week Moving Average (200WMA):** Roughly four years of weekly adjusted closes. Episodes below the line use 2-week recovery hysteresis to measure historical touch depth, duration, and subsequent 12-month and 24-month returns vs SPY.
+- **Bean Score:** Stock-specific z-score measuring how far current trailing-twelve-month FCF yield deviates from the stock's own quarterly baseline, normalized by its own historical intra-quarter standard deviation. Positive = unusually cheap; negative = unusually expensive.
+- **Dislocation Stack & WOW (`6EQUJ5`):** Counts independent cheapness signals per stock (0–6) with an earnings-quality accrual-gap gate to flag value traps. A WOW signal fires only when all four convergence tiers (price absurdity, business health, smart money, and historical bounce record) align simultaneously.
+- **Accountability:** All content is educational research, not investment advice. Every deep dive carries its publish date and closing price permanently; errors receive dated inline correction notes rather than silent edits.
