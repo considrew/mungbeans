@@ -355,7 +355,7 @@ main {
   max-width: 1000px;
 }
 
-/* Site Banner - small, quiet, in-theme */
+/* Hero Plate - editorial masthead with scroll-growing mungbean vine */
 .site-banner {
   max-width: 380px;
   margin: 0 auto var(--space-md);
@@ -371,12 +371,123 @@ main {
 
 .hero {
   text-align: center;
-  padding: var(--space-xl) 0 var(--space-2xl);
+  padding: var(--space-sm) 0 var(--space-xl);
   border-bottom: 1px solid var(--color-border);
   margin-bottom: var(--space-2xl);
 }
 
-.hero h1 {
+.hero-plate {
+  position: relative;
+  max-width: 920px;
+  margin: 0 auto var(--space-xl);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.hero-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero-copy {
+  position: absolute;
+  top: 8.5%;
+  left: 5.5%;
+  max-width: 56%;
+  text-align: left;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-brand {
+  font-family: var(--font-mono);
+  font-size: clamp(0.68rem, 1vw, 0.78rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bench);
+  margin: 0 0 0.75rem;
+}
+
+.hero-quote {
+  font-family: var(--font-sans);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 2.55vw, 1.9rem);
+  line-height: 1.24;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0 0 0.7rem;
+}
+
+.hero-attr {
+  font-family: var(--font-mono);
+  font-size: clamp(0.66rem, 0.95vw, 0.76rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin: 0;
+}
+
+.hero-sub {
+  font-family: var(--font-mono);
+  font-size: clamp(0.62rem, 0.85vw, 0.7rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0.85rem 0 0;
+}
+
+.hero-scroll-cue {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gain);
+  opacity: 0.78;
+  margin: 1rem 0 0;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  animation: heroCueFloat 2.4s ease-in-out infinite;
+}
+
+.hero-scroll-cue.is-hidden {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: none;
+}
+
+@keyframes heroCueFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
+
+@media (max-width: 640px) {
+  .hero-copy {
+    position: static;
+    max-width: none;
+    padding: 0.25rem 0.25rem 0.9rem;
+    pointer-events: auto;
+  }
+
+  .hero-quote {
+    font-size: 1.45rem;
+  }
+
+  .hero-scroll-cue {
+    margin-top: 0.65rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-cue {
+    display: none;
+  }
+}
+
+.hero h1.legacy-title {
   font-size: 3rem;
   margin: 0 0 var(--space-md);
 }
@@ -549,7 +660,7 @@ main {
 
 /* Responsive */
 @media (max-width: 600px) {
-  .hero h1 {
+  .hero h1.legacy-title {
     font-size: 2rem;
   }
   

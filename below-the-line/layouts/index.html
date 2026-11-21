@@ -138,8 +138,34 @@
   <main class="homepage">
     <!-- Banner + Stats -->
     <section class="hero">
-      <div class="site-banner">
-        <img src="/images/og-image.png" alt="mungbeans.io — Value Investing, Mastering the 200W Moving Average" class="site-banner-img">
+      <div class="hero-plate" id="hero-plate">
+        <div class="hero-copy">
+          <h1 class="hero-brand">mungbeans.io</h1>
+          <blockquote class="hero-quote">“The big money is not in the buying and selling, but in the waiting.”</blockquote>
+          <p class="hero-attr">— Charlie Munger</p>
+          <p class="hero-sub">200-Week Moving Average · Deep Dives · The Book</p>
+          <p class="hero-scroll-cue" id="hero-scroll-cue" aria-hidden="true">↓ Scroll to grow</p>
+        </div>
+        <svg class="hero-svg" viewBox="0 0 1376 768" role="img" aria-label="mungbeans.io — A stock price chart dipping below the 200-week moving average line, where a mungbean seed is planted at the deepest point of the trough and sprouts upward into compounding growth">
+          <defs>
+            <filter id="bean-soft-edge" x="-5%" y="-5%" width="110%" height="110%">
+              <feGaussianBlur stdDeviation="2.5" />
+            </filter>
+            <mask id="bean-growth-mask" maskUnits="userSpaceOnUse">
+              <rect width="1376" height="768" fill="black" />
+              <g filter="url(#bean-soft-edge)" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">
+                <path id="bean-stem" d="M 936 560 C 942 532, 954 510, 976 502 C 1006 492, 1022 478, 1032 442 C 1042 406, 1054 388, 1094 374 C 1138 358, 1178 350, 1212 318 C 1244 288, 1256 248, 1253 196 C 1252 174, 1252 156, 1256 138" stroke-width="46" />
+                <path class="bean-leaf" data-start="0.40" data-end="0.54" d="M 1088 376 Q 1096 346 1086 310" stroke-width="46" />
+                <path class="bean-leaf" data-start="0.62" data-end="0.74" d="M 1198 336 Q 1228 338 1256 360" stroke-width="44" />
+                <path class="bean-leaf" data-start="0.75" data-end="0.89" d="M 1250 254 Q 1294 246 1342 224" stroke-width="58" />
+                <path class="bean-leaf" data-start="0.86" data-end="0.98" d="M 1252 178 Q 1228 152 1188 136" stroke-width="50" />
+                <path class="bean-leaf" data-start="0.88" data-end="1.00" d="M 1252 168 Q 1266 134 1282 100" stroke-width="52" />
+              </g>
+            </mask>
+          </defs>
+          <image href="/images/hero-base.jpg" width="1376" height="768" />
+          <image href="/images/hero-full.jpg" width="1376" height="768" mask="url(#bean-growth-mask)" />
+        </svg>
       </div>
 
       <div class="hero-stats">
@@ -503,6 +529,81 @@
       color: var(--gain);
     }
   </style>
+
+  <script>
+    (function () {
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var plate = document.getElementById('hero-plate');
+      var stem = document.getElementById('bean-stem');
+      if (!plate || !stem || typeof stem.getTotalLength !== 'function') return;
+
+      var cue = document.getElementById('hero-scroll-cue');
+      var stemLen = stem.getTotalLength();
+      stem.style.strokeDasharray = stemLen;
+
+      var leaves = Array.prototype.map.call(plate.querySelectorAll('.bean-leaf'), function (el) {
+        var len = el.getTotalLength();
+        el.style.strokeDasharray = len;
+        return {
+          el: el,
+          len: len,
+          start: parseFloat(el.getAttribute('data-start')) || 0,
+          end: parseFloat(el.getAttribute('data-end')) || 1
+        };
+      });
+
+      function getTarget() {
+        var isMobile = window.innerWidth <= 640;
+        var span = isMobile ? 210 : 155;
+        var y = window.scrollY || window.pageYOffset || 0;
+        return Math.max(0, Math.min(1, y / span));
+      }
+
+      function apply(p) {
+        var hidden = p <= 0.001;
+        stem.style.strokeDashoffset = hidden ? stemLen + 2 : stemLen * (1 - p);
+        stem.style.opacity = hidden ? '0' : '1';
+
+        for (var i = 0; i < leaves.length; i++) {
+          var lf = leaves[i];
+          var lp = Math.max(0, Math.min(1, (p - lf.start) / (lf.end - lf.start)));
+          var lHidden = lp <= 0.001;
+          lf.el.style.strokeDashoffset = lHidden ? lf.len + 2 : lf.len * (1 - lp);
+          lf.el.style.opacity = lHidden ? '0' : '1';
+        }
+
+        if (cue) {
+          if (p > 0.06) cue.classList.add('is-hidden');
+          else if (p <= 0.02) cue.classList.remove('is-hidden');
+        }
+      }
+
+      var target = getTarget();
+      var current = target;
+      var rafId = 0;
+      apply(current);
+
+      function tick() {
+        rafId = 0;
+        current += (target - current) * 0.18;
+        if (Math.abs(target - current) < 0.0005) {
+          current = target;
+          apply(current);
+          return;
+        }
+        apply(current);
+        rafId = requestAnimationFrame(tick);
+      }
+
+      function onScroll() {
+        target = getTarget();
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    })();
+  </script>
 
 </body>
 </html>
