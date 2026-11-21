@@ -1,0 +1,109 @@
+{
+  "ticker": "NVDA",
+  "company": "NVIDIA",
+  "title": "NVIDIA (NVDA): Seven Times Earnings, Priced for a Normal Chip Cycle",
+  "description": "NVIDIA lost 23% in its worst week since 2008 as Jensen Huang resigned, the 10-Q slipped and the SEC reportedly probed its accounting. At $125.53 it sits on its 200-week line and within 2% of my cycle-aware value, with half its free cash flow going back into its own customers. I wait for the 10-Q.",
+  "tags": [
+    "semiconductors",
+    "ai",
+    "governance",
+    "cycle",
+    "200-week-line"
+  ],
+  "verdict": "wait",
+  "verdict_label": "Wait — fairly priced for a normal chip cycle; buy on a clean 10-Q or under $100",
+  "peer_ticker": "AMD",
+  "selection_rationale": "A market-wide AI sell-off put eight of the ten shortlisted names down 25-34%, mostly on sector beta (quantum, neoclouds, space). NVDA's 23% fall had company-specific causes: the CEO's resignation, a delayed 10-Q and a reported SEC accounting probe, in the world's most widely held stock, now sitting on its 200-week line. The piece answers whether the earnings are real and whether 7.6x forward earnings is cheap or a peak-cycle multiple. Passed on SMMT (single-asset trial readout), GLBE (smaller beat-and-raise sell-off) and the sector-beta names.",
+  "dcf_per_share": 129.03,
+  "diluted_shares": 24315000000,
+  "sources": [
+    {
+      "title": "NVIDIA Q3 FY2027 results, CFO commentary and supplemental financial information (Form 8-K, 17 Nov 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000088/0001045810-26-000088-index.htm"
+    },
+    {
+      "title": "NVIDIA announces CEO transition (Form 8-K, 12 Nov 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000082/nvidiaannouncesceotransiti.htm"
+    },
+    {
+      "title": "NVIDIA guarantees SB Energy PORTS-Pike campus (Form 8-K, 17 Aug 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000069/0001045810-26-000069-index.htm"
+    },
+    {
+      "title": "NVIDIA Q2 FY2027 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000075/nvda-20260726.htm"
+    },
+    {
+      "title": "NVIDIA FY2026 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm"
+    },
+    {
+      "title": "Nvidia's accounting is focus of US SEC investigation, sources say (Reuters via Korea Times)",
+      "url": "https://www.koreatimes.co.kr/world/20261121/nvidias-accounting-is-focus-of-us-sec-investigation-sources-say"
+    },
+    {
+      "title": "Nvidia created a weird bit of intrigue by not filing a routine SEC report (TechCrunch)",
+      "url": "https://techcrunch.com/2026/11/18/nvidia-created-a-weird-bit-of-intrigue-by-not-filing-a-routine-sec-report/"
+    },
+    {
+      "title": "Nvidia's SEC probe isn't going away (TIKR via Yahoo Finance)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-sec-probe-isn-t-102031848.html"
+    },
+    {
+      "title": "SEC probes Nvidia accounting, may eye omitted Singapore sales (Seoul Economic Daily)",
+      "url": "https://en.sedaily.com/world/2026/11/21/sec-probes-nvidia-accounting-may-eye-omitted-singapore-sales"
+    },
+    {
+      "title": "Nvidia CEO Jensen Huang resigns after reports of extramarital relationships (NBC News)",
+      "url": "https://www.nbcnews.com/tech/tech-news/nvidia-ceo-jensen-huang-resigns-reports-extramarital-relationships-rcna608402"
+    },
+    {
+      "title": "Nvidia CEO Jensen Huang resigns: live updates (CNBC)",
+      "url": "https://www.cnbc.com/2026/11/12/nvidia-jensen-huang-ceo-live-updates.html"
+    },
+    {
+      "title": "Jensen Huang scandal (Wikipedia, used as an index to primary reporting)",
+      "url": "https://en.wikipedia.org/wiki/Jensen_Huang_spying_scandal"
+    },
+    {
+      "title": "Nvidia's blind spots: questions management left unanswered (Oninvest)",
+      "url": "https://en.oninvest.com/article/nvidia-s-blind-spots-which-questions-did-the-company-s-management-leave-unanswered"
+    },
+    {
+      "title": "How much Nvidia is worth without Jensen Huang, per Dan Ives (Motley Fool)",
+      "url": "https://www.fool.com/investing/2026/11/20/here-s-how-much-nvidia-stock-is-worth-without-jensen-huang-according-to-dan-ives/"
+    },
+    {
+      "title": "Trump critiques Jensen Huang's replacement (Yahoo Finance)",
+      "url": "https://finance.yahoo.com/markets/article/trump-critiques-jensen-huangs-replacement-as-he-wades-deeper-into-nvidia-turmoil-210729338.html"
+    },
+    {
+      "title": "Nvidia shares sink to 52-week low after report SEC is probing accounting (Decrypt via Yahoo Finance)",
+      "url": "https://finance.yahoo.com/markets/stocks/articles/nvidia-shares-sink-52-week-203654330.html"
+    },
+    {
+      "title": "NVDA clocks worst week in 18 years (Stocktwits)",
+      "url": "https://stocktwits.com/news-articles/markets/equity/nvda-stock-clocks-worst-week-in-18-years-as-sec-reportedly-probes-its-accounting-practices/cNbSDIWR91Q"
+    },
+    {
+      "title": "AMD Q3 2026: data center revenue nearly doubles (Constellation Research)",
+      "url": "https://www.constellationr.com/insights/news/amd-q3-shines-data-center-revenue-nearly-doubles"
+    },
+    {
+      "title": "NVIDIA board establishes National Security and Export Control Oversight Committee (NVIDIA newsroom)",
+      "url": "https://nvidianews.nvidia.com/news/nvidia-board-of-directors-establishes-national-security-and-export-control-oversight-committee"
+    },
+    {
+      "title": "US moves to block China's remote access to AI chips amid Nvidia scandal (Al Jazeera)",
+      "url": "https://aljazeera.com/economy/2026/11/17/us-moves-to-block-chinas-remote-access-to-ai-chips-amid-nvidia-scandal"
+    },
+    {
+      "title": "Nvidia to buy Hugging Face for nearly $13 billion (Semafor)",
+      "url": "https://semafor.com/article/09/03/2026/nvidia-to-buy-hugging-face-for-nearly-13-billion"
+    },
+    {
+      "title": "Jensen Huang agrees to face Congress over Nvidia scandal (Axios)",
+      "url": "https://axios.com/2026/11/17/nvidia-jensen-huang-congress-testify-dates"
+    }
+  ]
+}

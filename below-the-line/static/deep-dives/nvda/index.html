@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KMCNBWBVVE');
+</script>
+<script src="/js/referral-events.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NVDA · Deep Dive — mungbeans</title>
+<meta name="description" content="NVIDIA lost 23% in its worst week since 2008 as Jensen Huang resigned, the 10-Q was delayed and the SEC reportedly probed its accounting. At $125.53 it sits on its 200-week line and near my cycle-aware value. My call: wait for the 10-Q.">
+<link rel="canonical" href="https://mungbeans.io/deep-dives/nvda/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="mungbeans.io">
+<meta property="og:title" content="NVIDIA (NVDA): Seven Times Earnings, Priced for a Normal Chip Cycle — mungbeans.io">
+<meta property="og:description" content="NVIDIA lost 23% in its worst week since 2008 as Jensen Huang resigned, the 10-Q was delayed and the SEC reportedly probed its accounting. At $125.53 it sits on its 200-week line and near my cycle-aware value. My call: wait for the 10-Q.">
+<meta property="og:url" content="https://mungbeans.io/deep-dives/nvda/">
+<meta property="og:image" content="https://mungbeans.io/images/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-11-20">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@mungbeans_io">
+<meta name="twitter:title" content="NVIDIA (NVDA): Seven Times Earnings, Priced for a Normal Chip Cycle — mungbeans.io">
+<meta name="twitter:description" content="NVIDIA lost 23% in its worst week since 2008 as Jensen Huang resigned, the 10-Q was delayed and the SEC reportedly probed its accounting. At $125.53 it sits on its 200-week line and near my cycle-aware value. My call: wait for the 10-Q.">
+<meta name="twitter:image" content="https://mungbeans.io/images/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "NVIDIA (NVDA): Seven Times Earnings, Priced for a Normal Chip Cycle",
+  "description": "NVIDIA lost 23% in its worst week since 2008 as Jensen Huang resigned, the 10-Q was delayed and the SEC reportedly probed its accounting. At $125.53 it sits on its 200-week line and near my cycle-aware value. My call: wait for the 10-Q.",
+  "datePublished": "2026-11-20",
+  "url": "https://mungbeans.io/deep-dives/nvda/",
+  "mainEntityOfPage": "https://mungbeans.io/deep-dives/nvda/",
+  "image": "https://mungbeans.io/images/og-image.png",
+  "author": {"@type": "Organization", "name": "mungbeans.io", "url": "https://mungbeans.io/"},
+  "publisher": {"@type": "Organization", "name": "mungbeans.io", "url": "https://mungbeans.io/"}
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15120e; --card:#1d1914; --card2:#241f18;
+    --ink:#ece6da; --dim:#a89e8c; --faint:#6f6757; --line:#332c22;
+    --gain:#8fbf6f; --bench:#c9a24a; --trim:#d4a24a; --closed:#5fa8b5; --loss:#c2604f;
+    --gain-soft:rgba(143,191,111,.12); --loss-soft:rgba(194,96,79,.12);
+    --bench-soft:rgba(201,162,74,.12); --faint-soft:rgba(111,103,87,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;padding:clamp(16px,4vw,52px);font-size:17px}
+  .wrap{max-width:840px;margin:0 auto}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--faint)}
+  h2{font-weight:500;font-size:23px;letter-spacing:-.01em;margin-bottom:4px}
+  h3{font-weight:600;font-size:16px;margin:22px 0 8px;color:var(--ink)}
+  p{margin-bottom:13px;color:#d8d1c4}
+  p.sub{color:var(--dim);font-size:15px}
+  b,strong{color:var(--ink);font-weight:600}
+  em{color:var(--bench)}
+
+  /* masthead */
+  .mast{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:22px;flex-wrap:wrap;gap:6px}
+  .mast .brand{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink)}
+  .mast .brand span{color:var(--faint)}
+  .mast .asof{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+
+  .ticker-row{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;letter-spacing:.1em;
+    color:var(--gain);border:1px solid var(--gain);padding:2px 8px;border-radius:3px;background:var(--gain-soft)}
+  .nm{color:var(--dim);font-size:15px}
+  .px{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dim)}
+  .px b{color:var(--ink)} .px .up{color:var(--gain)}
+
+  .perf-since{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-bottom:18px}
+  hr.sec{border:none;border-top:1px solid var(--line);margin:28px 0}
+
+  /* tabs */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:26px;
+    overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);background:none;border:none;border-bottom:2px solid transparent;
+    padding:10px 14px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+  .tab:hover{color:var(--dim)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gain)}
+  .tab .n{color:var(--faint);margin-right:6px}
+  .tab.active .n{color:var(--gain)}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* verdict */
+  .verdict{font-size:clamp(24px,4vw,34px);line-height:1.18;font-weight:500;letter-spacing:-.01em;
+    margin-bottom:12px;max-width:20ch}
+  .callbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 24px}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 11px;border-radius:4px;border:1px solid var(--line)}
+  .pill b{display:block;font-size:14px;letter-spacing:0;text-transform:none;margin-top:2px}
+  .pill.lean{border-color:rgba(143,191,111,.4)} .pill.lean b{color:var(--gain)}
+
+  /* gauge */
+  .gauge{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:20px 22px 16px;margin:8px 0 6px}
+  .gauge-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+  .gauge-head .l{font-size:14px;color:var(--ink);font-weight:500}
+  .gauge-head .t{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--gain);
+    background:var(--gain-soft);border:1px solid rgba(143,191,111,.3);padding:3px 8px;border-radius:3px}
+  .track{position:relative;height:44px;margin:0 4px}
+  .axis{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line)}
+  .gapfill{position:absolute;top:calc(50% - 12px);height:24px;border-radius:4px;
+    background:repeating-linear-gradient(45deg,var(--gain-soft),var(--gain-soft) 6px,transparent 6px,transparent 12px);
+    border-left:1px dashed rgba(143,191,111,.5);border-right:1px dashed rgba(143,191,111,.5)}
+  .mk{position:absolute;top:50%;transform:translate(-50%,-50%);text-align:center}
+  .mk .d{width:10px;height:10px;border-radius:50%;margin:0 auto 6px}
+  .mk .v{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);font-weight:500}
+  .mk .c{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;margin-top:1px}
+  .mk.p .d{background:var(--ink)} .mk.f .d{background:transparent;border:2px solid var(--gain)}
+  .gnote{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:20px}
+
+  /* overhang cards */
+  .ohcard{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:15px 17px;margin-bottom:10px}
+  .oh-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .arr{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;width:16px}
+  .up .arr{color:var(--gain)} .risk .arr{color:var(--loss)} .dorm .arr{color:var(--faint)}
+  .oh-title{font-weight:600;font-size:15.5px;flex:1}
+  .oh-layer{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .oh-score{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px}
+  .up .oh-score{color:var(--gain)} .risk .oh-score{color:var(--loss)} .dorm .oh-score{color:var(--faint)}
+  .sbar{height:3px;background:var(--line);border-radius:2px;margin:9px 0 11px;overflow:hidden}
+  .sbar i{display:block;height:100%}
+  .up .sbar i{background:var(--gain)} .risk .sbar i{background:var(--loss)} .dorm .sbar i{background:var(--faint)}
+  .oh-mech{font-size:14.5px;color:#d8d1c4;line-height:1.5}
+  .oh-foot{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+  .ff{font-size:12px;color:var(--faint)}
+  .ff b{font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--dim);font-weight:500;display:block;margin-bottom:1px}
+  .dorm{opacity:.66}
+  .dtag{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);border:1px solid var(--line);padding:2px 6px;border-radius:3px}
+
+  /* metric grid + tables */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;margin:14px 0}
+  .met{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+  .met .ml{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .met .mv{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:500;color:var(--ink)}
+  .met .mv.g{color:var(--gain)} .met .mv.r{color:var(--loss)}
+  .met .mn{font-size:11px;color:var(--faint);margin-top:4px;line-height:1.35}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-family:"IBM Plex Mono",monospace;font-size:13px}
+  th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+    font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);color:#d8d1c4}
+  td.r,th.r{text-align:right}
+  tr .scen{font-family:"Newsreader",serif;color:var(--dim);font-size:12px}
+  .g{color:var(--gain)} .r{color:var(--loss)} .b{color:var(--bench)}
+
+  .note{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--bench);
+    border-radius:6px;padding:13px 16px;margin:16px 0;font-size:14px;color:var(--dim)}
+  .note b{color:var(--ink)}
+  /* thesis tab prose */
+  .thesis-body h3{margin-top:32px}
+  .thesis-body table{font-size:12px}
+
+  /* mailing list + referral blocks */
+  .dd-signup{margin:30px 0 20px;padding:20px 22px;background:var(--card);border:1px solid var(--line);
+    border-left:2px solid var(--gain);border-radius:9px}
+  .dd-signup h3{margin:6px 0 8px;font-size:20px;font-weight:500}
+  .dd-signup p{font-size:14.5px;color:var(--dim);margin-bottom:14px}
+  .dd-form{display:flex;gap:8px;flex-wrap:wrap}
+  .dd-form input[type="email"]{flex:1;min-width:210px;background:var(--bg);color:var(--ink);
+    border:1px solid var(--line);border-radius:5px;padding:10px 13px;font-family:"IBM Plex Mono",monospace;
+    font-size:13px;outline:none}
+  .dd-form input[type="email"]:focus{border-color:var(--gain)}
+  .dd-form button{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.05em;
+    background:var(--gain-soft);color:var(--gain);border:1px solid var(--gain);padding:10px 20px;
+    border-radius:5px;cursor:pointer;white-space:nowrap}
+  .dd-form button:hover{background:rgba(143,191,111,.22)}
+  .dd-signup-note{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin:10px 0 0}
+
+  .tool-rec{margin:20px 0 26px;padding:20px 22px;background:var(--card);border:1px solid var(--line);
+    border-left:2px solid var(--bench);border-radius:9px}
+  .tool-rec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .tool-rec-badge{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);border:1px solid var(--line);padding:3px 8px;border-radius:3px}
+  .tool-rec h3{margin:8px 0 10px;font-size:20px;font-weight:500}
+  .tool-rec-body{color:var(--dim);font-size:14.5px;margin-bottom:16px}
+  .tool-rec-shot{margin:0 0 16px 0}
+  .tool-rec-shot img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px}
+  .tool-rec-shot figcaption{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:8px;line-height:1.5}
+  .tool-rec-shot figcaption a{color:var(--dim)}
+  .tool-rec-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .tool-rec-btn{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;
+    background:var(--bench-soft);color:var(--bench);border:1px solid var(--bench);padding:10px 20px;
+    border-radius:5px;text-decoration:none}
+  .tool-rec-code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dim)}
+  .tool-rec-code b{color:var(--gain)}
+  .tool-inline{border-top:1px solid var(--line);padding-top:12px;margin:14px 0 12px;font-size:13.5px;color:var(--dim)}
+  .tool-inline-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin-right:6px}
+  .tool-inline a{color:var(--bench);text-decoration:none;font-weight:500}
+  .tool-inline a:hover{text-decoration:underline}
+  .tool-rec-disc{font-size:12px;color:var(--faint);line-height:1.6;margin:0}
+  .tool-rec-disc a{color:var(--dim)}
+
+  footer{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--faint);line-height:1.6}
+  @media(max-width:560px){.px{margin-left:0;width:100%}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mast">
+    <a class="brand" href="/" style="text-decoration:none">mungbeans <span>// deep dive</span></a>
+    <div class="asof">20 nov 2026 · published</div>
+  </div>
+
+  <div class="ticker-row">
+    <a class="tk" href="/stocks/nvda/" style="text-decoration:none">NVDA</a>
+    <span class="nm">NVIDIA · Nasdaq · the arms dealer of the AI buildout</span>
+    <span class="px" id="livePx" data-symbol="NVDA" data-since="2026-11-20" data-publish="125.53" data-shares="24315000000"><b>$125.53</b> · cap <b>$3.05T</b></span>
+  </div>
+  <div class="perf-since">published 20 nov at $125.53 · <span class="g" id="livePerf">+0.0% since publish</span><span id="liveStamp"></span></div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-p="thesis"><span class="n">01</span>Thesis</button>
+    <button class="tab" data-p="verdict"><span class="n">02</span>Verdict</button>
+    <button class="tab" data-p="overhangs"><span class="n">03</span>Overhangs</button>
+    <button class="tab" data-p="numbers"><span class="n">04</span>Numbers</button>
+    <button class="tab" data-p="bear"><span class="n">05</span>Bear case</button>
+  </div>
+
+  <section class="panel active" data-panel="thesis">
+    <h2>NVIDIA (NVDA): Seven Times Earnings, Priced for a Normal Chip Cycle</h2>
+    <p class="sub">Published 20 November 2026 — the full thesis, unchanged.</p>
+
+    <div class="thesis-body">
+    <h3>Why This Takes A Full Read</h3>
+    <p>NVIDIA closed Friday at $125.53, down 22.9% on the week and 47.5% below its 6 October closing high of $239.24. It was the stock's worst week since October 2008. Three things happened in eight days. On 12 November the board announced that Jensen Huang, co-founder and chief executive since 1993, had resigned, four days after he admitted in a memo to employees that he had been unfaithful to his wife, amid press reports tying the relationship to a Singapore customer that US authorities had been investigating over chip diversion to China. On 17 November the company reported a third quarter with revenue of $115.8 billion, up 103%, and said it would file its 10-Q "in the coming weeks" instead of the same day, as it usually does. The same day the Wall Street Journal reported an SEC investigation, and on Friday Reuters reported that the SEC's enforcement staff were examining NVIDIA's accounting. The stock fell 14% on Friday alone, its seventh straight weekly loss.</p>
+    <p>That leaves NVDA 1.8% above its 200-week moving average of $123.33, the line this site is built around. It has not closed below it since September 2022, when it spent five weeks underneath, bottomed 12.5% below, and was up 233% a year later. The two long visits before that were the bad ones: from June 2002 the stock spent 139 weeks under the line and fell as far as 69% below it, and from June 2008 it spent 131 weeks under and fell 65% below. Twelve visits in all, an average return of 54% after touching, and a spread between outcomes wide enough to make the average useless on its own. What decides which kind of visit this is comes down to two questions: whether the earnings are real, and whether they are a peak.</p>
+    <p>I went through the fiscal 2026 10-K, the second-quarter 10-Q, the third-quarter release, the CFO commentary and the supplemental financial information NVIDIA posted in place of the 10-Q, the August 8-K on the Ohio data center guarantee, and the reporting on Huang's exit and the SEC probe. Here is what I found. On the first question, the reported numbers hold together better than the headlines suggest, but the balance sheet behind them has changed shape: in nine months NVIDIA spent $58.1 billion buying equity in its own ecosystem, against $113.7 billion of free cash flow, and it now guarantees up to $118 billion of other parties' obligations. On the second question, 7.6 times next year's consensus earnings is a peak-cycle multiple, and my DCF says the price already assumes a normal semiconductor downturn somewhere in the next four years.</p>
+    <p>My call is wait. At $125.53 the stock trades almost exactly at my probability-weighted value. The 10-Q, due around 4 December, and Huang's transcribed interview with House committees, reported for 1 December, are dated events that will tell me more than any model can today. The risk posture: this is the world's most widely held growth stock, it fell 14% in a day this week, and it can rise just as fast.</p>
+
+    <hr class="sec">
+    <h3>The Company: Thirty-Three Years of Betting the Company</h3>
+    <p>NVIDIA was incorporated in California in April 1993 by Jensen Huang, Chris Malachowsky and Curtis Priem. Huang had designed microprocessors at AMD and spent eight years at LSI Logic. The company's history is a sequence of bets large enough to sink it, and the capital allocation story is how each one paid for the next.</p>
+    <p>The first bet was that PC graphics would become its own chip category. The early products struggled; the RIVA line in the late 1990s worked, and in 1999 NVIDIA went public and launched the GeForce 256, which it marketed as the first GPU. Gaming funded the company for the next fifteen years, and the gaming franchise is still there: $16.0 billion of revenue in fiscal 2026.</p>
+    <p>The second bet, and the one that made the company, was CUDA in 2006: a programming model that let developers use the GPU for general-purpose parallel computing. For years it cost money and earned little. NVIDIA put CUDA on every consumer GPU it sold, which meant every student and researcher with a gaming card had a parallel computer and the software to program it. In 2012 the AlexNet network, trained on NVIDIA GPUs, won the ImageNet competition. The company calls that moment the "Big Bang" of AI, and it is the origin of everything since. By the end of fiscal 2026 NVIDIA said it had spent more than $76.7 billion on research and development since inception, and more than half its engineers work on software.</p>
+    <p>The third bet was buying the network. NVIDIA closed the roughly $7 billion acquisition of Mellanox in 2020, which gave it InfiniBand and the DPU, and turned it from a chip vendor into a company that sells a whole data center. Networking revenue reached $31.4 billion in fiscal 2026. The attempt to go further, a $40 billion purchase of Arm announced in 2020, died under regulatory opposition in early 2022. The stock fell from $33.23 in November 2021 to $11.19 in October 2022 (split-adjusted) as crypto demand collapsed and the post-pandemic PC boom ended. That decline is the most recent reminder that this is a cyclical business. Seven weeks after the low, ChatGPT launched.</p>
+    <p>The fourth bet is the one being graded now: the annual cadence. NVIDIA moved to a new data center architecture every year (Hopper, Blackwell, Blackwell Ultra, and now Vera Rubin, which began shipping this quarter in what the company calls its fastest ramp ever), and it began selling whole racks instead of chips. Revenue went from $27.0 billion in fiscal 2023 to $60.9 billion, $130.5 billion and $215.9 billion in fiscal 2026. The nine months to October 2026 brought in $293.7 billion.</p>
+    <p>The capital allocation of the last twelve months is where the story turns, and the table shows why it deserves its own section:</p>
+    <table>
+      <tr><th>Move</th><th>Date</th><th class="r">Size</th></tr>
+      <tr><td>Groq LPU license and hires (booked as $14.4B goodwill)</td><td>Dec 2025</td><td class="r">$17.0B</td></tr>
+      <tr><td>Senior notes, seven tranches</td><td>Jun 2026</td><td class="r">$25.0B</td></tr>
+      <tr><td>SB Energy / OpenAI campus guarantee, plus $1.5B equity</td><td>Aug 2026</td><td class="r">up to $105B</td></tr>
+      <tr><td>Buyback authorization increase</td><td>Sep 2026</td><td class="r">$150B</td></tr>
+      <tr><td>Equity securities purchased, nine months</td><td>FY2027 YTD</td><td class="r">$58.1B</td></tr>
+      <tr><td>Hugging Face acquisition (pending, expected to close H1 2027)</td><td>Sep 2026</td><td class="r">$12.9B</td></tr>
+    </table>
+    <p>A company that for thirty years kept a fortress balance sheet and let customers finance their own purchases has, in eighteen months, taken on $25 billion of new debt, committed up to $105 billion of credit support for a customer's data center, and put tens of billions into the equity of the companies that buy its chips. Each move has a defensible logic. Together they mean the next downturn will hit a balance sheet built for the upturn.</p>
+
+    <hr class="sec">
+    <h3>The Management Team</h3>
+    <p><b>Jensen Huang</b> is gone. He resigned as president, CEO and director on 12 November, effective immediately. On 8 November he apologized to employees, writing "I was unfaithful to my wife" and "There is no excuse for what I did." The New York Times reported on 29 October that US officials believe the woman involved, a former executive of Megaspeed, a Singapore company that bought billions of dollars of NVIDIA chips, was a Chinese intelligence asset. China called the claim "purely unsubstantiated," Attorney General Todd Blanche said on 12 November that no conclusion had been reached on whether she was a spy, Singapore said it lacked evidence to charge her and barred her from re-entering the country, and NVIDIA said it had no reason to believe national security or company secrets were compromised. On 11 November the Times also reported a relationship with an NVIDIA executive who reported to him. The board's independent investigation is run by former acting US attorney Joon Kim and Wachtell, Lipton, Rosen &amp; Katz, and on the earnings call the new chair said the board "does not intend to reinstate Jensen as CEO." I will not try to adjudicate any of it. What matters for the stock is that the founder who set the architecture cadence, ran the customer relationships personally and was the company's public voice for 33 years is out, and that his exit is entangled with export-control questions Congress now wants answered.</p>
+    <p><b>Colette Kress</b> is interim CEO and remains CFO. She joined in September 2013 after senior finance roles at Cisco, Microsoft and Texas Instruments, and she has run NVIDIA's finance organization through the entire AI ramp. She opened and closed this week's call with the same line: "Our momentum is real." She is the obvious steward and an unusual choice to keep both jobs during a quarter in which the 10-Q is late and the SEC is reportedly looking at the accounting she signs.</p>
+    <p><b>Harvey Jones</b>, a former CEO and executive chairman of Synopsys and a long-time director, became NVIDIA's first-ever board chair. Until this month NVIDIA had no board chair at all. The Wall Street Journal reported that Heidrick &amp; Struggles is running the CEO search, with internal and external candidates. On 17 November the board formed a National Security and Export Control Oversight Committee, chaired by director Suzanne Nora Johnson, to which the company's national security and trade compliance teams now report.</p>
+    <p>Below them sits a bench that has been in place for a decade or more. <b>Jay Puri</b> (71) runs worldwide field operations, which means the hyperscaler relationships. <b>Debora Shoquist</b> (71) runs operations and the supply chain that has to absorb $390 billion of purchase commitments. <b>Tim Teter</b> (59) is general counsel and is reportedly due to sit for his own transcribed interview with House committees on 2 December. The ages matter. The three executives who run sales, supply and legal are between 59 and 71, and the CEO search will decide whether NVIDIA's next decade is run by its current generation or a new one.</p>
+    <p>Two data points on alignment. Director Mark Stevens sold about 4.2 million shares for roughly $946 million at $220 to $234 in early and mid-September, near the top. And President Trump said on Friday, of Huang, "I would love to see Jensen be given a second chance," and appeared to criticize the people now running it. A sitting president lobbying publicly over a CEO succession is a governance variable I have never had to model before.</p>
+
+    <hr class="sec">
+    <h3>The Business: Two Segments, Three Platforms</h3>
+    <p>NVIDIA reports two segments, Compute &amp; Networking ($106.0 billion in Q3) and Graphics ($9.8 billion), and since the first quarter of fiscal 2027 it reports revenue by three market platforms: Hyperscale, AI Clouds/Industrial/Enterprise, and Edge Computing. The company-wide numbers first:</p>
+    <table>
+      <tr><th>Fiscal year (ends late Jan)</th><th class="r">Revenue</th><th class="r">Gross margin</th><th class="r">Net income</th></tr>
+      <tr><td>FY2023</td><td class="r">$27.0B</td><td class="r">56.9%</td><td class="r">$4.4B</td></tr>
+      <tr><td>FY2024</td><td class="r">$60.9B</td><td class="r">72.7%</td><td class="r">$29.8B</td></tr>
+      <tr><td>FY2025</td><td class="r">$130.5B</td><td class="r">75.0%</td><td class="r">$72.9B</td></tr>
+      <tr><td>FY2026</td><td class="r">$215.9B</td><td class="r">71.1%</td><td class="r">$120.1B</td></tr>
+      <tr><td>9M FY2027</td><td class="r">$293.7B</td><td class="r">74.9%</td><td class="r">$183.3B</td></tr>
+    </table>
+
+    <p class="eyebrow">1. Hyperscale: the four buyers that matter most</p>
+    <p>Hyperscale is sales to the largest cloud and internet platforms. It was $60.1 billion in Q3, up 71%. Concentration is the defining fact: three direct customers accounted for 14%, 11% and 11% of Q3 revenue, and two customers accounted for 35% of receivables. The hyperscalers are also NVIDIA's most capable competitors, since each designs its own accelerators.</p>
+    <table>
+      <tr><th>Period</th><th>Hyperscale revenue</th><th class="r">YoY growth</th></tr>
+      <tr><td>Q2 FY2026</td><td>$24.2B</td><td class="r">n/a</td></tr>
+      <tr><td>Q3 FY2026</td><td>$35.1B</td><td class="r">n/a</td></tr>
+      <tr><td>Q1 FY2027</td><td>$43.1B</td><td class="r">n/a</td></tr>
+      <tr><td>Q2 FY2027</td><td>$48.7B</td><td class="r">+102%</td></tr>
+      <tr><td>Q3 FY2027</td><td>$60.1B</td><td class="r">+71%</td></tr>
+    </table>
+
+    <p class="eyebrow">2. AI Clouds, Industrial &amp; Enterprise: the fastest line, and the financed one</p>
+    <p>This platform covers neoclouds (CoreWeave, Nebius and the rest), frontier labs, sovereign projects and enterprises. It grew 195% in Q3 to $47.5 billion, three times the pace of hyperscale. It is also the part of the business where NVIDIA's own money shows up most: the neocloud agreements ($32 billion of contingent commitments), the cloud service agreements under which NVIDIA rents capacity back ($28 billion), the land, power and shell guarantees, and most of the private equity stakes. Many of these customers, in the words of the CFO commentary, "are growing faster than their balance sheets and long-term credit profiles can support."</p>
+    <table>
+      <tr><th>Period</th><th>AI Clouds / Industrial / Enterprise</th><th class="r">YoY growth</th></tr>
+      <tr><td>Q2 FY2026</td><td>$16.9B</td><td class="r">n/a</td></tr>
+      <tr><td>Q3 FY2026</td><td>$16.1B</td><td class="r">n/a</td></tr>
+      <tr><td>Q1 FY2027</td><td>$32.2B</td><td class="r">n/a</td></tr>
+      <tr><td>Q2 FY2027</td><td>$40.3B</td><td class="r">+138%</td></tr>
+      <tr><td>Q3 FY2027</td><td>$47.5B</td><td class="r">+195%</td></tr>
+    </table>
+
+    <p class="eyebrow">3. Edge Computing: gaming, workstations, cars and robots</p>
+    <p>Edge Computing gathers the old Gaming, Professional Visualization and Automotive lines plus robotics. It was $8.2 billion in Q3, up 42%, about 7% of revenue. It is the stable part of the company and the part most exposed to memory prices, which the company says are weighing on consumer PC demand.</p>
+    <table>
+      <tr><th>Period</th><th>Edge Computing revenue</th><th class="r">YoY growth</th></tr>
+      <tr><td>Q2 FY2026</td><td>$5.6B</td><td class="r">n/a</td></tr>
+      <tr><td>Q3 FY2026</td><td>$5.8B</td><td class="r">n/a</td></tr>
+      <tr><td>Q2 FY2027</td><td>$7.2B</td><td class="r">+27%</td></tr>
+      <tr><td>Q3 FY2027</td><td>$8.2B</td><td class="r">+42%</td></tr>
+    </table>
+
+    <p class="eyebrow">4. China: the market the company has written down to zero</p>
+    <p>China (including Hong Kong) was $11.1 billion of Q3 revenue by customer headquarters, including $2.4 billion of Hopper data center shipments, yet the Q4 guidance assumes no data center compute revenue from China at all. The 10-K says NVIDIA was "effectively foreclosed" from China's data center market at the end of fiscal 2026. China is where the Huang story, the Megaspeed investigation and the export-control politics meet, and every outcome there is a policy decision NVIDIA does not control.</p>
+    <table>
+      <tr><th>Q3 FY2027 revenue by customer HQ</th><th class="r">Amount</th><th class="r">Share</th></tr>
+      <tr><td>United States</td><td class="r">$72.9B</td><td class="r">63%</td></tr>
+      <tr><td>Taiwan</td><td class="r">$30.3B</td><td class="r">26%</td></tr>
+      <tr><td>China (incl. Hong Kong)</td><td class="r">$11.1B</td><td class="r">10%</td></tr>
+      <tr><td>Other</td><td class="r">$1.6B</td><td class="r">1%</td></tr>
+    </table>
+
+    <hr class="sec">
+    <h3>Half The Free Cash Flow Goes Back Out The Door</h3>
+    <p>The bull case says NVIDIA earns $65 billion a quarter and buys back stock with it. The cash flow statement says something more complicated. Over the nine months to 25 October, NVIDIA generated $122.7 billion of operating cash flow and $113.7 billion of free cash flow. It used that cash, and the $24.9 billion it borrowed in June, like this:</p>
+    <table>
+      <tr><th>Nine months to 25 Oct 2026</th><th class="r">$B</th></tr>
+      <tr><td>Free cash flow</td><td class="r">113.7</td></tr>
+      <tr><td>Purchases of equity securities (net of $9.5B sold)</td><td class="r">−48.6</td></tr>
+      <tr><td>Share repurchases</td><td class="r">−61.2</td></tr>
+      <tr><td>Dividends</td><td class="r">−12.3</td></tr>
+      <tr><td>Employee stock tax payments</td><td class="r">−6.2</td></tr>
+      <tr><td>Acquisitions, net of cash acquired</td><td class="r">−3.0</td></tr>
+      <tr><td>Debt issued, net of repayment</td><td class="r">+23.9</td></tr>
+    </table>
+    <p>The equity purchases are the line to watch. NVIDIA's non-marketable equity holdings, stakes in private companies carried at cost plus observable price changes, went from $22.3 billion in January to $65.5 billion in October, with $46.4 billion of net additions in nine months. The CFO commentary says the equity investments are "focused on frontier labs, infrastructure financiers, and other private companies." Frontier labs and infrastructure financiers are the customer base. Its publicly held equity securities rose to $48.9 billion, $21.0 billion of it under lock-up. Equity gains contributed $25.5 billion to the nine months' $220.4 billion of pre-tax income.</p>
+    <p>Then add what sits off the balance sheet. The CFO commentary lists $518 billion of commitments: $390 billion of supply and capacity (up from $279 billion a quarter earlier, mostly multi-year memory), $28 billion of cloud service agreements, $74 billion of data center leases not yet commenced with terms up to twenty years, $20 billion of committed equity investments and $6 billion of capital spending. On top of that are $32 billion of contingent neocloud agreements and $118 billion of maximum guarantee exposure, $105 billion of it the credit support for SB Energy's Ohio campus, which SB Energy will build and lease to an OpenAI affiliate for 20 years.</p>
+    <p>All of this is disclosed, in more detail than most companies give, and each arrangement has a business reason: secure memory before rivals do, help customers who cannot yet borrow at scale, lock a 4.25-gigawatt campus to NVIDIA hardware. Kress told analysts this week that the company would be far more selective about financing customers. The point for valuation is that these arrangements change what the earnings mean. A dollar of revenue from a hyperscaler paying in 60 days is worth more than a dollar of revenue from a neocloud that NVIDIA has invested in, rents capacity back from, and guarantees the data center for. In the second case part of the revenue's risk stays on NVIDIA's balance sheet, and that risk shows up in a downturn.</p>
+    <p>The receivables line points the same way. Accounts receivable were $81.0 billion at 25 October, 64 days of sales, up from 60 days a quarter earlier and from $38.5 billion in January. The company attributes the rise to Rubin shipment timing and "extended payment terms on large, multi-quarter agreements with certain investment-grade customers." Receivables absorbed $42.6 billion of cash in nine months, and inventory another $18.4 billion, with raw materials up from $3.8 billion to $15.8 billion. Operating cash flow was 67% of net income for the nine months. Strip out the equity gains and it is closer to 75%. That is a lower conversion rate than a company with these margins usually shows, and it is the gap a skeptic points to.</p>
+    <p>My read: the cash is real, the customers are mostly real, and the conversion gap is mostly a growth artifact. What has changed is that NVIDIA now carries part of the AI buildout's credit risk itself. I value that by charging an "ecosystem investment" cost of 5% of revenue against free cash flow in my model through fiscal 2029, and 3% after, and by leaving the $65.5 billion of private stakes out of my cash.</p>
+
+    <hr class="sec">
+    <h3>What The SEC Can And Cannot Change</h3>
+    <p>Two things about the probe are known. The Wall Street Journal reported on 17 November that the SEC was investigating whether NVIDIA's disclosures misled investors, and Reuters reported on 20 November, citing two people briefed on the matter, that enforcement staff are examining potential accounting issues. Reuters said it could not determine what those issues are or when the inquiry began. The SEC declined to comment and NVIDIA did not respond. Many SEC investigations close without any action.</p>
+    <p>The candidates the press has raised fall into two groups, and the distinction matters for the stock. The first is presentation. In the third quarter of fiscal 2026 NVIDIA switched its geographic revenue disclosure from billing location to customer headquarters, which removed Singapore, then a large billing hub, from the breakdown. The Financial Times reported that Singapore sales had grown to almost half of revenue before the change. NVIDIA said the change would better reflect the geographic profile of its revenue, and in 2025 said that over 99% of data center compute revenue billed to Singapore was for US-based customers. A finding here, at worst, means restated geographic disclosures and possibly a penalty. It does not change total revenue, margins or cash. Its real risk is political: it feeds the export-control story that already cost a CEO.</p>
+    <p>The second group is recognition: when and how much revenue gets booked. Extended payment terms, rising receivables, multi-quarter agreements, customers that NVIDIA also invests in and rents from. Any of these could raise questions about revenue timing or about whether some sales and investments should be accounted for together. There is no reporting that the SEC is looking at any of them. But this is the group that could change the numbers, and the late 10-Q is why the market cannot rule it out. NVIDIA told UBS analyst Tim Arcuri that the delay relates to whether additional risk factors about the Huang investigation need to be added to the filing. That is a plausible and benign reason. The filing itself will be the evidence: if the 10-Q arrives by its deadline, around 4 December, with the same numbers as the supplemental document and no change to revenue recognition policy or auditor language, the recognition question mostly closes. If it arrives late, or with changes, it opens.</p>
+    <p>I give the second outcome a low probability, because the cash collected supports the revenue: $122.7 billion of operating cash flow in nine months is hard to fake, and a 64-day DSO is within normal range for a hardware company. I do not give it zero, and my bust scenario below is sized for it.</p>
+
+    <hr class="sec">
+    <h3>Seven Times Earnings Is A Cycle Question</h3>
+    <p>The headline multiple is the bull's best argument. At $125.53, NVDA trades at 7.6 times the consensus forward earnings of $16.61 a share and about 12 times my estimate of fiscal 2027 earnings of $10.40. No company this profitable trades this cheap unless the market thinks the earnings are about to fall.</p>
+    <p>NVIDIA's history says that after every great boom the earnings fell hard. In fiscal 2023 revenue was flat and net income fell 55% as crypto and PC demand broke. In late 2018 the stock fell 56% in three months on a crypto inventory glut. In 2008 it spent 131 weeks under its 200-week line. A data center business sold to a handful of buyers whose capital budgets move together is more concentrated than any of those, and today's operating margin of 67% is a record. The Q4 guide already brings gross margin down to 71–72% from 74.8% as Rubin ramps.</p>
+    <p>The other side of the ledger: Q4 revenue guidance of $130 billion in a quarter with an extra week, $390 billion of supply commitments that only make sense against much larger revenue, customers who, by accounts of the call, are still asking to increase shipments, and a product cadence that has so far kept each architecture's pricing intact. Wedbush's Dan Ives, who cut his target to $225 from $300, summed up the bull view: "Demand did not leave with him."</p>
+    <p>My base case splits the difference: fiscal 2028 revenue up 50% (consensus implies something closer to 70%), then a slowdown and a 15% decline in fiscal 2030 as the buildout digests, with operating margins drifting to 50%. That is a normal semiconductor cycle at an abnormal scale. On those assumptions the stock is worth about what it trades for. That is the finding of this piece. The market is pricing a normal cycle, and the debate from here is about whether the cycle will be normal.</p>
+
+    <hr class="sec">
+    <h3>NPV Estimate</h3>
+    <p>I built a six-year DCF for fiscal 2028 to 2033 from a fiscal 2027 base of $423.7 billion of revenue (nine months reported plus the $130 billion Q4 guide) and about $277 billion of operating income. Free cash flow is operating income after a 17% tax rate, less capital spending of 2.5% of revenue, plus depreciation of 1.2%, less working capital of 15% of each year's revenue increase, less an "ecosystem investment" charge of 5% of revenue in fiscal 2028 and 2029 and 3% thereafter. Stock compensation is already a cost, since NVIDIA's non-GAAP figures stopped excluding it this year. Discount rate (WACC) 10%: the measured beta is 2.2, inflated by this year's swings; I use a cost of equity of about 10% for a net-cash company of this size and governance risk, and debt is too small to move it. Terminal growth 3%. EBITDA below is operating income plus depreciation. In the down year I release no working capital, which is conservative. The model starts at fiscal 2028, so it leaves out the roughly $45 billion of free cash flow the fourth quarter of fiscal 2027 should add between the October balance sheet and January, about $1.85 a share; I treat that as a cushion against the private-stake marks I also leave out.</p>
+    <table>
+      <tr><th>Year</th><th class="r">Revenue</th><th class="r">Growth</th><th class="r">EBITDA</th><th class="r">Margin</th><th class="r">FCF</th><th class="r">Disc. FCF</th></tr>
+      <tr><td>FY2028</td><td class="r">$636B</td><td class="r">50%</td><td class="r">$414B</td><td class="r">65.2%</td><td class="r">$266B</td><td class="r">$242B</td></tr>
+      <tr><td>FY2029</td><td class="r">$686B</td><td class="r">8%</td><td class="r">$420B</td><td class="r">61.2%</td><td class="r">$291B</td><td class="r">$240B</td></tr>
+      <tr><td>FY2030</td><td class="r">$583B</td><td class="r">−15%</td><td class="r">$310B</td><td class="r">53.2%</td><td class="r">$227B</td><td class="r">$170B</td></tr>
+      <tr><td>FY2031</td><td class="r">$607B</td><td class="r">4%</td><td class="r">$311B</td><td class="r">51.2%</td><td class="r">$222B</td><td class="r">$152B</td></tr>
+      <tr><td>FY2032</td><td class="r">$631B</td><td class="r">4%</td><td class="r">$323B</td><td class="r">51.2%</td><td class="r">$231B</td><td class="r">$143B</td></tr>
+      <tr><td>FY2033</td><td class="r">$650B</td><td class="r">3%</td><td class="r">$333B</td><td class="r">51.2%</td><td class="r">$239B</td><td class="r">$135B</td></tr>
+    </table>
+    <p>Discounted cash flows sum to $1.08 trillion. The terminal value is $3.52 trillion, worth $1.99 trillion today. Enterprise value: $3.07 trillion. I add $70.0 billion of net financial assets: $53.5 billion of cash and marketable debt securities, less $32.4 billion of long-term debt, plus $48.9 billion of publicly held equity at market. I leave out the $65.5 billion of private stakes and do not deduct the $118 billion of contingent guarantees, which I treat as risk in the scenarios. Equity value is $3.14 trillion, or <b>$129.03 per share</b> on a fully diluted count of 24.32 billion shares.</p>
+    <table>
+      <tr><th>Share count component</th><th class="r">Shares</th></tr>
+      <tr><td>Common shares outstanding, 26 Jul 2026 balance sheet (24.1B reported at 21 Aug)</td><td class="r">24,147,000,000</td></tr>
+      <tr><td>Unvested RSUs, PSUs and market-based PSUs (26 Jul 2026)</td><td class="r">168,000,000</td></tr>
+      <tr><td>Options and warrants</td><td class="r">none material</td></tr>
+      <tr><td>Convertible notes</td><td class="r">none</td></tr>
+      <tr><td><b>Fully diluted</b></td><td class="r"><b>24,315,000,000</b></td></tr>
+    </table>
+    <p>The count is conservative. NVIDIA spent $22.1 billion on buybacks in Q3, after the last share count was published; the Q3 weighted basic count was 24.106 billion. The delayed 10-Q will carry the updated figure.</p>
+    <p>Sensitivity, per share:</p>
+    <table>
+      <tr><th>WACC</th><th class="r">g = 2%</th><th class="r">g = 3%</th><th class="r">g = 4%</th></tr>
+      <tr><td>9%</td><td class="r">$134.07</td><td class="r">$149.28</td><td class="r">$170.57</td></tr>
+      <tr><td>10%</td><td class="r">$118.13</td><td class="r">$129.03</td><td class="r">$143.55</td></tr>
+      <tr><td>11%</td><td class="r">$105.72</td><td class="r">$113.82</td><td class="r">$124.23</td></tr>
+      <tr><td>12%</td><td class="r">$95.78</td><td class="r">$101.97</td><td class="r">$109.72</td></tr>
+      <tr><td>13%</td><td class="r">$87.64</td><td class="r">$92.49</td><td class="r">$98.41</td></tr>
+    </table>
+    <p>Two variants frame it. A consensus-like path (fiscal 2028 revenue up 70%, no down year, margins easing slowly to 55%) gives $209.53 at the same discount rate. A bust (revenue up 5% next year, then two years down 25% each, margins at 40%, as an accounting restatement and a capex freeze would combine to produce) gives $43.40. I weight them 25% bust, 50% base, 25% consensus, which gives about $128, within 2% of the price.</p>
+    <p>Multiple sanity check. At $125.53 the equity is worth $3.05 trillion and the enterprise value, net of my $70 billion, about $2.98 trillion. That is 19 times my estimate of fiscal 2027 free cash flow of about $159 billion, 12 times fiscal 2027 earnings of about $10.40 a share (about $9.50 excluding equity gains), and 7.6 times consensus fiscal 2028 earnings. AMD, the closest listed peer, trades at about 24 times forward earnings. On any trailing measure NVDA is cheap. On a forward measure it is cheap only if consensus is right about fiscal 2028.</p>
+
+    <hr class="sec">
+    <h3>NVDA vs. AMD: The Head-to-Head</h3>
+    <p>AMD is the only merchant GPU supplier with a rack-scale alternative in production. It reported its third quarter on 3 November, before NVIDIA's week began.</p>
+    <table>
+      <tr><th>Latest quarter</th><th class="r">NVDA (Q3 FY27, to 25 Oct)</th><th class="r">AMD (Q3 2026, to 26 Sep)</th></tr>
+      <tr><td>Revenue</td><td class="r">$115.8B (+103%)</td><td class="r">$13.4B (+45%)</td></tr>
+      <tr><td>Data center revenue</td><td class="r">$107.6B (+110%)</td><td class="r">$8.5B (+97%)</td></tr>
+      <tr><td>Gross margin (GAAP)</td><td class="r">74.8%</td><td class="r">54%</td></tr>
+      <tr><td>Operating income</td><td class="r">$77.5B (67%)</td><td class="r">$2.8B (21%)</td></tr>
+      <tr><td>Next-quarter revenue guide</td><td class="r">$130B ± 3%</td><td class="r">~$17B ± 3%</td></tr>
+      <tr><td>Market cap (20 Nov)</td><td class="r">$3.05T</td><td class="r">~$702B</td></tr>
+      <tr><td>Forward P/E</td><td class="r">~7.6x</td><td class="r">~24x</td></tr>
+    </table>
+    <table>
+      <tr><th>Layer</th><th>NVDA</th><th>AMD</th></tr>
+      <tr><td>Rack-scale system</td><td>Vera Rubin NVL72 (shipping)</td><td>Helios with MI450 (ramping)</td></tr>
+      <tr><td>Data center CPU</td><td>Vera (first fully custom)</td><td>EPYC "Venice"</td></tr>
+      <tr><td>Software</td><td>CUDA, twenty years of libraries</td><td>ROCm, improving</td></tr>
+      <tr><td>Networking</td><td>NVLink, InfiniBand, Spectrum-X</td><td>Pensando, open standards</td></tr>
+      <tr><td>Frontier-lab customers</td><td>OpenAI, Anthropic, Meta, xAI among many</td><td>Anthropic, Meta, Microsoft, OpenAI, OCI on MI450</td></tr>
+      <tr><td>Customer financing</td><td>$65.5B private stakes, $118B guarantees</td><td>Warrants to OpenAI for up to 160M shares (2025)</td></tr>
+    </table>
+    <p>Three things stand out. First, scale: NVIDIA's data center business is about 13 times AMD's, and NVIDIA's quarterly operating income is about six times AMD's quarterly revenue. Second, the margin gap of 20 points of gross margin is the clearest measure of NVIDIA's software and system moat; AMD wins business by being the second source, which hyperscalers want, at a lower price. Third, the market now values AMD at 24 times forward earnings and NVIDIA at 7.6 times, the inverse of their competitive positions. That gap is the market saying it believes AMD's growth is earlier in its cycle and NVIDIA's is near its peak, plus a governance discount on NVIDIA that did not exist a month ago.</p>
+    <p>What would AMD need to close the gap? A software ecosystem that makes moving off CUDA cheap, rack-scale reliability at hyperscale volume, and customers willing to standardize on it for training as well as inference. It is gaining on all three, and MI450's customer list is the strongest AMD has had. It is still years behind on the first. For NVIDIA's valuation, AMD's main effect is a cap on pricing: every Helios deployment gives a hyperscaler leverage in its next NVIDIA negotiation, and that leverage shows up first in gross margin.</p>
+
+    <hr class="sec">
+    <h3>The Risks</h3>
+    <p><b>The SEC probe touches recognition.</b> If the investigation turns out to concern when or how revenue is booked on multi-quarter agreements, extended terms or transactions with investees, a restatement of timing is possible and the multiple would fall before anyone knew the size. The 10-Q, due around 4 December, is the first evidence either way. A late filing would be a red flag in itself.</p>
+    <p><b>The cycle turns.</b> Three direct customers accounted for 36% of Q3 revenue, the capital budgets behind them move together, and the operating margin is at a record. Every prior NVIDIA boom ended with earnings falling by half or more. My base case includes one down year; a second, 10% decline would take it to about $116.</p>
+    <p><b>Credit risk moved onto the balance sheet.</b> $118 billion of maximum guarantee exposure, $65.5 billion of private equity stakes, $32 billion of neocloud commitments and $28 billion of cloud services NVIDIA rents back. In a downturn these lose value at the same moment revenue falls, and the guarantees can turn into cash payments.</p>
+    <p><b>Leadership.</b> The founder who ran product cadence and the largest customer relationships is gone, the interim CEO is also the CFO, the senior bench is 59 to 71, and the permanent CEO search runs while Congress, the SEC and the President all weigh in. Customer and employee retention through that is not guaranteed. RSUs granted this year at an average grant-date value of $183.74 have lost about a third of their value, which tests retention.</p>
+    <p><b>China and export politics.</b> The Q4 guide assumes zero data center compute revenue from China. On 16 November the Commerce Department issued a rule requiring a license for any data center, anywhere, to rent large amounts of US-chip compute to Chinese companies, and added license requirements for advanced chips shipped to Singapore, Malaysia, Indonesia, Thailand and Brazil. The Megaspeed investigation, congressional hearings and the President's own comments all keep export policy volatile, in either direction, and a hostile turn could also touch Taiwan-headquartered customers that are 26% of revenue.</p>
+    <p><b>Gross margin compression.</b> Q4 is guided to 71–72%, down three points, on the Rubin ramp. Memory costs are rising (supply commitments are up $111 billion in a quarter, mostly memory), and AMD's MI450 gives buyers a second source. Three points lower margins in every year of my model would take the value to about $121.</p>
+    <p><b>Customer concentration and in-house chips.</b> The hyperscalers, 52% of revenue this quarter, design their own accelerators. Each generation they shift more inference work to them, so the depth of the next down cycle depends on NVIDIA's share of their spending as much as on the total.</p>
+
+    <hr class="sec">
+    <h3>The Path From Here</h3>
+    <p>NVIDIA is still the most important company in the AI buildout. It earned $65.3 billion in the quarter it reported this week, it guided to $130 billion of revenue next quarter, and its products are the default choice at every major lab and cloud. That position survived the week intact.</p>
+    <p>The price and what it assumes moved instead. At $125.53 the market is no longer paying for the buildout to continue indefinitely. My base case, which includes a normal downturn and margins falling to 50%, comes out at $129. The probability-weighted value, including a bust that would come with a restatement, comes out at about $128. The stock is fairly priced for a normal semiconductor cycle, sitting on its 200-week line, with a governance and accounting overhang that has dates attached.</p>
+    <p>So I wait, and I say exactly for what. I would buy on either of two things. A clean 10-Q, filed on time, with numbers matching the supplemental document, no change to revenue recognition and no new language from the auditor, would remove the bust tail and put the weighted value near $150. Or a price under about $100, my value at a 12% discount rate, would pay me for the uncertainty without the filing.</p>
+    <p>The checkpoints come in order: Huang's transcribed interview with House committees, reported for 1 December; Teter's on 2 December; the 10-Q, due around 4 December; the next dividend on 23 December; and the fourth-quarter print around 24 February 2027, which will show whether gross margin held in the low 70s and whether receivables came back under 60 days.</p>
+
+    <div class="note" style="margin-top:28px"><b>Disclaimer.</b> Not financial advice. Do your own research. All figures from company filings and public disclosures. Price at publish: $125.53 (20 November 2026).</div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="verdict">
+    <h1 class="verdict">Fairly priced for a normal chip cycle; the 10-Q decides the rest.</h1>
+    <p class="sub">At $125.53 NVIDIA trades within 2% of my probability-weighted value, with a base case that already includes a 15% revenue decline in fiscal 2030. The accounting and governance overhang has dates attached, so I wait for the filing.</p>
+
+    <div class="callbar">
+      <span class="pill">Call<b style="color:var(--bench)">Wait · buy on a clean 10-Q or under $100</b></span>
+      <span class="pill">Conviction<b>Moderate</b></span>
+      <span class="pill lean">Net overhang lean<b style="color:var(--bench)">Neutral to negative</b></span>
+      <span class="pill">Recognition<b>10-Q ~4 Dec · Q4 print ~24 Feb 2027</b></span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head"><span class="l">Recognition gap</span><span class="t">resolves ~ Dec 2026 · 10-Q</span></div>
+      <div class="track">
+        <div class="axis"></div>
+        <div class="gapfill" style="left:37.77%;right:61.12%"></div>
+        <div class="mk p" style="left:37.77%"><div class="d"></div><div class="v">$125.53</div><div class="c">price now</div></div>
+        <div class="mk f" style="left:38.88%"><div class="d"></div><div class="v">~$127.75</div><div class="c">driver-adjusted</div></div>
+      </div>
+      <div class="gnote">axis $50–$250 · anchor = 25% bust DCF ($43.40) + 50% base DCF ($129.03) + 25% consensus-path DCF ($209.53), all at 10% WACC and 3% terminal growth · my own DCF (thesis tab) runs ~$129.03 · ~2% upside to the anchor, ~3% to my DCF</div>
+    </div>
+    <p>The gauge shows almost no gap, and that is the finding. All three DCFs share the same mechanics: a fiscal 2027 base of $423.7 billion of revenue, a 17% tax rate, an ecosystem-investment charge against cash flow, $70.0 billion of net financial assets, the private stakes excluded and 24.32 billion diluted shares. They differ only on the operating path. The weights are my judgment. A quarter on the bust reflects a restatement plus a capex freeze arriving together. Half on the base is a normal cycle at an abnormal scale. A quarter on the consensus path is no down year at all.</p>
+    <p>Sell-side targets average $244.18 across 56 analysts, with a low of $130; Ives is at $225 and UBS's Arcuri at $220. Those targets mostly capitalize consensus fiscal 2028 earnings near $16.61 at 13 to 15 times. My consensus-path DCF, at $209.53, is the same view expressed in cash flows, and I give it a quarter of the weight.</p>
+    <div class="note"><b>Key levels.</b> $123.33 is the 200-week line, 1.8% below Friday's close; a weekly close under it would be the first since September 2022. $239.24 is the October high. The weighted value moves to about $150 if the 10-Q removes the bust tail, and I would buy there; below $100 the price pays for the uncertainty without the filing.</div>
+  </section>
+
+  <section class="panel" data-panel="overhangs">
+    <h2>Overhang ledger</h2>
+    <p class="sub">Drivers the metrics don't show yet, scored materiality × unpriced × low-attention × linkage. Net lean neutral to negative: the risks are larger and mostly priced after a 47% fall, and the positives are real and already in consensus.</p>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">The 10-Q and revenue recognition</span><span class="oh-layer">micro · accounting</span><span class="oh-score">0.52</span></div>
+      <div class="sbar"><i style="width:52%"></i></div>
+      <div class="oh-mech">The SEC probe, per Reuters, examines accounting; the press has focused on the 2025 switch from billing to headquarters geography, which cannot change totals. The risk that can is revenue timing on multi-quarter deals with extended terms, with DSO up to 64 days and receivables at $81.0B. The 10-Q, held back from the results day for the first time in ten reports, is where any change in policy or auditor language would appear.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium (14% on Friday)</div><div class="ff"><b>Attention</b>High on the probe, low on recognition vs presentation</div><div class="ff"><b>Trigger</b>10-Q, due ~4 Dec 2026</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">Customer credit risk now sits on NVIDIA's balance sheet</span><span class="oh-layer">micro · capital structure</span><span class="oh-score">0.47</span></div>
+      <div class="sbar"><i style="width:47%"></i></div>
+      <div class="oh-mech">$118B of maximum guarantee exposure ($105B for the SB Energy campus leased to OpenAI), $65.5B of private stakes, $32B of neocloud commitments, $28B of cloud capacity rented back. In nine months NVIDIA bought $58.1B of equity securities against $113.7B of free cash flow. In a downturn these lose value as revenue falls; the market values NVDA on earnings and has not priced the leverage.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Medium ("circular financing" gets the headlines; the dollar amounts get little coverage)</div><div class="ff"><b>Trigger</b>A neocloud funding failure; guarantee disclosures in the 10-Q</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">A leadership vacuum with politics attached</span><span class="oh-layer">micro · governance</span><span class="oh-score">0.36</span></div>
+      <div class="sbar"><i style="width:36%"></i></div>
+      <div class="oh-mech">Interim CEO doubling as CFO, a first-ever independent chair, a CEO search, senior executives aged 59 to 71, House interviews on 1 and 2 December, and a President calling for Huang's return. Customer relationships Huang ran personally now pass to others during the Rubin ramp.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium-high</div><div class="ff"><b>Attention</b>Very high</div><div class="ff"><b>Trigger</b>Permanent CEO named; testimony transcripts</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">Demand did not leave with him</span><span class="oh-layer">micro · 1st-order</span><span class="oh-score">0.40</span></div>
+      <div class="sbar"><i style="width:40%"></i></div>
+      <div class="oh-mech">Q4 guided to $130B (a 14-week quarter) with no China data center compute in it, Vera Rubin shipping at partners including CoreWeave, Google Cloud, Microsoft Azure, Oracle and Nebius, and $390B of supply secured. If the Q4 print lands at or above the guide with margins in the low 70s, the market has priced a cycle turn that has not started.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>Low this week (drowned out)</div><div class="ff"><b>Trigger</b>Q4 FY27 print ~24 Feb 2027</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">$227B of buyback at half the price</span><span class="oh-layer">micro · capital return</span><span class="oh-score">0.38</span></div>
+      <div class="sbar"><i style="width:38%"></i></div>
+      <div class="oh-mech">The board added $150B in September, with no expiration, leaving $227.3B authorized. At $125.53 that is 7.4% of the market cap, bought at roughly half the average price of Q3's $22.1B of repurchases. Buybacks were "the highest priority" on the call.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low</div><div class="ff"><b>Trigger</b>Q4 repurchase disclosure; 10b5-1 activity</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">A presentation finding would leave the numbers intact</span><span class="oh-layer">regulatory · 2nd-order</span><span class="oh-score">0.30</span></div>
+      <div class="sbar"><i style="width:30%"></i></div>
+      <div class="oh-mech">If the SEC's interest is the geographic reporting change, the remedy is restated geography and possibly a penalty. Revenue, margins and cash are untouched. The market sold the stock as if recognition were in question; a clean 10-Q and a narrow probe would reverse part of Friday's 14%.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low (the market has not separated the two)</div><div class="ff"><b>Trigger</b>10-Q risk-factor language; any SEC or company statement</div></div>
+    </div>
+
+    <div class="ohcard dorm">
+      <div class="oh-top"><span class="arr">○</span><span class="oh-title">A guarantee is called</span><span class="oh-layer">micro · dormant</span><span class="dtag">fires on anomaly</span></div>
+      <div class="oh-mech">NVIDIA says it has made no payments under its guarantees, and the SB Energy guarantees take effect only as each building's lease commences, with payment obligations expected to begin in 2028. Held dormant: it fires only if a neocloud or data center partner defaults on financing NVIDIA backstops, which would turn contingent exposure into cash and change how the market values every other arrangement.</div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="numbers">
+    <h2>Numbers</h2>
+    <p class="eyebrow">Q3 fiscal 2027, quarter to 25 October 2026</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Revenue</div><div class="mv g">$115.8B</div><div class="mn">+103% y/y, +20% q/q</div></div>
+      <div class="met"><div class="ml">Data Center</div><div class="mv g">$107.6B</div><div class="mn">+110%; hyperscale $60.1B, AI clouds etc. $47.5B</div></div>
+      <div class="met"><div class="ml">Gross margin</div><div class="mv">74.8%</div><div class="mn">GAAP; Q4 guided 71–72%</div></div>
+      <div class="met"><div class="ml">Operating income</div><div class="mv g">$77.5B</div><div class="mn">67% margin, a record</div></div>
+      <div class="met"><div class="ml">Net income</div><div class="mv g">$65.3B</div><div class="mn">EPS $2.70; equity gains $1.8B</div></div>
+      <div class="met"><div class="ml">Receivables</div><div class="mv r">$81.0B</div><div class="mn">64 days, up from 60; extended terms</div></div>
+    </div>
+    <p class="eyebrow">Guidance, cash and exposures</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Q4 revenue guide</div><div class="mv">$130.0B ± 3%</div><div class="mn">14-week quarter; no China DC compute</div></div>
+      <div class="met"><div class="ml">Free cash flow (9M)</div><div class="mv g">$113.7B</div><div class="mn">OCF $122.7B = 67% of net income</div></div>
+      <div class="met"><div class="ml">Equity bought (9M)</div><div class="mv r">$58.1B</div><div class="mn">private stakes now $65.5B</div></div>
+      <div class="met"><div class="ml">Guarantees (max)</div><div class="mv r">$118.0B</div><div class="mn">$105B SB Energy / OpenAI campus</div></div>
+      <div class="met"><div class="ml">Commitments</div><div class="mv r">$518B</div><div class="mn">$390B supply, $74B leases, $28B cloud</div></div>
+      <div class="met"><div class="ml">Buyback left</div><div class="mv">$227.3B</div><div class="mn">7.4% of market cap at $125.53</div></div>
+    </div>
+    <h3>Scenario targets — P/E on fiscal 2028 earnings per share</h3>
+    <table>
+      <tr><th>Scenario</th><th>Multiple</th><th class="r">Implied</th><th>Path</th></tr>
+      <tr><td class="b">Bear</td><td>8× on ~$8.98</td><td class="r">~$72</td><td class="scen">Revenue up only 5% in FY28 as a restatement and a capex freeze hit together; margins fall toward 58%</td></tr>
+      <tr><td class="b">Base</td><td>9× on ~$14.07</td><td class="r">~$127</td><td class="scen">FY28 revenue +50%, then a normal digestion year; a cycle-aware multiple (matches my $129 DCF)</td></tr>
+      <tr><td class="b">Bull</td><td>14× on $16.61</td><td class="r g">~$232</td><td class="scen">Consensus FY28 earnings delivered, clean 10-Q, the governance discount fades</td></tr>
+    </table>
+    <div class="note"><b>The gaps.</b> The 10-Q has not been filed, so I do not have the Q3 share count, the full notes on revenue recognition, or the risk factors the company is still drafting. Reporting has not established which accounting issues the SEC is examining or when it began. NVIDIA does not disclose revenue or margin by customer, so how much of the AI Clouds line comes from companies it has invested in, rents from or guarantees for is unknown. The fair value of the $65.5 billion of private stakes is unobservable. The outcome of the board's investigation, the identity of the next CEO and the direction of China export policy cannot be known yet. My fiscal 2027 earnings estimate assumes Q4 lands at the guide midpoint.</div>
+  </section>
+
+  <section class="panel" data-panel="bear">
+    <h2>Bear case</h2>
+    <p>The steelman, given equal room.</p>
+    <h3>The short thesis</h3>
+    <p>NVIDIA's earnings are a peak, and part of the peak is financed by NVIDIA. The company that once let customers pay their own way now buys equity in them ($58.1 billion in nine months, $65.5 billion of private stakes on the books), rents capacity back from them ($28 billion of cloud service agreements), commits to fill their data centers ($32 billion of neocloud agreements), and guarantees the buildings ($118 billion of maximum exposure, $105 billion of it for one customer's campus). Receivables doubled in nine months to $81 billion on "extended payment terms." Operating cash flow covered only two-thirds of net income, and $25.5 billion of the pre-tax income came from marking up equity stakes in the ecosystem. The marks have already started to turn: the third quarter carried a $1.8 billion impairment on private stakes, in a quarter when the buildout was still accelerating. A bear only has to show that the quality of each dollar of revenue has fallen while the market still capitalizes it as if every dollar came from a hyperscaler paying on normal terms.</p>
+    <p>Then the governance collapse. The founder resigned amid reports linking his personal life to a customer under export-control investigation. The board that let him run the company for 33 years without a chair is now running a CEO search under the eyes of three House committees, the SEC, California regulators and a President who wants Huang back. The interim CEO is the CFO whose accounting the SEC is reportedly examining, and the company did something it had not done in this cycle: it reported earnings without filing the 10-Q. Late filings precede restatements often enough that the market is right to treat this one as a signal until proven otherwise.</p>
+    <p>Then the cycle. Every NVIDIA boom has ended with earnings falling by half or more: fiscal 2023, late 2018, 2008. This one is concentrated in four or five buyers whose capital budgets move together, each designing its own chips, with AMD's MI450 now running at OpenAI, Meta, Microsoft, Anthropic and Oracle. Gross margin is already guided down three points. Memory commitments rose $111 billion in a single quarter, which means NVIDIA has locked in costs at peak prices for years. When the buildout pauses, revenue falls, the inventory and purchase commitments become liabilities, the equity stakes get written down, and the guarantees start to bite. Washington is adding a demand risk of its own. On 16 November the Commerce Department answered the Megaspeed story with a rule that requires a license for any data center renting large blocks of US-chip compute to Chinese companies, and for advanced chips shipped to Singapore, Malaysia, Indonesia, Thailand and Brazil. China already contributes nothing to the Q4 guide; the rule puts part of the Southeast Asian demand that grew up around it in doubt as well. On those inputs my bust case is worth $43, and the bear would argue I give it too little weight.</p>
+    <h3>Why the re-rate may never fire</h3>
+    <p>The bull case needs the market to pay a growth multiple again for a company it now suspects is at a cyclical peak. That rarely happens until the cycle has turned and recovered, which in 2008 and 2018 took one to two years. Meanwhile the news flow for the next three months is regulatory, legal and political: a late 10-Q, congressional testimony, an SEC inquiry with no timetable, a CEO search, and export policy set by a President who is publicly arguing with the board. Each of those can only add uncertainty. AMD at 24 times earnings shows the market still pays up for AI growth it trusts. It prices NVIDIA's at 7.6 times, and nothing on the calendar before February is built to change that.</p>
+    <h3>Pre-committed invalidations</h3>
+    <p>These are the conditions under which my wait call is wrong. If any of the first three happen, I will say so in a dated note and move to buy; if either of the last two happens, I will move to avoid.</p>
+    <table>
+      <tr><td>The 10-Q is filed by 4 December 2026 with revenue, net income and receivables matching the 17 November supplemental, no change to revenue recognition policy and no new auditor language (move to buy)</td></tr>
+      <tr><td>Q4 fiscal 2027 revenue of $134 billion or more with GAAP gross margin of at least 72% and DSO back at or below 60 days (move to buy)</td></tr>
+      <tr><td>NVDA closes below $100 on any day before the 10-Q is filed (move to buy on price)</td></tr>
+      <tr><td>The 10-Q is filed late (an NT 10-Q), or discloses a restatement or a change in revenue recognition (move to avoid)</td></tr>
+      <tr><td>Any guarantee payment, or an impairment of private stakes above $5 billion in a quarter, before the Q1 fiscal 2028 report (move to avoid)</td></tr>
+    </table>
+  </section>
+
+  <section class="dd-signup">
+    <div class="eyebrow">the mailing list</div>
+    <h3>Get the work as it publishes</h3>
+    <p>One list: weekly 200-week moving average signal reports every Saturday, plus each new deep dive as it goes up.</p>
+    <form name="deepdive-notify" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="dd-form">
+      <input type="hidden" name="form-name" value="deepdive-notify">
+      <input type="hidden" name="source" value="deep-dive-nvda">
+      <p style="display:none"><label>Leave blank: <input name="bot-field"></label></p>
+      <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="dd-signup-note">No spam. Unsubscribe anytime.</p>
+  </section>
+
+  <section class="tool-rec">
+    <div class="tool-rec-head">
+      <div class="eyebrow">the terminal I use</div>
+      <span class="tool-rec-badge">referral link</span>
+    </div>
+    <h3>Godel Terminal</h3>
+    <p style="margin-bottom:10px">A browser-based research terminal with a Bloomberg-style command interface: DES, FOCUS, TAS, HDS. Real-time quotes, filings, financials, ownership and news, at $996 a year against Bloomberg's roughly $27,000.</p>
+    <p class="tool-rec-body">I use it for the filing and ownership work behind these deep dives. Research and analysis only; order execution and dealer chat sit with your broker. Fourteen-day trial.</p>
+    <figure class="tool-rec-shot">
+      <a href="https://app.godelterminal.com/?via=mungbeans" target="_blank" rel="noopener sponsored">
+        <img src="/images/godel-terminal-ganx.png" alt="Godel Terminal showing GANX: ownership, valuation ratios and a live filings feed" loading="lazy" width="2880" height="1557">
+      </a>
+      <figcaption>GANX in Godel: float, insider and institutional ownership, valuation ratios and the filings feed on one screen. That name is a position in <a href="/book/">The Book</a>.</figcaption>
+    </figure>
+    <div class="tool-rec-cta">
+      <a class="tool-rec-btn" href="https://app.godelterminal.com/?via=mungbeans" target="_blank" rel="noopener sponsored">Try Godel Terminal &rarr;</a>
+      <span class="tool-rec-code">code <b>mungbeans</b> &middot; 30% off your first month</span>
+    </div>
+    <p class="tool-inline">
+      <span class="tool-inline-label">also on the desk</span>
+      <a href="https://simplywall.st/register?referrer_code=a32b7ed506a963a86c00e64f87045877" target="_blank" rel="noopener sponsored">Simply Wall St</a>
+      &middot; visual company reports and write-ups, five free reports a month as a quick second read.
+    </p>
+    <p class="tool-rec-disc">Disclosure: these are referral links and mungbeans.io earns a commission if you subscribe, at no extra cost to you. The discount code is why Godel is here; the recommendation is because I pay for it myself. The site carries no advertising, and every paid link is <a href="/tools/">listed on one page</a>.</p>
+  </section>
+
+  <footer>
+    Thesis published 20 Nov 2026 at $125.53. Fundamentals from filings, the Q3 fiscal 2027 release, CFO commentary and supplemental financial information (17 Nov 2026), and public disclosures. Recognition-gap anchor derived from three DCFs weighted 25/50/25; sell-side consensus shown for reference. Not investment advice. A record of reasoning.
+  </footer>
+
+</div>
+<script>
+  const tabs=[...document.querySelectorAll('.tab')];
+  const panels=[...document.querySelectorAll('.panel')];
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector(`[data-panel="${t.dataset.p}"]`).classList.add('active');
+  }));
+</script>
+
+<script>
+// Live price for the masthead, using the same /.netlify/functions/quote proxy
+// the individual stock pages call. Server-side, CDN-cached, no API key. The
+// publish price stays hardcoded because it is history; only the current price
+// and the since-publish percentage are fetched, so the article cannot go stale
+// between builds.
+(function () {
+  var el = document.getElementById("livePx");
+  if (!el) return;
+  var symbol = el.dataset.symbol;
+  var publish = parseFloat(el.dataset.publish);
+  var shares = parseFloat(el.dataset.shares || "0");
+  var debt = parseFloat(el.dataset.netdebt || "0");
+
+  var since = el.dataset.since || "";
+
+  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol) +
+        (since ? "&since=" + encodeURIComponent(since) : ""))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (q) {
+      if (!q || !q.price) return;
+      var px = q.price;
+
+      // The publish price and share count above are in the terms that applied
+      // on the publish date. A split since then changes the unit, not the
+      // value: restate both so "since publish" measures the business rather
+      // than the share count. Market cap is unaffected either way, since price
+      // and shares move in opposite directions by the same factor.
+      var sf = (typeof q.splitFactor === "number" && isFinite(q.splitFactor)
+                && q.splitFactor > 0) ? q.splitFactor : 1;
+      if (sf !== 1) {
+        publish = publish / sf;
+        shares = shares * sf;
+      }
+      var parts = ["<b>$" + px.toFixed(2) + "</b>"];
+      if (shares > 0) {
+        var cap = px * shares;
+        parts.push("cap <b>$" + (cap / 1e9).toFixed(2) + "B</b>");
+        if (debt) parts.push("EV <b>$" + ((cap + debt) / 1e9).toFixed(2) + "B</b>");
+      }
+      el.innerHTML = parts.join(" · ");
+
+      var perf = document.getElementById("livePerf");
+      if (perf && publish > 0) {
+        var chg = (px / publish - 1) * 100;
+        perf.className = chg >= 0 ? "g" : "r";
+        perf.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(1) + "% since publish";
+      }
+      var stamp = document.getElementById("liveStamp");
+      if (stamp) stamp.textContent = " · live";
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>
