@@ -1,16 +1,15 @@
-name: Micro Cap Innovation Screener
+name: Micro Cap Innovation Screener (Manual)
+
+# Scheduled Saturday runs are orchestrated by build-deploy.yml so Hugo builds
+# and deploys once after all weekly data updates finish. Keep this workflow
+# for manual one-off reruns.
 
 on:
-  workflow_run:
-    workflows: ["Weekly Stock Data Update and Deploy"]
-    types:
-      - completed
   workflow_dispatch:
 
 jobs:
   screen-microcaps:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout repo
