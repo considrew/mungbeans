@@ -66,6 +66,28 @@
   {{ if .Params.below_line }}{{ $faqPct = printf "%.1f%%" (math.Abs .Params.pct_from_wma) }}{{ else }}{{ $faqPct = printf "%.1f%%" .Params.pct_from_wma }}{{ end }}
   {{ with .Params.rsi_14 }}{{ $faqRsi = printf "%.0f" . }}{{ end }}
   {{ with .Params.fcf_yield }}{{ if gt . 0.0 }}{{ $faqFcf = printf "%.1f%%" . }}{{ end }}{{ end }}
+  {{ $aiRec := dict }}
+  {{ with resources.Get "data/ai_exposure.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ with index (.stocks | default dict) $.Params.symbol }}
+        {{ if ne .ai_quadrant "unlinked" }}
+          {{ $aiRec = . }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+  {{ $aiFaqText := "" }}
+  {{ if $aiRec.ai_quadrant }}
+    {{ $aiQName := "AI-Linked Bystander" }}
+    {{ if eq $aiRec.ai_quadrant "toll_collector" }}{{ $aiQName = "AI Toll Collector" }}
+    {{ else if eq $aiRec.ai_quadrant "levered_landlord" }}{{ $aiQName = "Levered Landlord" }}
+    {{ else if eq $aiRec.ai_quadrant "bag_holder" }}{{ $aiQName = "AI Bag Holder" }}{{ end }}
+    {{ $aiScorePart := "" }}
+    {{ if ne $aiRec.ai_bust_score nil }}{{ $aiScorePart = printf " AI Bust Exposure is %.1f/100." (float $aiRec.ai_bust_score) }}{{ end }}
+    {{ if ne $aiRec.ai_toll_score nil }}{{ $aiScorePart = printf "%s AI Toll Gate score is %.1f/100." $aiScorePart (float $aiRec.ai_toll_score) }}{{ end }}
+    {{ $aiSummaryClean := replace ($aiRec.search_summary | default "") "\"" "'" }}
+    {{ $aiFaqText = printf "%s (%s) is classified as an %s on mungbeans.io.%s %s" .Params.name .Params.symbol $aiQName $aiScorePart $aiSummaryClean }}
+  {{ end }}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -94,7 +116,15 @@
           "@type": "Answer",
           "text": "{{ if .Params.below_line }}{{ .Params.symbol }} is below its 200-week moving average, which is the starting point for value analysis.{{ else }}{{ .Params.symbol }} is above its 200-week moving average, so it does not currently meet the primary signal.{{ end }}{{ if $faqRsi }} RSI is {{ $faqRsi }}.{{ end }}{{ if $faqFcf }} FCF yield is {{ $faqFcf }}.{{ end }} This is not financial advice."
         }
-      }
+      }{{ if $aiFaqText }},
+      {
+        "@type": "Question",
+        "name": "Is {{ .Params.symbol }} ({{ .Params.name }}) failing or at risk from an AI capex bust?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ $aiFaqText }}"
+        }
+      }{{ end }}
     ]
   }
   </script>
@@ -1474,6 +1504,9 @@
       </div>
 
     {{ partial "options-panel.html" $ }}
+    {{ if $aiRec.ai_quadrant }}
+      {{ partial "ai-stock-card.html" (dict "page" $ "ai" $aiRec) }}
+    {{ end }}
 
     {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-single") }}
 
@@ -1990,6 +2023,12 @@
             {{ .Params.name }} does not currently pay a dividend.
           {{- end }}
         </p>
+      </details>
+      {{ end }}
+      {{ if $aiFaqText }}
+      <details open>
+        <summary>Is {{ .Params.symbol }} ({{ .Params.name }}) failing or at risk from an AI capex bust?</summary>
+        <p>{{ $aiFaqText }} <a href="/ai-exposure/" style="color:var(--bench)">Compare on the AI Exposure Quadrant &rarr;</a></p>
       </details>
       {{ end }}
     </section>

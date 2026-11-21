@@ -44,6 +44,7 @@
     if (path.indexOf('/book') === 0) return 'book';
     if (path.indexOf('/disclaimer') === 0) return 'disclaimer';
     if (path.indexOf('/screens') === 0) return 'screen-page';
+    if (path.indexOf('/ai-exposure') === 0) return 'ai-exposure';
     if (path === '/stocks/' || path === '/stocks') return 'all-stocks';
     if (path.indexOf('/stocks/') === 0) return 'stock-page';
     return 'other';

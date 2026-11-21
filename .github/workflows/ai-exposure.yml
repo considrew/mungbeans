@@ -1,0 +1,84 @@
+name: AI Exposure Overlay Re-Score & Deploy
+
+# Manual workflow for mid-week edits to below-the-line/data/ai_overlay.yml.
+# Recomputes AI Bust & AI Toll Gate scores in seconds from the existing
+# stocks.json snapshot without re-fetching Yahoo Finance, then rebuilds and
+# deploys Hugo to Netlify.
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Build Hugo and deploy to Netlify after re-scoring'
+        type: boolean
+        default: true
+
+concurrency:
+  group: ai-exposure-rescore
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rescore-ai-exposure:
+    name: Re-score AI Exposure & Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: pip install numpy pyyaml
+
+      - name: Recompute AI Exposure scores
+        run: |
+          cd below-the-line
+          python scripts/ai_exposure.py --verbose
+
+      - name: Commit and push updated AI Exposure data
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add below-the-line/assets/data/ai_exposure.json
+          git add below-the-line/static/data/ai_exposure.json
+          git add below-the-line/assets/data/stocks.json
+          git diff --staged --quiet || git commit -m "Re-score AI Exposure overlay $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push
+
+      - name: Setup Hugo
+        if: ${{ inputs.deploy }}
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'
+          extended: true
+
+      - name: Install Node dependencies
+        if: ${{ inputs.deploy }}
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site
+        if: ${{ inputs.deploy }}
+        run: |
+          cd below-the-line
+          hugo --minify
+
+      - name: Deploy to Netlify
+        if: ${{ inputs.deploy }}
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './below-the-line/public'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

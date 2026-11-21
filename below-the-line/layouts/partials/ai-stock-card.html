@@ -1,0 +1,108 @@
+{{/* AI Exposure & Capex Risk card for individual stock pages (/stocks/<sym>/).
+     Rendered ONLY for stocks that pass the AI-relevance or Toll Gate curation gate.
+     Expects dict with keys: page, ai. */}}
+{{ $p := .page }}
+{{ $r := .ai }}
+{{ $bp := $r.ai_bust_pillars | default dict }}
+{{ $tp := $r.ai_toll_pillars | default dict }}
+{{ $qLabel := "AI-Linked Bystander" }}
+{{ if eq $r.ai_quadrant "toll_collector" }}{{ $qLabel = "AI Toll Collector" }}
+{{ else if eq $r.ai_quadrant "levered_landlord" }}{{ $qLabel = "Levered Landlord" }}
+{{ else if eq $r.ai_quadrant "bag_holder" }}{{ $qLabel = "AI Bag Holder (High Capex/Bust Risk)" }}{{ end }}
+
+<section class="ai-stock-card" id="ai-exposure">
+  <div class="ai-sc-head">
+    <div>
+      <div class="eyebrow">ai exposure &amp; bust risk</div>
+      <h2>Is {{ $p.Params.symbol }} Exposed to an AI Capex Bust?</h2>
+    </div>
+    <span class="ai-sc-badge ai-sc-{{ $r.ai_quadrant }}">{{ $qLabel }}</span>
+  </div>
+
+  {{ with $r.search_summary }}
+  <p class="ai-sc-summary">{{ . }}</p>
+  {{ end }}
+
+  <div class="ai-sc-scores">
+    <div class="ai-sc-stat">
+      <span class="ai-sc-lbl">AI Bust Exposure</span>
+      <span class="ai-sc-val {{ if and (ne $r.ai_bust_score nil) (ge (float $r.ai_bust_score) 50.0) }}neg{{ end }}">
+        {{ if ne $r.ai_bust_score nil }}{{ printf "%.1f" (float $r.ai_bust_score) }}<small>/100</small>{{ else }}—{{ end }}
+      </span>
+    </div>
+    <div class="ai-sc-stat">
+      <span class="ai-sc-lbl">AI Toll Gate</span>
+      <span class="ai-sc-val {{ if and (ne $r.ai_toll_score nil) (ge (float $r.ai_toll_score) 60.0) }}pos{{ end }}">
+        {{ if ne $r.ai_toll_score nil }}{{ printf "%.1f" (float $r.ai_toll_score) }}<small>/100</small>{{ else }}<small>not curated</small>{{ end }}
+      </span>
+    </div>
+    <div class="ai-sc-stat">
+      <span class="ai-sc-lbl">AI Beta</span>
+      <span class="ai-sc-val">{{ if ne $r.ai_beta nil }}{{ printf "%.2f" (float $r.ai_beta) }}{{ else }}—{{ end }}</span>
+    </div>
+    <div class="ai-sc-stat">
+      <span class="ai-sc-lbl">Funding Gap</span>
+      <span class="ai-sc-val">{{ if ne $r.capex_funding_gap nil }}{{ printf "%.1f%%" (float $r.capex_funding_gap) }}{{ else }}—{{ end }}</span>
+    </div>
+  </div>
+
+  <div class="ai-sc-pillars">
+    <div>
+      <div class="ai-sc-subhead">Bust Pillars</div>
+      <div class="ai-sc-row"><span>A · Deprec. Bomb</span><div class="ai-sc-track"><i class="bust" style="width:{{ if ne $bp.A nil }}{{ printf "%.0f" (float $bp.A) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $bp.A nil }}{{ printf "%.0f" (float $bp.A) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>B · Leverage</span><div class="ai-sc-track"><i class="bust" style="width:{{ if ne $bp.B nil }}{{ printf "%.0f" (float $bp.B) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $bp.B nil }}{{ printf "%.0f" (float $bp.B) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>C · Circularity</span><div class="ai-sc-track"><i class="bust" style="width:{{ if ne $bp.C nil }}{{ printf "%.0f" (float $bp.C) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $bp.C nil }}{{ printf "%.0f" (float $bp.C) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>D · Rev. Depend.</span><div class="ai-sc-track"><i class="bust" style="width:{{ if ne $bp.D nil }}{{ printf "%.0f" (float $bp.D) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $bp.D nil }}{{ printf "%.0f" (float $bp.D) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>E · AI Beta</span><div class="ai-sc-track"><i class="bust" style="width:{{ if ne $bp.E nil }}{{ printf "%.0f" (float $bp.E) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $bp.E nil }}{{ printf "%.0f" (float $bp.E) }}{{ else }}—{{ end }}</span></div>
+    </div>
+    {{ if ne $r.ai_toll_score nil }}
+    <div>
+      <div class="ai-sc-subhead">Toll Gate Pillars</div>
+      <div class="ai-sc-row"><span>T1 · Data Moat</span><div class="ai-sc-track"><i class="toll" style="width:{{ if ne $tp.T1 nil }}{{ printf "%.0f" (float $tp.T1) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $tp.t1_raw nil }}{{ $tp.t1_raw }}/10{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>T2 · Capex Light</span><div class="ai-sc-track"><i class="toll" style="width:{{ if ne $tp.T2 nil }}{{ printf "%.0f" (float $tp.T2) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $tp.T2 nil }}{{ printf "%.0f" (float $tp.T2) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>T3 · Efficiency</span><div class="ai-sc-track"><i class="toll" style="width:{{ if ne $tp.T3 nil }}{{ printf "%.0f" (float $tp.T3) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $tp.T3 nil }}{{ printf "%.0f" (float $tp.T3) }}{{ else }}—{{ end }}</span></div>
+      <div class="ai-sc-row"><span>T4 · Cash Quality</span><div class="ai-sc-track"><i class="toll" style="width:{{ if ne $tp.T4 nil }}{{ printf "%.0f" (float $tp.T4) }}%{{ else }}0%{{ end }}"></i></div><span>{{ if ne $tp.T4 nil }}{{ printf "%.0f" (float $tp.T4) }}{{ else }}—{{ end }}</span></div>
+    </div>
+    {{ end }}
+  </div>
+
+  <div class="ai-sc-foot">
+    <a href="/ai-exposure/">Compare on the full AI Exposure Quadrant &rarr;</a>
+    <a href="/methodology/ai-exposure/">Methodology</a>
+    {{ with $r.overlay }}
+      {{ if .reviewed }}<span>Reviewed {{ .reviewed }}</span>{{ end }}
+      {{ range .sources }}
+        <a href="{{ .url }}" target="_blank" rel="noopener">{{ .doc }}</a>
+      {{ end }}
+    {{ end }}
+  </div>
+</section>
+
+<style>
+  .ai-stock-card { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--bench); border-radius: 9px; padding: 20px 22px; margin: 28px 0; }
+  .ai-sc-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+  .ai-sc-head h2 { margin: 4px 0 0; font-size: 21px; }
+  .ai-sc-badge { font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; padding: 4px 10px; border-radius: 4px; }
+  .ai-sc-toll_collector { background: var(--gain-soft); color: var(--gain); border: 1px solid rgba(143,191,111,.4); }
+  .ai-sc-levered_landlord { background: var(--bench-soft); color: var(--bench); border: 1px solid rgba(201,162,74,.4); }
+  .ai-sc-bag_holder { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(194,96,79,.4); }
+  .ai-sc-bystander { background: rgba(111,103,87,.14); color: var(--dim); border: 1px solid var(--line); }
+  .ai-sc-summary { font-size: 15.5px; color: var(--ink); line-height: 1.6; margin: 0 0 16px; }
+  .ai-sc-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .ai-sc-stat { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
+  .ai-sc-lbl { display: block; font-family: "IBM Plex Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); }
+  .ai-sc-val { display: block; font-family: "IBM Plex Mono", monospace; font-size: 18px; font-weight: 600; margin-top: 4px; color: var(--ink); }
+  .ai-sc-val small { font-size: 11px; color: var(--faint); font-weight: 400; }
+  .ai-sc-val.pos { color: var(--gain); }
+  .ai-sc-val.neg { color: var(--loss); }
+  .ai-sc-pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 14px; }
+  .ai-sc-subhead { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 8px; }
+  .ai-sc-row { display: grid; grid-template-columns: 118px 1fr 40px; align-items: center; gap: 8px; margin-bottom: 5px; font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--dim); }
+  .ai-sc-track { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .ai-sc-track i { display: block; height: 100%; border-radius: 3px; }
+  .ai-sc-track i.bust { background: var(--loss); }
+  .ai-sc-track i.toll { background: var(--gain); }
+  .ai-sc-foot { display: flex; flex-wrap: wrap; gap: 14px; font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--faint); border-top: 1px solid var(--line); padding-top: 12px; }
+  .ai-sc-foot a { color: var(--bench); text-decoration: none; }
+  .ai-sc-foot a:hover { text-decoration: underline; }
+</style>

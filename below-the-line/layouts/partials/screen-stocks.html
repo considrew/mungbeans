@@ -8,8 +8,17 @@
 {{- $rows := slice -}}
 {{- $order := "asc" -}}
 
-{{- if or (eq $key "large_cap_below") (eq $key "insider_below") (eq $key "fcf_growing_below") (eq $key "wide_moat_below") (eq $key "yartseva_below") (eq $key "bean_deep_value") (eq $key "stacked_dislocations") -}}
+{{- if or (eq $key "large_cap_below") (eq $key "insider_below") (eq $key "fcf_growing_below") (eq $key "wide_moat_below") (eq $key "yartseva_below") (eq $key "bean_deep_value") (eq $key "stacked_dislocations") (eq $key "ai_toll_collectors") (eq $key "ai_bag_holders") (eq $key "ai_depreciation_bombs") -}}
   {{- $order = "desc" -}}
+{{- end -}}
+
+{{- $aiMap := dict -}}
+{{- if or (eq $key "ai_toll_collectors") (eq $key "ai_bag_holders") (eq $key "ai_depreciation_bombs") -}}
+  {{- with resources.Get "data/ai_exposure.json" -}}
+    {{- with . | transform.Unmarshal -}}
+      {{- $aiMap = .stocks | default dict -}}
+    {{- end -}}
+  {{- end -}}
 {{- end -}}
 
 {{- range $stocks -}}
@@ -123,6 +132,37 @@
       {{- $wowBonus := 0.0 -}}
       {{- if $isWow -}}{{- $wowBonus = add 100.0 $wowScore -}}{{- end -}}
       {{- $sk = add $wowBonus (add (mul $stack 10.0) $bs) -}}
+    {{- end -}}
+
+  {{- else if eq $key "ai_toll_collectors" -}}
+    {{- with index $aiMap $s.symbol -}}
+      {{- if eq .ai_quadrant "toll_collector" -}}
+        {{- $match = true -}}
+        {{- if ne .ai_toll_score nil -}}{{- $sk = float .ai_toll_score -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "ai_bag_holders" -}}
+    {{- with index $aiMap $s.symbol -}}
+      {{- if or (eq .ai_quadrant "bag_holder") (eq .ai_quadrant "levered_landlord") -}}
+        {{- $match = true -}}
+        {{- if ne .ai_bust_score nil -}}{{- $sk = float .ai_bust_score -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "ai_depreciation_bombs" -}}
+    {{- with index $aiMap $s.symbol -}}
+      {{- if .ai_relevant -}}
+        {{- if ne .depreciation_overhang nil -}}
+          {{- if ge (float .depreciation_overhang) 15.0 -}}
+            {{- $match = true -}}
+            {{- $sk = float .depreciation_overhang -}}
+          {{- end -}}
+        {{- else if and (ne .ai_bust_score nil) (ge (float .ai_bust_score) 45.0) -}}
+          {{- $match = true -}}
+          {{- $sk = float .ai_bust_score -}}
+        {{- end -}}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 

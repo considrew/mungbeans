@@ -31,10 +31,16 @@
       {{ $data = . }}
     {{ end }}
   {{ end }}
+  {{ $aiMap := dict }}
+  {{ with resources.Get "data/ai_exposure.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $aiMap = .stocks | default dict }}
+    {{ end }}
+  {{ end }}
 
   <main class="stocks-list-page">
     <h1>All Stocks</h1>
-    <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}. <a href="/screens/">Browse pre-built weekly screens &rarr;</a></p>
+    <p class="page-desc">{{ $data.summary.total_stocks }} stocks tracked. Data as of {{ $data.generated_readable }}. <a href="/screens/">Browse weekly screens &rarr;</a> · <a href="/ai-exposure/">AI Exposure Hub &rarr;</a></p>
 
     {{ partial "tool-strip.html" (dict "ctx" . "at" "stocks-list") }}
 
@@ -94,6 +100,8 @@
           <button class="filter-btn fcf-btn" data-filter-group="special" data-filter="fcf-growing" title="Free cash flow trending upward">📈 FCF Growing</button>
           <button class="filter-btn accumulation-btn" data-filter-group="special" data-filter="quiet-accum" title="Low relative volume + accumulation ratio > 1.2">🔇 Quiet Accumulation</button>
           <button class="filter-btn bean-btn" data-filter-group="special" data-filter="bean-cheap" title="Bean Score > 1σ — FCF yield meaningfully above historical baseline">🫘 Bean Cheap</button>
+          <button class="filter-btn ai-toll-btn" data-filter-group="special" data-filter="ai-toll" title="Curated proprietary data toll gates with low AI capex bust exposure">🛡️ AI Toll Collectors</button>
+          <button class="filter-btn ai-bag-btn" data-filter-group="special" data-filter="ai-bag" title="AI-exposed stocks carrying high capex, financing, or customer concentration risk">💣 AI Bag Holders</button>
         </div>
       </div>
       
@@ -208,6 +216,18 @@
         <li>Combine with "Below Line" signal filter to find mispriced businesses</li>
       </ul>
       <p class="info-note">A stock below the line with growing cash flow is a business getting healthier while the market looks the other way.</p>
+    </div>
+
+    <div id="aiTollInfo" class="info-box ai-toll-info" style="display: none;">
+      <strong>🛡️ AI Toll Collectors</strong>
+      <p>Curated businesses owning legally mandated, exclusive real-time, or deeply embedded proprietary data toll gates with low AI capex bust exposure.</p>
+      <p class="info-note">Explore the full 2×2 quadrant chart, pillar breakdowns, and filing sources on the <a href="/ai-exposure/">AI Exposure Hub &rarr;</a> or <a href="/screens/ai-toll-collectors/">AI Toll Collectors screen &rarr;</a></p>
+    </div>
+
+    <div id="aiBagInfo" class="info-box ai-bag-info" style="display: none;">
+      <strong>💣 AI Bag Holders (Capex Bust Exposure)</strong>
+      <p>AI-linked companies carrying high AI capex funding gaps, negative free cash flow, circular customer/vendor ties, or heavy AI revenue concentration.</p>
+      <p class="info-note">See full five-pillar scoring and SEC filing links on the <a href="/ai-exposure/">AI Exposure Hub &rarr;</a> or <a href="/screens/ai-bag-holders/">AI Bag Holders screen &rarr;</a></p>
     </div>
 
     <!-- WOW Signals Panel -->
@@ -425,6 +445,9 @@
           <th class="sortable hide-mobile has-tooltip" data-sort="beanscore" data-tooltip="Bean Score — FCF yield dislocation from historical baseline, measured in standard deviations. Positive = cheap (yield higher than usual). Negative = expensive. Experimental.">
             Bean <span class="sort-icon">↕</span>
           </th>
+          <th class="hide-mobile has-tooltip" data-tooltip="AI Exposure quadrant from /ai-exposure/: Toll = AI Toll Collector (proprietary data moat, low bust risk); Landlord = Levered Landlord; Bag = AI Bag Holder (high capex/concentration risk).">
+            AI
+          </th>
           <th class="hide-tablet">Sector</th>
         </tr>
       </thead>
@@ -436,6 +459,9 @@
         {{ range .historical_touches }}
           {{ if .ongoing }}{{ $hasOngoingTouch = true }}{{ end }}
         {{ end }}
+        {{ $ai := index $aiMap .symbol }}
+        {{ $aiQ := "" }}
+        {{ with $ai }}{{ if ne .ai_quadrant "unlinked" }}{{ $aiQ = .ai_quadrant }}{{ end }}{{ end }}
         <tr class="stock-row zone-{{ .zone }}{{ if .buffett_quality }} buffett-match{{ end }}{{ if .yartseva_candidate }} yartseva-match{{ end }}{{ if .dividend_aristocrat }} aristocrat-match{{ end }}{{ if .is_cannibal }} cannibal-match{{ end }}" 
             data-symbol="{{ .symbol }}"
             data-name="{{ .name }}"
@@ -485,7 +511,10 @@
             data-is-insider="{{ if .has_conviction_buy }}1{{ end }}"
             data-is-diluter="{{ if .is_diluting }}1{{ end }}"
             data-beanscore="{{ with .bean_score_data }}{{ with .current_score }}{{ . }}{{ else }}-999{{ end }}{{ else }}-999{{ end }}"
-            data-bean-cheap="{{ with .bean_score_data }}{{ with .current_score }}{{ if gt . 1.0 }}true{{ else }}false{{ end }}{{ else }}false{{ end }}{{ else }}false{{ end }}">
+            data-bean-cheap="{{ with .bean_score_data }}{{ with .current_score }}{{ if gt . 1.0 }}true{{ else }}false{{ end }}{{ else }}false{{ end }}{{ else }}false{{ end }}"
+            data-ai-quadrant="{{ $aiQ }}"
+            data-ai-toll="{{ if eq $aiQ "toll_collector" }}true{{ else }}false{{ end }}"
+            data-ai-bag="{{ if eq $aiQ "bag_holder" }}true{{ else }}false{{ end }}">
           <td>
             <a href="/stocks/{{ .symbol | lower }}/">{{ .symbol }}</a>
             {{ if .buffett_quality }}<span class="badge-inline buffett-badge" title="Buffett Quality">🏆</span>{{ end }}
@@ -550,6 +579,17 @@
           </td>
           <td class="mono hide-mobile {{ with .bean_score_data }}{{ with .current_score }}{{ if gt . 1.0 }}bean-cheap{{ else if lt . -1.0 }}bean-expensive{{ else }}bean-neutral{{ end }}{{ end }}{{ end }}">
             {{ with .bean_score_data }}{{ with .current_score }}{{ printf "%+.1f" . }}σ{{ else }}—{{ end }}{{ else }}—{{ end }}
+          </td>
+          <td class="mono hide-mobile">
+            {{ if eq $aiQ "toll_collector" }}
+              <a href="/ai-exposure/" class="ai-pill ai-pill-toll" title="AI Toll Collector{{ with $ai.ai_toll_score }} ({{ printf "%.0f" . }}/100){{ end }}">Toll</a>
+            {{ else if eq $aiQ "levered_landlord" }}
+              <a href="/ai-exposure/" class="ai-pill ai-pill-landlord" title="Levered Landlord">Landlord</a>
+            {{ else if eq $aiQ "bag_holder" }}
+              <a href="/ai-exposure/" class="ai-pill ai-pill-bag" title="AI Bag Holder{{ with $ai.ai_bust_score }} ({{ printf "%.0f" . }}/100){{ end }}">Bag</a>
+            {{ else if eq $aiQ "bystander" }}
+              <a href="/ai-exposure/" class="ai-pill ai-pill-bystander" title="AI-Linked Bystander{{ with $ai.ai_bust_score }} ({{ printf "%.0f" . }}/100){{ end }}">AI</a>
+            {{ else }}—{{ end }}
           </td>
           <td class="sector-cell hide-tablet">{{ if .sector }}{{ .sector }}{{ else }}—{{ end }}</td>
         </tr>
@@ -631,7 +671,9 @@
       diluter: document.getElementById('diluterInfo'),
       insider: document.getElementById('insiderBelowInfo'),
       'fcf-growing': document.getElementById('fcfGrowingInfo'),
-      'quiet-accum': document.getElementById('quietAccumInfo')
+      'quiet-accum': document.getElementById('quietAccumInfo'),
+      'ai-toll': document.getElementById('aiTollInfo'),
+      'ai-bag': document.getElementById('aiBagInfo')
     };
     
     // Populate sector dropdown
@@ -685,13 +727,16 @@
       if (d.isYartseva) flags.push('<span class="detail-flag positive">🎯 Multibagger</span>');
       if (d.isInsider) flags.push('<span class="detail-flag positive">🔍 Insider Buying</span>');
       if (fcf === 'growing') flags.push('<span class="detail-flag positive">📈 FCF Growing</span>');
+      if (d.aiQuadrant === 'toll_collector') flags.push('<span class="detail-flag positive">🛡️ AI Toll Collector</span>');
+      if (d.aiQuadrant === 'levered_landlord') flags.push('<span class="detail-flag warning">⚡ AI Levered Landlord</span>');
+      if (d.aiQuadrant === 'bag_holder') flags.push('<span class="detail-flag negative">💣 AI Bag Holder</span>');
       if (d.isDiluter) flags.push('<span class="detail-flag warning">⚠️ Diluter</span>');
       if (flags.length === 0) flags.push('<span class="detail-flag neutral">No special flags</span>');
 
       const tr = document.createElement('tr');
       tr.className = 'detail-row';
       tr.dataset.detailFor = sym;
-      tr.innerHTML = '<td colspan="15"><div class="detail-content"><div class="detail-grid">' +
+      tr.innerHTML = '<td colspan="16"><div class="detail-content"><div class="detail-grid">' +
         '<div class="detail-section"><h4>Touch History</h4>' +
         '<div class="detail-metric"><span class="label">Times below 200WMA</span><span class="value">' + (d.touches || '0') + '</span></div>' +
         '<div class="detail-metric"><span class="label">Avg return after touch</span><span class="value ' + avgRetClass + '">' + avgRetStr + '</span></div>' +
@@ -865,7 +910,9 @@
             'insider': () => row.dataset.insider === 'true',
             'fcf-growing': () => row.dataset.fcfGrowing === 'true',
             'quiet-accum': () => row.dataset.quietAccum === 'true',
-            'bean-cheap': () => row.dataset.beanCheap === 'true'
+            'bean-cheap': () => row.dataset.beanCheap === 'true',
+            'ai-toll': () => row.dataset.aiToll === 'true',
+            'ai-bag': () => row.dataset.aiBag === 'true'
           };
           for (const f of filters.special) {
             if (specialMap[f] && !specialMap[f]()) { show = false; break; }
@@ -951,6 +998,10 @@
         'quiet_accum': { group: 'special', filter: 'quiet-accum' },
         'bean-cheap': { group: 'special', filter: 'bean-cheap' },
         'bean_cheap': { group: 'special', filter: 'bean-cheap' },
+        'ai-toll': { group: 'special', filter: 'ai-toll' },
+        'ai_toll': { group: 'special', filter: 'ai-toll' },
+        'ai-bag': { group: 'special', filter: 'ai-bag' },
+        'ai_bag': { group: 'special', filter: 'ai-bag' },
         'sp500': { group: 'quality', filter: 'sp500' },
         'proven': { group: 'quality', filter: 'proven' },
         'lowdebt': { group: 'quality', filter: 'lowdebt' },
@@ -1155,8 +1206,23 @@
       .detail-grid { grid-template-columns: 1fr; }
     }
     
-    /* Affiliate */
-    
+    /* AI Exposure light bridge */
+    .ai-toll-btn { background: var(--card); border-color: var(--gain); color: var(--gain); }
+    .ai-toll-btn:hover { background: var(--card2); color: var(--ink); }
+    .ai-toll-btn.active { background: var(--gain-soft); border-color: var(--gain); color: var(--ink); }
+    .ai-bag-btn { background: var(--card); border-color: var(--loss); color: var(--loss); }
+    .ai-bag-btn:hover { background: var(--card2); color: var(--ink); }
+    .ai-bag-btn.active { background: var(--loss-soft); border-color: var(--loss); color: var(--ink); }
+    .ai-toll-info { background: var(--gain-soft); border: 1px solid rgba(143,191,111,.35); }
+    .ai-toll-info strong { color: var(--gain); }
+    .ai-bag-info { background: var(--loss-soft); border: 1px solid rgba(194,96,79,.35); }
+    .ai-bag-info strong { color: var(--loss); }
+    .ai-pill { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 0.7rem; font-weight: 600; text-decoration: none; letter-spacing: 0.02em; }
+    .ai-pill-toll { background: var(--gain-soft); color: var(--gain); border: 1px solid rgba(143,191,111,.35); }
+    .ai-pill-landlord { background: var(--bench-soft); color: var(--bench); border: 1px solid rgba(201,162,74,.35); }
+    .ai-pill-bag { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(194,96,79,.35); }
+    .ai-pill-bystander { background: rgba(139,148,158,.12); color: var(--color-text-muted); border: 1px solid rgba(139,148,158,.25); }
+
     /* Responsive */
     @media (max-width: 900px) {
       .filter-label { min-width: 70px; font-size: 0.7rem; }

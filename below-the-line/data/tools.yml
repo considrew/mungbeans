@@ -41,6 +41,7 @@ tools:
     placements:
       - deep-dives
       - stocks-list
+      - ai-exposure
       - email
     what_it_is_for: >-
       Primary research. Filings, ownership, transcripts and real-time data in one
