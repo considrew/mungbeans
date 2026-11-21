@@ -1,0 +1,900 @@
+{
+  "generated_at": "2026-11-21T00:49:05+00:00",
+  "price_date": "2026-11-20",
+  "weights": {
+    "move": 0.38,
+    "news": 0.24,
+    "size": 0.1,
+    "rvol": 0.12,
+    "line": 0.16
+  },
+  "excluded_already_covered": [
+    "ADBE",
+    "BB",
+    "BMBL",
+    "CELH",
+    "CGEN",
+    "DIS",
+    "DPZ",
+    "FIS",
+    "GASS",
+    "GENI",
+    "GOOGL",
+    "HD",
+    "HIMS",
+    "IRDM",
+    "LULU",
+    "NKE",
+    "NVEC",
+    "PAR",
+    "PATH",
+    "PYPL",
+    "SIRI",
+    "SPGI",
+    "TTD",
+    "ZM",
+    "ZTS"
+  ],
+  "candidates": [
+    {
+      "ticker": "SMMT",
+      "name": "Summit Therapeutics Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "market_cap": 11316659200,
+      "close": 9.95,
+      "close_date": "2026-11-20",
+      "prev_week_close": 14.15,
+      "week_return_pct": -29.68,
+      "max_day_move_pct": 16.47,
+      "rvol": 2.72,
+      "wma_200": 12.62,
+      "pct_from_wma": -21.2,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "FDA Grants Priority Tag to AZN's BLA Filing for Gastric Cancer Drug",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/healthcare/articles/fda-grants-priority-tag-azns-151300361.html"
+        },
+        {
+          "title": "This week in charts: Biotech investors\u2019 China bets are already paying off",
+          "publisher": "BioPharma Dive",
+          "date": "2026-11-20",
+          "url": "https://www.biopharmadive.com/news/biotech-china-deals-venture-returns-summit-stock/874912/"
+        },
+        {
+          "title": "Wall Street Wrap: ASTS, BE, MDB Stocks Win Bullish Calls As PEP, USAR, SMMT Face Downgrades",
+          "publisher": "Stocktwits",
+          "date": "2026-11-20",
+          "url": "https://stocktwits.com/news-articles/markets/equity/wall-street-wrap-asts-be-mdb-stocks-win-bullish-calls-as-pep-usar-smmt-face-downgrades/cNbSfrjR9KN"
+        },
+        {
+          "title": "Analysts Turned Bearish on These 5 Stocks on Wednesday",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/analysts-turned-bearish-5-stocks-152114314.html"
+        },
+        {
+          "title": "3 standout drug launches of 2026 and what comes next",
+          "publisher": "Pharma Voice",
+          "date": "2026-11-19",
+          "url": "https://www.pharmavoice.com/news/standout-drug-launches-2026-revolution-jnj-vera/875175/"
+        },
+        {
+          "title": "FDA publishes rejection letter for Summit drug; Nuvalent buyout pays more dividends for GSK",
+          "publisher": "BioPharma Dive",
+          "date": "2026-11-18",
+          "url": "https://www.biopharmadive.com/news/summit-crl-sellas-data-nelkarmi-lilly-astrazeneca-biogen/874825/"
+        },
+        {
+          "title": "Summit Therapeutics (SMMT) Is Losing Wall Street\u2019s Confidence",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/summit-therapeutics-smmt-losing-wall-065833485.html"
+        },
+        {
+          "title": "Revolution Medicines Wins EU Nod for Rasonque in Pancreatic Cancer",
+          "publisher": "Zacks",
+          "date": "2026-11-17",
+          "url": "https://finance.yahoo.com/healthcare/articles/revolution-medicines-wins-eu-nod-171300017.html"
+        },
+        {
+          "title": "Summit Therapeutics (SMMT) Stock Sees Modest Fair Value Cut As Analysts Weigh Trial Risks",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-17",
+          "url": "https://finance.yahoo.com/healthcare/articles/summit-therapeutics-smmt-stock-sees-111419165.html"
+        },
+        {
+          "title": "Summit Therapeutics (SMMT) Hits 52-Week Low After FDA Setback",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-17",
+          "url": "https://finance.yahoo.com/healthcare/articles/summit-therapeutics-smmt-hits-52-022043094.html"
+        }
+      ],
+      "viewership_score": 80.9,
+      "score_parts": {
+        "move": 0.85,
+        "rvol": 0.43,
+        "size": 0.35,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 1
+    },
+    {
+      "ticker": "AAOI",
+      "name": "Applied Optoelectronics, Inc.",
+      "sector": "Technology - Communication Equipment",
+      "market_cap": 4528551936,
+      "close": 32.93,
+      "close_date": "2026-11-20",
+      "prev_week_close": 49.89,
+      "week_return_pct": -33.99,
+      "max_day_move_pct": 16.55,
+      "rvol": 1.16,
+      "wma_200": 36.9,
+      "pct_from_wma": -10.8,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "3 Growth Stocks With Revenue Growth Up To 68%",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/3-growth-stocks-revenue-growth-151321360.html"
+        },
+        {
+          "title": "Applied Optoelectronics Sinks 7% as Optics Stocks Reverse Thursday\u2019s Rally; Coherent Declines 4%, Lumentum Slides 5%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/applied-optoelectronics-sinks-10-as-optics-stocks-reverse-thursdays-rally-coherent-tumbles-8-lumentum-slides-7/"
+        },
+        {
+          "title": "Coherent Soars 6% on New $2 Billion Buyback as Anthropic IPO Revives AI Trade",
+          "publisher": "TIKR",
+          "date": "2026-11-19",
+          "url": "https://www.tikr.com/blog/coherent-soars-6-on-new-2-billion-buyback-as-anthropic-ipo-revives-ai-trade?ref=yahoofinance&tlnk=yf-261119-px4vrhf4"
+        },
+        {
+          "title": "Applied Optoelectronics Rallies 5% Despite $550 Million Share Sale Plan; Coherent Jumps 8%, Lumentum Climbs 4%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/applied-optoelectronics-rallies-5-despite-550-million-share-sale-plan-coherent-jumps-8-lumentum-climbs-4/"
+        },
+        {
+          "title": "What Sent Applied Optoelectronics Stock Higher?",
+          "publisher": "Trefis",
+          "date": "2026-11-19",
+          "url": "https://www.trefis.com/stock/aaoi/articles/626749/what-sent-applied-optoelectronics-stock-higher/2026-11-19"
+        },
+        {
+          "title": "Applied Optoelectronics (AAOI) Could Be 63% Undervalued After $550 Million Stock Offering",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/applied-optoelectronics-aaoi-could-63-011242004.html"
+        },
+        {
+          "title": "Nvidia, Take-Two, Palo Alto, Applied Optoelectronics, TJX, and More Stocks That Explain Today\u2019s Market",
+          "publisher": "Barrons.com",
+          "date": "2026-11-18",
+          "url": "https://www.barrons.com/articles/stock-movers-62881b61?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Lumentum Is Down 33% in a Month as Marvell\u2019s Slide Shrinks Its Buyout Value. Can LITE Stock Get Back to Bernstein\u2019s $700 Target?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-18",
+          "url": "https://247wallst.com/investing/2026/11/18/lumentum-is-down-33-in-a-month-as-marvells-slide-shrinks-its-buyout-value-can-lite-stock-get-back-to-bernsteins-700-target/"
+        },
+        {
+          "title": "Applied Optoelectronics Falls After $550 Million Share Sale Plan",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/applied-optoelectronics-falls-550-million-194848177.html"
+        },
+        {
+          "title": "Applied Optoelectronics Stock Plunges 10% -- Company Seeks $550 Million Share Sale",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/applied-optoelectronics-stock-plunges-10-191153969.html"
+        }
+      ],
+      "viewership_score": 79.6,
+      "score_parts": {
+        "move": 0.97,
+        "rvol": 0.04,
+        "size": 0.22,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 2
+    },
+    {
+      "ticker": "NBIS",
+      "name": "Nebius Group N.V.",
+      "sector": "Technology - AI Infrastructure",
+      "market_cap": 33941528576,
+      "close": 81.31,
+      "close_date": "2026-11-20",
+      "prev_week_close": 115.88,
+      "week_return_pct": -29.83,
+      "max_day_move_pct": 16.11,
+      "rvol": 1.27,
+      "wma_200": 103.45,
+      "pct_from_wma": -21.4,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Here Are the Nasdaq Stocks Getting Hit the Hardest Today",
+          "publisher": "The Wall Street Journal",
+          "date": "2026-11-20",
+          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-20-2026/card/here-are-the-nasdaq-stocks-getting-hit-the-hardest-today-k15GUuTwjaWZSTDWpLNG?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "SpaceX\u2019s New \u2018Game Plan\u2019 Could Pay Off, Says Top Analyst",
+          "publisher": "TipRanks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/technology/ai/articles/spacex-game-plan-could-pay-201104881.html"
+        },
+        {
+          "title": "This Top AI Energy Supply Stock Is Down for a 7th Day. Why Fortune Favors the Bold.",
+          "publisher": "Barrons.com",
+          "date": "2026-11-20",
+          "url": "https://www.barrons.com/articles/bloom-energy-stock-ai-trade-ef008720?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "CoreWeave Stocks Fall 6.10% After Co-Founder's $30 Million Bond Bet Fails to Hold Rally",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/coreweave-stocks-fall-6-10-175147592.html"
+        },
+        {
+          "title": "Nebius vs. SoundHound AI: Which AI Tech Stock Is a Better Buy for 2027?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-20",
+          "url": "https://www.fool.com/coverage/better-buy/2026/11/20/nebius-vs-soundhound-ai-which-ai-tech-stock-is-a-better-buy-for-2027/"
+        },
+        {
+          "title": "Bloom Energy Tumbles 10% Despite BMO Upgrade With $230 Target; FuelCell Energy Slides 7%, Plug Power Drops 3%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/bloom-energy-tumbles-10-despite-bmo-upgrade-with-230-target-fuelcell-energy-slides-7-plug-power-drops-3/"
+        },
+        {
+          "title": "AI trade stocks hit hardest after Jensen Huang\u2019s exit from Nvidia",
+          "publisher": "Investing.com",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ai-trade-stocks-hit-hardest-152651279.html"
+        },
+        {
+          "title": "Here Are the AI Stocks Tanking This Morning",
+          "publisher": "The Wall Street Journal",
+          "date": "2026-11-20",
+          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-20-2026/card/here-are-the-ai-stocks-tanking-this-morning-toF5LHILCo8Cffend4F8?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Nebius Drops 7% as Michael Burry Takes a Victory Lap on Neocloud Rout; IREN Falls 5%, Oracle Slides 4%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/nebius-drops-7-as-michael-burry-takes-a-victory-lap-on-neocloud-rout-iren-falls-5-oracle-slides-4/"
+        },
+        {
+          "title": "The Zacks Analyst Blog Highlights Nebius, CoreWeave, Microsoft and Amazon",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/zacks-analyst-blog-highlights-nebius-134500953.html"
+        }
+      ],
+      "viewership_score": 78.3,
+      "score_parts": {
+        "move": 0.85,
+        "rvol": 0.07,
+        "size": 0.51,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 3
+    },
+    {
+      "ticker": "QBTS",
+      "name": "D-Wave Quantum Inc.",
+      "sector": "Technology - Quantum Computing",
+      "market_cap": 3629230592,
+      "close": 6.52,
+      "close_date": "2026-11-20",
+      "prev_week_close": 9.56,
+      "week_return_pct": -31.8,
+      "max_day_move_pct": 10.81,
+      "rvol": 1.2,
+      "wma_200": 9.45,
+      "pct_from_wma": -31.0,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "QNT & QBTS: 2 Quantum Stocks to Buy for Triple-Digit Growth in 2027",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/technology/ai/articles/qnt-qbts-2-quantum-stocks-190000464.html"
+        },
+        {
+          "title": "IonQ Is Down 33% in a Month. What Will It Take to Get IONQ Stock Back to $30?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/ionq-is-down-33-in-a-month-what-will-it-take-to-get-ionq-stock-back-to-30/"
+        },
+        {
+          "title": "D-WAVE QUANTUM (QBTS) Upgraded to Buy: Here's Why",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/d-wave-quantum-qbts-upgraded-160005256.html"
+        },
+        {
+          "title": "D Wave Quantum (QBTS) On Results And Lawsuits The Valuation Debate Returns",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/d-wave-quantum-qbts-results-111336838.html"
+        },
+        {
+          "title": "D-Wave Quantum Just Hit a New 52-Week Low, Down 38% in a Month. Is the Selling Overdone?",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/d-wave-quantum-just-hit-a-new-52-week-low-down-38-in-a-month-is-the-selling-overdone?ref=yahoofinance&tlnk=yf-261120-22fg52mm"
+        },
+        {
+          "title": "QBTS Stock Drops 27% After Q3 Results: Is This a Buying Opportunity?",
+          "publisher": "Zacks",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/qbts-stock-drops-27-q3-190000286.html"
+        },
+        {
+          "title": "Should You Sell Your IonQ Stock Now That It Has Halved?",
+          "publisher": "Trefis",
+          "date": "2026-11-19",
+          "url": "https://www.trefis.com/stock/ionq/articles/626746/should-you-sell-your-ionq-stock-now-that-it-has-halved/2026-11-19"
+        },
+        {
+          "title": "IonQ Jumps 9% as Anthropic\u2019s IPO Lifts Beaten-Down Quantum Stocks; D-Wave and Rigetti Surge 8%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-jumps-9-as-anthropics-ipo-lifts-beaten-down-quantum-stocks-d-wave-and-rigetti-surge-8/"
+        },
+        {
+          "title": "IonQ Has 2 Opportunities That Could Transform Its Long-Term Growth Story",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-has-2-opportunities-that-could-transform-its-long-term-growth-story/"
+        },
+        {
+          "title": "Here's How D-Wave Quantum Prioritizes International Expansion",
+          "publisher": "Zacks",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/technology/ai/articles/heres-d-wave-quantum-prioritizes-181000781.html"
+        }
+      ],
+      "viewership_score": 77.0,
+      "score_parts": {
+        "move": 0.91,
+        "rvol": 0.05,
+        "size": 0.19,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 4
+    },
+    {
+      "ticker": "LUNR",
+      "name": "Intuitive Machines Inc.",
+      "sector": "Aerospace",
+      "market_cap": 2306129920,
+      "close": 8.77,
+      "close_date": "2026-11-20",
+      "prev_week_close": 13.0,
+      "week_return_pct": -32.5,
+      "max_day_move_pct": 10.28,
+      "rvol": 1.05,
+      "wma_200": 11.25,
+      "pct_from_wma": -22.0,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "AST SpaceMobile Just Plunged 44% in a Month as Space Stocks Face a Hard Landing: Could ASTS Stock Realistically Double From Here?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/ast-spacemobile-just-plunged-44-in-a-month-as-space-stocks-face-a-hard-landing-could-asts-stock-realistically-double-from-here/"
+        },
+        {
+          "title": "Intuitive Machines vs. Rocket Lab: Which Space Stock Is a Better Buy for 2027?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-20",
+          "url": "https://www.fool.com/coverage/better-buy/2026/11/20/intuitive-machines-vs-rocket-lab-which-space-stock-is-a-better-buy-for-2027/"
+        },
+        {
+          "title": "Can LUNR Build a New Growth Engine in Space Communications?",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/lunr-build-growth-engine-space-165600349.html"
+        },
+        {
+          "title": "Intuitive Machines (LUNR) Stock Sees Fair Value Cut As Analysts Turn More Cautious",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-stock-sees-111216174.html"
+        },
+        {
+          "title": "SpaceX's Wild Ride Puts 2 Space Stocks and a Weekly-Payout ETF in Focus",
+          "publisher": "MarketBeat",
+          "date": "2026-11-18",
+          "url": "https://www.marketbeat.com/articles/spacexs-wild-ride-puts-2-space-stocks-and-a-weekly-payout-etf-in-focus/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "Rocket Lab Slides 4% as SpaceX Shares a $985 Million Launch Award: Are Cathie Wood and David Tepper Picking SpaceX Over Rocket Lab?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-17",
+          "url": "https://247wallst.com/investing/2026/11/17/rocket-lab-slides-4-as-spacex-shares-a-985-million-launch-award-are-cathie-wood-and-david-tepper-picking-spacex-over-rocket-lab/"
+        },
+        {
+          "title": "Intuitive Machines (LUNR) Takes a Beating. Here\u2019s What Spooked Investors",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-17",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-lunr-takes-beating-014036181.html"
+        },
+        {
+          "title": "ASTS, RKLB, LUNR And FLY Fall After ULA Rocket Failure Strands 40 Amazon Satellites \u2014 Why One Analyst Wants Musk To Free Up Falcon 9 Flights",
+          "publisher": "Stocktwits",
+          "date": "2026-11-16",
+          "url": "https://stocktwits.com/news-articles/markets/equity/asts-rklb-lunr-fly-ula-rocket-failure-40-amazon-satellites-analyst-musk-falcon-9-flights/cNb7XOFR9Xa"
+        },
+        {
+          "title": "Intuitive Machines\u2019 Business Is Taking Off\u2014Will Its Stock Follow?",
+          "publisher": "MarketBeat",
+          "date": "2026-11-15",
+          "url": "https://www.marketbeat.com/articles/intuitive-machines-business-is-taking-offwill-its-stock-follow/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "Intuitive Machines Is No Longer Just About the Moon, CEO Sees Bigger Space Opportunity",
+          "publisher": "Benzinga",
+          "date": "2026-11-14",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/intuitive-machines-no-longer-just-185708851.html"
+        }
+      ],
+      "viewership_score": 76.6,
+      "score_parts": {
+        "move": 0.93,
+        "rvol": 0.01,
+        "size": 0.12,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 5
+    },
+    {
+      "ticker": "IONQ",
+      "name": "IonQ Inc.",
+      "sector": "Technology - Quantum Computing",
+      "market_cap": 13420418048,
+      "close": 20.72,
+      "close_date": "2026-11-20",
+      "prev_week_close": 28.88,
+      "week_return_pct": -28.25,
+      "max_day_move_pct": 8.76,
+      "rvol": 1.22,
+      "wma_200": 26.76,
+      "pct_from_wma": -22.6,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "IonQ (IONQ) Stock Dropped, So What Is Driving Attention Now?",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ionq-ionq-stock-dropped-driving-220928364.html"
+        },
+        {
+          "title": "IonQ (IONQ) Stock Looks Overvalued As Its 83% 3 Year Gain Continues",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ionq-ionq-stock-looks-overvalued-211212154.html"
+        },
+        {
+          "title": "QNT & QBTS: 2 Quantum Stocks to Buy for Triple-Digit Growth in 2027",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/technology/ai/articles/qnt-qbts-2-quantum-stocks-190000464.html"
+        },
+        {
+          "title": "IonQ Is Down 33% in a Month. What Will It Take to Get IONQ Stock Back to $30?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/ionq-is-down-33-in-a-month-what-will-it-take-to-get-ionq-stock-back-to-30/"
+        },
+        {
+          "title": "D-Wave Quantum Just Hit a New 52-Week Low, Down 38% in a Month. Is the Selling Overdone?",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/d-wave-quantum-just-hit-a-new-52-week-low-down-38-in-a-month-is-the-selling-overdone?ref=yahoofinance&tlnk=yf-261120-22fg52mm"
+        },
+        {
+          "title": "QBTS Stock Drops 27% After Q3 Results: Is This a Buying Opportunity?",
+          "publisher": "Zacks",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/qbts-stock-drops-27-q3-190000286.html"
+        },
+        {
+          "title": "Should You Sell Your IonQ Stock Now That It Has Halved?",
+          "publisher": "Trefis",
+          "date": "2026-11-19",
+          "url": "https://www.trefis.com/stock/ionq/articles/626746/should-you-sell-your-ionq-stock-now-that-it-has-halved/2026-11-19"
+        },
+        {
+          "title": "Why IonQ Stock Popped Today",
+          "publisher": "Motley Fool",
+          "date": "2026-11-19",
+          "url": "https://www.fool.com/investing/2026/11/19/why-ionq-stock-popped-today/"
+        },
+        {
+          "title": "IonQ Jumps 9% as Anthropic\u2019s IPO Lifts Beaten-Down Quantum Stocks; D-Wave and Rigetti Surge 8%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-jumps-9-as-anthropics-ipo-lifts-beaten-down-quantum-stocks-d-wave-and-rigetti-surge-8/"
+        },
+        {
+          "title": "IonQ Has 2 Opportunities That Could Transform Its Long-Term Growth Story",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-has-2-opportunities-that-could-transform-its-long-term-growth-story/"
+        }
+      ],
+      "viewership_score": 75.1,
+      "score_parts": {
+        "move": 0.81,
+        "rvol": 0.05,
+        "size": 0.38,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 6
+    },
+    {
+      "ticker": "APLD",
+      "name": "Applied Digital Corporation",
+      "sector": "Technology - Data Centers",
+      "market_cap": 4829122560,
+      "close": 11.49,
+      "close_date": "2026-11-20",
+      "prev_week_close": 15.97,
+      "week_return_pct": -28.05,
+      "max_day_move_pct": 17.81,
+      "rvol": 1.03,
+      "wma_200": 13.63,
+      "pct_from_wma": -15.7,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Tesla Sinks 8%, SpaceX Down 7%, Rivian Down 8% as AI Sell-Off Swamps HSBC Upgrade",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/tesla-sinks-8-spacex-down-7-rivian-down-8-as-ai-sell-off-swamps-hsbc-upgrade?ref=yahoofinance&tlnk=yf-261120-49fmfcrf"
+        },
+        {
+          "title": "What a Market \u2018Correction\u2019 Actually Means",
+          "publisher": "The Wall Street Journal",
+          "date": "2026-11-20",
+          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-20-2026/card/what-a-market-correction-actually-means-JcX0oDwsAOGHZ6xdlzls?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "AI Racks Are Now \u201cToo Heavy for Most Old Datacenters.\u201d That\u2019s a Bottleneck for Nvidia\u2019s Vera Rubin",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/ai-racks-are-now-too-heavy-for-most-old-datacenters-thats-a-bottleneck-for-nvidias-vera-rubin?ref=yahoofinance&tlnk=yf-261120-pvv6fq57"
+        },
+        {
+          "title": "Applied Digital and Core Scientific Sink 12% as AI Infrastructure Sell-Off Deepens; TeraWulf Tumbles 10%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/applied-digital-and-core-scientific-sink-12-as-ai-infrastructure-sell-off-deepens-terawulf-tumbles-10/"
+        },
+        {
+          "title": "Applied Digital Fell Nearly 71%: Trim Or Add?",
+          "publisher": "Trefis",
+          "date": "2026-11-20",
+          "url": "https://www.trefis.com/stock/apld/articles/627217/applied-digital-fell-nearly-71-trim-or-add/2026-11-20"
+        },
+        {
+          "title": "Could Applied Digital Actually Climb 265%? Or Is B. Riley Totally Wrong?",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/could-applied-digital-actually-climb-265-or-is-b-riley-totally-wrong?ref=yahoofinance&tlnk=yf-261120-242qmwqj"
+        },
+        {
+          "title": "\u201cRidiculously Cheap\u201d Micron Soars 7% on Revived AI Trade",
+          "publisher": "TIKR",
+          "date": "2026-11-19",
+          "url": "https://www.tikr.com/blog/ridiculously-cheap-micron-soars-7-on-revived-ai-trade?ref=yahoofinance&tlnk=yf-261119-8pcf49qg"
+        },
+        {
+          "title": "Forget CoreWeave: Applied Digital Is the Real Loser as \u201cThe Bank of Nvidia\u201d Pulls Back",
+          "publisher": "TIKR",
+          "date": "2026-11-18",
+          "url": "https://www.tikr.com/blog/forget-coreweave-applied-digital-is-the-real-loser-as-the-bank-of-nvidia-pulls-back?ref=yahoofinance&tlnk=yf-261118-36f5785r"
+        },
+        {
+          "title": "CoreWeave Sinks 5% After Nvidia Earnings as Kress Vows \u201cA Very Strong Look\u201d at Neocloud Financing",
+          "publisher": "TIKR",
+          "date": "2026-11-18",
+          "url": "https://www.tikr.com/blog/coreweave-sinks-5-after-nvidia-earnings-as-kress-vows-a-very-strong-look-at-neocloud-financing?ref=yahoofinance&tlnk=yf-261118-25647mpv"
+        },
+        {
+          "title": "Nvidia Stock Rises, Lifting AI Picks and Shovels",
+          "publisher": "The Wall Street Journal",
+          "date": "2026-11-18",
+          "url": "https://www.wsj.com/livecoverage/stock-market-today-dow-sp-500-nasdaq-11-18-2026/card/nvidia-stock-rises-lifting-ai-picks-and-shovels-qvVvUxNAjZeYhiwFHC46?siteid=yhoof2&yptr=yahoo"
+        }
+      ],
+      "viewership_score": 72.8,
+      "score_parts": {
+        "move": 0.8,
+        "rvol": 0.01,
+        "size": 0.23,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 7
+    },
+    {
+      "ticker": "RGTI",
+      "name": "Rigetti Computing Inc.",
+      "sector": "Technology - Quantum Computing",
+      "market_cap": 3297572608,
+      "close": 7.16,
+      "close_date": "2026-11-20",
+      "prev_week_close": 9.62,
+      "week_return_pct": -25.57,
+      "max_day_move_pct": 11.17,
+      "rvol": 1.19,
+      "wma_200": 9.41,
+      "pct_from_wma": -23.9,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "IonQ Is Down 33% in a Month. What Will It Take to Get IONQ Stock Back to $30?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-20",
+          "url": "https://247wallst.com/investing/2026/11/20/ionq-is-down-33-in-a-month-what-will-it-take-to-get-ionq-stock-back-to-30/"
+        },
+        {
+          "title": "Wall Street Analysts Think Rigetti Computing (RGTI) Is a Good Investment: Is It?",
+          "publisher": "Zacks",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/wall-street-analysts-think-rigetti-133003170.html"
+        },
+        {
+          "title": "D-Wave Quantum Just Hit a New 52-Week Low, Down 38% in a Month. Is the Selling Overdone?",
+          "publisher": "TIKR",
+          "date": "2026-11-20",
+          "url": "https://www.tikr.com/blog/d-wave-quantum-just-hit-a-new-52-week-low-down-38-in-a-month-is-the-selling-overdone?ref=yahoofinance&tlnk=yf-261120-22fg52mm"
+        },
+        {
+          "title": "Is Rigetti Computing (RGTI) Pricing In Too Much Balance Sheet Hope?",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/rigetti-computing-rgti-pricing-too-011333947.html"
+        },
+        {
+          "title": "QBTS Stock Drops 27% After Q3 Results: Is This a Buying Opportunity?",
+          "publisher": "Zacks",
+          "date": "2026-11-19",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/qbts-stock-drops-27-q3-190000286.html"
+        },
+        {
+          "title": "Should You Sell Your IonQ Stock Now That It Has Halved?",
+          "publisher": "Trefis",
+          "date": "2026-11-19",
+          "url": "https://www.trefis.com/stock/ionq/articles/626746/should-you-sell-your-ionq-stock-now-that-it-has-halved/2026-11-19"
+        },
+        {
+          "title": "Is Rigetti Computing a Buy Right Now?",
+          "publisher": "Motley Fool",
+          "date": "2026-11-19",
+          "url": "https://www.fool.com/investing/2026/11/19/is-rigetti-computing-a-buy-right-now/"
+        },
+        {
+          "title": "IonQ Jumps 9% as Anthropic\u2019s IPO Lifts Beaten-Down Quantum Stocks; D-Wave and Rigetti Surge 8%",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-jumps-9-as-anthropics-ipo-lifts-beaten-down-quantum-stocks-d-wave-and-rigetti-surge-8/"
+        },
+        {
+          "title": "IonQ Has 2 Opportunities That Could Transform Its Long-Term Growth Story",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-19",
+          "url": "https://247wallst.com/investing/2026/11/19/ionq-has-2-opportunities-that-could-transform-its-long-term-growth-story/"
+        },
+        {
+          "title": "D-Wave Quantum Stock Down 66%: What Moves It Next?",
+          "publisher": "Trefis",
+          "date": "2026-11-18",
+          "url": "https://www.trefis.com/stock/qbts/articles/626204/d-wave-quantum-stock-down-66-what-moves-it-next/2026-11-18"
+        }
+      ],
+      "viewership_score": 70.1,
+      "score_parts": {
+        "move": 0.73,
+        "rvol": 0.05,
+        "size": 0.17,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 8
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "sector": "Technology - Semiconductors",
+      "market_cap": 3932339044352,
+      "close": 125.53,
+      "close_date": "2026-11-20",
+      "prev_week_close": 162.85,
+      "week_return_pct": -22.92,
+      "max_day_move_pct": 14.01,
+      "rvol": 1.95,
+      "wma_200": 123.33,
+      "pct_from_wma": 1.8,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Dow Jones Futures: Market Has Worst Week Since Covid Amid Nvidia, Anthropic. Does Fear Gauge Offer Hope?",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-21",
+          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-futures-worst-week-covid-nvidia-anthropic-vix-fear-gauge/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "Here's How Much Nvidia Stock Is Worth Without Jensen Huang, According to Dan Ives",
+          "publisher": "Motley Fool",
+          "date": "2026-11-21",
+          "url": "https://www.fool.com/investing/2026/11/20/here-s-how-much-nvidia-stock-is-worth-without-jensen-huang-according-to-dan-ives/"
+        },
+        {
+          "title": "The Weekly Spread: What Shaped US Treasury Yields And The Dollar This Week",
+          "publisher": "Stocktwits",
+          "date": "2026-11-21",
+          "url": "https://stocktwits.com/news-articles/markets/equity/the-weekly-spread-what-shaped-us-treasury-yields-and-the-dollar-this-week-1/cNbmPyOR91X"
+        },
+        {
+          "title": "Prediction: Nvidia Stock Will Do This in the 6 Months After a New CEO Takes Over, According to History",
+          "publisher": "Motley Fool",
+          "date": "2026-11-21",
+          "url": "https://www.fool.com/investing/2026/11/20/prediction-nvidia-stock-will-do-this-in-the-6-months-after-a-new-ceo-takes-over-according-to-history/"
+        },
+        {
+          "title": "Nvidia stock extends $2.7 trillion rout as SEC probe reportedly investigates its accounting",
+          "publisher": "Yahoo Finance",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/article/nvidia-stock-extends-25-trillion-rout-as-sec-probe-reportedly-investigates-its-accounting-194945274.html"
+        },
+        {
+          "title": "Trump critiques Jensen Huang's replacement as he wades deeper into Nvidia turmoil",
+          "publisher": "Yahoo Finance",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/markets/article/trump-critiques-jensen-huangs-replacement-as-he-wades-deeper-into-nvidia-turmoil-210729338.html"
+        },
+        {
+          "title": "Market Hang: AI Reset? Anthropic's Outlook, Amodei's Future, and Who Could Dethrone NVIDIA?",
+          "publisher": "Yahoo Finance Video",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/video/market-hang-ai-reset-anthropics-outlook-amodeis-future-and-who-could-dethrone-nvidia-210048852.html"
+        },
+        {
+          "title": "Trump on Jensen Huang: 'We're a country of second chances'",
+          "publisher": "Yahoo Finance Video",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/video/trump-on-jensen-huang-were-a-country-of-second-chances-193647938.html"
+        },
+        {
+          "title": "Is today's market showing warning signs of a 2000 bubble?",
+          "publisher": "Yahoo Finance Video",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/video/is-todays-market-showing-warning-signs-of-a-2000-bubble-185443509.html"
+        },
+        {
+          "title": "Sozzi: Anthropic\u2019s IPO Surges; Is AMD\u2019s Pullback a Buy?",
+          "publisher": "Yahoo Finance Video",
+          "date": "2026-11-20",
+          "url": "https://finance.yahoo.com/video/sozzi-anthropics-ipo-surges-is-amds-pullback-a-buy-181915349.html"
+        }
+      ],
+      "viewership_score": 68.1,
+      "score_parts": {
+        "move": 0.65,
+        "rvol": 0.24,
+        "size": 1.0,
+        "line": 0.4,
+        "news": 1.0
+      },
+      "rank": 9
+    },
+    {
+      "ticker": "GLBE",
+      "name": "Global-E Online Ltd.",
+      "sector": "Consumer Cyclical - Internet Retail",
+      "market_cap": 7005080576,
+      "close": 33.84,
+      "close_date": "2026-11-20",
+      "prev_week_close": 41.71,
+      "week_return_pct": -18.86,
+      "max_day_move_pct": 7.7,
+      "rvol": 2.61,
+      "wma_200": 36.69,
+      "pct_from_wma": -7.8,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Global-e Online Ltd. Q3 2026 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-18",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-global-e-online-ltd-q3-2026-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "Global-E: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-18",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/18/global-e-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Global-E (GLBE) Q3 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-18",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/18/global-e-glbe-q3-2026-earnings-call-transcript/"
+        },
+        {
+          "title": "What Global-e Online (GLBE) Said on Its Q3 Earnings Call",
+          "publisher": "MarketBeat",
+          "date": "2026-11-18",
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-what-global-e-online-glbe-said-on-its-q3-earnings-call-2026-11-18/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "Global-e Beats Third-Quarter Earnings Estimates and Raises 2026 Revenue and EBITDA Guidance",
+          "publisher": "InvestorsHub",
+          "date": "2026-11-18",
+          "url": "https://investorshub.advfn.com/market-news/article/40302/global-e-beats-third-quarter-earnings-estimates-and-raises-2026-revenue-and-ebitda-guidance"
+        },
+        {
+          "title": "Stock Market Today: Nvidia Earnings Are Driving the Market, but Uncertainty Still Reigns",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-18",
+          "url": "https://247wallst.com/investing/2026/11/18/stock-market-today-nvidia-earnings-are-driving-the-market-but-uncertainty-still-reigns/"
+        },
+        {
+          "title": "Globale Online (GLBE) Reports Q3 Earnings: What Key Metrics Have to Say",
+          "publisher": "Zacks",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/globale-online-glbe-reports-q3-133004476.html"
+        },
+        {
+          "title": "3 Export Stocks Retail Investors Are Watching Before APEC Trade Rules Shift",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-18",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/3-export-stocks-retail-investors-100952334.html"
+        },
+        {
+          "title": "Unveiling Globale Online (GLBE) Q3 Outlook: Wall Street Estimates for Key Metrics",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/unveiling-globale-online-glbe-q3-131509504.html"
+        },
+        {
+          "title": "Global-E Online's Q3 Earnings Coming Up: Factors to Watch for GLBE",
+          "publisher": "Zacks",
+          "date": "2026-11-13",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/global-e-onlines-q3-earnings-130600533.html"
+        }
+      ],
+      "viewership_score": 68.1,
+      "score_parts": {
+        "move": 0.54,
+        "rvol": 0.4,
+        "size": 0.28,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 10
+    }
+  ]
+}
