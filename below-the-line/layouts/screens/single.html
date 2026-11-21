@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{ partial "head.html" . }}
+  {{ $data := dict }}
+  {{ with resources.Get "data/stocks.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $data = . }}
+    {{ end }}
+  {{ end }}
+  {{ $rows := partial "screen-stocks.html" (dict "stocks" $data.stocks "key" .Params.screen_key) }}
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="mungbeans.io">
+  <meta property="og:title" content="{{ .Title }} ({{ len $rows }} Stocks) | mungbeans.io">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:image" content="{{ .Site.BaseURL }}images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@mungbeans_io">
+  <meta name="twitter:title" content="{{ .Title }} ({{ len $rows }} Stocks) | mungbeans.io">
+  <meta name="twitter:description" content="{{ .Description }}">
+  <meta name="twitter:image" content="{{ .Site.BaseURL }}images/og-image.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "{{ .Title }}",
+    "description": "{{ .Description }}",
+    "url": "{{ .Permalink }}",
+    "dateModified": "{{ $data.generated_iso }}",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "Screens", "item": "{{ .Site.BaseURL }}screens/"},
+        {"@type": "ListItem", "position": 3, "name": "{{ .Params.short_title | default .Title }}"}
+      ]
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": {{ len $rows }},
+      "itemListElement": [
+        {{ range $i, $r := first 25 $rows }}{{ if $i }},{{ end }}
+        {"@type": "ListItem", "position": {{ add $i 1 }}, "name": "{{ $r.stock.symbol }} - {{ $r.stock.name }}", "url": "{{ $.Site.BaseURL }}stocks/{{ $r.stock.symbol | lower }}/"}
+        {{ end }}
+      ]
+    }
+  }
+  </script>
+
+  {{ if and .Params.faq_q1 .Params.faq_a1 }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "{{ .Params.faq_q1 }}",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ .Params.faq_a1 }}"
+        }
+      }{{ if and .Params.faq_q2 .Params.faq_a2 }},
+      {
+        "@type": "Question",
+        "name": "{{ .Params.faq_q2 }}",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "{{ .Params.faq_a2 }}"
+        }
+      }{{ end }}
+    ]
+  }
+  </script>
+  {{ end }}
+
+  <style>
+    .screen-page { max-width: 1120px; margin: 0 auto; padding: 32px 20px 64px; }
+    .screen-breadcrumb { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--faint); margin-bottom: 14px; }
+    .screen-breadcrumb a { color: var(--dim); text-decoration: none; }
+    .screen-breadcrumb a:hover { color: var(--ink); }
+    .screen-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+    .screen-head h1 { margin: 6px 0 0; font-size: clamp(26px, 3.6vw, 36px); line-height: 1.2; }
+    .screen-stats { display: flex; gap: 10px; flex-wrap: wrap; font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+    .screen-pill { background: var(--card); border: 1px solid var(--line); border-radius: 5px; padding: 6px 11px; color: var(--dim); }
+    .screen-pill b { color: var(--gain); }
+    .screen-prose { color: var(--dim); max-width: 72ch; font-size: 16px; line-height: 1.65; margin: 10px 0 18px; }
+    .screen-criteria { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; padding: 0; list-style: none; }
+    .screen-criteria li { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--dim); background: var(--card); border: 1px solid var(--line); border-radius: 4px; padding: 4px 10px; }
+    .screen-actions { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0 0 14px; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--faint); }
+    .screen-actions a { color: var(--bench); text-decoration: none; }
+    .screen-actions a:hover { text-decoration: underline; }
+    .screen-table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 9px; margin-bottom: 32px; }
+    .screen-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .screen-table th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); font-weight: 500; padding: 11px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .screen-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); color: var(--ink); vertical-align: middle; }
+    .screen-table tbody tr:last-child td { border-bottom: none; }
+    .screen-table tbody tr:hover { background: rgba(255,255,255,.025); }
+    .screen-table .num { text-align: right; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .screen-sym { font-family: "IBM Plex Mono", monospace; font-weight: 600; color: var(--bench); text-decoration: none; }
+    .screen-sym:hover { text-decoration: underline; }
+    .screen-co { display: block; font-size: 12.5px; color: var(--dim); max-width: 240px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .screen-tag { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+    .screen-tag-wow { background: rgba(201,162,74,.18); color: var(--bench); border: 1px solid var(--bench); }
+    .screen-tag-warn { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(194,96,79,.35); }
+    .pos { color: var(--gain); }
+    .neg { color: var(--loss); }
+    .muted { color: var(--faint); }
+    .screen-empty { padding: 28px 22px; color: var(--dim); font-size: 15px; }
+    .screen-faq { margin: 34px 0 30px; padding-top: 22px; border-top: 1px solid var(--line); }
+    .screen-faq h2 { font-size: 21px; margin-bottom: 14px; }
+    .screen-faq h3 { font-size: 16px; margin: 16px 0 6px; color: var(--ink); }
+    .screen-faq p { color: var(--dim); font-size: 15px; line-height: 1.6; max-width: 72ch; }
+    .screen-related { margin: 28px 0 32px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .screen-related h2 { font-size: 18px; margin-bottom: 12px; }
+    .screen-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .screen-chips a { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--dim); background: var(--card); border: 1px solid var(--line); border-radius: 5px; padding: 6px 11px; text-decoration: none; }
+    .screen-chips a:hover { border-color: var(--bench); color: var(--ink); }
+    @media (max-width: 760px) { .hide-sm { display: none; } }
+  </style>
+</head>
+<body>
+  {{ partial "nav.html" . }}
+
+  <main class="screen-page">
+    <nav class="screen-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Home</a> &rsaquo; <a href="/screens/">Screens</a> &rsaquo; <span>{{ .Params.short_title | default .Title }}</span>
+    </nav>
+
+    <div class="screen-head">
+      <div>
+        <div class="eyebrow">{{ .Params.eyebrow }}</div>
+        <h1>{{ .Title }}</h1>
+      </div>
+      <div class="screen-stats">
+        <span class="screen-pill"><b>{{ len $rows }}</b> matches</span>
+        <span class="screen-pill">as of {{ $data.generated_readable }}</span>
+      </div>
+    </div>
+
+    <div class="screen-prose">
+      {{ .Content }}
+    </div>
+
+    {{ with .Params.criteria }}
+    <ul class="screen-criteria">
+      {{ range . }}<li>{{ . }}</li>{{ end }}
+    </ul>
+    {{ end }}
+
+    {{ partial "tool-strip.html" (dict "ctx" . "at" "screens") }}
+
+    <div class="screen-actions">
+      <span>{{ .Params.sort_label }} &middot; showing {{ len $rows }} of {{ $data.summary.total_stocks }} tracked stocks</span>
+      <a href="{{ .Params.stocks_filter_url | default "/stocks/" }}">Open in interactive screener &rarr;</a>
+    </div>
+
+    <div class="screen-table-wrap">
+      {{ if gt (len $rows) 0 }}
+      <table class="screen-table">
+        <thead>
+          <tr>
+            <th>Stock</th>
+            <th class="num">Price</th>
+            <th class="num">200WMA</th>
+            <th class="num">vs Line</th>
+            <th class="num">RSI</th>
+            <th class="num">FCF Yield</th>
+            <th class="num">Bean Score</th>
+            <th class="num hide-sm">ROE</th>
+            <th class="hide-sm">Sector</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $rows }}
+          {{ $s := .stock }}
+          <tr>
+            <td>
+              <a href="/stocks/{{ $s.symbol | lower }}/" class="screen-sym">{{ $s.symbol }}</a>
+              {{ with $s.wow_signal }}{{ if .wow }}<span class="screen-tag screen-tag-wow">WOW {{ printf "%.1f" (float .wow_score) }}</span>{{ end }}{{ end }}
+              {{ with $s.dislocation }}{{ if .quality_warning }}<span class="screen-tag screen-tag-warn" title="Accrual gap deteriorating">accrual warn</span>{{ end }}{{ end }}
+              <span class="screen-co">{{ $s.name }}</span>
+            </td>
+            <td class="num">${{ printf "%.2f" (float $s.close) }}</td>
+            <td class="num">${{ printf "%.2f" (float $s.wma_200) }}</td>
+            <td class="num {{ if $s.below_line }}pos{{ else }}muted{{ end }}">{{ printf "%+.1f%%" (float $s.pct_from_wma) }}</td>
+            <td class="num {{ if and (ne $s.rsi_14 nil) (lt (float $s.rsi_14) 30.0) }}pos{{ end }}">
+              {{ if ne $s.rsi_14 nil }}{{ printf "%.0f" (float $s.rsi_14) }}{{ else }}—{{ end }}
+            </td>
+            <td class="num {{ if and (ne $s.fcf_yield nil) (ge (float $s.fcf_yield) 5.0) }}pos{{ end }}">
+              {{ if ne $s.fcf_yield nil }}{{ printf "%.1f%%" (float $s.fcf_yield) }}{{ else }}—{{ end }}
+            </td>
+            <td class="num {{ with $s.bean_score_data }}{{ if ne .current_score nil }}{{ if ge (float .current_score) 2.0 }}pos{{ else if le (float .current_score) -1.5 }}neg{{ end }}{{ end }}{{ end }}">
+              {{ with $s.bean_score_data }}{{ if ne .current_score nil }}{{ printf "%+.1fσ" (float .current_score) }}{{ else }}—{{ end }}{{ else }}—{{ end }}
+            </td>
+            <td class="num hide-sm">
+              {{ if ne $s.roe nil }}{{ printf "%.0f%%" (float $s.roe) }}{{ else }}—{{ end }}
+            </td>
+            <td class="hide-sm muted">{{ $s.sector | default "—" }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+      {{ else }}
+      <p class="screen-empty">Zero stocks cleared every filter on this week's close ({{ $data.generated_readable }}). Check back Saturday after the weekly refresh or browse <a href="/stocks/">all {{ $data.summary.total_stocks }} tracked stocks</a>.</p>
+      {{ end }}
+    </div>
+
+    {{ partial "deepdive-signup.html" . }}
+
+    {{ if and .Params.faq_q1 .Params.faq_a1 }}
+    <section class="screen-faq">
+      <h2>Methodology &amp; FAQ</h2>
+      <h3>{{ .Params.faq_q1 }}</h3>
+      <p>{{ .Params.faq_a1 }}</p>
+      {{ if and .Params.faq_q2 .Params.faq_a2 }}
+      <h3>{{ .Params.faq_q2 }}</h3>
+      <p>{{ .Params.faq_a2 }}</p>
+      {{ end }}
+    </section>
+    {{ end }}
+
+    <section class="screen-related">
+      <h2>More Weekly Screens</h2>
+      <div class="screen-chips">
+        {{ range .CurrentSection.Pages.ByWeight }}
+          {{ if ne .Permalink $.Permalink }}
+          <a href="{{ .Permalink }}">{{ .Params.short_title | default .Title }}</a>
+          {{ end }}
+        {{ end }}
+      </div>
+    </section>
+  </main>
+
+  {{ partial "footer.html" . }}
+</body>
+</html>

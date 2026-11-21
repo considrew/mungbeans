@@ -15,7 +15,7 @@ Whether or not Munger actually said this, the concept is sound: the 200-week mov
 
 ## What This Tool Does
 
-mungbeans.io tracks over 1,600 stocks against their 200-week moving average and answers one simple question for each:
+mungbeans.io tracks roughly 2,000 stocks against their 200-week moving average and answers one simple question for each:
 
 **Is it below the line? Yes or no.**
 
@@ -72,7 +72,7 @@ The Relative Strength Index on weekly data:
 - **Stock prices**: [yfinance](https://github.com/ranaroussi/yfinance) (weekly adjusted close)
 - **Insider transactions**: SEC Form 4 filings
 - **Update schedule**: Weekly (typically Saturday mornings, based on Friday close data)
-- **Stocks tracked**: 1,600+ names across all sectors, including S&P 500 constituents, Berkshire Hathaway holdings, Dividend Aristocrats, and additional mid/small-cap stocks
+- **Stocks tracked**: ~2,000 names across all sectors, including S&P 500 constituents, Berkshire Hathaway holdings, Dividend Aristocrats, and additional mid/small-cap stocks
 
 ## Built With
 

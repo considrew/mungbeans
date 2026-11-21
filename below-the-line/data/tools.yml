@@ -77,6 +77,7 @@ tools:
     image_caption: ""
     placements:
       - stocks-single
+      - screens
       - email
     what_it_is_for: >-
       A quick, readable second opinion on a single ticker.

@@ -1,0 +1,135 @@
+{{- /*
+  Filters and sorts stocks from stocks.json for a given screen_key.
+  Usage: partial "screen-stocks.html" (dict "stocks" $data.stocks "key" .Params.screen_key)
+  Returns a sorted slice of dicts with keys "stock" and "sort_key" (float64).
+*/ -}}
+{{- $stocks := .stocks -}}
+{{- $key := .key -}}
+{{- $rows := slice -}}
+{{- $order := "asc" -}}
+
+{{- if or (eq $key "large_cap_below") (eq $key "insider_below") (eq $key "fcf_growing_below") (eq $key "wide_moat_below") (eq $key "yartseva_below") (eq $key "bean_deep_value") (eq $key "stacked_dislocations") -}}
+  {{- $order = "desc" -}}
+{{- end -}}
+
+{{- range $stocks -}}
+  {{- $s := . -}}
+  {{- $match := false -}}
+  {{- $sk := 0.0 -}}
+
+  {{- if eq $key "large_cap_below" -}}
+    {{- if and $s.below_line $s.market_cap -}}
+      {{- $mc := float $s.market_cap -}}
+      {{- if ge $mc 10000000000.0 -}}
+        {{- $match = true -}}
+        {{- $sk = $mc -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "buffett_below" -}}
+    {{- if $s.buffett_below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.pct_from_wma nil -}}{{- $sk = float $s.pct_from_wma -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "aristocrat_below" -}}
+    {{- if $s.aristocrat_below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.pct_from_wma nil -}}{{- $sk = float $s.pct_from_wma -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "insider_below" -}}
+    {{- if $s.insider_below_line -}}
+      {{- $match = true -}}
+      {{- if $s.insider_buy_total_12m -}}
+        {{- $sk = float $s.insider_buy_total_12m -}}
+      {{- else if $s.largest_buy_value -}}
+        {{- $sk = float $s.largest_buy_value -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "fcf_growing_below" -}}
+    {{- if $s.fcf_growing_below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.fcf_cagr_3yr nil -}}{{- $sk = float $s.fcf_cagr_3yr -}}{{- else -}}{{- $sk = -999.0 -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "wide_moat_below" -}}
+    {{- if and $s.wide_moat $s.below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.gross_margin nil -}}{{- $sk = float $s.gross_margin -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "cannibal_below" -}}
+    {{- if $s.cannibal_below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.shares_change_3yr nil -}}{{- $sk = float $s.shares_change_3yr -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "oversold_below" -}}
+    {{- if and $s.below_line (ne $s.rsi_14 nil) -}}
+      {{- $rsi := float $s.rsi_14 -}}
+      {{- if lt $rsi 30.0 -}}
+        {{- $match = true -}}
+        {{- $sk = $rsi -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "yartseva_below" -}}
+    {{- if $s.yartseva_below_line -}}
+      {{- $match = true -}}
+      {{- if ne $s.fcf_yield nil -}}{{- $sk = float $s.fcf_yield -}}{{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "approaching_doorstep" -}}
+    {{- if and (not $s.below_line) (ne $s.pct_from_wma nil) -}}
+      {{- $pct := float $s.pct_from_wma -}}
+      {{- if and (ge $pct 0.0) (le $pct 5.0) -}}
+        {{- $match = true -}}
+        {{- $sk = $pct -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "bean_deep_value" -}}
+    {{- with $s.bean_score_data -}}
+      {{- if ne .current_score nil -}}
+        {{- $bs := float .current_score -}}
+        {{- if ge $bs 2.0 -}}
+          {{- $match = true -}}
+          {{- $sk = $bs -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+  {{- else if eq $key "stacked_dislocations" -}}
+    {{- $isWow := false -}}
+    {{- $wowScore := 0.0 -}}
+    {{- with $s.wow_signal -}}
+      {{- if .wow -}}
+        {{- $isWow = true -}}
+        {{- if ne .wow_score nil -}}{{- $wowScore = float .wow_score -}}{{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $stack := 0.0 -}}
+    {{- with $s.dislocation -}}
+      {{- if ne .dislocation_stack nil -}}{{- $stack = float .dislocation_stack -}}{{- end -}}
+    {{- end -}}
+    {{- if or $isWow (ge $stack 3.0) -}}
+      {{- $match = true -}}
+      {{- $bs := 0.0 -}}
+      {{- with $s.bean_score_data -}}
+        {{- if ne .current_score nil -}}{{- $bs = float .current_score -}}{{- end -}}
+      {{- end -}}
+      {{- $wowBonus := 0.0 -}}
+      {{- if $isWow -}}{{- $wowBonus = add 100.0 $wowScore -}}{{- end -}}
+      {{- $sk = add $wowBonus (add (mul $stack 10.0) $bs) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- if $match -}}
+    {{- $rows = $rows | append (dict "stock" $s "sort_key" $sk) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $sorted := sort $rows "sort_key" $order -}}
+{{- return $sorted -}}
