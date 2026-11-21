@@ -12,7 +12,7 @@ verdict_label: "Wait — fairly priced for a normal chip cycle; buy on a clean 1
 performance_price_at_publish: "$125.53"
 performance_since: "+0.0%"
 performance_price_current: "$125.53"
-performance_as_of: "2026-11-20"
+performance_as_of: "2026-11-21"
 ---
 
 The full deep dive lives at [/deep-dives/nvda/](/deep-dives/nvda/).

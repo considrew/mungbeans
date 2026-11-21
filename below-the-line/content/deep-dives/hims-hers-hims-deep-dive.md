@@ -10,9 +10,9 @@ ticker_b: "LFMD"
 verdict: "value-trap"
 verdict_label: "Avoid — cheap on revenue, fully priced on what each member earns"
 performance_price_at_publish: "$19.73"
-performance_since: "+0.0%"
-performance_price_current: "$19.73"
-performance_as_of: "2026-11-13"
+performance_since: "-26.0%"
+performance_price_current: "$14.60"
+performance_as_of: "2026-11-21"
 ---
 
 The full deep dive lives at [/deep-dives/hims/](/deep-dives/hims/).

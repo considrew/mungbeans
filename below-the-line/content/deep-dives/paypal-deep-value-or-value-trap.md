@@ -8,10 +8,10 @@ ticker: "PYPL"
 verdict: "deep-value"
 verdict_label: "Deep Value (w/ Structural Risk)"
 pct_below_200wma: "43"
-performance_since: "+44.5%"
+performance_since: "+29.9%"
 performance_price_at_publish: "$41.03"
-performance_price_current: "$59.28"
-performance_as_of: "2026-11-14"
+performance_price_current: "$53.29"
+performance_as_of: "2026-11-21"
 ---
 
 ## The Setup

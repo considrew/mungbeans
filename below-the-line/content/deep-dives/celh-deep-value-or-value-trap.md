@@ -8,10 +8,10 @@ ticker: "CELH"
 verdict: "deep-value"
 verdict_label: "Deep Value"
 pct_below_200wma: "28"
-performance_since: "+0.4%"
+performance_since: "-11.9%"
 performance_price_at_publish: "$32.29"
-performance_price_current: "$32.42"
-performance_as_of: "2026-11-14"
+performance_price_current: "$28.46"
+performance_as_of: "2026-11-21"
 ---
 
 ## The Setup
