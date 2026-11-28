@@ -1,0 +1,657 @@
+# Curated AI Exposure & Toll Gate Overlay (v1 — 40 flagship tickers)
+# Methodology: docs/ai-exposure-methodology.md (v0.2)
+#
+# Rules:
+# - C1 counts pre-profit AI lab concentration only; profitable hyperscaler
+#   concentration belongs in Pillar D (ai_revenue_share / ai_tier).
+# - Every rubric block carries a source note and review date. Unverified numeric
+#   shares remain null so Pillar E absorbs Pillar D cleanly.
+# - Entries older than 180 days are automatically flagged stale (50% overlay weight).
+
+# ==============================================================================
+# TIER 1 — DIRECT AI INFRASTRUCTURE (CHIPS, SERVERS, NETWORKING, NEOCLOUDS)
+# ==============================================================================
+
+NVDA:
+  ai_tier: 1
+  ai_revenue_share: 88
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 2
+    c3_equity_for_orders: 1
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Nvidia generates the overwhelming majority of revenue from data-center accelerators and holds equity stakes in GPU-cloud customers; a hyperscaler capex pause hits earnings directly even though its own balance sheet is cash-rich."
+  sources:
+    - {claim: "ai_revenue_share,c2", doc: "NVIDIA Form 10-K / Form 10-Q Data Center segment & strategic equity investments", url: "https://investor.nvidia.com/financial-info/sec-filings/", asof: "2026-11-17"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+AVGO:
+  ai_tier: 1
+  ai_revenue_share: 35
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Broadcom sells custom AI XPUs and Ethernet switching to profitable hyperscalers alongside high-margin infrastructure software, giving it meaningful AI demand sensitivity without circular lab-financing exposure."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Broadcom SEC filings & Semiconductor Solutions AI revenue disclosures", url: "https://investors.broadcom.com/financial-information/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+AMD:
+  ai_tier: 1
+  ai_revenue_share: 45
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "AMD's growth multiple rests on Instinct data-center GPU share gains behind Nvidia; slower hyperscaler AI budgets would compress data-center revenue while PC and embedded lines provide partial ballast."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "AMD Form 10-K / 10-Q Data Center segment disclosures", url: "https://ir.amd.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+MU:
+  ai_tier: 1
+  ai_revenue_share: 40
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Micron is committing heavy fab capex to high-bandwidth memory (HBM) for AI accelerators; if GPU shipments cool, memory pricing and depreciation swing fast."
+  sources:
+    - {claim: "ai_tier,capex", doc: "Micron Technology Form 10-K / 10-Q HBM & capital expenditure disclosures", url: "https://investors.micron.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+MRVL:
+  ai_tier: 1
+  ai_revenue_share: 65
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Marvell's data-center optical DSPs and custom cloud silicon now drive most of revenue, tying its margin recovery directly to hyperscaler cluster buildouts."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Marvell Technology Form 10-K / 10-Q Data Center end-market revenue", url: "https://investor.marvell.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+SMCI:
+  ai_tier: 1
+  ai_revenue_share: 75
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Super Micro operates on thin hardware-assembly margins tied heavily to GPU server racks and neocloud orders, leaving working capital and earnings sharply exposed if AI server demand slows."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Super Micro Computer SEC filings & AI GPU platform revenue mix", url: "https://ir.supermicro.com/financials/sec-filings/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+ANET:
+  ai_tier: 1
+  ai_revenue_share: 45
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Arista sells high-margin cloud Ethernet switching concentrated in top hyperscalers; capex cuts hit top-line growth, though a capital-light, net-cash balance sheet eliminates solvency risk."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Arista Networks Form 10-K customer concentration & AI networking disclosures", url: "https://investors.arista.com/sec-filings/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+DELL:
+  ai_tier: 1
+  ai_revenue_share: 20
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 1
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Dell's AI server backlog has been its primary growth narrative, though lower-margin GPU racks sit alongside a large legacy PC and storage business with meaningful corporate debt."
+  sources:
+    - {claim: "ai_tier,c2", doc: "Dell Technologies Form 10-K / 10-Q Infrastructure Solutions Group & DFS disclosures", url: "https://investors.delltechnologies.com/financial-information/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+HPE:
+  ai_tier: 1
+  ai_revenue_share: 18
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 1
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "HPE carries AI server backlog and customer financing exposure alongside its Juniper networking integration, creating moderate capex-cycle sensitivity."
+  sources:
+    - {claim: "ai_tier,c2", doc: "HPE Form 10-K / 10-Q Server & Financial Services disclosures", url: "https://investors.hpe.com/financial/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+NBIS:
+  ai_tier: 1
+  ai_revenue_share: 85
+  counterparty:
+    c1_backlog_concentration: 2
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 2
+    c5_collateral_fragility: 2
+  useful_life_extended: false
+  search_summary: "Nebius is a pure-play AI GPU neocloud deploying rapid capex into fast-depreciating accelerator clusters; utilization and GPU resale pricing decide equity value in a downturn."
+  sources:
+    - {claim: "ai_tier,c1,c4,c5", doc: "Nebius Group SEC filings & AI infrastructure capex disclosures", url: "https://www.sec.gov/edgar/browse/?CIK=0001513845", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+IREN:
+  ai_tier: 1
+  ai_revenue_share: 50
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 2
+  useful_life_extended: false
+  search_summary: "IREN pivoted power-dense bitcoin sites into AI GPU cloud hosting funded with heavy capex and equity/convertible issuance, giving it high leverage to AI compute demand."
+  sources:
+    - {claim: "ai_tier,c5", doc: "IREN Limited Form 10-K / 10-Q AI Cloud & power site capex disclosures", url: "https://www.sec.gov/edgar/browse/?CIK=0001878848", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+APLD:
+  ai_tier: 1
+  ai_revenue_share: 70
+  counterparty:
+    c1_backlog_concentration: 2
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 1
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 2
+  useful_life_extended: false
+  search_summary: "Applied Digital is building dedicated AI data centers funded through project debt, leases, and dilution tied to hyperscaler and neocloud tenant commitments."
+  sources:
+    - {claim: "ai_tier,c1,c3,c5", doc: "Applied Digital Form 10-K / 10-Q HPC hosting & financing disclosures", url: "https://ir.applieddigital.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+TSM:
+  ai_tier: 1
+  ai_revenue_share: 30
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "TSMC manufactures nearly all leading-edge AI accelerators on heavy leading-node fab capex, cushioned by smartphone/HPC diversification and strong operating cash flow."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "TSMC Form 20-F HPC & AI accelerator platform revenue disclosures", url: "https://investor.tsmc.com/english/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+ASML:
+  ai_tier: 1
+  ai_revenue_share: 25
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "ASML holds a monopoly on EUV lithography tools required for AI chips, so foundry capex delays swing orders cyclically without creating balance-sheet stress."
+  sources:
+    - {claim: "ai_tier", doc: "ASML Form 20-F EUV lithography backlog & foundry capex disclosures", url: "https://www.asml.com/en/investors/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+# ==============================================================================
+# TIER 2 — HYPERSCALERS & CLOUD CAPEX FUNDERS
+# ==============================================================================
+
+ORCL:
+  ai_tier: 2
+  ai_revenue_share: 38
+  counterparty:
+    c1_backlog_concentration: 2
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 2
+    c5_collateral_fragility: 1
+  useful_life_extended: false
+  search_summary: "Oracle has ramped AI data-center capex well ahead of operating cash flow, pushing free cash flow deeply negative alongside heavy debt, equity issuance, and large pre-profit AI lab RPO concentration."
+  sources:
+    - {claim: "ai_tier,c1,c4", doc: "Oracle Form 10-K / 10-Q RPO, OCI capex & Nov 2026 equity offering", url: "https://investor.oracle.com/sec-filings/", asof: "2026-11-20"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+MSFT:
+  ai_tier: 2
+  ai_revenue_share: 22
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 2
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 0
+  useful_life_extended: true
+  search_summary: "Microsoft carries large Azure AI capex, multi-year data-center leases, and deep OpenAI commercial ties, buffered by massive positive free cash flow from enterprise software."
+  sources:
+    - {claim: "ai_tier,c2,useful_life", doc: "Microsoft Form 10-K / 10-Q server useful-life, finance lease & OpenAI disclosures", url: "https://www.microsoft.com/en-us/Investor/sec-filings.aspx", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+META:
+  ai_tier: 2
+  ai_revenue_share: null
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 0
+  useful_life_extended: true
+  search_summary: "Meta has surged AI data-center capex to levels that turned recent free cash flow negative and paused buybacks, creating a steep future depreciation wave if ad monetization slows."
+  sources:
+    - {claim: "ai_tier,useful_life", doc: "Meta Platforms Form 10-K / 10-Q server useful-life & 2026 AI capex guidance", url: "https://investor.fb.com/financials/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+AMZN:
+  ai_tier: 2
+  ai_revenue_share: 18
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 2
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 1
+    c5_collateral_fragility: 0
+  useful_life_extended: true
+  search_summary: "Amazon is running the largest absolute AI and AWS capex program in public markets (~$200B+ annualized) alongside strategic investments in Anthropic, pushing trailing free cash flow negative."
+  sources:
+    - {claim: "ai_tier,c2,useful_life", doc: "Amazon Form 10-K / 10-Q AWS capex, Anthropic investment & useful-life notes", url: "https://ir.aboutamazon.com/sec-filings/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+GOOG:
+  ai_tier: 2
+  ai_revenue_share: 16
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 1
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 1
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 2
+  disintermediation_penalty: 5
+  useful_life_extended: true
+  search_summary: "Alphabet is a classic Levered Landlord: it owns unmatched proprietary data across Search, YouTube, and Maps, while simultaneously underwriting a massive AI capex surge that briefly pushed quarterly FCF negative."
+  sources:
+    - {claim: "ai_tier,toll_gate,useful_life", doc: "Alphabet Form 10-K / 10-Q Cloud, Search/YouTube & capex disclosures", url: "https://abc.xyz/investor/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+GOOGL:
+  ai_tier: 2
+  ai_revenue_share: 16
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 1
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 1
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 2
+  disintermediation_penalty: 5
+  useful_life_extended: true
+  search_summary: "Alphabet (Class A) combines proprietary data scale across Search, YouTube, and Maps with heavy AI infrastructure capex—high toll-gate moat paired with rising depreciation overhang."
+  sources:
+    - {claim: "ai_tier,toll_gate,useful_life", doc: "Alphabet Form 10-K / 10-Q Cloud, Search/YouTube & capex disclosures", url: "https://abc.xyz/investor/", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+# ==============================================================================
+# TIER 3 — PICKS & SHOVELS (POWER, NUCLEAR, COOLING, GRID, DATA CENTER REITS)
+# ==============================================================================
+
+VRT:
+  ai_tier: 3
+  ai_revenue_share: 75
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Vertiv supplies liquid cooling and critical power directly into AI data centers (~75% data-center exposure); orders re-rate sharply whenever hyperscaler buildout schedules slip."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Vertiv Holdings Form 10-K data center end-market revenue mix", url: "https://investors.vertiv.com/financial-information/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+VST:
+  ai_tier: 3
+  ai_revenue_share: 25
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Vistra re-rated as a merchant power beneficiary of AI data-center load growth; if load forecasts cool, forward power-price expectations compress faster than contracted retail earnings."
+  sources:
+    - {claim: "ai_tier", doc: "Vistra Corp Form 10-K nuclear & data-center power load disclosures", url: "https://investor.vistracorp.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+CEG:
+  ai_tier: 3
+  ai_revenue_share: 25
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Constellation Energy operates the largest US nuclear fleet and signed long-term hyperscaler PPAs; valuation embeds multi-year AI power demand premiums above traditional utility multiples."
+  sources:
+    - {claim: "ai_tier", doc: "Constellation Energy Form 10-K nuclear PPA & hyperscaler contract disclosures", url: "https://investors.constellationenergy.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+GEV:
+  ai_tier: 3
+  ai_revenue_share: 25
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "GE Vernova's gas turbine and grid-electrification backlog surged on AI data-center power demand; backlog is multi-year, though its stock trades with high AI-beta sensitivity."
+  sources:
+    - {claim: "ai_tier", doc: "GE Vernova Form 10-K Power & Electrification backlog disclosures", url: "https://www.gevernova.com/investors/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+ETN:
+  ai_tier: 3
+  ai_revenue_share: 17
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Eaton supplies switchgear and electrical distribution for data centers alongside aerospace and industrial segments, limiting downside relative to pure-play AI hardware."
+  sources:
+    - {claim: "ai_tier,ai_revenue_share", doc: "Eaton Corp Form 10-K Electrical Americas data-center mix", url: "https://www.eaton.com/us/en-us/company/investor-relations.html", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+PWR:
+  ai_tier: 3
+  ai_revenue_share: 15
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Quanta Services builds grid transmission and data-center electrical infrastructure; broad utility modernization cushions a slowdown in AI-only projects."
+  sources:
+    - {claim: "ai_tier", doc: "Quanta Services Form 10-K Electric Power backlog disclosures", url: "https://investors.quantaservices.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+EQIX:
+  ai_tier: 3
+  ai_revenue_share: 30
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 1
+  useful_life_extended: false
+  search_summary: "Equinix focuses on interconnection-heavy retail colocation plus xScale hyperscale JVs, giving it lower single-tenant AI bust risk than pure GPU-cloud landlords."
+  sources:
+    - {claim: "ai_tier,c5", doc: "Equinix Form 10-K xScale joint venture & development pipeline disclosures", url: "https://investor.equinix.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+DLR:
+  ai_tier: 3
+  ai_revenue_share: 45
+  counterparty:
+    c1_backlog_concentration: 1
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 1
+  useful_life_extended: false
+  search_summary: "Digital Realty carries substantial wholesale hyperscale data-center development capex and leverage; long-term leases protect near-term FFO while renewal spreads track AI capacity demand."
+  sources:
+    - {claim: "ai_tier,c5", doc: "Digital Realty Trust Form 10-K development pipeline & tenant concentration", url: "https://investor.digitalrealty.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+PLTR:
+  ai_tier: 4
+  ai_revenue_share: null
+  counterparty:
+    c1_backlog_concentration: 0
+    c2_vendor_financing: 0
+    c3_equity_for_orders: 0
+    c4_take_or_pay_payer: 0
+    c5_collateral_fragility: 0
+  useful_life_extended: false
+  search_summary: "Palantir runs a capital-light software model with zero GPU-capex overhang, so its AI risk sits in valuation multiple compression rather than balance-sheet solvency."
+  sources:
+    - {claim: "ai_tier", doc: "Palantir Technologies Form 10-K / 10-Q AIP software & balance-sheet disclosures", url: "https://investors.palantir.com/financials/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+# ==============================================================================
+# AI TOLL GATE CANDIDATES (PROPRIETARY, FRESH, AUTHORITATIVE DATA MOATS)
+# ==============================================================================
+
+GENI:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 1
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Genius Sports holds exclusive official league data rights (including NFL) embedded in live sportsbook and prediction-market feeds—real-time data an LLM cannot scrape or synthesize."
+  sources:
+    - {claim: "toll_gate", doc: "Genius Sports Form 20-F & mungbeans GENI deep dive", url: "https://mungbeans.io/deep-dives/geni/", asof: "2026-08-08"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+SPGI:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 2
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "S&P Global owns legally mandated credit ratings, S&P benchmarks, and Platts commodity prices—capital-light, authoritative toll booths that AI agents must license rather than approximate."
+  sources:
+    - {claim: "toll_gate", doc: "S&P Global Form 10-K Ratings, Indices, Platts & Market Intelligence disclosures", url: "https://investor.spglobal.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+MCO:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 1
+    t1c_authority: 2
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Moody's combines an NRSRO credit-rating duopoly with deeply embedded Moody's Analytics risk datasets, collecting AI-era licensing rent without underwriting GPU capex."
+  sources:
+    - {claim: "toll_gate", doc: "Moody's Corp Form 10-K MIS & Moody's Analytics AI product disclosures", url: "https://ir.moodys.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+MSCI:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 1
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "MSCI's global equity indices and factor models are written directly into ETF mandates and institutional benchmarks, generating recurring high-margin royalties insulated from AI capex busts."
+  sources:
+    - {claim: "toll_gate", doc: "MSCI Form 10-K Index & Analytics recurring subscription disclosures", url: "https://ir.msci.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+FICO:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 1
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "FICO Scores sit inside regulated US mortgage and consumer lending workflows; lenders cannot replace a mandated underwriting standard with a generic LLM prompt."
+  sources:
+    - {claim: "toll_gate", doc: "Fair Isaac Corp Form 10-K Scores & Software segment disclosures", url: "https://investors.fico.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+PL:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 1
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 1
+  disintermediation_penalty: 0
+  search_summary: "Planet Labs owns a proprietary daily Earth-imaging satellite archive that feeds AI geospatial models; satellite capex makes it less capital-light than pure software toll collectors."
+  sources:
+    - {claim: "toll_gate", doc: "Planet Labs Form 10-K / 10-Q satellite fleet & AI analytics disclosures", url: "https://investors.planet.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+VRSK:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 1
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Verisk aggregates proprietary contributory US insurance loss data embedded in underwriting workflows, creating a high-margin data moat that cannot be scraped from the public web."
+  sources:
+    - {claim: "toll_gate", doc: "Verisk Analytics Form 10-K ISO contributory insurance database disclosures", url: "https://investor.verisk.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+TRI:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 2
+    t1d_ai_monetization: 2
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Thomson Reuters owns authoritative legal (Westlaw) and tax databases paired with CoCounsel AI tools embedded in law-firm workflows where hallucination liability makes authoritative citations mandatory."
+  sources:
+    - {claim: "toll_gate", doc: "Thomson Reuters Form 40-F Legal Professionals & CoCounsel AI disclosures", url: "https://ir.thomsonreuters.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+CME:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "CME Group owns exclusive live futures order-book and settlement data across rates, equity indices, and commodities—real-time market truth with minimal capex intensity."
+  sources:
+    - {claim: "toll_gate", doc: "CME Group Form 10-K Market Data & Clearing segment disclosures", url: "https://investor.cmegroup.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+ICE:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Intercontinental Exchange pairs exclusive energy/NYSE exchange feeds with fixed-income pricing and mortgage workflow software, earning recurring data tolls with low GPU capex."
+  sources:
+    - {claim: "toll_gate", doc: "ICE Form 10-K Exchanges, Fixed Income & Data Services disclosures", url: "https://ir.theice.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew
+
+NDAQ:
+  toll_gate:
+    t1a_exclusivity: 2
+    t1b_freshness: 2
+    t1c_authority: 2
+    t1d_ai_monetization: 1
+    t1e_embeddedness: 2
+  disintermediation_penalty: 0
+  search_summary: "Nasdaq pairs proprietary equity-market data and Nasdaq-100 index licensing with financial-crime and regulatory software, collecting recurring data rent without AI infrastructure capex."
+  sources:
+    - {claim: "toll_gate", doc: "Nasdaq Form 10-K Financial Technology & Market Services disclosures", url: "https://ir.nasdaq.com/sec-filings", asof: "2026-11-21"}
+  reviewed: 2026-11-21
+  reviewer: drew

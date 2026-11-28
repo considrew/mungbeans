@@ -7,6 +7,8 @@
 - [Homepage](https://mungbeans.io/): Weekly summary of ~2,000 tracked stocks against their 200-week moving average, latest deep dives, and actionable value zones.
 - [All Stocks Screener](https://mungbeans.io/stocks/): Full interactive screener covering ~2,000 US equities with 200WMA distance, 14-week RSI, historical touch returns, Bean Score, insider buying, share buybacks, and Dislocation Stack.
 - [Stock Screens Index](https://mungbeans.io/screens/): Pre-built, static, weekly-updated stock lists filtered by quality, cash flow, insider buying, valuation dislocation, and momentum.
+- [AI Exposure Screener](https://mungbeans.io/ai-exposure/): Two-axis map separating AI Capex Bust Exposure (depreciation overhang, negative FCF / capex funding gap, circular financing & vendor equity ties, AI revenue concentration, market-implied AI beta) from AI Toll Collectors (proprietary data moats with low bust risk).
+- [AI Exposure Methodology](https://mungbeans.io/methodology/ai-exposure/): Full v0.2 scoring specification covering the 2-axis quadrant matrix, five bust pillars, four toll-gate pillars, relevance gate, and filing-backed curation rules.
 - [Deep Dives](https://mungbeans.io/deep-dives/): Five-tab forensic single-stock theses (Thesis, Verdict, Overhangs, Numbers, Bear Case) with immutable publish prices and live performance tracking.
 - [Weekly Signal Reports](https://mungbeans.io/blog/): Saturday summaries of every stock that newly crossed below or recovered above its 200-week moving average.
 - [Micro Cap Innovation Screener](https://mungbeans.io/microcaps/): Sub-$500M innovation screen scoring cash runway, R&D intensity, patent activity, and revenue inflection.
@@ -27,10 +29,13 @@
 - [Approaching 200WMA (Within 5%)](https://mungbeans.io/screens/approaching-200wma/): Watchlist of stocks sitting 0% to 5% above their 200-week moving average.
 - [Bean Score Deep Value (+2σ FCF Dislocation)](https://mungbeans.io/screens/bean-score-deep-value/): Stocks whose trailing FCF yield sits at least two standard deviations cheaper than their own quarterly baseline.
 - [Stacked Dislocations & WOW (6EQUJ5) Signals](https://mungbeans.io/screens/stacked-dislocations/): Multi-factor convergence screen combining price drawdown, FCF yield, dividend yield, sector-relative dislocation, buyback acceleration, and insider intensity.
+- [AI Toll Collectors (Proprietary Data Moats)](https://mungbeans.io/screens/ai-toll-collectors/): Curated companies owning authoritative, legally mandated, or exclusive real-time data toll gates with low AI capex bust exposure.
+- [AI Capex Bust Exposure (AI Bag Holders)](https://mungbeans.io/screens/ai-bag-holders/): Stocks most vulnerable to an AI capex slowdown due to negative FCF funding gaps, high AI revenue dependence, circular financing, and high market-implied AI beta.
+- [AI Depreciation Overhang & Capex Intensity](https://mungbeans.io/screens/ai-depreciation-bombs/): AI infrastructure, hyperscaler, and power buildout stocks ranked by capex-to-D&A gap, useful-life extensions, and capital-funding pressure.
 
 ## URL Conventions
 
-- Individual stock signal page: `https://mungbeans.io/stocks/<ticker-lowercase>/` (example: `https://mungbeans.io/stocks/nvda/`)
+- Individual stock signal page: `https://mungbeans.io/stocks/<ticker-lowercase>/` (example: `https://mungbeans.io/stocks/nvda/`) — includes AI Exposure diagnostics and FAQ for AI-linked tickers.
 - Forensic deep dive: `https://mungbeans.io/deep-dives/<ticker-lowercase>/` (examples: `https://mungbeans.io/deep-dives/hims/`, `https://mungbeans.io/deep-dives/geni/`)
 
 ## Methodology & Editorial Policy
@@ -38,4 +43,5 @@
 - **200-Week Moving Average (200WMA):** Roughly four years of weekly adjusted closes. Episodes below the line use 2-week recovery hysteresis to measure historical touch depth, duration, and subsequent 12-month and 24-month returns vs SPY.
 - **Bean Score:** Stock-specific z-score measuring how far current trailing-twelve-month FCF yield deviates from the stock's own quarterly baseline, normalized by its own historical intra-quarter standard deviation. Positive = unusually cheap; negative = unusually expensive.
 - **Dislocation Stack & WOW (`6EQUJ5`):** Counts independent cheapness signals per stock (0–6) with an earnings-quality accrual-gap gate to flag value traps. A WOW signal fires only when all four convergence tiers (price absurdity, business health, smart money, and historical bounce record) align simultaneously.
+- **AI Exposure Matrix (v0.2):** Scores AI-linked stocks on two orthogonal axes — AI Bust Exposure (0–100) and AI Toll Gate (0–100, curated-only) — separating Toll Collectors, Levered Landlords, Bystanders, and AI Bag Holders with filing-linked sources.
 - **Accountability:** All content is educational research, not investment advice. Every deep dive carries its publish date and closing price permanently; errors receive dated inline correction notes rather than silent edits.

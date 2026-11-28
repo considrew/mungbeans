@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {{ partial "head.html" . }}
+  {{ $ai := dict }}
+  {{ with resources.Get "data/ai_exposure.json" }}
+    {{ with . | transform.Unmarshal }}
+      {{ $ai = . }}
+    {{ end }}
+  {{ end }}
+  {{ $counts := $ai.counts | default dict }}
+  {{ $ranked := $ai.ranked | default slice }}
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="mungbeans.io">
+  <meta property="og:title" content="{{ .Title }} | mungbeans.io">
+  <meta property="og:description" content="{{ .Description }}">
+  <meta property="og:url" content="{{ .Permalink }}">
+  <meta property="og:image" content="{{ .Site.BaseURL }}images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@mungbeans_io">
+  <meta name="twitter:title" content="{{ .Title }} | mungbeans.io">
+  <meta name="twitter:description" content="{{ .Description }}">
+  <meta name="twitter:image" content="{{ .Site.BaseURL }}images/og-image.png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "mungbeans.io AI Exposure & Toll Gate Ranking",
+    "description": "{{ .Description }}",
+    "url": "{{ .Permalink }}",
+    "dateModified": "{{ $ai.generated_iso }}",
+    "creator": {"@type": "Organization", "name": "mungbeans.io", "url": "{{ .Site.BaseURL }}"},
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ .Site.BaseURL }}"},
+        {"@type": "ListItem", "position": 2, "name": "AI Exposure Screener"}
+      ]
+    }
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which stocks are most exposed if the AI bubble bursts or AI capex slows?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most exposed stocks sit in the Bag Holder quadrant: companies with high depreciation overhang, negative free cash flow or debt-funded GPU capex, equity dilution, and circular counterparty commitments tied to pre-profit AI labs—without a capital-light proprietary data moat. Examples ranked on this page include pure-play neoclouds, GPU hosting builders, and heavily levered AI infrastructure spenders."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Nvidia (NVDA) failing because of AI capex fears?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Nvidia's own balance sheet is cash-rich and highly profitable, so its risk is demand concentration rather than solvency. Because roughly 88% of revenue comes from data-center accelerators and it holds strategic investments in GPU-cloud customers, any pause in hyperscaler capex hits earnings directly. Check /stocks/nvda/ for its live 200-week moving average signal and full AI Bust Exposure pillar breakdown."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why are Oracle (ORCL) and hyperscaler stocks under AI capex pressure?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When annual capital expenditure runs far ahead of depreciation and operating cash flow, reported earnings overstate steady-state cash generation until future depreciation catches up. Companies funding AI data-center buildouts with debt, leases, or share issuance face a steeper balance-sheet stress test if AI monetization lags spending."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is an AI Toll Collector stock?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An AI Toll Collector owns exclusive, fresh, legally or contractually authoritative data that AI models and agents must license—such as official league sports feeds (GENI), credit ratings and benchmarks (SPGI, MCO, MSCI, FICO), or live exchange order-book data (CME, ICE, NDAQ)—while running a capital-light business that does not underwrite GPU buildouts."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js" defer></script>
+
+  <style>
+    .ai-hub { max-width: 1140px; margin: 0 auto; padding: 34px 20px 64px; }
+    .ai-head { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px; margin-bottom: 14px; }
+    .ai-head h1 { margin: 6px 0 0; font-size: clamp(26px, 3.8vw, 38px); line-height: 1.18; }
+    .ai-sub { color: var(--dim); max-width: 74ch; font-size: 16.5px; line-height: 1.6; margin: 10px 0 20px; }
+    .ai-sub a { color: var(--bench); text-decoration: none; }
+    .ai-sub a:hover { text-decoration: underline; }
+
+    .ai-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(175px, 1fr)); gap: 12px; margin: 18px 0 26px; }
+    .ai-kpi { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; }
+    .ai-kpi-label { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+    .ai-kpi-val { font-family: "IBM Plex Mono", monospace; font-size: 26px; font-weight: 600; margin: 6px 0 2px; color: var(--ink); }
+    .ai-kpi-val.toll { color: var(--gain); }
+    .ai-kpi-val.bag { color: var(--loss); }
+    .ai-kpi-val.landlord { color: var(--bench); }
+    .ai-kpi-note { font-size: 12px; color: var(--faint); margin: 0; }
+
+    .ai-chart-card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; margin-bottom: 28px; }
+    .ai-chart-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .ai-chart-head h2 { margin: 0; font-size: 20px; font-weight: 500; }
+    .ai-chart-legend { display: flex; gap: 14px; flex-wrap: wrap; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--dim); }
+    .ai-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    .ai-chart-wrap { position: relative; height: 390px; }
+    .ai-chart-foot { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--faint); margin: 12px 0 0; }
+
+    .ai-controls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0 0 14px; }
+    .ai-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ai-tab { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; padding: 8px 13px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--dim); cursor: pointer; }
+    .ai-tab:hover { border-color: var(--bench); color: var(--ink); }
+    .ai-tab.active { background: var(--bench-soft); border-color: var(--bench); color: var(--bench); font-weight: 600; }
+    .ai-search { background: var(--card); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; padding: 8px 12px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; min-width: 220px; outline: none; }
+    .ai-search:focus { border-color: var(--bench); }
+
+    .ai-table-wrap { overflow-x: auto; background: var(--card); border: 1px solid var(--line); border-radius: 9px; margin-bottom: 30px; }
+    .ai-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .ai-table th { text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); font-weight: 500; padding: 11px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    .ai-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .ai-row { cursor: pointer; }
+    .ai-row:hover { background: rgba(255,255,255,.025); }
+    .ai-table .num { text-align: right; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .ai-sym { font-family: "IBM Plex Mono", monospace; font-weight: 600; color: var(--bench); text-decoration: none; }
+    .ai-sym:hover { text-decoration: underline; }
+    .ai-co { display: block; font-size: 12px; color: var(--dim); max-width: 230px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .qbadge { display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+    .q-toll_collector { background: var(--gain-soft); color: var(--gain); border: 1px solid rgba(143,191,111,.35); }
+    .q-levered_landlord { background: var(--bench-soft); color: var(--bench); border: 1px solid rgba(201,162,74,.4); }
+    .q-bag_holder { background: var(--loss-soft); color: var(--loss); border: 1px solid rgba(194,96,79,.4); }
+    .q-bystander { background: rgba(111,103,87,.14); color: var(--dim); border: 1px solid var(--line); }
+
+    .ai-drawer { display: none; background: rgba(0,0,0,.22); }
+    .ai-drawer.open { display: table-row; }
+    .ai-drawer-inner { padding: 18px 20px; }
+    .ai-drawer-summary { font-size: 15px; color: var(--ink); line-height: 1.55; margin: 0 0 14px; max-width: 78ch; }
+    .ai-pillar-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-bottom: 14px; }
+    .ai-pbox { background: var(--bg); border: 1px solid var(--line); border-radius: 7px; padding: 12px 14px; }
+    .ai-pbox h4 { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin: 0 0 10px; }
+    .ai-pbar-row { display: grid; grid-template-columns: 120px 1fr 44px; align-items: center; gap: 8px; margin-bottom: 6px; font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--dim); }
+    .ai-pbar-track { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+    .ai-pbar-fill { height: 100%; border-radius: 3px; }
+    .ai-pbar-fill.bust { background: var(--loss); }
+    .ai-pbar-fill.toll { background: var(--gain); }
+    .ai-sources { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--faint); display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    .ai-sources a { color: var(--bench); text-decoration: none; }
+    .ai-sources a:hover { text-decoration: underline; }
+
+    .ai-screens-strip { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 28px; }
+    .ai-screens-strip a { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--dim); background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 7px 12px; text-decoration: none; }
+    .ai-screens-strip a:hover { border-color: var(--bench); color: var(--ink); }
+
+    .ai-faq { margin: 36px 0 24px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .ai-faq h2 { font-size: 22px; margin-bottom: 14px; }
+    .ai-faq h3 { font-size: 16.5px; margin: 18px 0 6px; color: var(--ink); }
+    .ai-faq p { color: var(--dim); font-size: 15px; line-height: 1.65; max-width: 74ch; }
+    .pos { color: var(--gain); }
+    .neg { color: var(--loss); }
+    .muted { color: var(--faint); }
+    @media (max-width: 760px) { .hide-sm { display: none; } .ai-chart-wrap { height: 310px; } }
+  </style>
+</head>
+<body>
+  {{ partial "nav.html" . }}
+
+  <main class="ai-hub">
+    <div class="ai-head">
+      <div>
+        <div class="eyebrow">mungbeans // ai exposure &amp; toll gate screener</div>
+        <h1>AI Bust Exposure vs. AI Toll Collectors</h1>
+      </div>
+      <div class="eyebrow">as of {{ $ai.generated_readable }} &middot; v{{ $ai.methodology_version }}</div>
+    </div>
+
+    <p class="ai-sub">
+      Not all AI stocks face the same risk if AI capital spending slows. We separate <strong>AI Bust Exposure</strong> (depreciation overhang, debt/equity-funded capex, circular lab deals, revenue dependence, AI beta) from <strong>AI Toll Gate</strong> (proprietary, fresh, authoritative data moats with capital-light economics). Click any row to audit its pillars and primary-source filings, or read the <a href="/methodology/ai-exposure/">full methodology &rarr;</a>
+    </p>
+
+    <div class="ai-kpis">
+      <div class="ai-kpi">
+        <div class="ai-kpi-label">Bag Holders</div>
+        <div class="ai-kpi-val bag">{{ $counts.bag_holder | default 0 }}</div>
+        <p class="ai-kpi-note">Bust &ge; 50, no data toll booth</p>
+      </div>
+      <div class="ai-kpi">
+        <div class="ai-kpi-label">Levered Landlords</div>
+        <div class="ai-kpi-val landlord">{{ $counts.levered_landlord | default 0 }}</div>
+        <p class="ai-kpi-note">Data moat + heavy AI capex</p>
+      </div>
+      <div class="ai-kpi">
+        <div class="ai-kpi-label">Toll Collectors</div>
+        <div class="ai-kpi-val toll">{{ $counts.toll_collector | default 0 }}</div>
+        <p class="ai-kpi-note">Toll &ge; 60, Bust &lt; 50</p>
+      </div>
+      <div class="ai-kpi">
+        <div class="ai-kpi-label">Bystanders (AI-Linked)</div>
+        <div class="ai-kpi-val">{{ $counts.bystander | default 0 }}</div>
+        <p class="ai-kpi-note">AI-tied, lower balance-sheet risk</p>
+      </div>
+      <div class="ai-kpi">
+        <div class="ai-kpi-label">Curated / Tracked</div>
+        <div class="ai-kpi-val">{{ $counts.curated_total | default 0 }}</div>
+        <p class="ai-kpi-note">out of {{ $counts.universe_total | default 1999 }} stocks</p>
+      </div>
+    </div>
+
+    <div class="ai-screens-strip">
+      <a href="/screens/ai-toll-collectors/">Static Screen: AI Toll Collectors &rarr;</a>
+      <a href="/screens/ai-bag-holders/">Static Screen: AI Bag Holders &rarr;</a>
+      <a href="/screens/ai-depreciation-bombs/">Static Screen: AI Capex &amp; Depreciation Risk &rarr;</a>
+      <a href="/stocks/">Back to All Stocks Screener &rarr;</a>
+    </div>
+
+    {{ partial "tool-strip.html" (dict "ctx" . "at" "ai-exposure") }}
+
+    <section class="ai-chart-card">
+      <div class="ai-chart-head">
+        <h2>The AI Exposure Quadrant</h2>
+        <div class="ai-chart-legend">
+          <span><i class="ai-dot" style="background:#8fbf6f"></i>Toll Collector</span>
+          <span><i class="ai-dot" style="background:#c9a24a"></i>Levered Landlord</span>
+          <span><i class="ai-dot" style="background:#c2604f"></i>Bag Holder</span>
+          <span><i class="ai-dot" style="background:#8b8170"></i>Bystander</span>
+        </div>
+      </div>
+      <div class="ai-chart-wrap">
+        <canvas id="aiQuadrantChart" aria-label="AI Bust Exposure vs AI Toll Gate Quadrant Scatter Plot"></canvas>
+      </div>
+      <p class="ai-chart-foot">X-axis: AI Bust Exposure (0–100, higher = greater capex/funding/circularity risk). Y-axis: AI Toll Gate (0–100, curated data moats; uncurated names plot along the baseline). Click any ticker dot to open its filing audit drawer below.</p>
+    </section>
+
+    <div class="ai-controls">
+      <div class="ai-tabs" role="tablist">
+        <button class="ai-tab active" data-tab="all">All AI-Ranked ({{ len $ranked }})</button>
+        <button class="ai-tab" data-tab="toll_collector">Toll Collectors ({{ $counts.toll_collector | default 0 }})</button>
+        <button class="ai-tab" data-tab="bag_holder">Bag Holders ({{ $counts.bag_holder | default 0 }})</button>
+        <button class="ai-tab" data-tab="levered_landlord">Levered Landlords ({{ $counts.levered_landlord | default 0 }})</button>
+        <button class="ai-tab" data-tab="bystander">Bystanders ({{ $counts.bystander | default 0 }})</button>
+      </div>
+      <input type="search" id="aiSearch" class="ai-search" placeholder="Filter ticker or company..." aria-label="Filter AI exposure stocks">
+    </div>
+
+    <div class="ai-table-wrap">
+      <table class="ai-table">
+        <thead>
+          <tr>
+            <th>Stock</th>
+            <th>Quadrant</th>
+            <th class="num">AI Bust</th>
+            <th class="num">Toll Gate</th>
+            <th class="num hide-sm">Tier</th>
+            <th class="num hide-sm">AI Beta</th>
+            <th class="num hide-sm">Funding Gap</th>
+            <th class="num">vs 200WMA</th>
+            <th class="hide-sm">Conf.</th>
+          </tr>
+        </thead>
+        <tbody id="aiTableBody">
+          {{ range $ranked }}
+          {{ $r := . }}
+          {{ $bp := $r.ai_bust_pillars | default dict }}
+          {{ $tp := $r.ai_toll_pillars | default dict }}
+          <tr class="ai-row" id="row-{{ $r.symbol }}" data-symbol="{{ $r.symbol }}" data-name="{{ $r.name | lower }}" data-quadrant="{{ $r.ai_quadrant }}">
+            <td>
+              <a href="/stocks/{{ $r.symbol | lower }}/" class="ai-sym" onclick="event.stopPropagation()">{{ $r.symbol }}</a>
+              <span class="ai-co">{{ $r.name }}</span>
+            </td>
+            <td>
+              <span class="qbadge q-{{ $r.ai_quadrant }}">
+                {{- if eq $r.ai_quadrant "toll_collector" -}}Toll Collector
+                {{- else if eq $r.ai_quadrant "levered_landlord" -}}Levered Landlord
+                {{- else if eq $r.ai_quadrant "bag_holder" -}}Bag Holder
+                {{- else -}}Bystander{{- end -}}
+              </span>
+            </td>
+            <td class="num {{ if and (ne $r.ai_bust_score nil) (ge (float $r.ai_bust_score) 50.0) }}neg{{ end }}">
+              {{ if ne $r.ai_bust_score nil }}{{ printf "%.1f" (float $r.ai_bust_score) }}{{ else }}—{{ end }}
+            </td>
+            <td class="num {{ if and (ne $r.ai_toll_score nil) (ge (float $r.ai_toll_score) 60.0) }}pos{{ end }}">
+              {{ if ne $r.ai_toll_score nil }}{{ printf "%.1f" (float $r.ai_toll_score) }}{{ else }}<span class="muted">—</span>{{ end }}
+            </td>
+            <td class="num hide-sm muted">{{ if $r.ai_tier }}T{{ $r.ai_tier }}{{ else }}—{{ end }}</td>
+            <td class="num hide-sm">{{ if ne $r.ai_beta nil }}{{ printf "%.2f" (float $r.ai_beta) }}{{ else }}—{{ end }}</td>
+            <td class="num hide-sm">{{ if ne $r.capex_funding_gap nil }}{{ printf "%.1f%%" (float $r.capex_funding_gap) }}{{ else }}—{{ end }}</td>
+            <td class="num {{ if $r.below_line }}pos{{ else }}muted{{ end }}">
+              {{ if ne $r.pct_from_wma nil }}{{ printf "%+.1f%%" (float $r.pct_from_wma) }}{{ else }}—{{ end }}
+            </td>
+            <td class="hide-sm muted" style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ $r.ai_confidence | default "medium" }}</td>
+          </tr>
+          <tr class="ai-drawer" id="drawer-{{ $r.symbol }}" data-for="{{ $r.symbol }}" data-quadrant="{{ $r.ai_quadrant }}">
+            <td colspan="9">
+              <div class="ai-drawer-inner">
+                {{ with $r.search_summary }}
+                <p class="ai-drawer-summary">{{ . }}</p>
+                {{ end }}
+                <div class="ai-pillar-cols">
+                  <div class="ai-pbox">
+                    <h4>AI Bust Exposure Pillars {{ if ne $r.ai_bust_score nil }}({{ printf "%.1f" (float $r.ai_bust_score) }}/100){{ end }}</h4>
+                    <div class="ai-pbar-row"><span>A · Deprec. Bomb</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ if ne $bp.A nil }}{{ printf "%.0f" (float $bp.A) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $bp.A nil }}{{ printf "%.0f" (float $bp.A) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>B · Leverage</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ if ne $bp.B nil }}{{ printf "%.0f" (float $bp.B) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $bp.B nil }}{{ printf "%.0f" (float $bp.B) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>C · Circularity</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ if ne $bp.C nil }}{{ printf "%.0f" (float $bp.C) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $bp.C nil }}{{ printf "%.0f" (float $bp.C) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>D · Rev. Depend.</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ if ne $bp.D nil }}{{ printf "%.0f" (float $bp.D) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $bp.D nil }}{{ printf "%.0f" (float $bp.D) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>E · AI Beta</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ if ne $bp.E nil }}{{ printf "%.0f" (float $bp.E) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $bp.E nil }}{{ printf "%.0f" (float $bp.E) }}{{ else }}—{{ end }}</span></div>
+                  </div>
+                  <div class="ai-pbox">
+                    <h4>AI Toll Gate Pillars {{ if ne $r.ai_toll_score nil }}({{ printf "%.1f" (float $r.ai_toll_score) }}/100){{ else }}(not curated){{ end }}</h4>
+                    <div class="ai-pbar-row"><span>T1 · Data Moat</span><div class="ai-pbar-track"><div class="ai-pbar-fill toll" style="width:{{ if ne $tp.T1 nil }}{{ printf "%.0f" (float $tp.T1) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $tp.t1_raw nil }}{{ $tp.t1_raw }}/10{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>T2 · Capex Light</span><div class="ai-pbar-track"><div class="ai-pbar-fill toll" style="width:{{ if ne $tp.T2 nil }}{{ printf "%.0f" (float $tp.T2) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $tp.T2 nil }}{{ printf "%.0f" (float $tp.T2) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>T3 · Efficiency</span><div class="ai-pbar-track"><div class="ai-pbar-fill toll" style="width:{{ if ne $tp.T3 nil }}{{ printf "%.0f" (float $tp.T3) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $tp.T3 nil }}{{ printf "%.0f" (float $tp.T3) }}{{ else }}—{{ end }}</span></div>
+                    <div class="ai-pbar-row"><span>T4 · Cash Quality</span><div class="ai-pbar-track"><div class="ai-pbar-fill toll" style="width:{{ if ne $tp.T4 nil }}{{ printf "%.0f" (float $tp.T4) }}%{{ else }}0%{{ end }}"></div></div><span>{{ if ne $tp.T4 nil }}{{ printf "%.0f" (float $tp.T4) }}{{ else }}—{{ end }}</span></div>
+                    {{ if and (ne $tp.penalty nil) (gt (float $tp.penalty) 0.0) }}
+                    <div class="ai-pbar-row"><span>Disinterm. Pen.</span><div class="ai-pbar-track"><div class="ai-pbar-fill bust" style="width:{{ printf "%.0f" (mul (float $tp.penalty) 5.0) }}%"></div></div><span class="neg">−{{ printf "%.0f" (float $tp.penalty) }}</span></div>
+                    {{ end }}
+                  </div>
+                </div>
+                <div class="ai-sources">
+                  <a href="/stocks/{{ $r.symbol | lower }}/">Full {{ $r.symbol }} 200WMA &amp; Fundamentals Page &rarr;</a>
+                  {{ if $r.useful_life_extended }}<span class="neg">Server useful life extended (inflates near-term EPS)</span>{{ end }}
+                  {{ if ne $r.depreciation_overhang nil }}<span>Deprec. Overhang: {{ printf "%.1f%%" (float $r.depreciation_overhang) }} of EBITDA</span>{{ end }}
+                  {{ with $r.overlay }}
+                    {{ if .reviewed }}<span>Reviewed {{ .reviewed }}{{ if .stale }} (stale){{ end }}</span>{{ end }}
+                    {{ range .sources }}
+                      <a href="{{ .url }}" target="_blank" rel="noopener">{{ .doc }} ({{ .asof }})</a>
+                    {{ end }}
+                  {{ end }}
+                </div>
+              </div>
+            </td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+
+    {{ partial "deepdive-signup.html" . }}
+
+    <section class="ai-faq">
+      <h2>Common Questions About AI Stock Exposure</h2>
+      <h3>Which stocks are most exposed if the AI bubble bursts or AI capex slows?</h3>
+      <p>The highest-risk stocks sit in the <strong>Bag Holder</strong> quadrant: GPU neoclouds, dedicated AI data-center builders, and infrastructure spenders running negative free cash flow or circular customer commitments without a capital-light data toll booth. When AI capex pauses, depreciation and debt service stay fixed while utilization drops.</p>
+
+      <h3>Is Nvidia (NVDA) failing because of AI capex fears?</h3>
+      <p>Nvidia is profitable and cash-rich—its risk is customer capex concentration, not solvency. Roughly 88% of revenue comes from data-center accelerators alongside strategic investments in GPU-cloud customers, so any pullback in hyperscaler spending hits earnings directly. View <a href="/stocks/nvda/" style="color:var(--bench)">NVDA's live 200-week moving average page</a> or the <a href="/deep-dives/nvda/" style="color:var(--bench)">NVDA deep dive</a> for full valuation math.</p>
+
+      <h3>Why are Oracle (ORCL) and hyperscaler stocks under AI capex pressure?</h3>
+      <p>Hyperscalers and cloud challengers are spending hundreds of billions annually on short-lived AI servers and data centers—in several cases outpacing operating cash flow and turning free cash flow negative. Because current depreciation reflects older, smaller capex vintages, reported operating earnings overstate steady-state cash earnings unless AI revenue grows into the future depreciation wave.</p>
+
+      <h3>What is an AI Toll Collector stock?</h3>
+      <p>An <strong>AI Toll Collector</strong> owns exclusive, fresh, legally or contractually authoritative data that AI systems must license rather than scrape—such as credit ratings and benchmarks (<a href="/stocks/spgi/" style="color:var(--bench)">SPGI</a>, <a href="/stocks/mco/" style="color:var(--bench)">MCO</a>, <a href="/stocks/msci/" style="color:var(--bench)">MSCI</a>), official live sports feeds (<a href="/stocks/geni/" style="color:var(--bench)">GENI</a>), or exchange settlement data (<a href="/stocks/cme/" style="color:var(--bench)">CME</a>, <a href="/stocks/ice/" style="color:var(--bench)">ICE</a>)—without underwriting the GPU buildout.</p>
+    </section>
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  <script>
+  (function () {
+    var activeTab = "all";
+    var searchInput = document.getElementById("aiSearch");
+    var tabs = Array.prototype.slice.call(document.querySelectorAll(".ai-tab"));
+    var rows = Array.prototype.slice.call(document.querySelectorAll(".ai-row"));
+
+    function applyFilters() {
+      var q = (searchInput && searchInput.value || "").trim().toLowerCase();
+      rows.forEach(function (row) {
+        var sym = row.dataset.symbol;
+        var drawer = document.getElementById("drawer-" + sym);
+        var matchTab = activeTab === "all" || row.dataset.quadrant === activeTab;
+        var matchQ = !q || sym.toLowerCase().indexOf(q) !== -1 || (row.dataset.name || "").indexOf(q) !== -1;
+        var show = matchTab && matchQ;
+        row.style.display = show ? "" : "none";
+        if (!show && drawer) drawer.classList.remove("open");
+      });
+    }
+
+    tabs.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        tabs.forEach(function (b) { b.classList.remove("active"); });
+        btn.classList.add("active");
+        activeTab = btn.dataset.tab;
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener("input", applyFilters);
+    }
+
+    rows.forEach(function (row) {
+      row.addEventListener("click", function () {
+        var drawer = document.getElementById("drawer-" + row.dataset.symbol);
+        if (drawer) drawer.classList.toggle("open");
+      });
+    });
+
+    function openRow(sym) {
+      activeTab = "all";
+      tabs.forEach(function (b) { b.classList.toggle("active", b.dataset.tab === "all"); });
+      if (searchInput) searchInput.value = "";
+      applyFilters();
+      var row = document.getElementById("row-" + sym);
+      var drawer = document.getElementById("drawer-" + sym);
+      if (drawer) drawer.classList.add("open");
+      if (row) row.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function initChart() {
+      var canvas = document.getElementById("aiQuadrantChart");
+      if (!canvas || typeof Chart === "undefined") return;
+
+      fetch("/data/ai_exposure.json")
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (payload) {
+          if (!payload || !payload.ranked) return;
+          var colors = {
+            toll_collector: "#8fbf6f",
+            levered_landlord: "#c9a24a",
+            bag_holder: "#c2604f",
+            bystander: "#8b8170"
+          };
+          var pts = payload.ranked.map(function (r) {
+            return {
+              x: r.ai_bust_score !== null ? r.ai_bust_score : 12,
+              y: r.ai_toll_score !== null ? r.ai_toll_score : 14,
+              symbol: r.symbol,
+              name: r.name,
+              quadrant: r.ai_quadrant,
+              bust: r.ai_bust_score,
+              toll: r.ai_toll_score
+            };
+          });
+
+          var quadrantPlugin = {
+            id: "quadrantOverlay",
+            beforeDraw: function (chart) {
+              var ctx = chart.ctx, area = chart.chartArea, x = chart.scales.x, y = chart.scales.y;
+              var x50 = x.getPixelForValue(50), y60 = y.getPixelForValue(60);
+              ctx.save();
+              ctx.fillStyle = "rgba(143,191,111,0.06)";
+              ctx.fillRect(area.left, area.top, x50 - area.left, y60 - area.top);
+              ctx.fillStyle = "rgba(201,162,74,0.06)";
+              ctx.fillRect(x50, area.top, area.right - x50, y60 - area.top);
+              ctx.fillStyle = "rgba(194,96,79,0.06)";
+              ctx.fillRect(x50, y60, area.right - x50, area.bottom - y60);
+
+              ctx.strokeStyle = "rgba(168,158,140,0.35)";
+              ctx.setLineDash([5, 5]);
+              ctx.beginPath();
+              ctx.moveTo(x50, area.top); ctx.lineTo(x50, area.bottom);
+              ctx.moveTo(area.left, y60); ctx.lineTo(area.right, y60);
+              ctx.stroke();
+              ctx.setLineDash([]);
+
+              ctx.font = "600 10.5px 'IBM Plex Mono', monospace";
+              ctx.fillStyle = "rgba(143,191,111,0.85)";
+              ctx.fillText("TOLL COLLECTORS", area.left + 10, area.top + 18);
+              ctx.fillStyle = "rgba(201,162,74,0.85)";
+              ctx.fillText("LEVERED LANDLORDS", x50 + 10, area.top + 18);
+              ctx.fillStyle = "rgba(168,158,140,0.65)";
+              ctx.fillText("BYSTANDERS", area.left + 10, area.bottom - 10);
+              ctx.fillStyle = "rgba(194,96,79,0.85)";
+              ctx.fillText("BAG HOLDERS", x50 + 10, area.bottom - 10);
+              ctx.restore();
+            },
+            afterDatasetsDraw: function (chart) {
+              var ctx = chart.ctx;
+              var meta = chart.getDatasetMeta(0);
+              ctx.save();
+              ctx.font = "500 10px 'IBM Plex Mono', monospace";
+              ctx.fillStyle = "#ece6da";
+              meta.data.forEach(function (el, idx) {
+                var p = pts[idx];
+                if (!p) return;
+                ctx.fillText(p.symbol, el.x + 7, el.y + 3);
+              });
+              ctx.restore();
+            }
+          };
+
+          new Chart(canvas, {
+            type: "scatter",
+            data: {
+              datasets: [{
+                label: "AI Ranked Stocks",
+                data: pts,
+                pointRadius: 5.5,
+                pointHoverRadius: 8,
+                pointBackgroundColor: pts.map(function (p) { return colors[p.quadrant] || "#8b8170"; }),
+                pointBorderColor: "#15120e",
+                pointBorderWidth: 1.5
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  callbacks: {
+                    label: function (ctx) {
+                      var p = ctx.raw;
+                      return p.symbol + " (" + p.name + ") — Bust: " + (p.bust !== null ? p.bust : "—") + " · Toll: " + (p.toll !== null ? p.toll : "not curated");
+                    }
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  min: 0, max: 100,
+                  title: { display: true, text: "AI Bust Exposure (0–100)", color: "#a89e8c", font: { family: "'IBM Plex Mono', monospace", size: 11 } },
+                  grid: { color: "rgba(51,44,34,0.6)" },
+                  ticks: { color: "#8b8170" }
+                },
+                y: {
+                  min: 0, max: 100,
+                  title: { display: true, text: "AI Toll Gate (0–100)", color: "#a89e8c", font: { family: "'IBM Plex Mono', monospace", size: 11 } },
+                  grid: { color: "rgba(51,44,34,0.6)" },
+                  ticks: { color: "#8b8170" }
+                }
+              },
+              onClick: function (evt, elements) {
+                if (elements && elements.length) {
+                  var p = pts[elements[0].index];
+                  if (p) openRow(p.symbol);
+                }
+              }
+            },
+            plugins: [quadrantPlugin]
+          });
+        })
+        .catch(function () {});
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initChart);
+    } else {
+      initChart();
+    }
+  })();
+  </script>
+</body>
+</html>

@@ -678,6 +678,112 @@ def get_health_metrics(ticker: yf.Ticker) -> dict:
         return empty
 
 
+def extract_ai_fundamentals(ticker: yf.Ticker, info: dict) -> Optional[dict]:
+    """Extract annual capex, D&A, EBIT, EBITDA, OCF, cash, debt, interest and SG&A
+    from already-fetched yfinance statements for scripts/ai_exposure.py.
+
+    Uses cached ticker.financials / balance_sheet / cashflow (no extra HTTP calls).
+    Always stores Capex and Interest Expense as positive magnitudes.
+    """
+    def _first_val(df, labels, col):
+        if df is None or df.empty or col not in df.columns:
+            return None
+        for lbl in labels:
+            if lbl in df.index:
+                v = df.loc[lbl, col]
+                if pd.notna(v):
+                    return float(v)
+        return None
+
+    try:
+        fin = ticker.financials
+        bs = ticker.balance_sheet
+        cf = ticker.cashflow
+        if fin is None or fin.empty:
+            return None
+
+        cols = sorted(fin.columns)
+        latest = cols[-1]
+        prev = cols[-2] if len(cols) >= 2 else None
+        oldest = cols[0] if len(cols) >= 3 else None
+
+        rev_fy = _first_val(fin, ['Total Revenue', 'Revenue'], latest)
+        ni_fy = _first_val(fin, ['Net Income', 'Net Income Common Stockholders'], latest)
+        ebit_fy = _first_val(fin, ['EBIT', 'Operating Income'], latest)
+        ebitda_fy = _first_val(fin, ['EBITDA', 'Normalized EBITDA'], latest)
+        int_exp = _first_val(fin, ['Interest Expense', 'Interest Expense Non Operating'], latest)
+        sga_fy = _first_val(fin, ['Selling General And Administration', 'Selling General And Administrative'], latest)
+
+        capex_raw = _first_val(cf, ['Capital Expenditure', 'Capital Expenditures'], latest)
+        capex_fy = abs(capex_raw) if capex_raw is not None else None
+        da_fy = _first_val(cf, ['Depreciation And Amortization', 'Depreciation Amortization Depletion', 'Depreciation'], latest)
+        if da_fy is None:
+            da_fy = _first_val(fin, ['Reconciled Depreciation', 'Depreciation And Amortization In Income Statement'], latest)
+        da_fy = abs(da_fy) if da_fy is not None else None
+        ocf_fy = _first_val(cf, ['Operating Cash Flow', 'Cash Flow From Continuing Operating Activities'], latest)
+
+        if ebitda_fy is None and ebit_fy is not None and da_fy is not None:
+            ebitda_fy = ebit_fy + da_fy
+        if ebitda_fy is None and info.get('ebitda') is not None:
+            ebitda_fy = float(info['ebitda'])
+        if ocf_fy is None and info.get('operatingCashflow') is not None:
+            ocf_fy = float(info['operatingCashflow'])
+
+        debt_fy = _first_val(bs, ['Total Debt'], latest)
+        if debt_fy is None and info.get('totalDebt') is not None:
+            debt_fy = float(info['totalDebt'])
+        debt_prev = _first_val(bs, ['Total Debt'], prev) if prev is not None else None
+        debt_growth_yoy = None
+        if debt_fy is not None and debt_prev is not None and debt_prev > 0:
+            debt_growth_yoy = round(((debt_fy - debt_prev) / debt_prev) * 100.0, 2)
+
+        cash_fy = _first_val(bs, ['Cash Cash Equivalents And Short Term Investments', 'Cash And Cash Equivalents'], latest)
+        if cash_fy is None and info.get('totalCash') is not None:
+            cash_fy = float(info['totalCash'])
+
+        # 3-year deltas / CAGRs (coarse, 3-4 annual points)
+        capex_3yr_cagr = None
+        rev_3yr_cagr = None
+        op_margin_delta_3y = None
+        sga_ratio_delta_3y = None
+        if oldest is not None:
+            years_span = max(1.0, (pd.Timestamp(latest) - pd.Timestamp(oldest)).days / 365.25)
+            capex_old_raw = _first_val(cf, ['Capital Expenditure', 'Capital Expenditures'], oldest)
+            if capex_fy is not None and capex_old_raw is not None and abs(capex_old_raw) > 0:
+                capex_3yr_cagr = round((((capex_fy / abs(capex_old_raw)) ** (1.0 / years_span)) - 1.0) * 100.0, 2)
+            rev_old = _first_val(fin, ['Total Revenue', 'Revenue'], oldest)
+            if rev_fy is not None and rev_old is not None and rev_old > 0 and rev_fy > 0:
+                rev_3yr_cagr = round((((rev_fy / rev_old) ** (1.0 / years_span)) - 1.0) * 100.0, 2)
+            ebit_old = _first_val(fin, ['Operating Income', 'EBIT'], oldest)
+            if ebit_fy is not None and rev_fy and rev_fy > 0 and ebit_old is not None and rev_old and rev_old > 0:
+                op_margin_delta_3y = round(((ebit_fy / rev_fy) - (ebit_old / rev_old)) * 100.0, 2)
+            sga_old = _first_val(fin, ['Selling General And Administration', 'Selling General And Administrative'], oldest)
+            if sga_fy is not None and rev_fy and rev_fy > 0 and sga_old is not None and rev_old and rev_old > 0:
+                # Positive = SG&A/Revenue fell (efficiency improved)
+                sga_ratio_delta_3y = round(((sga_old / rev_old) - (sga_fy / rev_fy)) * 100.0, 2)
+
+        return {
+            'fy_date': pd.Timestamp(latest).strftime('%Y-%m-%d'),
+            'capex': round(capex_fy, 0) if capex_fy is not None else None,
+            'da': round(da_fy, 0) if da_fy is not None else None,
+            'ebit': round(ebit_fy, 0) if ebit_fy is not None else None,
+            'ebitda': round(ebitda_fy, 0) if ebitda_fy is not None else None,
+            'net_income': round(ni_fy, 0) if ni_fy is not None else None,
+            'revenue': round(rev_fy, 0) if rev_fy is not None else None,
+            'interest_expense': round(abs(int_exp), 0) if int_exp is not None else None,
+            'ocf': round(ocf_fy, 0) if ocf_fy is not None else None,
+            'total_debt': round(debt_fy, 0) if debt_fy is not None else None,
+            'total_cash': round(cash_fy, 0) if cash_fy is not None else None,
+            'debt_growth_yoy': debt_growth_yoy,
+            'capex_3yr_cagr': capex_3yr_cagr,
+            'rev_3yr_cagr': rev_3yr_cagr,
+            'op_margin_delta_3y': op_margin_delta_3y,
+            'sga_ratio_delta_3y': sga_ratio_delta_3y,
+        }
+    except Exception:
+        return None
+
+
 def fetch_fundamental_data(symbol: str) -> dict:
     """
     Fetch fundamental data for quality screening.
@@ -717,6 +823,9 @@ def fetch_fundamental_data(symbol: str) -> dict:
 
         # Business health time-series (dashboard charts)
         health_data = get_health_metrics(ticker)
+
+        # Annual capex / D&A / EBITDA / OCF / SG&A for AI exposure scoring (no extra HTTP calls)
+        ai_fundamentals = extract_ai_fundamentals(ticker, info)
         
         # === DERIVED METRICS ===
         
@@ -812,6 +921,8 @@ def fetch_fundamental_data(symbol: str) -> dict:
             'fcf_history': fcf_trend_data['fcf_history'],
             # Business health dashboard
             'health_chart': health_data if health_data['years'] else None,
+            # AI exposure annual statement snapshot
+            'ai_fundamentals': ai_fundamentals,
         }
         
     except Exception as e:
@@ -1561,7 +1672,7 @@ def _slim_stock(stock: dict) -> dict:
     approaching, rsi_14, avg_return_after_touch). Dropping the chart/history
     data from summary lists saves ~9 MB in stocks.json.
     """
-    heavy_fields = {'growth_chart', 'touch_chart', 'health_chart', 'historical_touches', 'insider_buys'}
+    heavy_fields = {'growth_chart', 'touch_chart', 'health_chart', 'historical_touches', 'insider_buys', 'ai_fundamentals'}
     return {k: v for k, v in stock.items() if k not in heavy_fields}
 
 

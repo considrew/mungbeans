@@ -53,7 +53,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Python dependencies
-        run: pip install pandas yfinance
+        run: pip install pandas yfinance pyyaml
 
       - name: Run stock update script
         run: |
@@ -62,6 +62,11 @@ jobs:
         env:
           SKIP_BLOG: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_blog && 'true' || 'false' }}
           SKIP_BEAN_SCORE: 'true'
+
+      - name: Compute AI Exposure scores
+        run: |
+          cd below-the-line
+          python scripts/ai_exposure.py --verbose
 
       - name: Update deep-dive performance data
         continue-on-error: true
@@ -74,9 +79,11 @@ jobs:
           git add below-the-line/assets/data/stocks.json
           git add -f below-the-line/assets/data/stocks_baseline.json || true
           git add below-the-line/assets/data/crossings.json
+          git add below-the-line/assets/data/ai_exposure.json
+          git add below-the-line/static/data/ai_exposure.json
           git add below-the-line/content/blog/
           git add below-the-line/content/deep-dives/
-          git diff --staged --quiet || git commit -m "Update stock data + weekly blog $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Update stock data + AI exposure + weekly blog $(date +'%Y-%m-%d') [skip netlify]"
           git pull --rebase origin main
           git push
 
@@ -180,7 +187,7 @@ jobs:
           git add -f below-the-line/static/data/bean_score_alerts.json || true
           git add -f below-the-line/static/data/bean_score_history.json || true
           git add -f below-the-line/static/data/bean_score_tracking.json || true
-          git diff --staged --quiet || git commit -m "Weekly Bean Score update $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Weekly Bean Score update $(date +'%Y-%m-%d') [skip netlify]"
           git pull --rebase origin main
           git push
 
@@ -213,7 +220,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add below-the-line/assets/data/microcap_screener.json
-          git diff --staged --quiet || git commit -m "Update micro cap screener results [$(date +%Y-%m-%d)]"
+          git diff --staged --quiet || git commit -m "Update micro cap screener results [$(date +%Y-%m-%d)] [skip netlify]"
           git pull --rebase origin main
           git push
 

@@ -1,0 +1,51 @@
+name: PR Hugo Build Check
+
+# Validates that the Hugo site compiles cleanly on pull requests without
+# spending Netlify Deploy Preview build minutes/credits.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'below-the-line/content/**'
+      - 'below-the-line/layouts/**'
+      - 'below-the-line/static/**'
+      - 'below-the-line/assets/**'
+      - 'below-the-line/data/**'
+      - 'below-the-line/netlify/**'
+      - 'below-the-line/hugo.toml'
+      - 'below-the-line/package.json'
+      - 'below-the-line/netlify.toml'
+      - 'netlify.toml'
+      - '.github/workflows/pr-hugo-check.yml'
+
+concurrency:
+  group: pr-hugo-check-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  hugo-build:
+    name: Verify Hugo Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: '0.139.0'  # keep in sync with netlify.toml HUGO_VERSION
+          extended: true
+
+      - name: Install Node dependencies
+        run: |
+          cd below-the-line
+          npm install
+
+      - name: Build site with Hugo
+        run: |
+          cd below-the-line
+          hugo --minify --gc

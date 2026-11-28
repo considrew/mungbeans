@@ -1,6 +1,7 @@
 [build]
   command = "hugo --minify"
   publish = "public"
+  ignore = "[ -n \"$CACHED_COMMIT_REF\" ] && git cat-file -e \"$CACHED_COMMIT_REF\" 2>/dev/null && git diff --quiet \"$CACHED_COMMIT_REF\" \"$COMMIT_REF\" -- content/ layouts/ static/ assets/ data/ netlify/ hugo.toml package.json netlify.toml"
 
 [build.environment]
   HUGO_VERSION = "0.139.0"
