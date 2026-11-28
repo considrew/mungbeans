@@ -1,0 +1,101 @@
+{
+  "ticker": "AMBA",
+  "company": "Ambarella",
+  "title": "Ambarella (AMBA): The Memory Crunch Exposed a Business That Has Never Earned Its Stock Comp",
+  "description": "Ambarella fell 40% this week after guiding next quarter 37% lower on the memory price spike. At $35.24 it is 46% below its 200-week line, yet even its record year did not cover $98M of stock comp. I call it a value trap, priced for a buyer that has not appeared.",
+  "tags": [
+    "semiconductors",
+    "edge-ai",
+    "memory",
+    "value-trap",
+    "200-week-line"
+  ],
+  "verdict": "value-trap",
+  "verdict_label": "Avoid — cheap against its line, still dear against its cash",
+  "peer_ticker": "MBLY",
+  "selection_rationale": "AMBA fell 40.2% after guiding Q4 revenue to $70-75M against about $112M expected, blaming the memory price spike, and now sits 46% below its 200-week line. It has a company-specific cause, years of filings and a live debate: temporary shock and takeover candidate, or a business whose economics never covered its stock comp. KYMR scored slightly higher on a Phase 2b win but has no product revenue to support the format; INSM is a merger-arb pin on Sanofi's bid; NTNX and ANF were smaller stories.",
+  "dcf_per_share": 22.91,
+  "diluted_shares": 47105219,
+  "sources": [
+    {
+      "title": "Ambarella Q3 FY2027 results (Form 8-K, Ex. 99.1, 24 Nov 2026)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526475716/d912526dex991.htm"
+    },
+    {
+      "title": "Ambarella Q2 FY2027 results (Form 8-K, Ex. 99.1)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526381923/d88952dex991.htm"
+    },
+    {
+      "title": "Ambarella Q1 FY2027 results (Form 8-K, Ex. 99.1)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526245234/d130687dex991.htm"
+    },
+    {
+      "title": "Ambarella Q4 FY2026 results (Form 8-K, Ex. 99.1)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526076823/d108529dex991.htm"
+    },
+    {
+      "title": "Ambarella FY2026 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526119321/amba-20260131.htm"
+    },
+    {
+      "title": "Ambarella Q2 FY2027 Form 10-Q",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526383365/amba-20260731.htm"
+    },
+    {
+      "title": "Ambarella 2026 proxy statement (DEF 14A)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000119312526227183/d20210ddef14a.htm"
+    },
+    {
+      "title": "Ambarella Q3 FY2027 earnings call transcript (Investing.com)",
+      "url": "https://www.investing.com/news/transcripts/earnings-call-transcript-ambarella-q3-2027-profit-beats-but-stock-plunges-93CH-5049252"
+    },
+    {
+      "title": "Ambarella earnings analysis: questions answered and next catalysts (Investing.com)",
+      "url": "https://uk.investing.com/news/stock-market-news/ambarella-earnings-analysis-questions-answered-and-next-catalysts-93CH-5004686"
+    },
+    {
+      "title": "Ambarella stock tumbles as memory crunch chokes guidance (BigGo Finance)",
+      "url": "https://finance.biggo.com/news/0b83bcfa-7882-48cd-a888-21fa3deb0581"
+    },
+    {
+      "title": "NXP reportedly in talks to acquire Ambarella (SiliconANGLE, 31 Jul 2026)",
+      "url": "https://siliconangle.com/2026/07/31/nxp-reportedly-talks-acquire-vehicle-chip-supplier-ambarella/"
+    },
+    {
+      "title": "NXP in talks to buy chip developer Ambarella, FT reports (Reuters via KFGO)",
+      "url": "https://kfgo.com/2026/07/31/nxp-in-talks-to-buy-chip-developer-ambarella-ft-reports/"
+    },
+    {
+      "title": "Ambarella said to explore potential sale (Bloomberg, Jun 2025)",
+      "url": "https://www.bloomberg.com/news/articles/2025-06-24/chip-designer-ambarella-is-said-to-explore-potential-sale"
+    },
+    {
+      "title": "TrendForce: 1Q26 DRAM contract price outlook",
+      "url": "https://www.trendforce.com/presscenter/news/20260105-12860.html"
+    },
+    {
+      "title": "Rapid contract price surge drives 1Q26 DRAM industry up 81% QoQ (I-Connect007)",
+      "url": "https://iconnect007.com/article/150222/rapid-contract-price-surge-drives-1q26-dram-industry-up-81-qoq/150219/ein"
+    },
+    {
+      "title": "Mobileye Q3 2026 results (Form 8-K, Ex. 99.1)",
+      "url": "https://www.sec.gov/Archives/edgar/data/0001910139/000110465926119830/tm2628197d1_ex99-1.htm"
+    },
+    {
+      "title": "Ambarella IPO priced at $6 (Renaissance Capital, 2012)",
+      "url": "https://renaissancecapital.com/IPO-Center/News/12660/Ambarella-prices-IPO-at-$6-well-below-the-range"
+    },
+    {
+      "title": "Can Ambarella survive without GoPro? (Motley Fool, 2017)",
+      "url": "https://www.fool.com/investing/2017/03/15/can-ambarella-inc-survive-without-gopro.aspx"
+    },
+    {
+      "title": "Ambarella Q3 FY2022 Form 10-Q (Oculii acquisition)",
+      "url": "https://www.sec.gov/Archives/edgar/data/1280263/000156459021059979/amba-10q_20211031.htm"
+    },
+    {
+      "title": "Continental and Ambarella strategic partnership (Continental press release, Jan 2023)",
+      "url": "https://www.continental.com/en/press/press-releases/20230105-ambarella-strategic-partnership/"
+    }
+  ]
+}

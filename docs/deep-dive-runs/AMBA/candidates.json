@@ -1,0 +1,901 @@
+{
+  "generated_at": "2026-11-28T00:48:18+00:00",
+  "price_date": "2026-11-27",
+  "weights": {
+    "move": 0.38,
+    "news": 0.24,
+    "size": 0.1,
+    "rvol": 0.12,
+    "line": 0.16
+  },
+  "excluded_already_covered": [
+    "ADBE",
+    "BB",
+    "BMBL",
+    "CELH",
+    "CGEN",
+    "DIS",
+    "DPZ",
+    "FIS",
+    "GASS",
+    "GENI",
+    "GOOGL",
+    "HD",
+    "HIMS",
+    "IRDM",
+    "LULU",
+    "NKE",
+    "NVDA",
+    "NVEC",
+    "PAR",
+    "PATH",
+    "PYPL",
+    "SIRI",
+    "SPGI",
+    "TTD",
+    "ZM",
+    "ZTS"
+  ],
+  "candidates": [
+    {
+      "ticker": "KYMR",
+      "name": "Kymera Therapeutics, Inc.",
+      "sector": "Healthcare - Biotechnology",
+      "market_cap": 9844175872,
+      "close": 175.53,
+      "close_date": "2026-11-27",
+      "prev_week_close": 119.39,
+      "week_return_pct": 47.02,
+      "max_day_move_pct": 30.4,
+      "rvol": 4.34,
+      "wma_200": 51.02,
+      "pct_from_wma": 244.0,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Was There An Early Sign Kymera Stock Would Run?",
+          "publisher": "Trefis",
+          "date": "2026-11-27",
+          "url": "https://www.trefis.com/stock/kymr/articles/629376/was-there-an-early-sign-kymera-stock-would-run/2026-11-27"
+        },
+        {
+          "title": "Kymera Therapeutics\u2019 Oral Eczema Drug Meets Phase 2b Goal, Setting Up Phase 3 Push",
+          "publisher": "MarketBeat",
+          "date": "2026-11-27",
+          "url": "https://www.marketbeat.com/instant-alerts/event-kymera-therapeutics-oral-eczema-drug-meets-phase-2b-goal-setting-up-phase-3-push-2026-11-27/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "What Did Kymera Stock Investors Miss Before The Run?",
+          "publisher": "Trefis",
+          "date": "2026-11-25",
+          "url": "https://www.trefis.com/stock/kymr/articles/628993/what-did-kymera-stock-investors-miss-before-the-run/2026-11-25"
+        },
+        {
+          "title": "Kymera Therapeutics (KYMR) Gets a Massive 16% Lift From Wall Street",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/healthcare/articles/kymera-therapeutics-kymr-gets-massive-020804682.html"
+        },
+        {
+          "title": "Top Midday Gainers",
+          "publisher": "MT Newswires",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/top-midday-gainers-192035875.html"
+        },
+        {
+          "title": "GILD, KYMR Stocks Hit Record Highs \u2013 Wall Street Backs Gilead's Resilience, Kymera's Eczema Data",
+          "publisher": "Stocktwits",
+          "date": "2026-11-24",
+          "url": "https://stocktwits.com/news-articles/markets/equity/gild-kymr-stocks-hit-record-highs-wall-street-backs-gilead-s-resilience-kymera-s-eczema-data/cNbs0gtR9kx"
+        },
+        {
+          "title": "Kymera Therapeutics Posts 'Solid Win' in Phase 2b Results, But Upside Likely Priced In, RBC Says",
+          "publisher": "MT Newswires",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/healthcare/articles/kymera-therapeutics-posts-apos-solid-164542597.html"
+        },
+        {
+          "title": "Kymera Shares Soar 30% After Positive Atopic Dermatitis Drug Data",
+          "publisher": "Zacks",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/healthcare/articles/kymera-shares-soar-30-positive-164000708.html"
+        },
+        {
+          "title": "Kymera stock soars as eczema pill takes aim at Dupixent",
+          "publisher": "TheStreet",
+          "date": "2026-11-24",
+          "url": "https://www.thestreet.com/investing/stocks/kymera-stock-soars-as-eczema-pill-kt-621-competes-with-dupixent"
+        },
+        {
+          "title": "Why Did Kymera Therapeutics Stock Move?",
+          "publisher": "Trefis",
+          "date": "2026-11-24",
+          "url": "https://www.trefis.com/stock/kymr/articles/628612/why-did-kymera-therapeutics-stock-move/2026-11-24"
+        }
+      ],
+      "viewership_score": 75.3,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.83,
+        "size": 0.33,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 1
+    },
+    {
+      "ticker": "AMBA",
+      "name": "Ambarella, Inc.",
+      "sector": "Technology - Semiconductor Equipment & Materials",
+      "market_cap": 2342561280,
+      "close": 35.24,
+      "close_date": "2026-11-27",
+      "prev_week_close": 58.93,
+      "week_return_pct": -40.2,
+      "max_day_move_pct": 19.96,
+      "rvol": 4.62,
+      "wma_200": 65.06,
+      "pct_from_wma": -45.8,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Ambarella (AMBA) Stock Fair Value Falls After Analysts Cut Targets On Weaker Guidance",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-amba-stock-fair-value-080809903.html"
+        },
+        {
+          "title": "Company News for Nov 27, 2026",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/company-news-nov-27-2026-075900250.html"
+        },
+        {
+          "title": "Nvidia Wins Back Wall Street Backing As Jensen Huang Returns; CRWD, LI Stocks Score Upgrades While DKNG, AMBA Face Pressure",
+          "publisher": "Stocktwits",
+          "date": "2026-11-26",
+          "url": "https://stocktwits.com/news-articles/markets/equity/nvda-jensen-huang-return-stock-upgrades-crwd-li-amba-dkng/cNbxi4aR9ZF"
+        },
+        {
+          "title": "Ambarella: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-26",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/25/ambarella-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Tech, Media & Telecom Roundup: Market Talk",
+          "publisher": "The Wall Street Journal",
+          "date": "2026-11-25",
+          "url": "https://www.wsj.com/business/tech-media-telecom-roundup-market-talk-39807782?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Morgan Stanley Downgrades Ambarella Stock After Disappointing Earnings Results",
+          "publisher": "Barchart",
+          "date": "2026-11-25",
+          "url": "https://www.barchart.com/story/news/9010224/morgan-stanley-downgrades-ambarella-stock-after-disappointing-earnings-results"
+        },
+        {
+          "title": "Ambarella earnings analysis: questions answered and next catalysts",
+          "publisher": "Investing.com",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-earnings-analysis-questions-answered-204517015.html"
+        },
+        {
+          "title": "Stock Market Midday, Nov. 25: Nasdaq Plunges 4% as AI Sell-Off Deepens and Inflation Remains Stubborn",
+          "publisher": "Motley Fool",
+          "date": "2026-11-25",
+          "url": "https://www.fool.com/coverage/stock-market-today/2026/11/25/stock-market-midday-nov-25-nasdaq-plunges-4-as-ai-sell-off-deepens-and-inflation-remains-stubborn/"
+        },
+        {
+          "title": "Ambarella sinks as memory shortages hit chip orders",
+          "publisher": "Proactive",
+          "date": "2026-11-25",
+          "url": "https://www.proactiveinvestors.com/companies/news/1102455/ambarella-sinks-as-memory-shortages-hit-chip-orders-1102455.html"
+        },
+        {
+          "title": "Ambarella Facing Broader Memory Squeeze, BofA Securities Says",
+          "publisher": "MT Newswires",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/ambarella-facing-broader-memory-squeeze-161442572.html"
+        }
+      ],
+      "viewership_score": 74.1,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.91,
+        "size": 0.12,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 2
+    },
+    {
+      "ticker": "NTNX",
+      "name": "Nutanix, Inc.",
+      "sector": "Technology - Software - Infrastructure",
+      "market_cap": 14787545088,
+      "close": 46.5,
+      "close_date": "2026-11-27",
+      "prev_week_close": 57.24,
+      "week_return_pct": -18.76,
+      "max_day_move_pct": 15.19,
+      "rvol": 2.9,
+      "wma_200": 53.68,
+      "pct_from_wma": -13.4,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Nutanix downgrade puts CEO succession in focus",
+          "publisher": "Proactive",
+          "date": "2026-11-26",
+          "url": "https://www.proactiveinvestors.com/companies/news/1102540/nutanix-downgrade-puts-ceo-succession-in-focus-1102540.html"
+        },
+        {
+          "title": "Nutanix (NTNX) Says Rajiv Ramaswami Will Step Down By April 2027",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/nutanix-ntnx-says-rajiv-ramaswami-131447838.html"
+        },
+        {
+          "title": "Stock Market Today: Dow Swings Into A Win; Anthropic Almost Retakes Its IPO Price",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-25",
+          "url": "https://www.investors.com/market-trend/stock-market-today/dow-jones-sp500-nasdaq-fed-inflation-data-nvidia-anthropic/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "Why Nutanix Plunged Today",
+          "publisher": "Motley Fool",
+          "date": "2026-11-25",
+          "url": "https://www.fool.com/investing/2026/11/25/why-nutanix-plunged-today/"
+        },
+        {
+          "title": "What Is Driving Nutanix Stock?",
+          "publisher": "Trefis",
+          "date": "2026-11-25",
+          "url": "https://www.trefis.com/stock/ntnx/articles/629008/did-nutanix-stock-fall-alone-or-with-its-peers/2026-11-25"
+        },
+        {
+          "title": "Nutanix Stock Gets Body-Slammed on Surprise CEO Exit.  Why Some Analysts Aren\u2019t Sweating It.",
+          "publisher": "Barrons.com",
+          "date": "2026-11-25",
+          "url": "https://www.barrons.com/articles/nutanix-earnings-stock-price-013d3b2d?siteid=yhoof2&yptr=yahoo"
+        },
+        {
+          "title": "Nutanix stock plunges as CEO announces plans to step down",
+          "publisher": "Yahoo Finance",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/article/nutanix-stock-plunges-as-ceo-announces-plans-to-step-down-151611485.html"
+        },
+        {
+          "title": "Nutanix stock drops after earnings beat and CEO succession news",
+          "publisher": "Proactive",
+          "date": "2026-11-25",
+          "url": "https://www.proactiveinvestors.com/companies/news/1102448/nutanix-stock-drops-after-earnings-beat-and-ceo-succession-news-1102448.html"
+        },
+        {
+          "title": "HCA Healthcare, GoodRx downgraded: Wall Street's top analyst calls",
+          "publisher": "The Fly",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/hca-healthcare-goodrx-downgraded-wall-144025827.html"
+        },
+        {
+          "title": "Nutanix Posts a Record 32.1% Margin, But a CEO Exit and Shrinking Backlog Spark a 19% Stock Plunge",
+          "publisher": "Barchart",
+          "date": "2026-11-25",
+          "url": "https://www.barchart.com/story/news/9004094/nutanix-posts-a-record-32-1-margin-but-a-ceo-exit-and-shrinking-backlog-spark-a-19-stock-plunge"
+        }
+      ],
+      "viewership_score": 70.0,
+      "score_parts": {
+        "move": 0.54,
+        "rvol": 0.47,
+        "size": 0.39,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 3
+    },
+    {
+      "ticker": "ANF",
+      "name": "Abercrombie & Fitch Co.",
+      "sector": "Consumer Discretionary - Apparel Retail",
+      "market_cap": 5852549120,
+      "close": 184.43,
+      "close_date": "2026-11-27",
+      "prev_week_close": 137.64,
+      "week_return_pct": 33.99,
+      "max_day_move_pct": 19.69,
+      "rvol": 2.34,
+      "wma_200": 96.61,
+      "pct_from_wma": 90.9,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Inflation-Weary Shoppers Are Picky\u2014Yet This Mall Brand Surged 30%",
+          "publisher": "Investing.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/inflation-weary-shoppers-picky-yet-203942847.html"
+        },
+        {
+          "title": "How AI is driving record holiday spending",
+          "publisher": "Yahoo Finance Video",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/video/how-ai-is-driving-record-holiday-spending-154808415.html"
+        },
+        {
+          "title": "Stock Market Surges As Jensen Huang Returns As Nvidia CEO; Abercrombie Leads Retail Winners: Weekly Review",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-27",
+          "url": "https://www.investors.com/news/stock-market-surges-as-jensen-huang-returns-as-nvidia-ceo-abercrombie-leads-retail-winners-weekly-review/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "'The consumer just is not in recession': Why holiday spending is still on track to grow",
+          "publisher": "Yahoo Finance",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/article/the-consumer-just-is-not-in-recession-why-holiday-spending-is-still-on-track-to-grow-140327700.html"
+        },
+        {
+          "title": "Abercrombie & Fitch (ANF) Stock Fair Value Rises After Strong Q3 And Higher Targets",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/abercrombie-fitch-anf-stock-fair-090901953.html"
+        },
+        {
+          "title": "Zacks Market Edge Highlights: Royal Caribbean Cruises, Abercrombie & Fitch and Burlington Stores",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/zacks-market-edge-highlights-royal-073400939.html"
+        },
+        {
+          "title": "Nike Slumped to $34, Yet This Apparel Pick Surged 23% Since October",
+          "publisher": "Investing.com",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/nike-slumped-34-yet-apparel-144519189.html"
+        },
+        {
+          "title": "Higher Fuel Costs Weigh on Apparel Retail Earnings",
+          "publisher": "Sourcing Journal",
+          "date": "2026-11-25",
+          "url": "https://wwd.com/sourcing-journal/logistics/fuel-costs-diesel-freight-burlington-abercrombie-fitch-kohls-urban-outfitters-gap-dollar-tree-1239466545/"
+        },
+        {
+          "title": "America's Greatest Opportunities: Abercrombie & Fitch Stock Catapulted In 2023 On A Big Earnings Leap",
+          "publisher": "Investor's Business Daily",
+          "date": "2026-11-25",
+          "url": "https://www.investors.com/research/americas-greatest-opportunities-abercrombie-fitch-stock-anf-breakout-2023-earnings/?src=A00220&yptr=yahoo"
+        },
+        {
+          "title": "Abercrombie & Fitch Grew Sales for the 16th Straight Quarter as Earnings Jumped 62%. Here's What's Behind the Streak.",
+          "publisher": "Motley Fool",
+          "date": "2026-11-25",
+          "url": "https://www.fool.com/investing/2026/11/25/abercrombie-fitch-grew-sales-for-the-16th-straight-quarter-as-earnings-jumped-62-heres-whats-behind-the-streak/"
+        }
+      ],
+      "viewership_score": 67.5,
+      "score_parts": {
+        "move": 0.97,
+        "rvol": 0.33,
+        "size": 0.26,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 4
+    },
+    {
+      "ticker": "FLNC",
+      "name": "Fluence Energy, Inc.",
+      "sector": "Industrials - Energy Storage",
+      "market_cap": 673533248,
+      "close": 5.19,
+      "close_date": "2026-11-27",
+      "prev_week_close": 3.83,
+      "week_return_pct": 35.51,
+      "max_day_move_pct": 15.12,
+      "rvol": 2.73,
+      "wma_200": 16.62,
+      "pct_from_wma": -68.8,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Fluence Energy (FLNC) Stock Fair Value Moves Lower After Analyst Cuts On Execution Risk",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/fluence-energy-flnc-stock-fair-111024244.html"
+        },
+        {
+          "title": "Why Fluence Energy (FLNC) Shares Jumped After Its Latest Update",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/why-fluence-energy-flnc-shares-071254347.html"
+        },
+        {
+          "title": "What Has Changed For Fluence Energy Since Its 79% Fall",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/changed-fluence-energy-since-79-061252600.html"
+        },
+        {
+          "title": "Fluence Energy (FLNC) Launched A New Partner Program For Battery Storage Projects",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/energy/articles/fluence-energy-flnc-launched-partner-011758542.html"
+        },
+        {
+          "title": "Fluence Energy (FLNC) Stock Looks Fully Priced On Cash Flow",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/fluence-energy-flnc-stock-looks-232032609.html"
+        },
+        {
+          "title": "Fluence Energy (FLNC) Stock Is Up 17.5% Today: Q4 Results, RBC Target Raise",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/fluence-energy-flnc-stock-17-183020237.html"
+        },
+        {
+          "title": "Fluence Q4 Earnings Call Details Houston Ramp and Record Backlog",
+          "publisher": "Zacks",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/fluence-q4-earnings-call-details-140000772.html"
+        },
+        {
+          "title": "Fluence: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-25",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/25/fluence-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Fluence (FLNC) Q4 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-24",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/fluence-flnc-q4-2026-earnings-call-transcript/"
+        },
+        {
+          "title": "Why Fluence Energy Stock Is Powering Higher Today",
+          "publisher": "Motley Fool",
+          "date": "2026-11-24",
+          "url": "https://www.fool.com/investing/2026/11/24/why-fluence-energy-stock-is-powering-higher-today/"
+        }
+      ],
+      "viewership_score": 67.2,
+      "score_parts": {
+        "move": 1.0,
+        "rvol": 0.43,
+        "size": 0.0,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 5
+    },
+    {
+      "ticker": "DY",
+      "name": "Dycom Industries, Inc.",
+      "sector": "Industrials - Engineering & Construction",
+      "market_cap": 6199584768,
+      "close": 180.42,
+      "close_date": "2026-11-27",
+      "prev_week_close": 221.36,
+      "week_return_pct": -18.49,
+      "max_day_move_pct": 18.02,
+      "rvol": 2.01,
+      "wma_200": 213.46,
+      "pct_from_wma": -15.5,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Dycom Stock Plunges 67% in Six Months: What Could Fuel a Recovery?",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-stock-plunges-67-six-163100199.html"
+        },
+        {
+          "title": "Dycom Industries (DY) Is Considered a Good Investment by Brokers: Is That True?",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-industries-dy-considered-good-133002086.html"
+        },
+        {
+          "title": "Record Backlog And Raised Outlook Could Change The Case For Dycom Industries Stock",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/record-backlog-raised-outlook-could-141143532.html"
+        },
+        {
+          "title": "Dycom Q3 Earnings Call Details Shift to Long-Haul Fiber",
+          "publisher": "Zacks",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-q3-earnings-call-details-140000993.html"
+        },
+        {
+          "title": "Dycom: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-25",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/25/dycom-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Dycom Industries, Inc. Q3 2027 Earnings Call Summary",
+          "publisher": "Moby",
+          "date": "2026-11-24",
+          "url": "https://app.moby.co/home/research/tools/earningsCalendar/earnings-dycom-industries-inc-q3-2027-earnings-call-summary?utm_source=yahoo_finance&utm_medium=rss"
+        },
+        {
+          "title": "Dycom (DY) Q3 2027 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-24",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/dycom-dy-q3-2027-earnings-call-transcript/"
+        },
+        {
+          "title": "Dycom Industries (DY) Stock Still Looks Like A Bargain On Its 123% Run",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-industries-dy-stock-still-211052210.html"
+        },
+        {
+          "title": "Dycom Industries Q3 Earnings Call Highlights",
+          "publisher": "MarketBeat",
+          "date": "2026-11-24",
+          "url": "https://www.marketbeat.com/instant-alerts/transcript-dycom-industries-q3-earnings-call-highlights-2026-11-24/?utm_source=yahoofinance&utm_medium=yahoofinance"
+        },
+        {
+          "title": "Dycom Industries (DY) Earnings Beat And Buyback Put Valuation Back In Focus",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/dycom-industries-dy-earnings-beat-181135552.html"
+        }
+      ],
+      "viewership_score": 65.7,
+      "score_parts": {
+        "move": 0.53,
+        "rvol": 0.25,
+        "size": 0.26,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 6
+    },
+    {
+      "ticker": "CENTA",
+      "name": "Central Garden & Pet Company",
+      "sector": "Consumer Defensive - Packaged Foods",
+      "market_cap": 2478666752,
+      "close": 32.1,
+      "close_date": "2026-11-27",
+      "prev_week_close": 39.35,
+      "week_return_pct": -18.42,
+      "max_day_move_pct": 8.16,
+      "rvol": 2.13,
+      "wma_200": 32.89,
+      "pct_from_wma": -2.4,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "3 Undervalued Stocks Trading Up To 40% Below Cash Flow Value",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/3-undervalued-stocks-trading-40-221348295.html"
+        },
+        {
+          "title": "Central Garden & Pet (CENTA) Stock Is Down 4.5% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/central-garden-pet-centa-stock-153023756.html"
+        },
+        {
+          "title": "Central Garden & Pet (CENT) Stock Is Down 4.4% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/central-garden-pet-cent-stock-153019232.html"
+        },
+        {
+          "title": "Central Garden & Pet: 3 Key Takeaways for Long-Term Investors",
+          "publisher": "Motley Fool",
+          "date": "2026-11-26",
+          "url": "https://www.fool.com/earnings/takeaways/2026/11/25/central-garden-pet-3-key-takeaways-for-long-term-investors/"
+        },
+        {
+          "title": "Central Garden & Pet (CENTA) Stock Is Down 5.8% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/central-garden-pet-centa-stock-160019930.html"
+        },
+        {
+          "title": "Central Garden & Pet (CENT) Stock Is Down 5.6% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-25",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/central-garden-pet-cent-stock-160017420.html"
+        },
+        {
+          "title": "Central Garden & Pet (CENT) Stock Is Down 5.0% Today: Q4 Sales Miss",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/central-garden-pet-cent-stock-203025180.html"
+        },
+        {
+          "title": "Why Central Garden & Pet (CENTA) Stock Is Down 4.1% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/why-central-garden-pet-centa-170034732.html"
+        },
+        {
+          "title": "CENT Q4 Loss Narrower Than Expected, Margins Expand, Sales Miss Estimates",
+          "publisher": "Zacks",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/cent-q4-loss-narrower-expected-152100118.html"
+        },
+        {
+          "title": "Central Garden (CENT) Q4 2026 Earnings Call Transcript",
+          "publisher": "Motley Fool",
+          "date": "2026-11-24",
+          "url": "https://www.fool.com/earnings/call-transcripts/2026/11/24/central-garden-cent-q4-2026-earnings-call-transcript/"
+        }
+      ],
+      "viewership_score": 64.7,
+      "score_parts": {
+        "move": 0.53,
+        "rvol": 0.28,
+        "size": 0.13,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 7
+    },
+    {
+      "ticker": "RBLX",
+      "name": "Roblox Corporation",
+      "sector": "Communication Services - Gaming",
+      "market_cap": 33438128128,
+      "close": 57.38,
+      "close_date": "2026-11-27",
+      "prev_week_close": 46.35,
+      "week_return_pct": 23.8,
+      "max_day_move_pct": 10.55,
+      "rvol": 1.06,
+      "wma_200": 56.62,
+      "pct_from_wma": 1.3,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Did Take-Two Stock Beat A Falling Market?",
+          "publisher": "Trefis",
+          "date": "2026-11-25",
+          "url": "https://www.trefis.com/stock/ttwo/articles/629004/did-take-two-stock-beat-a-falling-market/2026-11-25"
+        },
+        {
+          "title": "Cathie Wood and 9 Other Big Funds Sold Roblox Last Quarter, While 8 Bought. Who\u2019s Right?",
+          "publisher": "TIKR",
+          "date": "2026-11-24",
+          "url": "https://www.tikr.com/blog/cathie-wood-and-9-other-big-funds-sold-roblox-last-quarter-while-8-bought-whos-right?ref=yahoofinance&tlnk=yf-261124-rhgp7c9q"
+        },
+        {
+          "title": "Take-Two Interactive (TTWO) Stock Is Up 4.6% Today Without Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-24",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/two-interactive-ttwo-stock-4-160122808.html"
+        },
+        {
+          "title": "AppLovin Is Down 28% in a Year. CEO Says \u201cWe Have Every Mobile Gaming Company Live, Probably.\u201d Time to Buy?",
+          "publisher": "TIKR",
+          "date": "2026-11-24",
+          "url": "https://www.tikr.com/blog/applovin-is-down-28-in-a-year-ceo-says-we-have-every-mobile-gaming-company-live-probably-time-to-buy?ref=yahoofinance&tlnk=yf-261124-f759fhc2"
+        },
+        {
+          "title": "Roblox Engagement Hasn't Been Materially Affected by GTA VI, Oppenheimer Says",
+          "publisher": "MT Newswires",
+          "date": "2026-11-23",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/roblox-engagement-hasn-apos-t-202918059.html"
+        },
+        {
+          "title": "Roblox Soars 9% as Oppenheimer Says GTA VI Hasn\u2019t Dented Engagement, Lifts Target to $55",
+          "publisher": "TIKR",
+          "date": "2026-11-23",
+          "url": "https://www.tikr.com/blog/roblox-soars-9-as-oppenheimer-says-gta-vi-hasnt-dented-engagement-lifts-target-to-55?ref=yahoofinance&tlnk=yf-261123-63qgvxq4"
+        },
+        {
+          "title": "What Is The Case For Waiting On Roblox Stock?",
+          "publisher": "Trefis",
+          "date": "2026-11-23",
+          "url": "https://www.trefis.com/stock/rblx/articles/627684/what-is-the-case-for-waiting-on-roblox-stock/2026-11-23"
+        },
+        {
+          "title": "A $12 Billion Fund Just Bought These 3 Stocks",
+          "publisher": "TIKR",
+          "date": "2026-11-23",
+          "url": "https://www.tikr.com/blog/a-12-billion-fund-just-bought-these-3-stocks-3?ref=yahoofinance&tlnk=yf-261123-233qm94c"
+        },
+        {
+          "title": "A $14 Billion Fund Just Bought These 3 Stocks",
+          "publisher": "TIKR",
+          "date": "2026-11-22",
+          "url": "https://www.tikr.com/blog/a-14-billion-fund-just-bought-these-3-stocks?ref=yahoofinance&tlnk=yf-261122-xrm65rcp"
+        },
+        {
+          "title": "Is \u2018Grand Theft Auto VI\u2019 Gaming\u2019s Last Blockbuster?",
+          "publisher": "WSJ",
+          "date": "2026-11-22",
+          "url": "https://finance.yahoo.com/video/grand-theft-auto-vi-gaming-110000013.html"
+        }
+      ],
+      "viewership_score": 61.5,
+      "score_parts": {
+        "move": 0.68,
+        "rvol": 0.02,
+        "size": 0.51,
+        "line": 0.4,
+        "news": 1.0
+      },
+      "rank": 8
+    },
+    {
+      "ticker": "APLD",
+      "name": "Applied Digital Corporation",
+      "sector": "Technology - Data Centers",
+      "market_cap": 3474428160,
+      "close": 12.99,
+      "close_date": "2026-11-27",
+      "prev_week_close": 13.98,
+      "week_return_pct": -7.08,
+      "max_day_move_pct": 20.28,
+      "rvol": 1.31,
+      "wma_200": 13.67,
+      "pct_from_wma": -5.0,
+      "crossed_below_200wma_this_week": true,
+      "headlines": [
+        {
+          "title": "Applied Digital Has Over $41 Billion in Leases but Needs Billions to Build",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/technology/ai/articles/applied-digital-over-41-billion-202949598.html"
+        },
+        {
+          "title": "Nvidia, CoreWeave Face New U.S. Restrictions on China AI Chip Access",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/technology/ai/articles/nvidia-coreweave-face-u-restrictions-172327378.html"
+        },
+        {
+          "title": "Neocloud firms face tighter terms than Nvidia\u2019s old 50% AI chip cutoff",
+          "publisher": "Proactive",
+          "date": "2026-11-27",
+          "url": "https://www.proactiveinvestors.com/companies/news/1102588/neocloud-firms-face-tighter-terms-than-nvidia-s-old-50-ai-chip-cutoff-1102588.html"
+        },
+        {
+          "title": "How Low Can CIFR Stock Go If Markets Turn?",
+          "publisher": "Trefis",
+          "date": "2026-11-27",
+          "url": "https://www.trefis.com/stock/cifr/articles/629326/how-low-can-cifr-stock-go-if-markets-turn/2026-11-27"
+        },
+        {
+          "title": "Nvidia Sellers Deliver a Stark Warning. These AI Stocks Could Feel the Pressure",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/technology/ai/articles/nvidia-sellers-deliver-stark-warning-111929474.html"
+        },
+        {
+          "title": "Applied Digital Just Tumbled 33% in a Month. Can APLD Stock Get Back to $20 in 2027?",
+          "publisher": "24/7 Wall St.",
+          "date": "2026-11-26",
+          "url": "https://247wallst.com/investing/2026/11/26/applied-digital-just-tumbled-33-in-a-month-can-apld-stock-get-back-to-20-in-2027/"
+        },
+        {
+          "title": "\u201cIt\u2019s Dead\u201d: Applied Digital Has $11 Billion Riding on CoreWeave\u2019s Record Credit Stress",
+          "publisher": "TIKR",
+          "date": "2026-11-26",
+          "url": "https://www.tikr.com/blog/its-dead-applied-digital-has-11-billion-riding-on-coreweaves-record-credit-stress?ref=yahoofinance&tlnk=yf-261126-j6cxr9m2"
+        },
+        {
+          "title": "5 Best Small Cap AI Stocks to Buy for 2027",
+          "publisher": "Insider Monkey",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/technology/ai/articles/5-best-small-cap-ai-144008304.html"
+        },
+        {
+          "title": "Lucid Capital Cut Its Applied Digital Target to $40 From $83. It Still Sees 227% Upside",
+          "publisher": "TIKR",
+          "date": "2026-11-26",
+          "url": "https://www.tikr.com/blog/lucid-capital-cut-its-applied-digital-target-to-40-from-83-it-still-sees-227-upside?ref=yahoofinance&tlnk=yf-261126-hxqmqqw8"
+        },
+        {
+          "title": "Is Applied Digital (APLD) Undervalued As Its New 18 Year Lease Lifts Revenue Visibility?",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-26",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/applied-digital-apld-undervalued-18-061644025.html"
+        }
+      ],
+      "viewership_score": 61.4,
+      "score_parts": {
+        "move": 0.49,
+        "rvol": 0.08,
+        "size": 0.18,
+        "line": 1.0,
+        "news": 1.0
+      },
+      "rank": 9
+    },
+    {
+      "ticker": "INSM",
+      "name": "Insmed Incorporated",
+      "sector": "Healthcare - Biotechnology",
+      "market_cap": 31005018112,
+      "close": 170.44,
+      "close_date": "2026-11-27",
+      "prev_week_close": 144.46,
+      "week_return_pct": 17.98,
+      "max_day_move_pct": 14.13,
+      "rvol": 5.99,
+      "wma_200": 78.93,
+      "pct_from_wma": 115.9,
+      "crossed_below_200wma_this_week": false,
+      "headlines": [
+        {
+          "title": "Biotech Dealmaker: Sanofi\u2019s $41B Insmed Buyout Anchors Holiday Week As Lilly Continues Buying Spree",
+          "publisher": "Stocktwits",
+          "date": "2026-11-28",
+          "url": "https://stocktwits.com/news-articles/markets/equity/stocktwits-biotech-dealmaker-sanofi-s-41-b-insmed-buyout-anchors-holiday-week-as-lilly-continues-buying-spree/cNRRKt6R9Vk"
+        },
+        {
+          "title": "Baycurrent And 2 Other High Growth Stocks",
+          "publisher": "Simply Wall St.",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/baycurrent-2-other-high-growth-211456974.html"
+        },
+        {
+          "title": "Insmed's Sales Gave Notice A Year Early. Why Didn't The Stock?",
+          "publisher": "Trefis",
+          "date": "2026-11-27",
+          "url": "https://www.trefis.com/stock/insm/articles/629375/could-you-have-seen-insmed-stock-s-run-coming/2026-11-27"
+        },
+        {
+          "title": "Vera Therapeutics (VERA) Stock Jumps 16.4% Premarket: No Company News",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/vera-therapeutics-vera-stock-jumps-133018816.html"
+        },
+        {
+          "title": "SNY Up Almost 29% in a Month: Should You Buy, Hold or Sell the Stock?",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/sny-almost-29-month-buy-120600409.html"
+        },
+        {
+          "title": "Sanofi Stock Surges 26% as $41 Billion Insmed Deal Boosts Confidence",
+          "publisher": "GuruFocus.com",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/markets/stocks/articles/sanofi-stock-surges-26-41-113324950.html"
+        },
+        {
+          "title": "The Zacks Analyst Blog Highlights Vera Therapeutics, BridgeBio Pharma, Revolution Medicines, Agios Pharmaceuticals and Stoke Therapeutics",
+          "publisher": "Zacks",
+          "date": "2026-11-27",
+          "url": "https://finance.yahoo.com/healthcare/articles/zacks-analyst-blog-highlights-vera-064400990.html"
+        },
+        {
+          "title": "Sanofi CEO got to work on $41 billion Insmed deal straight after taking office",
+          "publisher": "Reuters",
+          "date": "2026-11-27",
+          "url": "https://www.yahoo.com/news/articles/sanofi-ceo-got-41-billion-060244864.html"
+        },
+        {
+          "title": "Sanofi Pays $41 Billion For Insmed's Lung Pill",
+          "publisher": "Trefis",
+          "date": "2026-11-26",
+          "url": "https://www.trefis.com/stock/insm/articles/629159/sanofi-pays-41-billion-for-insmed-s-lung-pill/2026-11-26"
+        },
+        {
+          "title": "Nvidia Wins Back Wall Street Backing As Jensen Huang Returns; CRWD, LI Stocks Score Upgrades While DKNG, AMBA Face Pressure",
+          "publisher": "Stocktwits",
+          "date": "2026-11-26",
+          "url": "https://stocktwits.com/news-articles/markets/equity/nvda-jensen-huang-return-stock-upgrades-crwd-li-amba-dkng/cNbxi4aR9ZF"
+        }
+      ],
+      "viewership_score": 60.5,
+      "score_parts": {
+        "move": 0.51,
+        "rvol": 1.0,
+        "size": 0.5,
+        "line": 0.0,
+        "news": 1.0
+      },
+      "rank": 10
+    }
+  ]
+}
