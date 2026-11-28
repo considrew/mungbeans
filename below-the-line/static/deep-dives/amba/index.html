@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-KMCNBWBVVE"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-KMCNBWBVVE');
+</script>
+<script src="/js/referral-events.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMBA · Deep Dive — mungbeans</title>
+<meta name="description" content="Ambarella fell 40% this week after guiding next quarter 37% lower on the memory price spike. At $35.24 it is 46% below its 200-week line, yet its record year still did not cover $98M of stock comp. My call: value trap, priced for a buyer that has not appeared.">
+<link rel="canonical" href="https://mungbeans.io/deep-dives/amba/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="mungbeans.io">
+<meta property="og:title" content="Ambarella (AMBA): The Memory Crunch Exposed a Business That Has Never Earned Its Stock Comp — mungbeans.io">
+<meta property="og:description" content="Ambarella fell 40% this week after guiding next quarter 37% lower on the memory price spike. At $35.24 it is 46% below its 200-week line, yet its record year still did not cover $98M of stock comp. My call: value trap, priced for a buyer that has not appeared.">
+<meta property="og:url" content="https://mungbeans.io/deep-dives/amba/">
+<meta property="og:image" content="https://mungbeans.io/images/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="article:published_time" content="2026-11-27">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@mungbeans_io">
+<meta name="twitter:title" content="Ambarella (AMBA): The Memory Crunch Exposed a Business That Has Never Earned Its Stock Comp — mungbeans.io">
+<meta name="twitter:description" content="Ambarella fell 40% this week after guiding next quarter 37% lower on the memory price spike. At $35.24 it is 46% below its 200-week line, yet its record year still did not cover $98M of stock comp. My call: value trap, priced for a buyer that has not appeared.">
+<meta name="twitter:image" content="https://mungbeans.io/images/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Ambarella (AMBA): The Memory Crunch Exposed a Business That Has Never Earned Its Stock Comp",
+  "description": "Ambarella fell 40% this week after guiding next quarter 37% lower on the memory price spike. At $35.24 it is 46% below its 200-week line, yet its record year still did not cover $98M of stock comp. My call: value trap, priced for a buyer that has not appeared.",
+  "datePublished": "2026-11-27",
+  "url": "https://mungbeans.io/deep-dives/amba/",
+  "mainEntityOfPage": "https://mungbeans.io/deep-dives/amba/",
+  "image": "https://mungbeans.io/images/og-image.png",
+  "author": {"@type": "Organization", "name": "mungbeans.io", "url": "https://mungbeans.io/"},
+  "publisher": {"@type": "Organization", "name": "mungbeans.io", "url": "https://mungbeans.io/"}
+}
+</script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#15120e; --card:#1d1914; --card2:#241f18;
+    --ink:#ece6da; --dim:#a89e8c; --faint:#6f6757; --line:#332c22;
+    --gain:#8fbf6f; --bench:#c9a24a; --trim:#d4a24a; --closed:#5fa8b5; --loss:#c2604f;
+    --gain-soft:rgba(143,191,111,.12); --loss-soft:rgba(194,96,79,.12);
+    --bench-soft:rgba(201,162,74,.12); --faint-soft:rgba(111,103,87,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);
+    font-family:"Newsreader",Georgia,serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;padding:clamp(16px,4vw,52px);font-size:17px}
+  .wrap{max-width:840px;margin:0 auto}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--faint)}
+  h2{font-weight:500;font-size:23px;letter-spacing:-.01em;margin-bottom:4px}
+  h3{font-weight:600;font-size:16px;margin:22px 0 8px;color:var(--ink)}
+  p{margin-bottom:13px;color:#d8d1c4}
+  p.sub{color:var(--dim);font-size:15px}
+  b,strong{color:var(--ink);font-weight:600}
+  em{color:var(--bench)}
+
+  /* masthead */
+  .mast{display:flex;justify-content:space-between;align-items:baseline;
+    border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:22px;flex-wrap:wrap;gap:6px}
+  .mast .brand{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink)}
+  .mast .brand span{color:var(--faint)}
+  .mast .asof{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--faint)}
+
+  .ticker-row{display:flex;align-items:baseline;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+  .tk{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;letter-spacing:.1em;
+    color:var(--gain);border:1px solid var(--gain);padding:2px 8px;border-radius:3px;background:var(--gain-soft)}
+  .nm{color:var(--dim);font-size:15px}
+  .px{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dim)}
+  .px b{color:var(--ink)} .px .up{color:var(--gain)}
+
+  .perf-since{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-bottom:18px}
+  hr.sec{border:none;border-top:1px solid var(--line);margin:28px 0}
+
+  /* tabs */
+  .tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:26px;
+    overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);background:none;border:none;border-bottom:2px solid transparent;
+    padding:10px 14px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+  .tab:hover{color:var(--dim)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--gain)}
+  .tab .n{color:var(--faint);margin-right:6px}
+  .tab.active .n{color:var(--gain)}
+  .panel{display:none;animation:fade .2s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  /* verdict */
+  .verdict{font-size:clamp(24px,4vw,34px);line-height:1.18;font-weight:500;letter-spacing:-.01em;
+    margin-bottom:12px;max-width:20ch}
+  .callbar{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 24px}
+  .pill{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    padding:6px 11px;border-radius:4px;border:1px solid var(--line)}
+  .pill b{display:block;font-size:14px;letter-spacing:0;text-transform:none;margin-top:2px}
+  .pill.lean{border-color:rgba(143,191,111,.4)} .pill.lean b{color:var(--gain)}
+
+  /* gauge */
+  .gauge{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:20px 22px 16px;margin:8px 0 6px}
+  .gauge-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px}
+  .gauge-head .l{font-size:14px;color:var(--ink);font-weight:500}
+  .gauge-head .t{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--gain);
+    background:var(--gain-soft);border:1px solid rgba(143,191,111,.3);padding:3px 8px;border-radius:3px}
+  .track{position:relative;height:44px;margin:0 4px}
+  .axis{position:absolute;top:50%;left:0;right:0;height:1px;background:var(--line)}
+  .gapfill{position:absolute;top:calc(50% - 12px);height:24px;border-radius:4px;
+    background:repeating-linear-gradient(45deg,var(--gain-soft),var(--gain-soft) 6px,transparent 6px,transparent 12px);
+    border-left:1px dashed rgba(143,191,111,.5);border-right:1px dashed rgba(143,191,111,.5)}
+  .mk{position:absolute;top:50%;transform:translate(-50%,-50%);text-align:center}
+  .mk .d{width:10px;height:10px;border-radius:50%;margin:0 auto 6px}
+  .mk .v{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);font-weight:500}
+  .mk .c{font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;margin-top:1px}
+  .mk.p .d{background:var(--ink)} .mk.f .d{background:transparent;border:2px solid var(--gain)}
+  .gnote{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:20px}
+
+  /* overhang cards */
+  .ohcard{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:15px 17px;margin-bottom:10px}
+  .oh-top{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .arr{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;width:16px}
+  .up .arr{color:var(--gain)} .risk .arr{color:var(--loss)} .dorm .arr{color:var(--faint)}
+  .oh-title{font-weight:600;font-size:15.5px;flex:1}
+  .oh-layer{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+  .oh-score{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:15px}
+  .up .oh-score{color:var(--gain)} .risk .oh-score{color:var(--loss)} .dorm .oh-score{color:var(--faint)}
+  .sbar{height:3px;background:var(--line);border-radius:2px;margin:9px 0 11px;overflow:hidden}
+  .sbar i{display:block;height:100%}
+  .up .sbar i{background:var(--gain)} .risk .sbar i{background:var(--loss)} .dorm .sbar i{background:var(--faint)}
+  .oh-mech{font-size:14.5px;color:#d8d1c4;line-height:1.5}
+  .oh-foot{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap}
+  .ff{font-size:12px;color:var(--faint)}
+  .ff b{font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.05em;
+    color:var(--dim);font-weight:500;display:block;margin-bottom:1px}
+  .dorm{opacity:.66}
+  .dtag{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--faint);border:1px solid var(--line);padding:2px 6px;border-radius:3px}
+
+  /* metric grid + tables */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;margin:14px 0}
+  .met{background:var(--card);border:1px solid var(--line);border-radius:7px;padding:12px 14px}
+  .met .ml{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .met .mv{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:500;color:var(--ink)}
+  .met .mv.g{color:var(--gain)} .met .mv.r{color:var(--loss)}
+  .met .mn{font-size:11px;color:var(--faint);margin-top:4px;line-height:1.35}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-family:"IBM Plex Mono",monospace;font-size:13px}
+  th{text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);
+    font-weight:500;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);color:#d8d1c4}
+  td.r,th.r{text-align:right}
+  tr .scen{font-family:"Newsreader",serif;color:var(--dim);font-size:12px}
+  .g{color:var(--gain)} .r{color:var(--loss)} .b{color:var(--bench)}
+
+  .note{background:var(--card);border:1px solid var(--line);border-left:2px solid var(--bench);
+    border-radius:6px;padding:13px 16px;margin:16px 0;font-size:14px;color:var(--dim)}
+  .note b{color:var(--ink)}
+  /* thesis tab prose */
+  .thesis-body h3{margin-top:32px}
+  .thesis-body table{font-size:12px}
+
+  /* mailing list + referral blocks */
+  .dd-signup{margin:30px 0 20px;padding:20px 22px;background:var(--card);border:1px solid var(--line);
+    border-left:2px solid var(--gain);border-radius:9px}
+  .dd-signup h3{margin:6px 0 8px;font-size:20px;font-weight:500}
+  .dd-signup p{font-size:14.5px;color:var(--dim);margin-bottom:14px}
+  .dd-form{display:flex;gap:8px;flex-wrap:wrap}
+  .dd-form input[type="email"]{flex:1;min-width:210px;background:var(--bg);color:var(--ink);
+    border:1px solid var(--line);border-radius:5px;padding:10px 13px;font-family:"IBM Plex Mono",monospace;
+    font-size:13px;outline:none}
+  .dd-form input[type="email"]:focus{border-color:var(--gain)}
+  .dd-form button{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.05em;
+    background:var(--gain-soft);color:var(--gain);border:1px solid var(--gain);padding:10px 20px;
+    border-radius:5px;cursor:pointer;white-space:nowrap}
+  .dd-form button:hover{background:rgba(143,191,111,.22)}
+  .dd-signup-note{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin:10px 0 0}
+
+  .tool-rec{margin:20px 0 26px;padding:20px 22px;background:var(--card);border:1px solid var(--line);
+    border-left:2px solid var(--bench);border-radius:9px}
+  .tool-rec-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .tool-rec-badge{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);border:1px solid var(--line);padding:3px 8px;border-radius:3px}
+  .tool-rec h3{margin:8px 0 10px;font-size:20px;font-weight:500}
+  .tool-rec-body{color:var(--dim);font-size:14.5px;margin-bottom:16px}
+  .tool-rec-shot{margin:0 0 16px 0}
+  .tool-rec-shot img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:6px}
+  .tool-rec-shot figcaption{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--faint);margin-top:8px;line-height:1.5}
+  .tool-rec-shot figcaption a{color:var(--dim)}
+  .tool-rec-cta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .tool-rec-btn{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.04em;
+    background:var(--bench-soft);color:var(--bench);border:1px solid var(--bench);padding:10px 20px;
+    border-radius:5px;text-decoration:none}
+  .tool-rec-code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--dim)}
+  .tool-rec-code b{color:var(--gain)}
+  .tool-inline{border-top:1px solid var(--line);padding-top:12px;margin:14px 0 12px;font-size:13.5px;color:var(--dim)}
+  .tool-inline-label{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--faint);margin-right:6px}
+  .tool-inline a{color:var(--bench);text-decoration:none;font-weight:500}
+  .tool-inline a:hover{text-decoration:underline}
+  .tool-rec-disc{font-size:12px;color:var(--faint);line-height:1.6;margin:0}
+  .tool-rec-disc a{color:var(--dim)}
+
+  footer{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:11px;color:var(--faint);line-height:1.6}
+  @media(max-width:560px){.px{margin-left:0;width:100%}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mast">
+    <a class="brand" href="/" style="text-decoration:none">mungbeans <span>// deep dive</span></a>
+    <div class="asof">27 nov 2026 · published</div>
+  </div>
+
+  <div class="ticker-row">
+    <a class="tk" href="/stocks/amba/" style="text-decoration:none">AMBA</a>
+    <span class="nm">Ambarella · Nasdaq · the camera chip that wants to be an AI company</span>
+    <span class="px" id="livePx" data-symbol="AMBA" data-since="2026-11-27" data-publish="35.24" data-shares="47105219"><b>$35.24</b> · cap <b>$1.66B</b></span>
+  </div>
+  <div class="perf-since">published 27 nov at $35.24 · <span class="g" id="livePerf">+0.0% since publish</span><span id="liveStamp"></span></div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-p="thesis"><span class="n">01</span>Thesis</button>
+    <button class="tab" data-p="verdict"><span class="n">02</span>Verdict</button>
+    <button class="tab" data-p="overhangs"><span class="n">03</span>Overhangs</button>
+    <button class="tab" data-p="numbers"><span class="n">04</span>Numbers</button>
+    <button class="tab" data-p="bear"><span class="n">05</span>Bear case</button>
+  </div>
+
+  <section class="panel active" data-panel="thesis">
+    <h2>Ambarella (AMBA): The Memory Crunch Exposed a Business That Has Never Earned Its Stock Comp</h2>
+    <p class="sub">Published 27 November 2026 — the full thesis, unchanged.</p>
+
+    <div class="thesis-body">
+    <h3>Why This Takes A Full Read</h3>
+    <p>Ambarella closed Friday at $35.24, down 40.2% on the week and 62% below the $93.57 high of the past year. On Tuesday, 24 November, it reported third-quarter revenue of $115.2 million, up 6.2% and at the bottom of its guidance range, and guided the fourth quarter to $70 to $75 million, against roughly $112 million the Street expected. That is a 37% sequential drop in a quarter that is normally only seasonally soft. The cause, in CEO Fermi Wang's words, is "the unprecedented rise in memory prices, as well as the scarcity of memory supply, which is causing our customers, to different degrees, to cancel, push out, or delay new orders." The stock had closed at $55.56 on Monday. By Wednesday's close it was $35.68, after trading in the session at levels last seen in late 2018, and it finished the holiday-shortened week at $35.24.</p>
+    <p>That puts AMBA 46% below its 200-week moving average of about $65, deep in the territory this site calls extreme value. It crossed under the line in mid-October and has fallen further every week since. The record here is mixed and mostly bad. The stock has been under its line sixteen times, with an average return after touching of 32.5%, but the two long visits are the ones that resemble today: from January 2018 it spent 84 weeks under the line, fell 42% below it and was down 29% a year later; from February 2023 it spent 130 weeks under, fell 53% below and was down 31% a year later. The short, sharp visit of March 2020, which more than doubled in a year, came with a demand shock that reversed in months. What I want to know about this visit is which kind of shock memory is, and what the business looks like underneath it.</p>
+    <p>I went through the fiscal 2026 10-K, the second-quarter 10-Q, four quarterly releases, the 2026 proxy, the third-quarter call, and the reporting on the memory market and on NXP's reported takeover talks. Three things the headlines skipped decide the call. First, the memory squeeze is a bill-of-materials problem that hits Ambarella's customers harder than Ambarella's own chips, and management itself assumes DRAM prices stay roughly where they are through fiscal 2028. Second, Ambarella has reported a GAAP loss in every one of the last four fiscal years, because stock compensation of roughly $100 million a year, a quarter of revenue, is larger than the free cash flow it has ever produced. Third, the stock is still priced as if a buyer were coming: the Financial Times reported in July that NXP was in talks to acquire the company, no deal has followed, and the call this week said only that the board remains open if approached.</p>
+    <p>My call is that AMBA is a value trap at $35.24. My DCF, treating stock compensation as the cost it is, comes out at $22.91; the same model with stock compensation added back gives $39.31, which is roughly the price. The risk posture: a takeover offer, or a fast memory reversal, could send the stock up 50% overnight, and this call accepts that risk explicitly.</p>
+
+    <hr class="sec">
+    <h3>The Company: Twenty-Two Years of Replacing the Customer</h3>
+    <p>Fermi Wang and Les Kohn founded Ambarella in early 2004, incorporated in the Cayman Islands and run from Santa Clara. Both came out of C-Cube Microsystems, the digital video chip company of the 1990s, and then co-founded Afara Websystems, which Sun Microsystems bought in 2002. Ambarella's first target was high-definition H.264 video compression. Its core competence for two decades has been the same thing: squeezing high-quality video processing into a chip that uses very little power.</p>
+    <p>The first reinvention was consumer video. Ambarella's chips went into camcorders, then into action cameras, and the action-camera boom made the company. It went public in October 2012 at $6 a share, 40% below the midpoint of its range. GoPro became its largest end customer, about 30% of revenue ($95 million of $316 million) in fiscal 2016, and the stock rose above $100 in 2015. Then GoPro moved to a replacement chip of its own starting in the second half of 2017, and Ambarella guided its share of fiscal 2018 revenue down to 3% to 6%. Losing the customer that built you is the founding trauma of this company, and it shaped everything that followed.</p>
+    <p>The second reinvention was computer vision. Ambarella paid $30 million for VisLab, an Italian autonomous-driving research group, in 2015, showed its first computer-vision chip, CV1, in 2017 and launched the CV2 family in 2018. Security cameras replaced action cameras as the core market. The older chips made video for people to watch; the new ones put an AI accelerator on the same die as the video engine, which is what lets a camera count people or read a license plate without sending video to the cloud.</p>
+    <p>The third reinvention is automotive and radar. In November 2021 Ambarella paid $307.5 million in cash for Oculii, a radar perception software company, and in January 2022 it announced the CV3 family of automotive domain controllers for driver assistance and autonomy. The stock closed at an all-time high of $216.84 on 8 December 2021, a week after a quarter that sent it up 25%. Five years later it trades at about a sixth of that.</p>
+    <p>Between the second and third reinventions sits the period that shaped today's balance sheet. Security cameras became Ambarella's largest market as action cameras faded, and the AI-capable CV2 family, announced in 2018 with up to 20 times the neural-network performance of CV1, was the product that carried the company through the 2018 to 2019 downturn, when the stock spent 84 weeks below its 200-week line. The CV5, a 5-nanometer chip that could encode 8K video at under two watts, followed in 2021. Each generation raised the average selling price, which is the lever the company has pulled every time unit growth stalled: the newest families sell for more than $20 against a company average of about $15. Ambarella wins on capability per watt and has always priced above the low-cost Asian suppliers. It gets paid for that only in products whose makers can afford it, which is the detail the memory shock is now testing.</p>
+    <p>The fourth reinvention, the current one, is "edge AI": N1 chips that run large language models on a device, CV7 on 4-nanometer silicon, CV8 on 2-nanometer, and a software platform for robotics and edge infrastructure. The record of revenue and profit shows what each reinvention cost:</p>
+    <table>
+      <tr><th>Fiscal year (ends Jan)</th><th class="r">Revenue</th><th class="r">GAAP net income</th><th class="r">Stock comp</th><th class="r">Free cash flow</th></tr>
+      <tr><td>FY2023</td><td class="r">$337.6M</td><td class="r">−$65.4M</td><td class="r">$111.2M</td><td class="r">$29.0M</td></tr>
+      <tr><td>FY2024</td><td class="r">$226.5M</td><td class="r">−$169.4M</td><td class="r">$111.3M</td><td class="r">$7.0M</td></tr>
+      <tr><td>FY2025</td><td class="r">$284.9M</td><td class="r">−$117.1M</td><td class="r">$107.8M</td><td class="r">$23.5M</td></tr>
+      <tr><td>FY2026</td><td class="r">$390.7M</td><td class="r">−$75.9M</td><td class="r">$98.0M</td><td class="r">$58.0M</td></tr>
+      <tr><td>9M FY2027</td><td class="r">$323.7M</td><td class="r">−$37.5M</td><td class="r">n/a</td><td class="r">n/a</td></tr>
+    </table>
+    <p>The capital allocation story is simple. Ambarella has spent its cash on two acquisitions (VisLab and Oculii) and on engineers, and it has paid the engineers mostly in stock. Goodwill of $303.6 million, most of it from Oculii, now sits on a balance sheet whose equity is $634 million. Share count rose from 39.0 million in January 2023 to 44.1 million in August 2026, about 3.5% a year, while the company bought back $3.4 million of stock in four years. A new $50 million authorization began in July 2026 and runs to June 2027; the second quarter, which ended in July, shows no repurchases, and the third-quarter cash flow statement is not yet filed.</p>
+
+    <hr class="sec">
+    <h3>The Management Team</h3>
+    <p><b>Fermi Wang</b> has been chairman, president and CEO since he co-founded the company in January 2004. Before that he was CEO and co-founder of Afara Websystems and spent nine years at C-Cube, finishing as a vice president and general manager. Twenty-two years of founder leadership is the main reason Ambarella survived losing GoPro, and it is also why the company has stayed small: the same team has run four product transitions without ever building a business that earns its own compensation. His pay in fiscal 2026 was $7.35 million, $5.93 million of it in stock, and his annual bonus is paid in fully vested shares.</p>
+    <p><b>Les Kohn</b>, the co-founder and long-time CTO, stepped down as an executive officer and director in November 2025 and stays on as Chief Technology Advisor. <b>Chan Lee</b> (COO since 2021) and <b>John Ju</b> (SVP Systems) have both been with the company since its founding team in 2004, by way of Afara, Intel and C-Cube. The engineering leadership is unusually stable: the 10-K reports an average employee tenure of 8.1 years and 31% of staff with more than ten years at the company.</p>
+    <p><b>John Young</b> became CFO in February 2024 after seven years in Ambarella's finance organization and seven at Mellanox. His credibility is now tied to the guidance record: the company guided Q1, Q2 and Q3 of this fiscal year to ranges of $97–103 million, $105–111 million and $115–124 million, and delivered $100.4 million, $108.1 million and $115.2 million. The first two landed in the middle. The third landed at the bottom, and the fourth will land 37% lower.</p>
+    <p>The board structure is founder-friendly: Wang is chairman as well as CEO, with a lead independent director. Insiders own about 4% of the shares. The compensation program pays executives mostly in restricted stock units and performance units tied to relative shareholder return and revenue growth, which means the people who decide whether to sell the company are paid in its stock.</p>
+
+    <hr class="sec">
+    <h3>The Business: Three End Markets, One Distributor</h3>
+    <p>Ambarella reports a single segment and does not publish revenue by end market in its filings. On the third-quarter call management said IoT was "a little more than 70%" of revenue and automotive "close to 30%," with consumer IoT about half of the total. Where I break those down further I am estimating from those shares. The quarterly record first:</p>
+    <table>
+      <tr><th>Quarter</th><th class="r">Guidance</th><th class="r">Revenue</th><th class="r">YoY</th><th class="r">Non-GAAP GM</th></tr>
+      <tr><td>Q1 FY2027 (Apr)</td><td class="r">$97–103M</td><td class="r">$100.4M</td><td class="r">+17%</td><td class="r">~60%</td></tr>
+      <tr><td>Q2 FY2027 (Jul)</td><td class="r">$105–111M</td><td class="r">$108.1M</td><td class="r">+13%</td><td class="r">~60%</td></tr>
+      <tr><td>Q3 FY2027 (Oct)</td><td class="r">$115–124M</td><td class="r">$115.2M</td><td class="r">+6%</td><td class="r">59.5%</td></tr>
+      <tr><td>Q4 FY2027 (Jan) guide</td><td class="r">$70–75M</td><td class="r">n/a</td><td class="r">~−28%</td><td class="r">59.0–60.25%</td></tr>
+    </table>
+
+    <p class="eyebrow">1. Consumer IoT: about half of revenue, and the first to break</p>
+    <p>Consumer IoT covers home security cameras, portable and action video, drones, and video conferencing devices. These are products where memory is a large share of the bill of materials and the retail price cannot rise to cover it. Management said consumer IoT was "below our expectations, declining sequentially" in Q3, before the full effect hit, and that customers either ship at very low margin or slow sales. Some consumer products, in management's paraphrased words on the call, "probably just perish."</p>
+    <table>
+      <tr><th>Consumer IoT</th><th class="r">Value</th></tr>
+      <tr><td>Share of revenue (Q3, per call)</td><td class="r">~50%</td></tr>
+      <tr><td>Implied Q3 revenue (my estimate)</td><td class="r">~$58M</td></tr>
+      <tr><td>Q3 trend</td><td class="r">Down sequentially</td></tr>
+    </table>
+
+    <p class="eyebrow">2. Enterprise and infrastructure IoT: security cameras, robotics, edge boxes</p>
+    <p>Enterprise and public security cameras are the business that replaced GoPro, and the new edge-infrastructure lines (N1, CV7, X7) sit here too. Customers named on the call include Verkada, and management cited more than 20 combined design wins in robotics and edge infrastructure. Enterprise was "close to our expectations" in Q3, but management said the memory weakness is now "spreading into all of our markets to various degrees."</p>
+    <table>
+      <tr><th>Enterprise / infrastructure IoT</th><th class="r">Value</th></tr>
+      <tr><td>Share of revenue (Q3, IoT less consumer)</td><td class="r">~20%</td></tr>
+      <tr><td>Implied Q3 revenue (my estimate)</td><td class="r">~$23M</td></tr>
+      <tr><td>New products in first production</td><td class="r">CV7 (3 customers)</td></tr>
+    </table>
+
+    <p class="eyebrow">3. Automotive: telematics, ADAS cameras, and a domain controller still waiting</p>
+    <p>Automotive is about 30% of revenue, mostly camera-based telematics, driver monitoring and ADAS vision, sold through Tier 1 suppliers. The CV3-AD domain controller, Ambarella's bid to compete with Mobileye and NVIDIA in autonomy, was announced in January 2022. Continental signed a strategic partnership around it in January 2023, with production tied to 2027 vehicle launches, and it has not yet produced large volumes. Morgan Stanley's Joseph Moore, downgrading the stock this week, wrote that the technology remains attractive but faces "a large memory-driven demand reset." The memory problem reaches here too: management said one automotive customer wants to ship but its Tier 1 cannot secure enough memory.</p>
+    <table>
+      <tr><th>Automotive</th><th class="r">Value</th></tr>
+      <tr><td>Share of revenue (Q3, per call)</td><td class="r">~30%</td></tr>
+      <tr><td>Implied Q3 revenue (my estimate)</td><td class="r">~$35M</td></tr>
+      <tr><td>Oculii radar acquisition (2021)</td><td class="r">$307.5M</td></tr>
+    </table>
+
+    <p class="eyebrow">4. The channel: one Taiwanese distributor and Asia</p>
+    <p>Ambarella sells mostly to the ODMs that build its customers' products, and most of that goes through one company. WT Microelectronics, its non-exclusive sales representative and fulfillment partner in Asia outside Japan, was about 70% of fiscal 2026 revenue and 56.7% of Q3 revenue; Hakuto was 11.8%. Asia was 88% of fiscal 2026 revenue. This matters for the memory story because the distributor and the ODMs sit between Ambarella and the demand signal, and receivable days rose from 32 to 47 in Q3.</p>
+    <table>
+      <tr><th>Concentration</th><th class="r">Value</th></tr>
+      <tr><td>WT Microelectronics, FY2026</td><td class="r">~70% of revenue</td></tr>
+      <tr><td>WT Microelectronics, Q3 FY2027</td><td class="r">56.7%</td></tr>
+      <tr><td>Asia share of revenue, FY2026</td><td class="r">88%</td></tr>
+      <tr><td>Receivable days, Q3 (from Q2)</td><td class="r">47 (32)</td></tr>
+    </table>
+
+    <hr class="sec">
+    <h3>The Memory Squeeze Is A Bill-Of-Materials Problem</h3>
+    <p>The mechanism is worth getting precisely, because it decides whether this quarter is a one-time air pocket. Ambarella's chips sell at an average price of about $15, with the newest families above $20. The camera or drone that contains one also contains DRAM, often LPDDR. Through 2026, memory makers moved capacity to the high-bandwidth memory and server DRAM that AI data centers buy, and conventional DRAM contract prices rose by roughly 93–98% in the first quarter alone, according to TrendForce. TrendForce describes supplier inventories as extremely low and expects suppliers to add bits mainly through process migrations, because new cleanroom capacity takes years to build.</p>
+    <p>For a consumer camera maker, that means the memory in the product can now cost more than the processor, the retail price is fixed, and the choice is between shipping at a loss and not shipping. For Ambarella, it means orders for a chip whose own price has not changed get cancelled or pushed out because a different component doubled. Management said most of the reduction is push-outs, with some cancellations, and that it had "heavily scrutinized our customers' orders and the forecast, and removed items we do not expect to ship."</p>
+    <p>Three things in management's own framing make me cautious about a quick snapback. First, the company assumes DRAM stays roughly where it is through fiscal 2028. In Wang's words, "we are assuming that DRAM situation is going to stay the same as Q4." Second, it said the fiscal 2028 growth it expects comes mainly from new products ramping in the second half, and that recovered push-outs are "not big part of it." Third, the weakness started in consumer and is spreading to enterprise and automotive, which makes it a cost problem across the whole customer base. Against that, the memory equities have started to price a peak: Micron's stock fell sharply from late October into November on fears that pricing had topped, and TrendForce's November forecast had PC DRAM contract prices still rising in the fourth quarter, at a slower 13% to 18%. If memory prices break, Ambarella's push-outs come back fast. I give that a real probability, which is why my bull case exists.</p>
+    <p>One more effect, which the market has not yet discounted: in a market where every component is scarce, customers redesign around what they can get. A memory shortage that runs into 2028 rewards suppliers whose chips need less memory, and it rewards integrated vendors who can bundle memory supply. Ambarella is neither, and its largest competitors in mass-market cameras, Novatek and the Chinese suppliers, compete on cost.</p>
+
+    <p>The arithmetic of the promised "growth year" is the part I would most like readers to check for themselves. Fiscal 2027 revenue will be about $396 million if Q4 lands at the guide midpoint. If the first half of fiscal 2028 runs near the Q4 rate, call it $75 to $85 million a quarter, the first half totals $150 to $170 million. To grow for the year, the second half then has to deliver $226 to $246 million, or $113 to $123 million a quarter, which is at or above the record $115.2 million Ambarella just reported, achieved before the memory shock. That is possible if memory eases and the new chips ramp on time. It is a demanding bar for a company that has just told investors it expects memory to stay where it is, and it is why I model fiscal 2028 slightly down.</p>
+    <p>An illustration of the squeeze, with round numbers I chose to show the mechanism (none of them reported): take a consumer camera that costs its maker $60 to build and sells for $100, with $9 of memory and a $15 Ambarella chip inside. If the memory doubles to $18, the maker's cost rises 15% and its gross margin falls from 40% to 31%. A maker with thin margins either raises the retail price into a weak consumer market, accepts the lower margin, or stops building the product. In each case the Ambarella chip is the component least responsible for the problem and the one that stops shipping. Enterprise and automotive products carry more margin and absorb the same shock for longer, which matches the order in which management says the weakness has spread.</p>
+    <p>The cash position buys time. With $282.8 million of cash and marketable securities and no debt, Ambarella can absorb a year of the losses in my base case, about $52 million of negative free cash flow in fiscal 2028, without raising money. Even my bear case, which burns about $190 million over three years, leaves cash on hand. What a year of waiting does cost is about 6% of the company in stock compensation at today's price, and the recovery, when it comes, accrues partly to new shares.</p>
+
+    <hr class="sec">
+    <h3>Stock Compensation Is The Business Model</h3>
+    <p>Ambarella reports a non-GAAP profit most quarters and a GAAP loss every year. The gap between the two is almost entirely stock compensation: $98.0 million in fiscal 2026 on $390.7 million of revenue, 25% of sales, and $111 million a year in the two years before that. In Q3 FY2027, non-GAAP net income was $12.7 million and GAAP net loss was $12.7 million; the $25.4 million difference is stock compensation and acquisition costs.</p>
+    <p>The comparison that matters is stock compensation against free cash flow, because that is the cost of the engineers set against the cash the business produces:</p>
+    <table>
+      <tr><th>Fiscal year</th><th class="r">Free cash flow</th><th class="r">Stock comp</th><th class="r">FCF less stock comp</th></tr>
+      <tr><td>FY2023</td><td class="r">$29.0M</td><td class="r">$111.2M</td><td class="r">−$82.1M</td></tr>
+      <tr><td>FY2024</td><td class="r">$7.0M</td><td class="r">$111.3M</td><td class="r">−$104.3M</td></tr>
+      <tr><td>FY2025</td><td class="r">$23.5M</td><td class="r">$107.8M</td><td class="r">−$84.3M</td></tr>
+      <tr><td>FY2026</td><td class="r">$58.0M</td><td class="r">$98.0M</td><td class="r">−$40.0M</td></tr>
+    </table>
+    <p>Fiscal 2026 was the best year in the table: revenue up 37%, edge AI demand strong, gross margin near 60%. It still did not cover its stock compensation. That is the structural fact the memory shock exposed. A 959-person company, 75% of it engineers, designing two or three new chips a year on leading-edge Samsung nodes, has a fixed cost base of about $234 million a year in cash operating expenses plus roughly $90 million in stock. At 60% gross margin it needs about $540 million of annual revenue to break even on a GAAP basis. It has never been there; its record year was fiscal 2026, at $391 million.</p>
+    <p>The dilution is real and measured: about 3.5% a year of share count growth with almost no offsetting buybacks. An investor who values Ambarella on non-GAAP earnings is paying for engineers with someone else's shares. My DCF charges stock compensation as a cost, and that one choice is worth about $16 a share: $22.91 with it, $39.30 without.</p>
+
+    <hr class="sec">
+    <h3>The Buyer In The Price</h3>
+    <p>In June 2025 Bloomberg reported that Ambarella was working with bankers and had approached potential buyers, and the stock rose about 20%. On 31 July 2026 the Financial Times reported that NXP Semiconductors was in talks to acquire the company, citing people familiar with the matter, with no terms disclosed; Ambarella was worth about $3.25 billion before the report, and the stock rose about 16% that day. NXP declined to comment and Ambarella did not respond. The FT said the talks might not lead to a transaction and that other industry players could also bid. Later reports of exclusive talks and named rival bidders I could not verify, and I give them no weight.</p>
+    <p>No deal has been announced in the four months since. On this week's call, when Susquehanna asked about strategic alternatives, Wang said the board's view had not changed: the company is open if approached and otherwise runs independently, and the memory issue does not change that. He did not mention NXP.</p>
+    <p>The strategic logic for a buyer like NXP is real. NXP sells automotive processors and radar, and Ambarella's vision SoCs and Oculii radar software would let it offer a fuller perception package. A buyer would also cut most of the duplicated overhead and stop paying the stock compensation in Ambarella's currency. But the timing works against a premium. Four months ago a buyer was looking at a company growing revenue 13% with Q3 guided to $115–124 million. Today it is looking at a Q4 guided 37% lower and a management team that does not forecast memory relief before 2028. A rational acquirer waits for the fourth-quarter print, or offers a price that reflects it.</p>
+    <p>I treat the takeover as an option with a 10% weight at $50 a share, about 5.2 times my fiscal 2027 revenue estimate in enterprise value. That is a premium to today's price and well below what the July valuation implied. Even generously, the option adds only about $2.70 to my anchor. The current price makes sense to me only if you believe a deal at a premium is much more likely than that, or if you value the company ignoring its stock compensation.</p>
+
+    <hr class="sec">
+    <h3>NPV Estimate</h3>
+    <p>I built a six-year DCF for fiscal 2028 to 2033 from a fiscal 2027 base of $396.2 million in revenue (nine months reported plus the Q4 guide midpoint of $72.5 million). Operating income is GAAP, after stock compensation. Free cash flow is operating income after a 10% tax rate when positive, plus depreciation and amortization of 4% of revenue, less capital spending of 3%, less working capital of 10% of each year's revenue increase. Discount rate (WACC) 12%: the measured beta is 2.36, and a cost of equity of about 12% reflects a small, cyclical, unprofitable chip designer with no debt to blend in. Terminal growth 3%. EBITDA below is GAAP operating income plus depreciation and amortization.</p>
+    <p>Assumptions. Revenue dips 4% in fiscal 2028 to $380 million, a weak first half and a second-half recovery on new products, consistent with management's "growth year" only against the depressed Q4 run rate. Then 21%, 15%, 13%, 10% and 8%, reaching $710 million in fiscal 2033, nearly double fiscal 2026. GAAP operating margin rises from −15% to 18%, which assumes stock compensation falls steadily as a share of revenue and the company reaches GAAP profitability in fiscal 2030 for the first time since the GoPro era.</p>
+    <p>That fiscal 2028 margin is generous, and I want the generosity on the record. At the Q4 guide, gross profit is about $43 million a quarter against $57.5 to $59.5 million of non-GAAP operating expense and roughly $23 million of stock compensation, a GAAP operating loss near $38 million a quarter. Run $380 million of revenue through that cost base at 59.5% gross margin and the year loses about $100 million, or 26% of revenue. My −15% assumes about $40 million of savings, from cuts or lower stock grants, that management has not announced. Without those savings in any year, the base case falls to about $15 a share.</p>
+    <table>
+      <tr><th>Year</th><th class="r">Revenue</th><th class="r">Growth</th><th class="r">EBITDA</th><th class="r">Margin</th><th class="r">FCF</th><th class="r">Disc. FCF</th></tr>
+      <tr><td>FY2028</td><td class="r">$380M</td><td class="r">−4%</td><td class="r">−$41.8M</td><td class="r">−11.0%</td><td class="r">−$51.6M</td><td class="r">−$46.1M</td></tr>
+      <tr><td>FY2029</td><td class="r">$460M</td><td class="r">21%</td><td class="r">$9.2M</td><td class="r">2.0%</td><td class="r">−$12.6M</td><td class="r">−$10.0M</td></tr>
+      <tr><td>FY2030</td><td class="r">$530M</td><td class="r">15%</td><td class="r">$53.0M</td><td class="r">10.0%</td><td class="r">$26.9M</td><td class="r">$19.2M</td></tr>
+      <tr><td>FY2031</td><td class="r">$600M</td><td class="r">13%</td><td class="r">$96.0M</td><td class="r">16.0%</td><td class="r">$63.8M</td><td class="r">$40.5M</td></tr>
+      <tr><td>FY2032</td><td class="r">$660M</td><td class="r">10%</td><td class="r">$132.0M</td><td class="r">20.0%</td><td class="r">$95.6M</td><td class="r">$54.3M</td></tr>
+      <tr><td>FY2033</td><td class="r">$710M</td><td class="r">8%</td><td class="r">$156.2M</td><td class="r">22.0%</td><td class="r">$117.1M</td><td class="r">$59.3M</td></tr>
+    </table>
+    <p>Discounted cash flows sum to $117 million. The terminal value is $1.34 billion, worth $679 million today. Enterprise value: $796 million. Add $282.8 million of cash and marketable debt securities (Ambarella has no borrowings; I leave operating leases out). Equity value is $1.08 billion, or <b>$22.91 per share</b> on a fully diluted count of 47.1 million shares.</p>
+    <table>
+      <tr><th>Share count component</th><th class="r">Shares</th></tr>
+      <tr><td>Ordinary shares outstanding (31 Aug 2026)</td><td class="r">44,140,971</td></tr>
+      <tr><td>Unvested RSUs, including PRSUs (31 Jul 2026)</td><td class="r">2,863,845</td></tr>
+      <tr><td>Stock options outstanding (exercise price $58.23)</td><td class="r">100,403</td></tr>
+      <tr><td>Convertibles, warrants</td><td class="r">none</td></tr>
+      <tr><td><b>Fully diluted</b></td><td class="r"><b>47,105,219</b></td></tr>
+    </table>
+    <p>Options are counted gross even though they are out of the money at $58.23. ESPP shares and future grants are excluded; they are paid for in the stock compensation charge inside operating income.</p>
+    <p>Sensitivity, per share:</p>
+    <table>
+      <tr><th>WACC</th><th class="r">g = 2%</th><th class="r">g = 3%</th><th class="r">g = 4%</th></tr>
+      <tr><td>10%</td><td class="r">$26.70</td><td class="r">$29.46</td><td class="r">$33.13</td></tr>
+      <tr><td>11%</td><td class="r">$23.71</td><td class="r">$25.76</td><td class="r">$28.39</td></tr>
+      <tr><td>12%</td><td class="r">$21.34</td><td class="r">$22.91</td><td class="r">$24.87</td></tr>
+      <tr><td>13%</td><td class="r">$19.42</td><td class="r">$20.65</td><td class="r">$22.15</td></tr>
+      <tr><td>14%</td><td class="r">$17.84</td><td class="r">$18.82</td><td class="r">$19.99</td></tr>
+    </table>
+    <p>Two variants frame it, on the same mechanics. A bull case (fiscal 2028 revenue up 9% as memory eases, then 30%, 21%, 18%, 12% and 9%, reaching $979 million; GAAP operating margins of −11%, 0%, 9%, 17%, 23% and 27%) gives $41.63. A bear case (fiscal 2028 revenue down 17% to $329 million, then 2%, 4%, 4%, 3% and 3%, so fiscal 2033 is still below fiscal 2026; GAAP operating margins of −32%, −20%, −10%, −2%, 4% and 10%) gives $7.74, most of it cash. With stock compensation added back to the base case, held flat at $86 million a year, the value is $39.31. Even at a 10% discount rate and 4% terminal growth, the base case stops short of the price, at $33.13.</p>
+    <p>Multiple sanity check. At $35.24 the equity is worth $1.66 billion and the enterprise value about $1.38 billion, or 3.5 times my fiscal 2027 revenue estimate. Cash is about $6.00 a share. The consensus forward EPS of $1.06, which predates this week's guidance, gives a P/E of 33; after this week Bank of America cut its fiscal 2028 EPS estimate to $0.12, which would put it near 300. Mobileye, the closest listed peer, trades at about 1.2 times trailing revenue.</p>
+
+    <hr class="sec">
+    <h3>AMBA vs. MBLY: The Head-to-Head</h3>
+    <p>Mobileye is the scale incumbent in vision-based driver assistance and the company Ambarella's CV3-AD is built to compete with. It is also the clearest example of what the market does to a vision-chip company whose growth stalls.</p>
+    <table>
+      <tr><th>Latest quarter</th><th class="r">AMBA (Q3 FY27, to 31 Oct)</th><th class="r">MBLY (Q3 2026, to 26 Sep)</th></tr>
+      <tr><td>Revenue</td><td class="r">$115.2M (+6.2%)</td><td class="r">$492M (−2%)</td></tr>
+      <tr><td>GAAP gross margin</td><td class="r">57.8%</td><td class="r">53%</td></tr>
+      <tr><td>Non-GAAP operating income</td><td class="r">~$10.8M (my calc.)</td><td class="r">$89M (incl. $51M incentive)</td></tr>
+      <tr><td>Next-period outlook</td><td class="r">Q4 $70–75M</td><td class="r">FY26 $1.995–2.020B</td></tr>
+      <tr><td>Market cap (27 Nov)</td><td class="r">$1.66B</td><td class="r">~$3.81B</td></tr>
+      <tr><td>Enterprise value / trailing revenue</td><td class="r">~3.5x (FY27E)</td><td class="r">~1.2x</td></tr>
+    </table>
+    <table>
+      <tr><th>Layer</th><th>AMBA</th><th>MBLY</th></tr>
+      <tr><td>Core market</td><td>IoT cameras ~70%, auto ~30%</td><td>Automotive ADAS, nearly all</td></tr>
+      <tr><td>Auto product</td><td>CV3-AD domain controller, Oculii radar</td><td>EyeQ, SuperVision, Chauffeur</td></tr>
+      <tr><td>Auto customers</td><td>Via Tier 1s, incl. Continental partnership</td><td>Most global OEMs</td></tr>
+      <tr><td>Memory exposure</td><td>Customers' bill of materials</td><td>Passed through at zero margin (~$7M in Q3)</td></tr>
+      <tr><td>Fab</td><td>Samsung (4nm, 5nm); CV8 on 2nm</td><td>TSMC</td></tr>
+      <tr><td>Strategic status</td><td>Reported NXP talks (Jul), no deal</td><td>Majority owned by Intel</td></tr>
+    </table>
+    <p>Three things stand out. First, Ambarella has the better gross margin and the faster growth this quarter, but a quarter of Mobileye's revenue. Second, the market still pays Ambarella about three times Mobileye's multiple of revenue, which is the takeover premium and the edge AI story at work; Mobileye trades as a stalled ADAS supplier at 1.2 times revenue. Third, the memory exposure differs in kind: Mobileye passes memory through at cost in its system sales, while Ambarella's customers carry it and cancel when it gets too expensive.</p>
+    <p>What would Ambarella need to earn Mobileye's position in automotive? An OEM that commits to CV3-AD at volume for a major vehicle platform, which on automotive design cycles means three to five years from win to revenue. What would Mobileye need to take Ambarella's IoT business? Nothing; it does not compete there. The comparison mostly shows that the market's generosity toward Ambarella's multiple depends on the story, and that a vision-chip company without growth gets valued like Mobileye.</p>
+
+    <hr class="sec">
+    <h3>The Risks</h3>
+    <p><b>The bull case is mostly upside risk to my call.</b> A takeover offer from NXP or anyone else would likely come at a premium to $35 even after this week, and the stock would jump. My 10% weight on a $50 deal may be too low. The memory market could also break sooner than management assumes, returning push-outs in two or three quarters.</p>
+    <p><b>Memory stays expensive into 2028.</b> Management assumes DRAM stays roughly where it is through fiscal 2028, and TrendForce still had contract prices rising in the fourth quarter. In that world consumer IoT demand stays impaired, customers redesign around scarce memory, and the 37% drop in Q4 becomes the run rate for longer than my base case allows.</p>
+    <p><b>Distributor and customer concentration.</b> WT Microelectronics handled 56.7% of Q3 revenue and about 70% of fiscal 2026 revenue. Receivable days rose from 32 to 47 in Q3, and receivables jumped to $58.3 million from $37.4 million. Inventory of $61.4 million at the end of October is about six months of cost of sales at the Q4 guide. A change in that relationship, a write-down of chips built for orders that were pushed out, or a buildup of inventory in the channel that the company does not see, would hit revenue with little warning.</p>
+    <p><b>Stock compensation and dilution.</b> Roughly $90–100 million a year of stock compensation against a market cap of $1.66 billion is about 6% of the company per year at today's price. If the share price stays here, the same dollar grants issue twice as many shares as they did in July.</p>
+    <p><b>Automotive takes longer still.</b> CV3-AD was announced in 2022. If a major OEM platform win does not materialize by fiscal 2028, the automotive part of the story reverts to a telematics camera business, and the radar acquisition's $303.6 million of goodwill becomes an impairment candidate.</p>
+    <p><b>Cost competition in cameras.</b> Novatek, SigmaStar and other Asian suppliers have taken share in mass-market security cameras on price. A memory shortage that squeezes customer margins pushes them toward cheaper processors, which is the opposite of Ambarella's strategy of selling higher-priced AI chips.</p>
+    <p><b>Leading-edge execution.</b> CV7 on 4nm and CV8 on 2nm at Samsung are expensive tape-outs for a $400 million company. A delay or yield problem in the products management is counting on for the second half of fiscal 2028 would push the recovery out a year.</p>
+
+    <hr class="sec">
+    <h3>The Path From Here</h3>
+    <p>Ambarella makes good chips. Its video and vision processors are in tens of millions of cameras, its gross margin has held near 60% through every transition, it has $283 million of cash and no borrowings, and its engineering team has stayed together for two decades. The silicon is as good as it was a week ago.</p>
+    <p>This week made the economics visible. A company with a record year of $391 million of revenue that still could not cover $98 million of stock compensation is now guiding a quarter 37% lower and expects no help from memory prices until 2028. My base case, which gives it a full recovery and doubled revenue by fiscal 2033, is worth $22.91 a share. The price of $35.24 makes sense only with stock compensation added back or with a buyer on the way.</p>
+    <p>So I call it a value trap at this price. It looks cheap: 46% below its 200-week line, 62% off its high, at levels last traded in late 2018. It is still above what its cash economics support. The evidence that would change my mind is specific: an announced acquisition, a fourth-quarter print above $80 million with orders back, or a GAAP operating profit in any quarter of fiscal 2028.</p>
+    <p>The checkpoints come in order: any statement from NXP or Ambarella on strategic talks; TrendForce's quarterly DRAM contract price data in January; the fourth-quarter print, tentatively scheduled for early March 2027, with the first commentary on fiscal 2028; and the first production revenue from CV8 in the second half of fiscal 2028.</p>
+
+    <div class="note" style="margin-top:28px"><b>Disclaimer.</b> Not financial advice. Do your own research. All figures from company filings and public disclosures. Price at publish: $35.24 (27 November 2026).</div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="verdict">
+    <h1 class="verdict">Cheap against its line, still dear against its cash.</h1>
+    <p class="sub">The memory crunch cut next quarter's revenue by 37%, and the reaction exposed a company that has never covered its stock compensation, even in its record year. At $35.24 the price assumes either that the stock comp is free or that a buyer is coming.</p>
+
+    <div class="callbar">
+      <span class="pill">Call<b style="color:var(--loss)">Avoid · value trap</b></span>
+      <span class="pill">Conviction<b>Moderate</b></span>
+      <span class="pill lean">Net overhang lean<b style="color:var(--loss)">Negative, with a takeover tail</b></span>
+      <span class="pill">Recognition<b>Q4 print · early Mar 2027</b></span>
+    </div>
+
+    <div class="gauge">
+      <div class="gauge-head"><span class="l">Recognition gap</span><span class="t">resolves ~ Mar 2027 · Q4 print</span></div>
+      <div class="track">
+        <div class="axis"></div>
+        <div class="gapfill" style="left:42.62%;right:41.27%"></div>
+        <div class="mk p" style="left:58.73%"><div class="d"></div><div class="v">$35.24</div><div class="c">price now</div></div>
+        <div class="mk f" style="left:42.62%"><div class="d"></div><div class="v">~$25.57</div><div class="c">driver-adjusted</div></div>
+      </div>
+      <div class="gnote">axis $0–$60 · anchor = 25% bear DCF ($7.74) + 45% base DCF ($22.91) + 20% bull DCF ($41.63) + 10% takeover at $50 = $25.57 · my own DCF (thesis tab) runs ~$22.91 · anchor ÷ price − 1 = −27% · price sits ~38% above the anchor and ~54% above my DCF</div>
+    </div>
+    <p>The anchor sits below the price. All three DCFs share the same mechanics: a fiscal 2027 revenue base of $396.2 million, GAAP operating income with stock compensation as a cost, a 12% discount rate, 3% terminal growth, $282.8 million of cash and 47.1 million diluted shares. They differ only on the revenue and margin path. The 10% takeover weight at $50 a share is a judgment, about 5.2 times fiscal 2027 revenue in enterprise value, a premium to today and well under what July's reported talks implied.</p>
+    <p>Sell-side targets were reset this week: Bank of America to $30 from $70 with an underperform rating, Morgan Stanley to $42 from $70 at equal weight, Stifel to $50 from $80 at buy. The consensus mean of $54.36 in my data predates most of the cuts. The difference between my anchor and the Street is mostly stock compensation, which the Street's non-GAAP models leave out.</p>
+    <div class="note"><b>Key levels.</b> About $65 is the 200-week line; $33.54 was Wednesday's pre-market low; about $6 a share is cash. I would look again below about $23, my base DCF, or at once on an announced deal, a Q4 print above $80 million, or a GAAP operating profit in any quarter of fiscal 2028.</div>
+  </section>
+
+  <section class="panel" data-panel="overhangs">
+    <h2>Overhang ledger</h2>
+    <p class="sub">Drivers the metrics don't show yet, scored materiality × unpriced × low-attention × linkage. Net lean negative: the memory and dilution risks are larger and nearer than the positives, but the takeover card is real and could fire on any day.</p>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">Memory stays expensive through fiscal 2028</span><span class="oh-layer">sector · 1st-order</span><span class="oh-score">0.55</span></div>
+      <div class="sbar"><i style="width:55%"></i></div>
+      <div class="oh-mech">Management assumes DRAM stays roughly where it is through fiscal 2028, and says the expected growth comes from new products, with recovered push-outs "not big part of it." The weakness started in consumer IoT, about half of revenue, and is spreading to enterprise and automotive. The market has priced one bad quarter; management's own assumption implies several.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>High on Q4, low on FY28</div><div class="ff"><b>Trigger</b>TrendForce DRAM contract prices; Q4 call guidance</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">Stock comp at half the share price</span><span class="oh-layer">micro · dilution</span><span class="oh-score">0.48</span></div>
+      <div class="sbar"><i style="width:48%"></i></div>
+      <div class="oh-mech">Roughly $90–100M a year of stock compensation, 25% of revenue, now costs about 6% of the company a year at $35, and issues twice the shares it did in July. Free cash flow has never covered it: the gap was −$40M even in record fiscal 2026. Non-GAAP models ignore it, so most targets do too.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low</div><div class="ff"><b>Trigger</b>March 2027 grant cycle; share count in the 10-K</div></div>
+    </div>
+
+    <div class="ohcard risk">
+      <div class="oh-top"><span class="arr">▼</span><span class="oh-title">One distributor and a stretching receivable</span><span class="oh-layer">micro · channel</span><span class="oh-score">0.34</span></div>
+      <div class="sbar"><i style="width:34%"></i></div>
+      <div class="oh-mech">WT Microelectronics handled 56.7% of Q3 revenue, about 70% in fiscal 2026. Receivable days rose from 32 to 47 in the quarter the demand broke. If the channel is holding inventory that end customers will not take, Q4 guidance may not be the floor.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low</div><div class="ff"><b>Trigger</b>Q4 DSO and inventory days</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">A buyer turns up</span><span class="oh-layer">micro · M&amp;A</span><span class="oh-score">0.45</span></div>
+      <div class="sbar"><i style="width:45%"></i></div>
+      <div class="oh-mech">The FT reported NXP talks on 31 July, Bloomberg reported a sale process in 2025, and Wang said this week the board remains open if approached. A strategic buyer would cut duplicated costs and stop paying Ambarella's stock comp in Ambarella's currency, which makes the asset worth more to it than to public holders. The memory shock lowers the price a buyer would pay and may also lower the price the board would accept.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>Medium</div><div class="ff"><b>Trigger</b>Any announcement; 13D filings</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">Memory breaks early</span><span class="oh-layer">sector · 2nd-order</span><span class="oh-score">0.38</span></div>
+      <div class="sbar"><i style="width:38%"></i></div>
+      <div class="oh-mech">Micron's stock sold off hard from late October on fears that memory pricing has peaked, and TrendForce's fourth-quarter PC DRAM forecast showed increases slowing to 13–18%. If contract prices roll over in the first half of 2027, push-outs return and Q4 becomes the trough a quarter or two early.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Low</div><div class="ff"><b>Attention</b>Low for AMBA specifically</div><div class="ff"><b>Trigger</b>Q1 2027 DRAM contract prices</div></div>
+    </div>
+
+    <div class="ohcard up">
+      <div class="oh-top"><span class="arr">▲</span><span class="oh-title">Higher-priced chips in the mix</span><span class="oh-layer">micro · product</span><span class="oh-score">0.30</span></div>
+      <div class="sbar"><i style="width:30%"></i></div>
+      <div class="oh-mech">CV72 and CV75 are ramping at average prices above $20, against a company average near $15. CV7 had first production revenue from three customers in Q3 and CV8 is sampling for second-half fiscal 2028. Mix is the one lever that raises revenue without more units, and units are what the memory shortage limits.</div>
+      <div class="oh-foot"><div class="ff"><b>Priced in</b>Medium</div><div class="ff"><b>Attention</b>Medium</div><div class="ff"><b>Trigger</b>ASP commentary on the Q4 and Q1 calls</div></div>
+    </div>
+
+    <div class="ohcard dorm">
+      <div class="oh-top"><span class="arr">○</span><span class="oh-title">The Oculii goodwill</span><span class="oh-layer">micro · dormant</span><span class="dtag">fires on anomaly</span></div>
+      <div class="oh-mech">$303.6M of goodwill, most of it from the $307.5M Oculii radar purchase, against equity of $634M and a market cap of $1.66B. Held dormant: it fires only if the annual impairment test, after a 60%-plus share price decline, forces a write-down, which would make the automotive radar thesis's failure official.</div>
+    </div>
+  </section>
+
+  <section class="panel" data-panel="numbers">
+    <h2>Numbers</h2>
+    <p class="eyebrow">Q3 fiscal 2027, quarter to 31 October 2026</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Revenue</div><div class="mv">$115.2M</div><div class="mn">+6.2% y/y; low end of $115–124M guide</div></div>
+      <div class="met"><div class="ml">Gross margin</div><div class="mv">57.8%</div><div class="mn">GAAP; non-GAAP 59.5%</div></div>
+      <div class="met"><div class="ml">GAAP net loss</div><div class="mv r">−$12.7M</div><div class="mn">−$0.29 a share; non-GAAP EPS $0.28</div></div>
+      <div class="met"><div class="ml">Non-GAAP opex</div><div class="mv">$57.7M</div><div class="mn">GAAP opex $81.1M incl. stock comp</div></div>
+      <div class="met"><div class="ml">Cash</div><div class="mv g">$282.8M</div><div class="mn">no borrowings; ~$6.00 a share</div></div>
+      <div class="met"><div class="ml">Receivable days</div><div class="mv r">47</div><div class="mn">from 32 in Q2</div></div>
+    </div>
+    <p class="eyebrow">Guidance and trailing year</p>
+    <div class="grid">
+      <div class="met"><div class="ml">Q4 revenue guide</div><div class="mv r">$70–75M</div><div class="mn">vs ~$112M expected; −37% q/q at midpoint</div></div>
+      <div class="met"><div class="ml">Q4 non-GAAP GM</div><div class="mv">59.0–60.25%</div><div class="mn">margin holds; volume does not</div></div>
+      <div class="met"><div class="ml">Q4 non-GAAP opex</div><div class="mv">$57.5–59.5M</div><div class="mn">no cost action taken yet</div></div>
+      <div class="met"><div class="ml">FY2026 revenue</div><div class="mv g">$390.7M</div><div class="mn">+37%, the record year</div></div>
+      <div class="met"><div class="ml">FY2026 stock comp</div><div class="mv r">$98.0M</div><div class="mn">25% of revenue</div></div>
+      <div class="met"><div class="ml">FY2026 FCF less SBC</div><div class="mv r">−$40.0M</div><div class="mn">negative in each of the last four years</div></div>
+    </div>
+    <h3>Scenario targets — EV/sales on fiscal 2028 revenue, plus $282.8M cash, on 47.1M diluted shares</h3>
+    <table>
+      <tr><th>Scenario</th><th>Multiple</th><th class="r">Implied</th><th>Path</th></tr>
+      <tr><td class="b">Bear</td><td>1.2× on $330M</td><td class="r">~$14.40</td><td class="scen">Memory tight into 2028, consumer IoT impaired, valued like Mobileye</td></tr>
+      <tr><td class="b">Base</td><td>2.0× on $380M</td><td class="r">~$22.14</td><td class="scen">Weak first half, second-half product ramp, GAAP profit only in FY30 (matches my $22.91 DCF)</td></tr>
+      <tr><td class="b">Bull</td><td>4.0× on $430M</td><td class="r g">~$42.50</td><td class="scen">Memory eases by mid-2027, push-outs return, CV7 and CV8 lift ASPs, or a buyer pays up</td></tr>
+    </table>
+    <div class="note"><b>The gaps.</b> Ambarella does not report revenue by end market; the consumer, enterprise and automotive splits come from approximate shares given on the call. How much of the Q4 reduction is push-out versus cancellation is management's estimate; the company discloses no figure for it. Channel inventory at WT Microelectronics and the ODMs is not disclosed. The status of any acquisition talks is unknown; neither company has confirmed the July report. No fiscal 2028 numeric guidance exists yet, and the DRAM price path through 2027 is a forecast by third parties. The Q3 10-Q, with the cash flow statement and updated share count, had not been filed when I wrote this.</div>
+  </section>
+
+  <section class="panel" data-panel="bear">
+    <h2>Bear case</h2>
+    <p>The steelman, given equal room. My call already leans bear, so this tab argues the short case harder than I do.</p>
+    <h3>The short thesis</h3>
+    <p>Ambarella is a 22-year-old chip designer that has reinvented itself four times and has not once produced a business that pays for itself. Every fiscal year in the last four ended in a GAAP loss, including the record year, when revenue rose 37% and still fell $40 million short of covering stock compensation. The engineering team is excellent and expensive, and the company pays it by issuing about 3.5% more shares every year. At $35 that dilution costs public holders about 6% a year before the business earns anything.</p>
+    <p>Now the demand has broken in the way that hurts most. Memory makers have moved capacity to AI data centers, DRAM prices roughly doubled in a quarter, and Ambarella's customers, mostly makers of consumer and enterprise cameras with fixed retail prices, are cancelling or delaying products because the memory beside the chip has doubled in price. Management guided the next quarter 37% lower, says the weakness is spreading from consumer to enterprise and automotive, and assumes memory stays expensive through fiscal 2028. Its promise of a "growth year" rests on new products ramping in the second half, with recovered push-outs "not big part of it," so the growth is measured against a collapsed base. A first half running near $70 million a quarter puts fiscal 2028 revenue below fiscal 2026 even with a strong second half.</p>
+    <p>The automotive story, which justified paying $307.5 million for a radar software company, is still waiting: nearly five years after the CV3 announcement there is no volume OEM platform, and the Continental program is tied to 2027 launches that now have to source memory too. Mobileye, the incumbent, trades at 1.2 times revenue. In cameras, Chinese and Taiwanese suppliers compete on price, and a memory squeeze pushes customers toward the cheapest processor that works. More than half of revenue runs through one distributor, and receivable days rose by half in the quarter demand fell.</p>
+    <p>The cash story is weaker than the balance sheet looks. In the first half of fiscal 2027, with revenue growing 15%, free cash flow was −$36.7 million because inventory more than doubled from a year earlier. Inventory is still $61.4 million, about six months of cost of sales at the Q4 guide, and chips built for pushed-out orders are the first candidates for a write-down. At the guided cost base the company loses about $38 million a quarter on a GAAP basis and has announced no cuts. My base case quietly assumes about $40 million a year of savings; take them out of every year and the same model is worth about $15 a share, and the bear case burns about $190 million of the $283 million of cash by fiscal 2030.</p>
+    <p>That leaves the takeover, which is what the stock is really trading on. The FT's July report came when Ambarella was worth $3.3 billion with growing revenue. A buyer looking now sees a company guiding to a $290 million annual run rate, with management expecting no memory relief for more than a year. The rational move is to wait for the March print. If no bid comes, the stock is valued on its fundamentals, and on GAAP fundamentals, my bear case is worth about $7.74, mostly cash.</p>
+    <h3>Why the re-rate may never fire</h3>
+    <p>The stock has spent long stretches below its 200-week line twice before, 84 weeks from 2018 and 130 weeks from 2023, and both times it was lower a year later. Each time the company pointed to the next product generation as the recovery. The market has learned to discount that promise, and memory gives it a new reason to wait. A recovery needs memory prices to fall, customers to restart designs, and the new chips to ramp on schedule, all within about a year, while stock compensation keeps diluting every quarter it takes. And if a buyer offers a modest premium to a depressed price, the board may accept it, which would cap the upside for anyone buying today in hope of the July valuation.</p>
+    <h3>Pre-committed invalidations</h3>
+    <p>These are the conditions under which my value-trap call is wrong. If any of them happen, I will say so in a dated note.</p>
+    <table>
+      <tr><td>An acquisition of Ambarella is announced at any price above $35.24 before 31 March 2027</td></tr>
+      <tr><td>Q4 fiscal 2027 revenue (reported around early March 2027) comes in at $80 million or more, above the top of the $70–75 million guide</td></tr>
+      <tr><td>Ambarella reports a GAAP operating profit in any quarter of fiscal 2028</td></tr>
+      <tr><td>Stock compensation falls below 15% of revenue for fiscal 2028, with fiscal 2028 revenue above the $390.7 million of fiscal 2026</td></tr>
+      <tr><td>The company guides Q1 fiscal 2028 revenue at or above $95 million on the March 2027 call</td></tr>
+    </table>
+  </section>
+
+  <section class="dd-signup">
+    <div class="eyebrow">the mailing list</div>
+    <h3>Get the work as it publishes</h3>
+    <p>One list: weekly 200-week moving average signal reports every Saturday, plus each new deep dive as it goes up.</p>
+    <form name="deepdive-notify" method="POST" action="/thanks/" data-netlify="true" netlify-honeypot="bot-field" class="dd-form">
+      <input type="hidden" name="form-name" value="deepdive-notify">
+      <input type="hidden" name="source" value="deep-dive-amba">
+      <p style="display:none"><label>Leave blank: <input name="bot-field"></label></p>
+      <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="dd-signup-note">No spam. Unsubscribe anytime.</p>
+  </section>
+
+  <section class="tool-rec">
+    <div class="tool-rec-head">
+      <div class="eyebrow">the terminal I use</div>
+      <span class="tool-rec-badge">referral link</span>
+    </div>
+    <h3>Godel Terminal</h3>
+    <p style="margin-bottom:10px">A browser-based research terminal with a Bloomberg-style command interface: DES, FOCUS, TAS, HDS. Real-time quotes, filings, financials, ownership and news, at $996 a year against Bloomberg's roughly $27,000.</p>
+    <p class="tool-rec-body">I use it for the filing and ownership work behind these deep dives. Research and analysis only; order execution and dealer chat sit with your broker. Fourteen-day trial.</p>
+    <figure class="tool-rec-shot">
+      <a href="https://app.godelterminal.com/?via=mungbeans" target="_blank" rel="noopener sponsored">
+        <img src="/images/godel-terminal-ganx.png" alt="Godel Terminal showing GANX: ownership, valuation ratios and a live filings feed" loading="lazy" width="2880" height="1557">
+      </a>
+      <figcaption>GANX in Godel: float, insider and institutional ownership, valuation ratios and the filings feed on one screen. That name is a position in <a href="/book/">The Book</a>.</figcaption>
+    </figure>
+    <div class="tool-rec-cta">
+      <a class="tool-rec-btn" href="https://app.godelterminal.com/?via=mungbeans" target="_blank" rel="noopener sponsored">Try Godel Terminal &rarr;</a>
+      <span class="tool-rec-code">code <b>mungbeans</b> &middot; 30% off your first month</span>
+    </div>
+    <p class="tool-inline">
+      <span class="tool-inline-label">also on the desk</span>
+      <a href="https://simplywall.st/register?referrer_code=a32b7ed506a963a86c00e64f87045877" target="_blank" rel="noopener sponsored">Simply Wall St</a>
+      &middot; visual company reports and write-ups, five free reports a month as a quick second read.
+    </p>
+    <p class="tool-rec-disc">Disclosure: these are referral links and mungbeans.io earns a commission if you subscribe, at no extra cost to you. The discount code is why Godel is here; the recommendation is because I pay for it myself. The site carries no advertising, and every paid link is <a href="/tools/">listed on one page</a>.</p>
+  </section>
+
+  <footer>
+    Thesis published 27 Nov 2026 at $35.24. Fundamentals from filings, the Q3 fiscal 2027 release and call (24 Nov 2026), and public disclosures. Recognition-gap anchor derived from three GAAP-basis DCFs and a takeover option, weighted 25/45/20/10. Not investment advice. A record of reasoning.
+  </footer>
+
+</div>
+<script>
+  const tabs=[...document.querySelectorAll('.tab')];
+  const panels=[...document.querySelectorAll('.panel')];
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.remove('active'));
+    panels.forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelector(`[data-panel="${t.dataset.p}"]`).classList.add('active');
+  }));
+</script>
+
+<script>
+// Live price for the masthead, using the same /.netlify/functions/quote proxy
+// the individual stock pages call. Server-side, CDN-cached, no API key. The
+// publish price stays hardcoded because it is history; only the current price
+// and the since-publish percentage are fetched, so the article cannot go stale
+// between builds.
+(function () {
+  var el = document.getElementById("livePx");
+  if (!el) return;
+  var symbol = el.dataset.symbol;
+  var publish = parseFloat(el.dataset.publish);
+  var shares = parseFloat(el.dataset.shares || "0");
+  var debt = parseFloat(el.dataset.netdebt || "0");
+
+  var since = el.dataset.since || "";
+
+  fetch("/.netlify/functions/quote?symbol=" + encodeURIComponent(symbol) +
+        (since ? "&since=" + encodeURIComponent(since) : ""))
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (q) {
+      if (!q || !q.price) return;
+      var px = q.price;
+
+      // The publish price and share count above are in the terms that applied
+      // on the publish date. A split since then changes the unit, not the
+      // value: restate both so "since publish" measures the business rather
+      // than the share count. Market cap is unaffected either way, since price
+      // and shares move in opposite directions by the same factor.
+      var sf = (typeof q.splitFactor === "number" && isFinite(q.splitFactor)
+                && q.splitFactor > 0) ? q.splitFactor : 1;
+      if (sf !== 1) {
+        publish = publish / sf;
+        shares = shares * sf;
+      }
+      var parts = ["<b>$" + px.toFixed(2) + "</b>"];
+      if (shares > 0) {
+        var cap = px * shares;
+        parts.push("cap <b>$" + (cap / 1e9).toFixed(2) + "B</b>");
+        if (debt) parts.push("EV <b>$" + ((cap + debt) / 1e9).toFixed(2) + "B</b>");
+      }
+      el.innerHTML = parts.join(" · ");
+
+      var perf = document.getElementById("livePerf");
+      if (perf && publish > 0) {
+        var chg = (px / publish - 1) * 100;
+        perf.className = chg >= 0 ? "g" : "r";
+        perf.textContent = (chg >= 0 ? "+" : "") + chg.toFixed(1) + "% since publish";
+      }
+      var stamp = document.getElementById("liveStamp");
+      if (stamp) stamp.textContent = " · live";
+    })
+    .catch(function () {});
+})();
+</script>
+</body>
+</html>
